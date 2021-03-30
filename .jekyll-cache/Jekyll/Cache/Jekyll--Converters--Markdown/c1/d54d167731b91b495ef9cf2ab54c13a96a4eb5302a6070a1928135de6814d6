@@ -1,0 +1,471 @@
+I"ˈ<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students can define basic React vocabulary (Component, JSX, Prop, State)</li>
+  <li>Students are able to create and use React components with heavy guidance from samples and documentation</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>What do you know thus far about React?</li>
+  <li>Why do front-end frameworks / libraries exist?</li>
+  <li>How do we currently understand elements to be added to and removed from our browser’s viewport?</li>
+</ul>
+
+<h2 id="reacts-take-on-front-end-development">React’s Take on Front-End Development</h2>
+
+<p>React’s big innovation is that it gives us a way to utilize
+the efficiently re-render our browser’s display when manipulating the DOM.</p>
+
+<p>Using React, we’ll define <strong>components</strong> – individual pieces of our UI
+that handle the data related to them. We’ll give each
+component a key <strong>render</strong> function, which tells React how to
+re-generate the portion of the DOM controlled by that component
+<em>in terms of its data.</em></p>
+
+<p>Then, whenever anything changes, React can walk down the component tree,
+re-rendering components in terms of their associated data (which may or may not have changed).</p>
+
+<h3 id="whats-the-benefit">What’s the Benefit?</h3>
+
+<p>But what about the performance problems of DOM repaints?</p>
+
+<p>React gets around the efficiency problem of re-rendering the DOM by implementing a separate, in-memory model of the current DOM, called a <strong>virtual DOM</strong>. When things need to be re-rendered,
+React can (very quickly) re-generate its virtual representation of the DOM. Then,
+it actually uses an algorithm to isolate those elements that <em>actually changed</em>,
+and sends real DOM updates to only those elements.</p>
+
+<p>So when we said React allows us to continuously re-render the entire UI in response
+to data changes, we were oversimplifying. In reality, React itself does end up
+sending selective updates to the DOM.</p>
+
+<p>Use your browser’s element inspector to inspect what’s happening in this <a href="https://codepen.io/gaearon/pen/gwoJZk?editors=0010">React example</a> vs <a href="https://codepen.io/laurenfazah/pen/EwzeYY">jQuery example</a>.</p>
+
+<h3 id="other-benefits-of-react">Other Benefits of React</h3>
+
+<ul>
+  <li><strong>Lightweight</strong> – does a specific thing and does it pretty well</li>
+  <li><strong>Very modular</strong> – easy to drop in for a small portion
+of your UI without having to rewrite everything in React</li>
+  <li><strong>Easy to learn</strong> – As we will see shortly, there’s
+not much to it. Learn the basics for setting up components
+as well as a few core lifecycle methods, and you’re ready to start
+building your own UI.</li>
+</ul>
+
+<h2 id="discussion">Discussion</h2>
+
+<p>Now that you’ve had a little introduction into React, discuss the following with your partner:</p>
+
+<ul>
+  <li>What parts of Quantified Self could have been easier with React?</li>
+  <li>When do you think you would use React? What is not a good use case for React?</li>
+</ul>
+
+<p>And then let’s come back as a group and report out your answers.</p>
+
+<h4 id="quick-aside-jsx">Quick Aside: JSX</h4>
+
+<p>A big trait of React that is worth mentioning is its use of JSX vs plain old JavaScript. JSX itself exists as a statically-typed spin-off of JavaScript that can be used on its own outside of React. However, you’ll likely mostly encounter it within React apps.</p>
+
+<p>JSX</p>
+
+<ul>
+  <li>is a syntax extension of JavaScript</li>
+  <li>is statically-typed, but can infer the type set to variables based on their initial declaration</li>
+  <li>integrates HTML within JavaScript
+    <ul>
+      <li>this means that most elements and DOM manipulation in React will happen through JS (you will barely touch <code class="highlighter-rouge">index.html</code>)</li>
+    </ul>
+  </li>
+  <li>can be typed within <code class="highlighter-rouge">.js</code> files within React, but <code class="highlighter-rouge">.jsx</code> extensions can also be used
+    <ul>
+      <li>if using <code class="highlighter-rouge">.jsx</code>, remember to tack that extension onto the end of the file you’re importing</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Read more about its use in React <a href="https://facebook.github.io/react/docs/introducing-jsx.html">here</a>.</p>
+
+<h2 id="likes-counter-code-along">Likes Counter Code Along</h2>
+
+<p>We ultimately want to create something like this:</p>
+
+<p><img src="/assets/images/lessons/react-in-theory/final-image.png" alt="" /></p>
+
+<p>Let’s break this up so we can develop individual components.</p>
+
+<p>If you were dividing this UI into sections, what would your sections be?</p>
+
+<h3 id="install-some-tools">Install Some Tools</h3>
+
+<p>Install the <a href="https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en">react dev tools</a>. It will give you additional information about your React application in the Chrome dev tools.</p>
+
+<p>Then we’re going to use a tool from Facebook called <a href="https://github.com/facebookincubator/create-react-app">Create React App</a>. It configures webpack and babel for us, so we don’t need to worry about them and can focus on React.</p>
+
+<p>Some terminal commands:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install -g create-react-app
+create-react-app awesome-counter
+cd awesome-counter
+npm start
+</code></pre></div></div>
+
+<p>Let’s navigate to <code class="highlighter-rouge">http://localhost:3000/</code>.</p>
+
+<p>Look at that - we have our React dev environment set up!</p>
+
+<h3 id="explore-the-app">Explore the app</h3>
+
+<p>Open a new tab in Terminal and open up your project with your text editor.</p>
+
+<p>Open <code class="highlighter-rouge">./src/App.js</code></p>
+
+<p>Let’s walk through this…</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">logo</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./logo.svg</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">'</span><span class="s1">./App.css</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"App"</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"App-header"</span><span class="p">&gt;</span>
+          <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="p">=</span><span class="si">{</span><span class="nx">logo</span><span class="si">}</span> <span class="na">className</span><span class="p">=</span><span class="s">"App-logo"</span> <span class="na">alt</span><span class="p">=</span><span class="s">"logo"</span> <span class="p">/&gt;</span>
+          <span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Welcome to React<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">p</span> <span class="na">className</span><span class="p">=</span><span class="s">"App-intro"</span><span class="p">&gt;</span>
+          To get started, edit <span class="p">&lt;</span><span class="nt">code</span><span class="p">&gt;</span>src/App.js<span class="p">&lt;/</span><span class="nt">code</span><span class="p">&gt;</span> and save to reload.
+        <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>First we import React and specifically the Component class from React. We can also import images, svg files and css. Then we define our main <code class="highlighter-rouge">App</code> component / module.</p>
+
+<p>How does our App component get added to our view?</p>
+
+<p>Open your <code class="highlighter-rouge">./index.js</code> file.</p>
+
+<p>ReactDOM is React’s object for interacting with the DOM. You can see we create an instance of our <code class="highlighter-rouge">&lt;App /&gt;</code> and add it to our root element which can be found in our <code class="highlighter-rouge">public/index.html</code> page.</p>
+
+<h4 id="capitalized-react-component-convention">Capitalized React Component Convention</h4>
+
+<p>Take note of how <code class="highlighter-rouge">&lt;App /&gt;</code> is capitalized.</p>
+
+<p>From the <a href="https://facebook.github.io/react/docs/jsx-in-depth.html">React docs</a>:</p>
+
+<blockquote>
+  <p>Capitalized types indicate that the JSX tag is referring to a React component. These tags get compiled into a direct reference to the named variable, so if you use the JSX <Foo></Foo> expression, Foo must be in scope.
+When an element type starts with a lowercase letter, it refers to a built-in component like &lt;div&gt; or <span> and results in a string ‘div’ or ‘span’ passed to React.createElement. Types that start with a capital letter like <Foo></Foo> compile to React.createElement(Foo) and correspond to a component defined or imported in your JavaScript file.
+We recommend naming components with a capital letter. If you do have a component that starts with a lowercase letter, assign it to a capitalized variable before using it in JSX.</span></p>
+</blockquote>
+
+<h3 id="time-to-make-a-new-component">Time to Make a New Component!</h3>
+
+<p>Let’s start by creating the template for the Like / Dislike button. Create an <code class="highlighter-rouge">ActionButton</code> class above our <code class="highlighter-rouge">App</code> class in <code class="highlighter-rouge">index.js</code>:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">ActionButton</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">className</span><span class="p">=</span><span class="s">"action-button"</span><span class="p">&gt;</span>
+        Submit
+      <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">...</span>
+
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s add the new component to our <code class="highlighter-rouge">App</code> component. Replace everything inside the <code class="highlighter-rouge">App</code> <code class="highlighter-rouge">div</code> with the <code class="highlighter-rouge">ActionButton</code> component:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="p">=</span><span class="s">"App"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nc">ActionButton</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<p>Head back to your browser. Great, we have our button! Open up the console, click on the React tab, Expand the <code class="highlighter-rouge">&lt;App&gt;</code> component and you’ll see we have our <code class="highlighter-rouge">&lt;ActionButton /&gt;</code> component. Take a minute to dig in and see what comes up in our sidebar.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Props
+  Empty Object
+</code></pre></div></div>
+
+<h3 id="props">Props</h3>
+
+<p>Props are crucial attributes of React components. A <code class="highlighter-rouge">prop</code> is an immutable property that holds data to be passed down to the component.</p>
+
+<p>Right now the text within our button is hardcoded to be ‘Submit’; let’s change it to be dynamic via props.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">ActionButton</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">className</span><span class="p">=</span><span class="s">"actionButton"</span><span class="p">&gt;</span>
+        <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span><span class="si">}</span>
+      <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, let’s pass our text into our instantiation of our <code class="highlighter-rouge">ActionButton</code>.</p>
+
+<p><code class="highlighter-rouge">&lt;ActionButton text="Submit"/&gt;</code></p>
+
+<p>Check out your React dev tools again. Select the <code class="highlighter-rouge">&lt;ActionButton /&gt;</code>, what do you see under props?</p>
+
+<p>Note that the word <code class="highlighter-rouge">text</code> here is completely arbitrary. It can be whatever you want to refer to that value as in your component. We could have put <code class="highlighter-rouge">&lt;ActionButton jellyfish="Submit"/&gt;</code> and within our JSX, accessed <code class="highlighter-rouge">{this.props.jellyfish}</code>.</p>
+
+<h3 id="refactor-3-5-minutes">Refactor (3-5 minutes)</h3>
+
+<p>Work with a partner to refactor your <code class="highlighter-rouge">ActionButton</code> component out of <code class="highlighter-rouge">App.js.</code> I’d recommend you create a <code class="highlighter-rouge">components</code> directory within <code class="highlighter-rouge">src</code> to start housing these components in.</p>
+
+<h3 id="action-time">Action Time</h3>
+
+<p>Currently, our button does not do anything. Let’s add an action. Add an <code class="highlighter-rouge">onClick</code> property to your button element.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="nt">button</span>
+    <span class="na">className</span><span class="p">=</span><span class="s">"actionButton"</span>
+    <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">alert</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span><span class="p">)</span><span class="si">}</span><span class="p">&gt;</span>
+
+  <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span><span class="si">}</span>
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<p>Cool, now let’s make our button a more customizable by passing in our action.</p>
+
+<p>First, modify your <code class="highlighter-rouge">ActionButton</code>’s <code class="highlighter-rouge">render</code> function.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="nt">button</span>
+    <span class="na">className</span><span class="p">=</span><span class="s">"actionButton"</span>
+    <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">onClick</span><span class="si">}</span><span class="p">&gt;</span>
+
+  <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">text</span><span class="si">}</span>
+<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<p>Inside your <code class="highlighter-rouge">App.js</code> file, pass in a function to your instantiated <code class="highlighter-rouge">ActionButton</code>.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="nc">ActionButton</span>
+    <span class="na">text</span><span class="p">=</span><span class="s">"Submit"</span>
+    <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleClick</span><span class="si">}</span><span class="p">/&gt;</span>
+</code></pre></div></div>
+
+<p>Finally, add a <code class="highlighter-rouge">handleClick</code> function to your <code class="highlighter-rouge">App</code> component.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">handleClick</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">you clicked me!</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{...}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="synthesize-passing-actions-as-props">Synthesize: Passing Actions as Props</h3>
+
+<p>You might be wondering why we’re passing a <code class="highlighter-rouge">handleClick</code> function as a prop from <code class="highlighter-rouge">App</code> to our child component, <code class="highlighter-rouge">ActionButton</code>.</p>
+
+<p>We absolutely could be defining this method within <code class="highlighter-rouge">ActionButton</code>, but if we’re learning it this way, there’s got to be a benefit (trust us).</p>
+
+<h4 id="data-down-actions-up">“Data Down, Actions Up”</h4>
+
+<p>Components in React can pass information down to their children, but there isn’t really a way for children to pass data back up to the parent. This is because the parent knows about the child (because it’s in the render function), but the child component doesn’t have any way to access its parent.</p>
+
+<p>The convention the React community (and Ember community before them) has adopted is passing actions down as data and allowing them to bubble back up.</p>
+
+<p>Just remember: <strong>data down, actions up</strong></p>
+
+<p>In our app, since the action handler is defined as a method of its parent component, it has access to everything that the parent component has access to. As long as the child component uses the handler that was passed down, the parent is the one who is actually handling the action.</p>
+
+<p>Read more about how this works in React <a href="https://facebook.github.io/react/docs/lifting-state-up.html">here</a>.</p>
+
+<h3 id="build-our-view-15-20-minutes">Build our View (15-20 minutes)</h3>
+
+<p>Let’s create a new component called <code class="highlighter-rouge">LikesCounter</code>. This component should have two <code class="highlighter-rouge">ActionButton</code>s: one saying “Like” and one saying “Dislike”. When you click “Like” or “Dislike”, an alert of which one was clicked should appear. Build this component in a new file, <code class="highlighter-rouge">components/LikesCounter.js</code></p>
+
+<p>After you create your <code class="highlighter-rouge">LikesCounter</code>, replace the <code class="highlighter-rouge">ActionButton</code> in your <code class="highlighter-rouge">App</code> with a <code class="highlighter-rouge">LikesCounter</code>.</p>
+
+<p>Anticipate the following error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error in ./src/LikesCounter.js
+Syntax error: Adjacent JSX elements must be wrapped in an enclosing tag
+</code></pre></div></div>
+
+<p>This is important. React components can only render one <em>root level</em> element, which simply means that you have to structure your JSX so that everything is contained within a single element.</p>
+
+<p>Let’s fix this by wrapping our adjacent <code class="highlighter-rouge">ActionButton</code> components in a <code class="highlighter-rouge">div</code>.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">return</span> <span class="p">(</span>
+  <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nc">ActionButton</span>
+      <span class="na">text</span><span class="p">=</span><span class="s">"Like +1"</span>
+    <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nc">ActionButton</span>
+      <span class="na">text</span><span class="p">=</span><span class="s">"Dislike -1"</span>
+    <span class="p">/&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="props-vs-state">Props vs State</h3>
+
+<p>Now that our HTML is in place, it’s time to add some behavior to the buttons.</p>
+
+<p>Let’s about what we’re trying to accomplish here:</p>
+
+<p>When the page loads, we want the initial value of Likes to be 0. Then when we click “Like”, we want to add 1 to the value of Likes, and remove 1 when we click “Dislike”.</p>
+
+<p>Let’s rephrase. On page load we want to set the <em>initial</em> state of our <code class="highlighter-rouge">LikesCounter</code> to have a count of 0, in other words we want to “initialize” our component to have some values. Sounds like a constructor!</p>
+
+<p>Along with sending the <code class="highlighter-rouge">props</code> through our custom HTML element, we can also define an initial <code class="highlighter-rouge">state</code> on our components that can be mutated based on user interaction and changes to our data.</p>
+
+<p>From <a href="https://facebook.github.io/react/docs/state-and-lifecycle.html">React</a>:</p>
+
+<blockquote>
+  <p>State is similar to props, but it is private and fully controlled by the component.</p>
+</blockquote>
+
+<p>Our state machine needs to get that information from somewhere, so let’s start with passing in an <code class="highlighter-rouge">initialLikes</code> property to our <code class="highlighter-rouge">&lt;LikesCounter /&gt;</code> instance:</p>
+
+<p><code class="highlighter-rouge">&lt;LikesCounter initialLikes="0" /&gt;</code></p>
+
+<p>Now we can add a constructor to our <code class="highlighter-rouge">LikesCounter</code> component. In our constructor, we will set the initial state of our component.</p>
+
+<p>Underneath the class declaration for <code class="highlighter-rouge">LikesCounter</code>, let’s add our constructor function.</p>
+
+<p>A standard component’s constructor function takes <code class="highlighter-rouge">props</code> as an argument and calls <code class="highlighter-rouge">super(props)</code>. In an ES6 child class constructor, <code class="highlighter-rouge">this</code> cannot be used until <code class="highlighter-rouge">super</code> is called.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">likes</span><span class="p">:</span> <span class="nx">props</span><span class="p">.</span><span class="nx">initialLikes</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We can now access a dynamically changing <code class="highlighter-rouge">likes</code> state value within our LikesCounter as so:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span><span class="p">(</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Likes: <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">likes</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    ...
+  )
+}
+</code></pre></div></div>
+
+<p>At this point your <code class="highlighter-rouge">LikesCounter</code> should look something like this:</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">ActionButton</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./ActionButton</span><span class="dl">'</span>
+
+<span class="kd">class</span> <span class="nx">LikesCounter</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">likes</span><span class="p">:</span> <span class="nx">props</span><span class="p">.</span><span class="nx">initialLikes</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleDislike</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Dislike</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleLike</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">Like</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>Likes: <span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">likes</span><span class="si">}</span><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nc">ActionButton</span>
+            <span class="na">text</span><span class="p">=</span><span class="s">"Like +1"</span>
+            <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleLike</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="si">}</span> <span class="p">/&gt;</span>
+
+        <span class="p">&lt;</span><span class="nc">ActionButton</span>
+            <span class="na">text</span><span class="p">=</span><span class="s">"Dislike -1"</span>
+            <span class="na">onClick</span><span class="p">=</span><span class="si">{</span><span class="k">this</span><span class="p">.</span><span class="nx">handleDislike</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="si">}</span> <span class="p">/&gt;</span>
+
+      <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">LikesCounter</span>
+</code></pre></div></div>
+
+<p>Read more about why we’re binding <code class="highlighter-rouge">this</code> <a href="https://facebook.github.io/react/docs/handling-events.html">here</a>.</p>
+
+<p>Open up the console and look at what information is available within the <code class="highlighter-rouge">&lt;LikesCounter /&gt;</code> component.</p>
+
+<p>Last step - hook up the buttons to change the state!</p>
+
+<p>Let’s modify our two our Like and Dislike functions to change our state. To modify our state, we pass in a new state object to <code class="highlighter-rouge">this.setState(newState)</code></p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">handleLike</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+    <span class="na">likes</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">likes</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">handleDislike</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span>
+    <span class="na">likes</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">likes</span> <span class="o">-</span> <span class="mi">1</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is where the magic of React comes in. We are essentially throwing out the old information and replacing it with fresh, up-to-date information.</p>
+
+<p>You can verify this state change by switching over to your browser and opening your React dev tools. Check out what happens when you click a button.</p>
+
+<p>Good work!</p>
+
+<p>Note: you may need to use <code class="highlighter-rouge">parseInt()</code> in order to update the state when you’re handling updating the like count.</p>
+
+<h3 id="refactor">Refactor</h3>
+
+<p>Our <code class="highlighter-rouge">handleDislike</code> and <code class="highlighter-rouge">handleLike</code> functions look very similar. Let’s create a new function <code class="highlighter-rouge">modifyLikes</code> that takes a modification parameter and updates our states likes.</p>
+
+<div class="language-jsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">handleLikeClick</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">modifyLikes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">handleDislikeClick</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">modifyLikes</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="cfus">CFUs</h2>
+
+<p>On your own, fill out the Intro to React Checks for Understanding questions <a href="https://goo.gl/forms/6n82Ft7qC0lnipK13">here</a>.</p>
+
+<h2 id="going-further">Going Further</h2>
+
+<p>If you’re enjoying what we’ve seen so far with React, I’d highly recommend reading their section of documentation called <a href="https://facebook.github.io/react/docs/thinking-in-react.html">Thinking in React</a>.</p>
+
+<p>This article walks you through their best practices for approaching a new application using React. Since component-based / data down, actions up paradigms are fairly new to us, it’ll be a worthy read for you.</p>
+
+<h2 id="resources-and-additional-learning-materials">Resources and Additional Learning Materials</h2>
+
+<p><a href="https://github.com/applegrain/creact">React &amp; Rails Tutorial</a></p>
+
+<p><a href="https://facebook.github.io/react/docs/component-specs.html">Render vs Return</a></p>
+
+<p><a href="https://toddmotto.com/react-create-class-versus-component/">React Classes vs extend Component</a></p>
+
+<p><a href="https://camjackson.net/post/9-things-every-reactjs-beginner-should-know">9 Things Every React Dev Should Know</a></p>
+
+<p><a href="https://facebook.github.io/react/docs/tutorial.html">React Tutorial by Facebook</a></p>
+:ET

@@ -1,0 +1,232 @@
+I"	'<p>In this project you’ll use Ruby to build an implementation of the classic game Mastermind.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<h3 id="learning-goals--areas-of-focus">Learning Goals / Areas of Focus</h3>
+
+<ul>
+  <li>Apply principles of flow control across multiple methods</li>
+  <li>Practice breaking a program into logical components</li>
+  <li>Learn to implement a REPL interface</li>
+  <li>Apply Enumerable techniques in a real context</li>
+</ul>
+
+<h2 id="base-expectations">Base Expectations</h2>
+
+<p>You are to build a playable game of Mastermind that runs in a REPL interface.</p>
+
+<h3 id="starting-a-game">Starting a Game</h3>
+
+<ul>
+  <li>The player starts the game by running <code class="highlighter-rouge">ruby mastermind.rb</code></li>
+  <li>Then they see:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to MASTERMIND
+
+Would you like to (p)lay, read the (i)nstructions, or (q)uit?
+&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>If they enter <code class="highlighter-rouge">p</code> or <code class="highlighter-rouge">play</code> then they enter the <em>game flow</em> described below.</li>
+  <li>If they enter <code class="highlighter-rouge">i</code> or <code class="highlighter-rouge">instructions</code> they should be presented with a short explanation of how
+the game is played.</li>
+  <li>If they enter <code class="highlighter-rouge">q</code> or <code class="highlighter-rouge">quit</code> then the game should exit</li>
+</ul>
+
+<h3 id="game-flow">Game Flow</h3>
+
+<p>Once the user starts a game they should see:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I have generated a beginner sequence with four elements made up of: (r)ed,
+(g)reen, (b)lue, and (y)ellow. Use (q)uit at any time to end the game.
+What's your guess?
+</code></pre></div></div>
+
+<p>They can then enter a guess in the form <code class="highlighter-rouge">rrgb</code></p>
+
+<ul>
+  <li>Guesses are case insensitive</li>
+  <li>If it’s <code class="highlighter-rouge">'q'</code> or <code class="highlighter-rouge">'quit'</code> then exit the game</li>
+  <li>If it’s <code class="highlighter-rouge">'c'</code> or <code class="highlighter-rouge">'cheat'</code> then print out the current secret code</li>
+  <li>If it’s fewer than four letters, tell them it’s too short</li>
+  <li>If it’s longer than four letters, tell them it’s too long</li>
+  <li>If they guess the secret sequence, enter the <em>end game</em>   flow below</li>
+  <li>Otherwise give them feedback on the guess like this:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'RRGB' has 3 of the correct elements with 2 in the correct positions
+You've taken 1 guess
+</code></pre></div></div>
+
+<p>Then let them guess again, repeating the game flow loop.</p>
+
+<h3 id="end-game">End Game</h3>
+
+<p>When the user correctly guesses the sequence, output the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Congratulations! You guessed the sequence 'GRRB' in 8 guesses over 4 minutes,
+22 seconds.
+
+Do you want to (p)lay again or (q)uit?
+</code></pre></div></div>
+
+<p>If they enter <code class="highlighter-rouge">'p'</code> or <code class="highlighter-rouge">'play'</code> then restart the game. <code class="highlighter-rouge">'q'</code> or <code class="highlighter-rouge">'quit'</code> ends
+the game.</p>
+
+<h2 id="extensions">Extensions</h2>
+
+<p>If you’re able to finish the base expectations, add on one or more of the
+following extensions:</p>
+
+<h3 id="difficulty-levels">Difficulty Levels</h3>
+
+<p>When the user is getting ready to start a game, ask them what difficulty
+level they’d like to play with the following adaptations:</p>
+
+<ul>
+  <li>Beginner = 4 characters, 4 colors</li>
+  <li>Intermediate = 6 characters, 5 colors</li>
+  <li>Advanced = 8 characters, 6 colors</li>
+</ul>
+
+<h3 id="record-tracking--top-10">Record Tracking &amp; Top 10</h3>
+
+<p>Use a file on the file system (like CSV, JSON, etc) to track completed
+games across runs of the program. When the user wins the game, output a message like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Congratulations! You've guessed the sequence! What's your name?
+
+&gt; Jeff
+
+Jeff, you guessed the sequence 'GRRB' in 8 guesses over 4 minutes,
+22 seconds. That's 1 minute, 10 seconds faster and two guesses fewer than the
+average.
+
+=== TOP 10 ===
+1. Jeff solved 'GRRB' in 8 guesses over 4m22s
+2. Jeff solved 'BRGG' in 11 guesses over 4m45s
+3. Jorge solved 'BBBB' in 12 guesses over 4m15s
+4. Jorge solved 'GGBB' in 12 guesses over 5m12s
+</code></pre></div></div>
+
+<p>Note that they’re ranked first by number of guesses then by time.</p>
+
+<h3 id="package--polish">Package &amp; Polish</h3>
+
+<p>Your game won’t be very popular if it’s hard to install and run.</p>
+
+<h4 id="add-a-command-line-wrapper">Add a Command Line Wrapper</h4>
+
+<p>Create an executable script that allows the user to just run <code class="highlighter-rouge">mastermind</code>
+from their terminal without directly executing Ruby.</p>
+
+<h3 id="other-ideas">Other Ideas</h3>
+
+<ul>
+  <li>Add a <code class="highlighter-rouge">history</code> instruction to the gameplay which can be called before entering a guess and it’ll display
+all previous guesses and results in a compact form</li>
+  <li>Visual Interface - add colors and ASCII graphics to make a more compelling
+visual experience</li>
+  <li>Two-Player Mode - Add a game mode where players alternate guesses and whoever
+gets the sequence right first wins. Consider having their guesses hidden.</li>
+</ul>
+
+<h2 id="evaluation-rubric">Evaluation Rubric</h2>
+
+<p>The project will be assessed with the following guidelines:</p>
+
+<ul>
+  <li>4: Above expectations</li>
+  <li>3: Meets expectations</li>
+  <li>2: Below expectations</li>
+  <li>1: Well-below expectations</li>
+</ul>
+
+<p><strong>Expectations:</strong></p>
+
+<h3 id="1-ruby-syntax--style">1. Ruby Syntax &amp; Style</h3>
+
+<ul>
+  <li>Applies appropriate attribute encapsulation</li>
+  <li>Developer creates instance and local variables appropriately</li>
+  <li>Naming follows convention (is idiomatic)</li>
+  <li>Ruby methods used are logical and readable</li>
+  <li>Code is indented properly</li>
+  <li>Code does not exceed 80 characters per line</li>
+  <li>Each class has correctly-named files and corresponding test files in the proper directories</li>
+</ul>
+
+<h3 id="2-breaking-logic-into-components">2. Breaking Logic into Components</h3>
+
+<ul>
+  <li>Code is effectively broken into methods &amp; classes</li>
+  <li>Developer writes methods less than 10 lines</li>
+  <li>No more than 3 methods break the principle of SRP</li>
+</ul>
+
+<h3 id="3-test-driven-development">3. Test-Driven Development</h3>
+
+<ul>
+  <li>Each method is tested</li>
+  <li>Tests implement Ruby syntax &amp; style</li>
+</ul>
+
+<h3 id="4-functionality">4. Functionality</h3>
+
+<ul>
+  <li>Application meets all requirements</li>
+</ul>
+
+<h3 id="5-git-workflow">5. Git Workflow</h3>
+
+<ul>
+  <li>Project has at least 20 commits and uses Pull Request workflow.</li>
+</ul>
+
+<p><strong>Rubric</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th><br /></th>
+      <th><strong>Exceptional</strong></th>
+      <th><strong>Meets Expectations</strong></th>
+      <th><strong>Below Expectations</strong></th>
+      <th><strong>Well Below Expectations</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Functionality</strong></td>
+      <td>Application is robust and can handle a variety of inputs including invalid inputs and both meets all requirements and two extensions.</td>
+      <td>Application adheres to the flow outlined in the specification and can handle a variety of valid inputs (not just what is outlined in spec). Application is fully functional.</td>
+      <td>Command line interface crashes or the application does not follow the flow outlined in the specification.</td>
+      <td>Application does not calculate moves properly, command line interface does not start game.</td>
+    </tr>
+    <tr>
+      <td><strong>Ruby Mechanics</strong></td>
+      <td>Project includes appropriate uses of hashes and enumerables not covered in class</td>
+      <td>Appropriately uses Ruby’s built in datatypes and methods, flow control, and enumerables.</td>
+      <td>Does not appropriately use one or two of the following: Ruby’s built in datatypes and methods, flow control, and enumerables</td>
+      <td>Does not appropriately use Ruby’s built in datatypes and methods, flow control, and enumerables, or does not build classes</td>
+    </tr>
+    <tr>
+      <td><strong>Ruby Conventions</strong></td>
+      <td>Classes, methods, and variables are well named so that they clearly communicate their purpose. Code is all properly indented and syntax is consistent.</td>
+      <td>Code is mostly properly indented, spaced, and lines are not excessively long. Class, method, variable, and file names follow convention</td>
+      <td>Code demonstrates some proper indenting and spacing. Class, method, variable, and file names inconsistently follow convention</td>
+      <td>Code is not properly indented and spaced and lines are excessively long. Class, method, variable, and file names do not follow convention</td>
+    </tr>
+    <tr>
+      <td><strong>Testing</strong></td>
+      <td>All methods that do not require command line input/output are accurately tested. Best use assertions are made.</td>
+      <td>Each class has its own test file. Every method listed on the specification is tested. Most tests are written to accurately verify expected behavior.</td>
+      <td>Tests are written for most methods listed on the specification, but the tests may be in an incorrect location or the tests may not accurately verify the expected behavior</td>
+      <td>Application does not show significant test driven devlopment</td>
+    </tr>
+  </tbody>
+</table>
+
+:ET

@@ -1,0 +1,88 @@
+I"©<p>Clone this repo: git@github.com:turingschool-examples/yacht_club.git</p>
+
+<h2 id="iteration-1-tests-provided">Iteration 1 (tests provided)</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">yacht</span> <span class="o">=</span> <span class="no">Yacht</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"S.S. Minnow"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">yacht</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1"># =&gt; "S.S. Minnow"</span>
+<span class="n">yacht</span><span class="p">.</span><span class="nf">length</span>
+<span class="c1"># =&gt; 40</span>
+<span class="n">yacht</span><span class="p">.</span><span class="nf">sailing?</span>
+<span class="c1"># =&gt; false</span>
+<span class="n">yacht</span><span class="p">.</span><span class="nf">sail</span>
+<span class="c1"># =&gt; "Aye, aye!"</span>
+<span class="n">yacht</span><span class="p">.</span><span class="nf">sailing?</span>
+<span class="c1"># =&gt; true</span>
+</code></pre></div></div>
+
+<h2 id="iteration-2">Iteration 2</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">yacht_1</span> <span class="o">=</span> <span class="no">Yacht</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"S.S. Minnow"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">yacht_2</span> <span class="o">=</span> <span class="no">Yacht</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Vajoliroja"</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">captain</span> <span class="o">=</span> <span class="no">Captain</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Thurston"</span><span class="p">,</span> <span class="s2">"Howell"</span><span class="p">,</span> <span class="s2">"10_000_000"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Captain...&gt;</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">full_name</span>
+<span class="c1"># =&gt; "Thurston Howell"</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">net_worth</span>
+<span class="c1"># =&gt; 10000000</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">yachts</span>
+<span class="c1"># =&gt; []</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">add_yacht</span><span class="p">(</span><span class="n">yacht_1</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">yachts</span>
+<span class="c1"># =&gt; [&lt;#Yacht...&gt;]</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">add_yacht</span><span class="p">(</span><span class="n">yacht_2</span><span class="p">)</span>
+<span class="c1"># =&gt; [&lt;#Yacht...&gt;, &lt;#Yacht...&gt;]</span>
+</code></pre></div></div>
+
+<h2 id="iteration-3">Iteration 3</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">yacht_club</span> <span class="o">=</span> <span class="no">YachtClub</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Mike's Yacht Club"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#YachtClub...&gt;</span>
+<span class="n">captain</span> <span class="o">=</span> <span class="no">Captain</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Thurston"</span><span class="p">,</span> <span class="s2">"Howell"</span><span class="p">,</span> <span class="s2">"10_000_000"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Captain...&gt;</span>
+<span class="n">yacht_1</span> <span class="o">=</span> <span class="no">Yacht</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"S.S. Minnow"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">add_yacht</span><span class="p">(</span><span class="n">yacht_1</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+
+
+<span class="n">yacht_club</span><span class="p">.</span><span class="nf">add_member</span><span class="p">(</span><span class="n">captain</span><span class="p">)</span>
+<span class="c1"># =&gt; "Thurston Howell added!"</span>
+<span class="n">yacht_club</span><span class="p">.</span><span class="nf">members</span>
+<span class="c1"># =&gt; ["Howell"]</span>
+</code></pre></div></div>
+
+<h2 id="iteration-4">Iteration 4</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">yacht_club</span> <span class="o">=</span> <span class="no">YachtClub</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Mike's Yacht Club"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#YachtClub...&gt;</span>
+
+<span class="n">captain_1</span> <span class="o">=</span> <span class="no">Captain</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Thurston"</span><span class="p">,</span> <span class="s2">"Howell"</span><span class="p">,</span> <span class="s2">"10_000_000"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Captain...&gt;</span>
+<span class="n">yacht_1</span> <span class="o">=</span> <span class="no">Yacht</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"S.S. Minnow"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">captain</span><span class="p">.</span><span class="nf">add_yacht</span><span class="p">(</span><span class="n">yacht_1</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+
+<span class="n">captain_2</span> <span class="o">=</span> <span class="no">Captain</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Kathryn"</span><span class="p">,</span> <span class="s2">"Janeway"</span><span class="p">,</span> <span class="s2">"100_000_000"</span> <span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Captain...&gt;</span>
+<span class="n">yacht_2</span> <span class="o">=</span> <span class="no">Yacht</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Voyager"</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+<span class="n">captain_2</span><span class="p">.</span><span class="nf">add_yacht</span><span class="p">(</span><span class="n">yacht_2</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Yacht...&gt;</span>
+
+<span class="n">yacht_club</span><span class="p">.</span><span class="nf">add_member</span><span class="p">(</span><span class="n">captain_1</span><span class="p">)</span>
+<span class="c1"># =&gt; "Thurston Howell added!"</span>
+
+<span class="n">yacht_club</span><span class="p">.</span><span class="nf">add_member</span><span class="p">(</span><span class="n">captain_2</span><span class="p">)</span>
+<span class="c1"># =&gt; "Kathryn Janeway added!"</span>
+
+<span class="n">yacht_club</span><span class="p">.</span><span class="nf">ship_log</span>
+<span class="c1"># =&gt; {"S.S. Minnow" =&gt; "Thurston Howell", "Voyager" =&gt; "Kathryn Janeway"}</span>
+</code></pre></div></div>
+
+:ET

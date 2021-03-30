@@ -1,0 +1,384 @@
+I"�a<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Describe the difference between a class and an instance of that class</li>
+  <li>Define a class</li>
+  <li>Store state in instance variables defined in <code class="highlighter-rouge">initialize</code></li>
+  <li>Provide access to state using <code class="highlighter-rouge">attr_reader</code>s and <code class="highlighter-rouge">attr_accessor</code>s</li>
+  <li>Use methods to provide behaviors to instances of a class</li>
+  <li>Create a new instance of a class and call methods on that instance</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/objects_classes_instances">here</a></p>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Class</li>
+  <li>Object</li>
+  <li>Instance</li>
+  <li>State</li>
+  <li>Attribute</li>
+  <li>Instance Variable</li>
+  <li>Behavior</li>
+  <li>Method</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<p>In your notebook brainstorm a <strong>type</strong> of object and <strong>specific</strong> instances of that object. Then brainstorm 3 different <strong>attributes</strong> for those objects and 3 different <strong>behaviors</strong> of those objects.</p>
+
+<p>For example:</p>
+
+<ul>
+  <li>Type of object: Refrigerator</li>
+  <li>Specific instances:
+    <ul>
+      <li>Staff Fridge, Small Fridge in Student Kitchen, Large Fridge in Student Kitchen</li>
+    </ul>
+  </li>
+  <li>Attributes:
+    <ul>
+      <li>Brand, Color, Temperature</li>
+    </ul>
+  </li>
+  <li>Behaviors:
+    <ul>
+      <li>Add Food, Remove Food, Change Temperature</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="classes-in-ruby">Classes in Ruby</h2>
+
+<h3 id="overview">Overview</h3>
+
+<p>In programming, a <strong>Class</strong> is something that models:</p>
+
+<ol>
+  <li>State</li>
+  <li>Behavior</li>
+</ol>
+
+<p>State is what something <em>is</em>. Behavior is what something <em>does</em>. In the warm up, our <em>Class</em> was refrigerator. We modeled the state of a refrigerator by defining the attributes “brand”, “color”, and “temperature”. We modeled the behavior of a refrigerator by defining the methods “add food”, “remove food”, and “change temperature”.</p>
+
+<p>An <strong>Instance</strong> or <strong>Object</strong> is a concrete representation of a Class. In the previous activity, “staff refrigerator” is a specific Instance of the Fridge Class. We can also say that “staff refrigerator” is a Fridge Object. Do not get confused by the terms Instance and Object. They mean the exact same thing (for now).</p>
+
+<p>Think of a <strong>Class</strong> like a blueprint for a house and an <strong>Instance</strong> as an actual house. The blueprint is a just an idea of how the house should be built, and the house is the realization of that blueprint.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<p>The syntax for defining a class is as follows:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">NameOfClass</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>So, for example, if we wanted to create a Dog class, we could do the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Dog</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice the use of <code class="highlighter-rouge">UpperCamelCase</code> for the class name.</p>
+
+<p>Generally we will want to put more information in our classes to make them useful to us, but those two lines (even with no other information) will create a class.</p>
+
+<h3 id="example---classinstance-syntax">Example - Class/Instance Syntax</h3>
+
+<p>Let’s follow a class example with a Unicorn class. I will create a directory in the classwork directory called <code class="highlighter-rouge">objects_classes_and_instances</code>. Within that directory, I’ll create a <code class="highlighter-rouge">unicorn.rb</code> file, and put the following information into that file. (You will take these same steps later for a different class😉)</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ~/turing/1module/classwork/objects_classes_and_instances/unicorn.rb</span>
+<span class="c1"># Notice that `class` is lowercase while `NameOfClass` is UpperCamelCased.</span>
+
+<span class="k">class</span> <span class="nc">Unicorn</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In the same <code class="highlighter-rouge">objects_instances_and_classes</code> directory, let’s create a <code class="highlighter-rouge">runner.rb</code> file and put the code below into that.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ~/turing/1module/classwork/objects_classes_and_instances/runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./unicorn'</span>
+
+<span class="n">unicorn_1</span> <span class="o">=</span> <span class="no">Unicorn</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">unicorn_2</span> <span class="o">=</span> <span class="no">Unicorn</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="nb">require</span> <span class="s1">'pry'</span><span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>We can run the <code class="highlighter-rouge">runner.rb</code> file from the command line if we are inside of our <code class="highlighter-rouge">objects_classes_and_instances</code> directory by typing the following: <code class="highlighter-rouge">ruby runner.rb</code>.</p>
+
+<p>When we run this file, our terminal should open up a pry session when it reads the line: <code class="highlighter-rouge">binding.pry</code>. Inside of that pry session, we’ll type <code class="highlighter-rouge">unicorn_1</code> and hit return to see what the variable <code class="highlighter-rouge">unicorn_1</code> is holding. Then, we’ll type <code class="highlighter-rouge">unicorn_2</code> to see what that variable is holding.</p>
+
+<h2 id="turn--talk">Turn &amp; Talk</h2>
+
+<ul>
+  <li>How are those two things the same?</li>
+  <li>How are they different?</li>
+</ul>
+
+<h2 id="attributes-in-ruby-classes">Attributes in Ruby Classes</h2>
+
+<p>Above we created a Unicorn class and then also created specific instances of the unicorn class that we held in the variables <code class="highlighter-rouge">unicorn_1</code> and <code class="highlighter-rouge">unicorn_2</code>. Generally the objects we create will come from the same template, but each will be a unique object.</p>
+
+<p>Take a look at these unicorns.</p>
+
+<p>Each one is different in important ways. For example, each one has its own:</p>
+
+<ul>
+  <li>name</li>
+  <li>color</li>
+</ul>
+
+<p>We can model these attributes in code by using <em>instance variables</em>. Generally we define these instance variables in a special method called <code class="highlighter-rouge">initialize</code> that is run every time a new instance of a class is created. Make sure to spell it correctly😬.</p>
+
+<h3 id="initialize">Initialize</h3>
+
+<p>When we run <code class="highlighter-rouge">Unicorn.new</code> in Ruby, what actually happens? We can see from the last example that different Unicorn objects (or instances) are created. Other than that, nothing happens. If we want some specific code to run when we first create a new Unicorn, we need to tell Ruby what should happen when a new Unicorn instance (or object) is created. We do this with the initialize method.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="c1">#any code here will run each time a new instance is created</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="o">...</span>
+</code></pre></div></div>
+
+<p>This method is run once and only once during an Object’s lifetime, when we call <code class="highlighter-rouge">new</code>. Other than that, initialize is like any other method where we can put Ruby code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="nb">puts</span> <span class="s2">"A new Unicorn object has been created"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="o">...</span>
+</code></pre></div></div>
+
+<h3 id="modeling-state-with-attributes">Modeling State with Attributes</h3>
+
+<p>The instances of the classes we’ve defined so far are basically useless. Aside from their <code class="highlighter-rouge">object_id</code>, there is nothing unique about these instances.</p>
+
+<p>Remember, a class models <em>State</em> and <em>Behavior</em>. Let’s give our unicorn some state.</p>
+
+<h3 id="example---attributes">Example - Attributes</h3>
+
+<p>Let’s add some attributes to the <code class="highlighter-rouge">Unicorn</code> class. The <code class="highlighter-rouge">@</code> symbol before a variable name indicates that it is an <em>Attribute</em> or <em>Instance Variable</em>. These two terms mean the exact same thing.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">name_parameter</span><span class="p">,</span> <span class="n">color_parameter</span><span class="p">)</span>
+    <span class="vi">@name</span>       <span class="o">=</span> <span class="n">name_parameter</span>
+    <span class="vi">@color</span>      <span class="o">=</span> <span class="n">color_parameter</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Because attributes are something we want to persist throughout an object’s lifetime, we typically define them inside the initialize method because we want them to exist as soon as the object is created.</p>
+
+<p>We have now created a method class that will allow us to create many different instances of Unicorn, each one slightly different from the last. How do we do that in practice? Let’s update the runner file so that it includes the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">unicorn_1</span>  <span class="o">=</span> <span class="no">Unicorn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Sparkle"</span><span class="p">,</span> <span class="s2">"rainbow"</span><span class="p">)</span>
+
+<span class="n">unicorn_2</span>   <span class="o">=</span> <span class="no">Unicorn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"white"</span><span class="p">)</span>
+
+<span class="nb">require</span> <span class="s1">'pry'</span><span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>When we include the arguments to <code class="highlighter-rouge">.new</code>, Ruby will pass those arguments to the initialize method for us. Note that the arguments that we pass to <code class="highlighter-rouge">new</code> are order dependent. So, in the first example when we pass <code class="highlighter-rouge">"Sparkle"</code> as the first argument, we are saying that the name of the Unicorn we are creating is Sparkle. When we pass an empty string (<code class="highlighter-rouge">""</code>) the second time we call <code class="highlighter-rouge">new</code> we are saying that the Unicorn that we created doesn’t have a name.</p>
+
+<p>What we have just done is a very common pattern. We gave our initialize method some arguments and we saved those arguments to instance variables. While this is a strong pattern, it is not a rule. For instance, you may want to set a variable in your initialize that has a default value that isn’t set using an argument:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+    <span class="vi">@name</span>            <span class="o">=</span> <span class="n">brand</span>
+    <span class="vi">@color</span>           <span class="o">=</span> <span class="n">color</span>
+    <span class="vi">@magical_powers</span>  <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="partner-practice">Partner Practice</h3>
+
+<p>With your pair, create an <code class="highlighter-rouge">objects_classes_and_instances</code> directory, then touch a <code class="highlighter-rouge">person.rb</code> file and a <code class="highlighter-rouge">runner.rb</code> file. Define a Person class in it and create instances of that class in your runner file.</p>
+
+<p>Now, give your Person class some attributes that are set using arguments to initialize and some attributes that have default values. Make some instances of your Person class, and run you runner file.</p>
+
+<h2 id="accessing-attributes">Accessing Attributes</h2>
+
+<p>That’s all well and good, but what can we do with all these attributes that we’ve created? They’re no good to us if we can’t use them.</p>
+
+<p>Generally, the way that we access information stored in a class is by <em>sending it messages</em> or <em>calling methods</em> on that class. We do that using <code class="highlighter-rouge">.</code> syntax.</p>
+
+<p>Let’s run our runner file again and check to see what this returns:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">unicorn_1</span><span class="p">.</span><span class="nf">name</span>
+</code></pre></div></div>
+
+<p>We should get an error that says something about the method <code class="highlighter-rouge">.name</code> not existing (a <code class="highlighter-rouge">no method</code> error). The syntax here is correct, but we haven’t told our <code class="highlighter-rouge">Unicorn</code> class how to respond when it receives the message <code class="highlighter-rouge">name</code>.</p>
+
+<p>We can do that with methods like the ones we’ve seen before, but attributes stored as instance variables are special. We can tell our class to provide access to them using attribute readers. Let’s do that now.</p>
+
+<h3 id="example---accessing-attributes">Example - Accessing Attributes</h3>
+
+<p>Let’s update our Unicorn class to include the lines below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+    <span class="vi">@name</span>            <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@color</span>           <span class="o">=</span> <span class="n">color</span>
+    <span class="vi">@magical_powers</span>  <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">name</span>
+    <span class="vi">@name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">color</span>
+    <span class="vi">@color</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">magical_powers</span>
+    <span class="vi">@magical_powers</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s run our runner file again and see if you can now call <code class="highlighter-rouge">unicorn_1.name</code>.</p>
+
+<p>Now, I should be able to call <code class="highlighter-rouge">unicorn_1.name</code> and get back whatever was stored in the instance variable. But wow, this class is suddenly lengthy, harder to read, and has a lot of similar work happening. A method called <code class="highlighter-rouge">name</code> returns <code class="highlighter-rouge">@name</code>, <code class="highlighter-rouge">color</code> returns <code class="highlighter-rouge">@color</code>, etc. There’s a cleaner way to do the same thing:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span>
+              <span class="ss">:color</span><span class="p">,</span>
+              <span class="ss">:magical_powers</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+    <span class="vi">@name</span>              <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@color</span>             <span class="o">=</span> <span class="n">color</span>
+    <span class="vi">@magical_powers</span>    <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s run our runner file again and see if you can still call <code class="highlighter-rouge">unicorn_1.brand</code> and the other attributes.</p>
+
+<p>An important thing to remember is that although there is a special syntax for creating <code class="highlighter-rouge">attr_reader</code>s, they are still just methods. Remember the error we got earlier was a <strong>no method error</strong> for <code class="highlighter-rouge">name</code>.</p>
+
+<h3 id="partner-practice-1">Partner Practice</h3>
+
+<ul>
+  <li>With your pair, create <code class="highlighter-rouge">attr_reader</code>s for the attributes in your <code class="highlighter-rouge">Person</code> class.</li>
+  <li>Practice explaining to your partner what is happening <em>under the hood</em> with the <code class="highlighter-rouge">attr_reader</code>s</li>
+</ul>
+
+<h2 id="other-methods">Other Methods</h2>
+
+<p>We can also create other methods that will allow us to send other messages to our Unicorn class. For example, let’s say we wanted to add a magical power to our unicorn. We currently have a way to see what magical powers our unicorn has, but we don’t have any way to <em>add</em> to it. Let’s do that by creating a method called <code class="highlighter-rouge">add_power</code> that will add a power to the <code class="highlighter-rouge">magical_powers</code> array.</p>
+
+<p>Define an <code class="highlighter-rouge">add_power</code> method that allows you to give your unicorn another magical power. Note that we can access the <code class="highlighter-rouge">@magical_powers</code> instance variable from anywhere within the class just by using the <code class="highlighter-rouge">@</code> symbol.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Unicorn</span>
+<span class="c1"># ... attr_readers &amp; initialize method</span>
+
+  <span class="k">def</span> <span class="nf">add_power</span><span class="p">(</span><span class="n">power</span><span class="p">)</span>
+    <span class="vi">@magical_powers</span> <span class="o">&lt;&lt;</span> <span class="n">power</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s update our runner file so that you:</p>
+
+<ol>
+  <li>Create a new instance of Unicorn.</li>
+  <li>Print the magical powers of that Unicorn.</li>
+  <li>Add a power for that Unicorn, using the method you just created. You can represent a power as a String.</li>
+  <li>Print the new powers of the Unicorn.</li>
+</ol>
+
+<h3 id="partner-practice-2">Partner Practice</h3>
+
+<ul>
+  <li>With your pair, create a <code class="highlighter-rouge">have_birthday</code> method for your Person class. This should increase the age of that person by 1.</li>
+  <li>Update your runner file in a similar fashion to steps 1-4 for your Person class.</li>
+</ul>
+
+<h2 id="object-interaction">Object Interaction</h2>
+
+<p>When we build more complex programs, we typically have many classes, and the instances of those classes <code class="highlighter-rouge">interact</code> in some way.</p>
+
+<h3 id="example---object-interaction">Example - Object Interaction</h3>
+
+<p>Instead of representing power as a String, let’s create a Power class to represent a power.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Power</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span>
+              <span class="ss">:energy_required</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">energy_required</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@energy_required</span> <span class="o">=</span> <span class="n">energy_required</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s update our runner file to add Power objects to your unicorn.</p>
+
+<h2 id="solo-practice">Solo Practice</h2>
+
+<h3 id="create-a-book-class">Create a Book Class</h3>
+
+<p>Create a book class. Make sure that your book class with <code class="highlighter-rouge">title</code>, <code class="highlighter-rouge">author</code>, and <code class="highlighter-rouge">genre</code> attributes.</p>
+
+<p>Once you’ve created your class, create a runner file that creates three separate instances of book and saves them to variables.</p>
+
+<p><strong>Check in</strong> with your partner that you’re in a similar place. Discuss an differences you have in your code.</p>
+
+<h3 id="create-a-library-class">Create a Library Class</h3>
+
+<p>Create a Library class. Add attributes as you wish, but the be sure to include a <code class="highlighter-rouge">@collection</code> instance variable that starts as an empty array.</p>
+
+<p><strong>Check in</strong> with your partner that you’re in a similar place. Discuss an differences you have in your code.</p>
+
+<p>If you have time:</p>
+
+<ul>
+  <li>Add a <code class="highlighter-rouge">add_book</code> method that takes an instance of book and adds it to your collection.</li>
+  <li>Add a <code class="highlighter-rouge">titles</code> method that iterates over your collection of books and returns only their titles.</li>
+  <li>Add an <code class="highlighter-rouge">authors</code> method that iterates over your collection of books and returns the authors for each book. Can you make it so that it does not return any duplicate authors?</li>
+  <li>Pretty print: add a method that prints a table of books and authors that the library has. This will require some string manipulation to get a table to print with columns that line up.</li>
+</ul>
+
+<p>Update your runner file to create a new library, add some books to the library, and print information about their collections.</p>
+
+<h3 id="check-for-understanding">Check for Understanding</h3>
+
+<p>On your own, answer the questions below.</p>
+
+<ul>
+  <li>Classes, instances, objects
+    <ul>
+      <li>What is a Class?</li>
+      <li>What is an Instance?</li>
+      <li>What is an Object?</li>
+      <li>How are these three things alike/different?</li>
+      <li>What code do you have to write to create a Class? What code do you have to write to create an instance?</li>
+      <li>What happens when a new instance is created?</li>
+    </ul>
+  </li>
+  <li>Attributes &amp; Methods
+    <ul>
+      <li>What is an attribute? How can we recognize an attribute?</li>
+      <li>What is a method? How do we write methods?</li>
+      <li>What are parameters? How do we add parameters to methods?</li>
+      <li>What is a return value? How do you know what the return value of a method is? Do all methods have return values?</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If you are struggling a bit to answer any of these, take some time after this lesson to google or talk with a classmate. If you feel absolutely lost in these, set up a time to pair with a Mod2 student/mentor/instructor.</p>
+:ET

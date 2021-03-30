@@ -1,0 +1,253 @@
+I"�]<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students remember AJAX</li>
+  <li>Students can comfortably write integration tests using outside resources</li>
+  <li>Students can incorporate integration tests into a webpack based environment</li>
+</ul>
+
+<h2 id="libraries-covered">Libraries Covered</h2>
+
+<ul>
+  <li><a href="https://mochajs.org/">Mocha</a> - A test runner</li>
+  <li><a href="http://chaijs.com/">Chai</a> - An assertion library</li>
+  <li><a href="https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebDriver.html">Selenium</a> - Browser automation and inspection</li>
+  <li><a href="https://webpack.github.io/">Webpack</a> - Build tool for asset management</li>
+</ul>
+
+<h2 id="ajax-refresher">AJAX Refresher</h2>
+
+<p>AJAX == Asynchronous JavaScript and XML. This should probably be renamed to AJAJ (Async JS and JSON), though.</p>
+
+<p>Essentially, AJAX allows us to <em>asynchronously</em> interact with most anything, but predominantly other servers (think APIs). The asynchronous bit here means that we could make a request and not need to wait for its response before moving on to execute other lines of code. The request will come back and be handled when it’s ready without needing to halt our program waiting for it.</p>
+
+<p>We’ll learn more about asynchronicity in JavaScript later in the module, but for now, let’s think of AJAX as the tool that will allow us to make client-side requests to an API.</p>
+
+<p><a href="https://api.jquery.com/category/ajax/">jQuery AJAX</a> requests come in all shapes and sizes, but for reference, here’s a common structure:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// make a GET request</span>
+  <span class="c1">// returning immediately since this AJAX call</span>
+  <span class="c1">// with chained handling is technically all one line</span>
+  <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://localhost:3000/api/v1/posts</span><span class="dl">"</span>
+  <span class="p">})</span>
+  <span class="c1">// JS Promise is returned, if successful, handled by `.then`</span>
+  <span class="c1">// JSON response is passed to anonymous function, here named `posts`</span>
+  <span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">posts</span><span class="p">){</span>
+    <span class="c1">// we're within this block if things went well,</span>
+    <span class="c1">// so do something with the data!</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">){</span>
+    <span class="c1">// only here if there was an error,</span>
+    <span class="c1">// so handle error if there is one</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Here’s a very similar structure, using a bit of syntactic sugar:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="dl">"</span><span class="s2">http://localhost:3000/api/v1/posts</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">posts</span><span class="p">){</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="turn-and-talk">Turn and Talk</h3>
+
+<ul>
+  <li>What are some use cases for AJAX? Name some cards from your current project that will require an AJAX request to complete.</li>
+  <li>What information do you need before you can make an AJAX request?</li>
+  <li>How do you access the response from the request?</li>
+</ul>
+
+<h2 id="selenium-setup">Selenium Setup</h2>
+
+<p>What about when we want to test user interactions with the application. We’re going to bring in a new tool called <a href="https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/lib/webdriver_exports_WebDriver.html">Selenium</a>.</p>
+
+<p>Selenium solves a similar problem to Capybara. It allows you to visit pages, interact with them, and inspect the page in order to assert things against your application.</p>
+
+<p>Capybara has its own built in assertions with <code class="highlighter-rouge">expect</code>, but we’ll continue to use Chai for our assertions. Instead, we extract values from the page with Selenium, and then write assertions against those</p>
+
+<p>I’ve added the packages you need to your package.json file already (chromedriver, webdriverjs and selenium-webdriver), but Selenium runs on java, and you may need to install the JDK. If <code class="highlighter-rouge">javac -version</code> in your terminal succeeds, you’re good to go. If it fails, <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">download the JDK here</a>.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>We’ll be working with a front-end repository. This will be our client that will communicate with an API via AJAX. For this lesson, we’ll be using <a href="https://jsonplaceholder.typicode.com/">JSONPlaceholder</a> as our API, serving us dummy data. For our projects, this back-end would be a separate repository running its own server.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git@github.com:turingschool-examples/ajax-testing-fe.git
+cd ajax-testing-fe
+npm install
+npm start
+npm test
+</code></pre></div></div>
+
+<h2 id="lets-integrate">Let’s Integrate</h2>
+
+<p>We have one passing test already.</p>
+
+<p>Let’s walk through that test and break down the pieces.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">assert</span>    <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">chai</span><span class="dl">'</span><span class="p">).</span><span class="nx">assert</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">webdriver</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">selenium-webdriver</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">until</span> <span class="o">=</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">until</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">test</span>      <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">selenium-webdriver/testing</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">frontEndLocation</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">http://localhost:8080</span><span class="dl">"</span>
+
+<span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">testing my simple blog</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">driver</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">timeout</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+
+  <span class="nx">test</span><span class="p">.</span><span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">driver</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">Builder</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">forBrowser</span><span class="p">(</span><span class="dl">'</span><span class="s1">chrome</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">build</span><span class="p">();</span>
+  <span class="p">})</span>
+
+  <span class="nx">test</span><span class="p">.</span><span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">driver</span><span class="p">.</span><span class="nx">quit</span><span class="p">();</span>
+  <span class="p">})</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Let’s start with our <code class="highlighter-rouge">require</code>s</p>
+
+<ul>
+  <li><code class="highlighter-rouge">webdriver</code> is really where the magic happens. We’re going to be calling a lot from this object.</li>
+  <li><code class="highlighter-rouge">test</code> kind of replaces Mocha for us. We use selenium’s <code class="highlighter-rouge">test</code> object because it handles asynchronous code better, but it’s still technically running within Mocha.</li>
+  <li>I’ve saved the url of my front end so I can easily use it throughout the tests, and change it in the future.</li>
+</ul>
+
+<p>Moving on:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ...</span>
+<span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">testing my simple blog</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">driver</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">timeout</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="c1">// ...</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Since we’re using Selenium’s test runner, we have to preface our <code class="highlighter-rouge">describe()</code> and <code class="highlighter-rouge">it()</code> with <code class="highlighter-rouge">test</code>.</li>
+  <li>We’re setting up a variable <code class="highlighter-rouge">driver</code> for the whole block. This is the thing that actually interacts with the browser.</li>
+  <li>I’ve set host as a variable so I can easily change it when the environment changes</li>
+  <li>The default timeout is 2000 milliseconds, which we’ll run out of quickly with all the browsing we’re going to be doing.</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">test</span><span class="p">.</span><span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">driver</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">Builder</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">forBrowser</span><span class="p">(</span><span class="dl">'</span><span class="s1">chrome</span><span class="dl">'</span><span class="p">)</span>
+    <span class="nx">build</span><span class="p">();</span>
+  <span class="p">});</span>
+  <span class="nx">test</span><span class="p">.</span><span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">driver</span><span class="p">.</span><span class="nx">quit</span><span class="p">();</span>
+  <span class="p">});</span>
+</code></pre></div></div>
+
+<p>Here we’re starting Chrome before each test, and quitting it after each test. I’ve found this yeilds the most consistent test results.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">test</span><span class="p">.</span><span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">lists all the entries on load</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">driver</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">frontEndLocation</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+    <span class="nx">driver</span><span class="p">.</span><span class="nx">wait</span><span class="p">(</span><span class="nx">until</span><span class="p">.</span><span class="nx">elementLocated</span><span class="p">({</span><span class="na">css</span><span class="p">:</span> <span class="dl">"</span><span class="s2">#entries .entry</span><span class="dl">"</span><span class="p">}))</span>
+    <span class="nx">driver</span><span class="p">.</span><span class="nx">findElements</span><span class="p">({</span><span class="na">css</span><span class="p">:</span> <span class="dl">"</span><span class="s2">#entries .entry</span><span class="dl">"</span><span class="p">})</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">entries</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">lengthOf</span><span class="p">(</span><span class="nx">entries</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+    <span class="p">})</span>
+  <span class="p">})</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="drivergeturl">driver.get(url)</h4>
+
+<p>This just visits a page in Selenium.</p>
+
+<h4 id="driverwaituntil">driver.wait(until…)</h4>
+
+<p>We’re frequently going to be looking for things that don’t exist at page load, because they have to be loaded via AJAX. These wait commands tell the test to wait until they can find some element on the page. You want to give it something that would only exist after the AJAX has loaded.</p>
+
+<h4 id="driverfindelements">driver.findElements()</h4>
+
+<p>My preference is to use CSS selectors to select elements.  <code class="highlighter-rouge">driver.findElement({css: '#id-name'})</code>.
+You may also select an element by id: <code class="highlighter-rouge">driver.findElement({id: 'id-name'})</code></p>
+
+<p>Because of some decisions made by the Selenium team, almost everything is a promise. This means instead of returning values, these functions return promises, and the only way to get the values is to call <code class="highlighter-rouge">then()</code> on them, and name the variable for the value in the anonymous function parameters. But once you get the pattern, it’s pretty straight forward.</p>
+
+<p>There is also a <code class="highlighter-rouge">findElement()</code> if you only expect there to be one, and don’t want to mess with an array.</p>
+
+<h4 id="checks-for-understanding">Checks for Understanding</h4>
+
+<p>We have more practice to do, but let’s check in on where you’re at.</p>
+
+<ul>
+  <li>How is Selenium like tools you’ve used in the past? What’s different and new?</li>
+</ul>
+
+<h3 id="a-post-test">A POST test</h3>
+
+<p>Great! We’ve broken down an existing test for an existing feature. Let’s see if we can test drive another feature. We want to be able to create a new <code class="highlighter-rouge">Entry</code> in our blog. The HTML form already exists, but it isn’t wired up.</p>
+
+<p>Before we write our tests, let’s go over a few more methods of the <code class="highlighter-rouge">driver</code> object:</p>
+
+<h4 id="click">click()</h4>
+
+<p>Called as a method off of <code class="highlighter-rouge">findElement()</code>. After selecting an element you can then call <code class="highlighter-rouge">click()</code> on that element</p>
+
+<h4 id="sendkeysstring">sendKeys(string)</h4>
+
+<p>Called as a method of <code class="highlighter-rouge">findElement()</code>. After selecting an element, usually one with an <code class="highlighter-rouge">&lt;input&gt;</code> tag, you can then call <code class="highlighter-rouge">sendKeys(string)</code> to fill in the input field.</p>
+
+<h4 id="gettext-and-getattribute">getText() and getAttribute()</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">driver</span><span class="p">.</span><span class="nx">findElement</span><span class="p">({</span><span class="na">id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">ideaname</span><span class="dl">'</span><span class="p">}).</span><span class="nx">getText</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">textValue</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">textValue</span><span class="p">,</span> <span class="dl">"</span><span class="s2">a new title</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>These are just a few of the functions you can use, but at least enough for us to write our next test. There are a lot more <a href="https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html">in the docs</a>. The docs seem intimidating at first, but stick with them. They’re consistent and have little snippets throughout.</p>
+
+<p>Alright, we’re ready to write our test.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">test</span><span class="p">.</span><span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">posts an entry</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">frontEndLocation</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="nx">wait</span><span class="p">(</span><span class="nx">until</span><span class="p">.</span><span class="nx">elementLocated</span><span class="p">({</span><span class="na">css</span><span class="p">:</span> <span class="dl">"</span><span class="s2">#entries .entry</span><span class="dl">"</span><span class="p">}));</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="nx">findElement</span><span class="p">({</span><span class="na">id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">author-field</span><span class="dl">'</span><span class="p">}).</span><span class="nx">sendKeys</span><span class="p">(</span><span class="dl">"</span><span class="s2">Lauren</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="nx">findElement</span><span class="p">({</span><span class="na">id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">body-field</span><span class="dl">'</span><span class="p">}).</span><span class="nx">sendKeys</span><span class="p">(</span><span class="dl">"</span><span class="s2">A new entry</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="nx">findElement</span><span class="p">({</span><span class="na">css</span><span class="p">:</span> <span class="dl">'</span><span class="s1">input[type="submit"]</span><span class="dl">'</span><span class="p">}).</span><span class="nx">click</span><span class="p">();</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="nx">wait</span><span class="p">(</span><span class="nx">until</span><span class="p">.</span><span class="nx">elementLocated</span><span class="p">({</span><span class="na">css</span><span class="p">:</span> <span class="dl">"</span><span class="s2">div[data-id='101']</span><span class="dl">"</span><span class="p">}));</span>
+  <span class="nx">driver</span><span class="p">.</span><span class="nx">findElements</span><span class="p">({</span><span class="na">css</span><span class="p">:</span> <span class="dl">"</span><span class="s2">#entries .entry</span><span class="dl">"</span><span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">entries</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">lengthOf</span><span class="p">(</span><span class="nx">entries</span><span class="p">,</span> <span class="mi">101</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="checks-for-understanding-1">Checks for Understanding</h3>
+
+<ul>
+  <li>What are some similarities and differences between this library and integration tests you’ve written in the past?</li>
+  <li>What kind of challenges do you think you’ll have when writing integration tests in JavaScript? What resources will you use to overcome those challenges?</li>
+</ul>
+
+<h2 id="your-turn">Your Turn</h2>
+
+<p>Using your new found Selenium knowledge, and your refreshed AJAX knowledge, write a test for, and then implement, the following feature:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a user, when I click "Delete" under a entry, that entry is removed from the app without a refresh. When I refresh, the entry will not reappear.
+</code></pre></div></div>
+
+<h2 id="wrap-up">Wrap Up</h2>
+
+<h3 id="notes-for-working-with-selenium">Notes for Working with Selenium</h3>
+
+<ul>
+  <li>Don’t forget to run your front-end server in another terminal session before you run your tests.</li>
+  <li>When googling, make don’t google “selenium” or even “selenium javascript”. You’ll just get stuff in other languages. Put “webdriverjs” in your search query.</li>
+  <li>You might be missing something like a Database Cleaner. Since the back-end API is your datasource, and your tests don’t have direct access to the database, you will want to make requests to the API to set up and teardown your data.</li>
+</ul>
+:ET

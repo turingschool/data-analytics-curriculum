@@ -1,0 +1,81 @@
+I"z<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Student has reviewed recommended practices and exemplars of strong READMEs</li>
+  <li>Student is able to describe a template for a strong README</li>
+  <li>Student has implemented the template by writing thier own README</li>
+</ul>
+
+<p>Mastery Expectation: HIGH. By the end of this lesson, students should feel completely confident in the skills listed here.</p>
+
+<h2 id="why">Why</h2>
+
+<p>We publish open source because we want people to use it, we want people to be impressed by it, or both. The first thing they’re going to do is check out the README. It’s our chance to make a first impression – done wrong it’ll be the only impression.</p>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>When you’re using other tools for the first time, what’s been frustrating?</li>
+  <li>What documentation have you seen that impressed you? Frustrated you?</li>
+  <li>What makes a good pull request?</li>
+</ul>
+
+<h2 id="structural-plan">Structural Plan</h2>
+
+<ul>
+  <li>Research (5 min) &amp; Collaborate (5 min)</li>
+  <li>Group Share (12 min)</li>
+  <li>Practice (15 min)</li>
+  <li>Closing (3 min)</li>
+</ul>
+
+<h2 id="research-16-min">Research (16 min)</h2>
+
+<p>Today we’ll use a jigsaw technique to explore the topic of READMEs.</p>
+
+<ul>
+  <li>Break into five groups of three</li>
+  <li>Each group will explore one resource</li>
+  <li>Read/explore <strong>on your own for 5 minutes</strong> using the guiding questions below</li>
+  <li>Discuss your findings <strong>with your group for another 5 minutes</strong></li>
+  <li>Draw a set of key observations to share with the whole class</li>
+</ul>
+
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li>Group 1: <a href="https://robots.thoughtbot.com/how-to-write-a-great-readme">thoughtbot’s Blog</a></li>
+  <li>Group 2: <a href="https://dbader.org/blog/write-a-great-readme-for-your-github-project">Dan Bader How to Write a Great Readme for Your GitHub Project</a> <em>note: you may have to click x on the ad to get to the page</em></li>
+  <li>Group 3: <a href="https://www.giacomodebidda.com/how-to-write-a-killer-readme/">Giacomo Debidda How to Write a Killer Readme</a></li>
+  <li>Group 4: <a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">TPW’s README-Driven-Development</a></li>
+  <li>Group 5: <a href="https://ponyfoo.com/articles/readme-driven-development">Ponyfoo on README-Driven-Development</a></li>
+  <li>Group 6: <a href="https://thejunkland.com/blog/how-to-write-good-readme.html">Jesse Luoto’s Blog</a></li>
+</ul>
+
+<p><a href="https://gist.github.com/PurpleBooth/109311bb0361f32d87a2">Purple Booth Readme Template</a></p>
+
+<h3 id="guiding-questions">Guiding Questions</h3>
+
+<ul>
+  <li>If you had to distill the reading down to five key points, what would they be?</li>
+  <li>Is there anything that stands out as surprising?</li>
+  <li>How are the recommendations similar/different from traditional writing (like essays, books, etc)?</li>
+  <li>Anything you disagree with or seems not worth the effort?</li>
+</ul>
+
+<p>If you or your group finish early, browse <a href="https://github.com/matiassingers/awesome-readme">these “awesome” READMEs and see if they comply with the recommendations you found</a>.</p>
+
+<h2 id="group-share-12-min">Group Share (12 min)</h2>
+
+<p>Let’s bring our findings together through group discussion and post findings on the white board.</p>
+
+<h2 id="practice-15-min">Practice (15 min)</h2>
+
+<p>It’s time to put it into practice. Get together with your group for Little Shop. Draft an amazing README, even if it includes features/descriptions you haven’t yet built, but will have when the project is delivered.</p>
+
+<h2 id="closing-3-min">Closing (3 min)</h2>
+
+<ul>
+  <li>What key points are you going to keep in mind when writing a solid README?</li>
+  <li>After today’s class, do you think you’ll go back and update README’s for your previous projects?</li>
+</ul>
+:ET

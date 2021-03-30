@@ -1,0 +1,53 @@
+I"z	<h1 id="refactoring-pattern-1-move-method">Refactoring Pattern 1: Move Method</h1>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Explain Move Method and how it promotes abstraction and single responsibility principle</li>
+  <li>Identify scenarios for which Move Method is the appropriate refactoring pattern to use</li>
+  <li>Implement Move Method</li>
+</ul>
+
+<h2 id="supplies">Supplies</h2>
+
+<ul>
+  <li>You should have a copy of
+<a href="https://drive.google.com/file/d/0B4C6lfVKu-E7ZlFDTnhyTklXdm8/view?usp=sharing">this extraction of Chapter 7</a>.</li>
+</ul>
+
+<h2 id="first-12-minutes-individually">First 12 minutes individually:</h2>
+
+<ul>
+  <li>Briefly read Move Method section from 167 to 172</li>
+  <li><em>Carefully</em> re-read the code sections on 170, 171, and 172</li>
+  <li>Reflect on these <strong>key ideas</strong> of Move Method:
+    <ul>
+      <li>Move Method is useful when you have two objects (e.g. Class A &amp; Class B) that are too tightly coupled
+        <ul>
+          <li>One indication you should use it is when you have several methods in Class A that have the name of Class B</li>
+          <li>You move the method from Class A to Class B and update any references</li>
+        </ul>
+      </li>
+      <li>Remember to consider the context of Class B when choosing a name for the moved method</li>
+    </ul>
+  </li>
+  <li>Try refactoring <a href="https://github.com/turingschool-examples/refactoring_patterns/blob/master/test/station_1_move_method_test.rb">this</a> example scenario (you should already have this cloned) using Move Method. As you move methods around, make sure the linked test still passes</li>
+  <li>If you finish early, apply this refactoring pattern to the Enigma examples found under <code class="highlighter-rouge">Additional Resources</code> in the main lesson for today</li>
+  <li>If you still have more time, apply this refactoring pattern to your current project</li>
+</ul>
+
+<h2 id="final-3-minutes-in-your-small-group">Final 3 minutes in your small group:</h2>
+
+<ul>
+  <li>Answer the following questions:
+    <ul>
+      <li>Why would you move a method from one class to another?</li>
+      <li>How can you identify methods that should be moved?</li>
+      <li>How can you implement red, green, refactor to successfully move the method?</li>
+      <li>Should you rename the moved method? If so, how?</li>
+    </ul>
+  </li>
+  <li>Compare solutions</li>
+</ul>
+
+:ET

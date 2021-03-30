@@ -1,0 +1,85 @@
+I"�<h3 id="getting-started">Getting started</h3>
+
+<p>First, we’ll need a Rails project with simple CRUD functionality. If you don’t have something on your local machine you can set up this simple project…</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git clone git@github.com:turingschool-examples/little_shop_1906.git
+$ cd little_shop_1906
+$ bundle
+$ rake db:{create,migrate}
+$ rails s
+</code></pre></div></div>
+
+<h3 id="mom-how-do-forms-work">Mom, how do forms work?</h3>
+
+<p>Navigate to <code class="highlighter-rouge">localhost:3000/merchants/new</code> and create a new merchant record using the form.</p>
+
+<p>You’ve done this countless number of times but do you know what’s really happening?</p>
+
+<h4 id="exercise---how-you-think-they-work-in-pairs---5-min">Exercise - How You Think They Work (In Pairs - 5 min)</h4>
+
+<p>Sketch out a diagram of what happens when we submit this form. (Be ready to share out)</p>
+
+<h4 id="whole-group">Whole Group</h4>
+
+<p>What did you all come up with?</p>
+
+<h4 id="exercise---how-they-really-work-postman-edition-in-pairs---30-min">Exercise - How They Really Work Postman Edition (In Pairs - 30 min)</h4>
+
+<p>Time to test your understanding… Make the same call using Postman.</p>
+
+<p><em>Heads-up:</em> At some point you will see an <code class="highlighter-rouge">ActionController::InvalidAuthenticityToken</code> error. You aren’t doing anything wrong but you will need to alter your Rails app to get this to work. Google your way to victory.</p>
+
+<p><em>Be ready to answer:</em> How did you resolve the error above? How does this impact the app’s security? Would you use this same technique on a production code base? Explain.</p>
+
+<h4 id="whole-group-1">Whole Group</h4>
+
+<p>Was there anything that differed from your diagram in the beginning?</p>
+
+<h4 id="exercise---how-they-really-work-faraday-edition-in-pairs---30-min">Exercise - How They Really Work Faraday Edition (In Pairs - 30 min)</h4>
+
+<ul>
+  <li>Install the <a href="https://github.com/lostisland/faraday">Faraday gem</a></li>
+  <li>Create a ruby file and require the Faraday library along with your debugger of choice.</li>
+  <li>In this newly created Ruby file, make the same HTTP request as the two previous challenges.</li>
+</ul>
+
+<h4 id="whole-group-2">Whole Group</h4>
+
+<p>What is challenging about working with Faraday?</p>
+
+<h3 id="when-to-teach-your-kids-about-api-consumption">When to Teach Your Kids About API Consumption</h3>
+
+<p>You now have experience building an API using Rails. In our next class we will be consuming an API in the context of Rails project. These next few exercises will prepare you for the most difficult concepts we cover in Mod 3. Struggle is more important than completion.</p>
+
+<p>The user story we will be working on during our next class is as follows:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a user
+When I visit "/"
+And I select "Colorado" from the dropdown
+And I click on "Locate Members of the House"
+Then my path should be "/search" with "state=CO" in the parameters
+And I should see a message "7 Results"
+And I should see a list of 7 the members of the house for Colorado
+And they should be ordered by seniority from most to least
+And I should see a name, role, party, and district for each member
+</code></pre></div></div>
+
+<p>This user story requires us to use the Propublica API to determine the members of the house for a given state. The <a href="https://projects.propublica.org/api-docs/congress-api/members/#lists-of-members">Lists of Members</a> documentation tells us how to retrieve this data.</p>
+
+<h4 id="exercise---make-an-api-call-using-postman-in-pairs">Exercise - Make an API Call Using Postman (In Pairs)</h4>
+
+<p><em>Instructor Note: Send out API keys.</em></p>
+
+<ul>
+  <li>Step 1: Draw two circles.</li>
+  <li>Step 2: Make the API call using Postman.</li>
+</ul>
+
+<h4 id="exercise---make-the-same-api-call-using-faraday-in-pairs">Exercise - Make the Same API Call Using Faraday (In Pairs)</h4>
+
+<p>Do this in a similar way as the previous Faraday challenge where you write your code in a simple Ruby file.</p>
+
+<h4 id="whole-group-20-min">Whole Group (20 min)</h4>
+
+<p>Q&amp;A</p>
+:ET

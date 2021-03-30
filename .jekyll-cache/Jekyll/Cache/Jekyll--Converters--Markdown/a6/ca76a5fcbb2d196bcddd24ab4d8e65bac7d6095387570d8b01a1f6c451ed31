@@ -1,0 +1,77 @@
+I" <h3 id="practice-makes-perfect"><em>Practice makes perfect.</em></h3>
+
+<p>Learning to program is a long journey. Additionally, no amount of instruction can truly teach you how to program. At the end of the day it’s up to us to put in the time and the practice required to internalize the lessons we’re being taught.</p>
+
+<p>With that in mind, our focus for this first week will be on practice and repetition. This collection of exercises is designed to give you guided practice and practical exposure to the concepts being discussed in our introductory lessons.</p>
+
+<h3 id="assignments--read-carefully">Assignments – Read Carefully</h3>
+
+<h4 id="from-the-ruby-exercises-repository">From the Ruby Exercises repository</h4>
+
+<p>The <strong><a href="https://github.com/turingschool/ruby-exercises">Ruby Exercises</a></strong> repository is a GitHub repo where Turing stores a collection of exercises designed to give students guided practice with fundamental concepts.</p>
+
+<p><strong>First</strong>, follow the instructions in the repository’s <a href="https://github.com/turingschool/ruby-exercises/blob/master/README.md">README</a> to get it set up on your machine.</p>
+
+<p><strong>Then</strong>, work through these exercises from the repo:</p>
+
+<ul>
+  <li>Core Types</li>
+  <li>Command/Query</li>
+  <li>Mythical Creatures</li>
+</ul>
+
+<p><strong>Optional:</strong></p>
+
+<ul>
+  <li>Objects and Methods</li>
+  <li>Comparisons</li>
+  <li>Mutation</li>
+</ul>
+
+<h4 id="from-the-challenges-repository">From the Challenges repository</h4>
+
+<p>The <strong><a href="https://github.com/turingschool/challenges">Challenges</a></strong> repository contains a large collection of programming exercises of varying degrees of complexity. During the week, you need to complete these exercises from that repository:</p>
+
+<ul>
+  <li><a href="https://github.com/turingschool/challenges/blob/master/deaf_grandma.markdown">Deaf Grandma</a></li>
+  <li><a href="https://github.com/turingschool/challenges/blob/master/bob.markdown">Bob</a></li>
+  <li><a href="https://github.com/turingschool/challenges/blob/master/collections.markdown">Collections</a></li>
+</ul>
+
+<h3 id="more-info">More Info</h3>
+
+<h4 id="exercise-types">Exercise Types</h4>
+
+<p>As you work through your <strong>Drills</strong> you’ll encounter 2 types of exercises:</p>
+
+<ol>
+  <li>Free-form assignments (Collections, Deaf Grandma, Bob) – These give you a problem and require you to fill in everything on your own. They require more design and planning on your part but the concepts being addressed will be more straightforward.</li>
+  <li>Guided “Test-Driven” Exercises (Core Types, Command/Query, Mythical Creatures) – These provide more of a “fill in the blank” experience, using automated (i.e. code) tests to verify your solutions and lead you toward the answers. They provide more structure but the concepts addressed will be more subtle. Each exercise may require deeper thought to fully grasp the point it is trying to show you.</li>
+</ol>
+
+<h4 id="setup">Setup</h4>
+
+<p>For the <strong>Challenges</strong> exercises, use whatever organization system you prefer to keep track of your ruby files.</p>
+
+<p>For the <strong>Ruby Exercises</strong>, make sure you carefuly read and follow the instructions included with the Readme in that repository. Don’t worry if the steps (especially involving Git and Running the automated test files) don’t totally make sense at the moment. We’ll be covering these tools in more detail later. For now all that matters is that you can follow the instructions and get them running on your computer.</p>
+
+<h4 id="recommended-order">Recommended Order</h4>
+
+<p>You can work on Drills in any order you want, but here is our perception of the order of difficulty:</p>
+
+<ol>
+  <li>Core Types</li>
+  <li>Deaf Grandma / Bob</li>
+  <li>Collections</li>
+  <li>Command/Query</li>
+  <li>Mythical Creatures</li>
+</ol>
+
+<h4 id="perceived-difficulty">Perceived Difficulty</h4>
+
+<p>Finally, a brief note on the difficulty of exercises. These Drills are intended to accompany and reinforce the concepts we’ll be covering during the first <strong>2 Weeks</strong> of class.</p>
+
+<p>This period of time represents a full <strong>third</strong> of your time in Module 1 and <strong>8 percent</strong> of your total time at Turing – in other words we’ll be covering a lot of material and filling in a lot of blanks during these first few weeks. It’s very likely that everything will not make sense at first, and that you won’t have the tools you need to complete all of the exercises during the first few days – don’t let this discourage you.</p>
+
+<p>We expect students to work through the exercises gradually during the first 2 weeks, and it’s very likely that you’ll need to take breaks or return to exercises that you did not initially understand as we introduce new material.</p>
+:ET

@@ -1,0 +1,254 @@
+I"G,<p>Some content shared from <a href="https://github.com/turingschool/front-end-curriculum/blob/6b5b565c409c769e297fac720cc6aca92ee9f2d3/lessons/module-3/merge-vs-rebase.md">the front-end program</a></p>
+
+<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>Understand the difference between merge and rebase workflows
+    <ul>
+      <li>Know when and when not to rebase</li>
+      <li>Identify pros and cons of each method</li>
+    </ul>
+  </li>
+  <li>Squashing Commits</li>
+  <li>Other helpful Git shortcuts</li>
+</ul>
+
+<h1 id="the-git-merge-branch-workflow">The Git Merge Branch Workflow</h1>
+
+<p>We’re all familiar with the most common git workflow: create a development branch, commit your work, push it to
+GitHub, make a pull request, and merge.</p>
+
+<h2 id="review">Review</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># find an awesome repo, fork it to your own GitHub user account, clone that repo:</span>
+<span class="nv">$ </span>git clone git@github.com:your_username/some-awesome-repo
+
+<span class="nv">$ </span>git checkout <span class="nt">-b</span> new-branch
+<span class="c"># do some work</span>
+<span class="nv">$ </span>git add new_file.rb
+<span class="nv">$ </span>git commit <span class="nt">-m</span> <span class="s2">"here is my new awesome work"</span>
+<span class="nv">$ </span>git push origin new-branch
+
+<span class="c"># visit github.com/your_username/some-awesome-repo</span>
+<span class="c"># create a pull request</span>
+<span class="c"># merge the code</span>
+
+<span class="nv">$ </span>git checkout master
+<span class="c"># fetch master and download new changes</span>
+<span class="nv">$ </span>git pull master
+
+<span class="c"># finally, delete your old branch</span>
+<span class="nv">$ </span>git branch <span class="nt">-D</span> new-branch
+</code></pre></div></div>
+
+<h2 id="whiteboard-diagram">Whiteboard diagram</h2>
+
+<h2 id="git-log">Git Log</h2>
+
+<p>Your git log will look something like this:</p>
+
+<ul>
+  <li>Merge pull request #76 from your_username/new-branch</li>
+  <li>here is my new awesome work</li>
+  <li>Merge pull request #75 from your_username/some-old-branch</li>
+  <li>…</li>
+</ul>
+
+<h1 id="advantages">Advantages</h1>
+
+<ul>
+  <li>This is a great workflow if you want to see a branch history in your git log. You can view the “network” of your
+git history on GitHub using a URL like this:
+    <ul>
+      <li>https://github.com/your-username/your-repo-name/<strong>network</strong></li>
+    </ul>
+  </li>
+  <li>This method of merging works great in solo and pairing projects.</li>
+</ul>
+
+<h2 id="disadvantages">Disadvantages</h2>
+
+<ul>
+  <li>A simple review of <code class="highlighter-rouge">git log</code> will be difficult to see what happened and when, commits will be all mashed together
+across branches.</li>
+  <li>You’ll need to “pull” or “merge” master into your branch frequently to resolve merge conflicts as they come up.</li>
+</ul>
+
+<h1 id="git-workflow-rebase">Git Workflow: Rebase</h1>
+
+<p>Some tech companies want a much cleaner commit log. Using <code class="highlighter-rouge">git rebase</code> allows us to see a more streamlined
+history of the commits without the branching.</p>
+
+<h2 id="disclaimer">Disclaimer</h2>
+
+<p>Not every tech company uses the rebase method. Your mileage may vary. No electrons were harmed in the production
+of this tutorial.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p>Rebasing will effectively rebuild your branch’s commit history with a new starting point from your master branch. You
+should <code class="highlighter-rouge">git rebase</code> often to minimize merge conflicts along the way.</p>
+
+<p>Doing a <code class="highlighter-rouge">git rebase</code> will have to step through every single commit you’ve made on your <strong>feature</strong> branch, one at a
+time, and see if it’s possible to apply it on top of the <strong>master</strong> branch. Squashing your commits may make this
+process easier. (covered later)</p>
+
+<h2 id="whiteboard-diagram-1">Whiteboard diagram</h2>
+
+<h2 id="workflow">Workflow</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># find an awesome repo, fork it to your own GitHub user account, clone that repo:</span>
+<span class="nv">$ </span>git clone git@github.com:your_username/some-awesome-repo
+
+<span class="nv">$ </span>git checkout <span class="nt">-b</span> new-branch
+<span class="c"># do some work</span>
+<span class="nv">$ </span>git add new_file.rb
+<span class="nv">$ </span>git commit <span class="nt">-m</span> <span class="s2">"here is my new awesome work"</span>
+<span class="c"># pull master from the origin fork and rebase our work</span>
+<span class="c"># git pull --rebase origin master</span>
+
+<span class="c"># fix any merge conflicts, commit them</span>
+
+<span class="nv">$ </span>git checkout master
+<span class="c"># merge our branch into master to catch up our master</span>
+<span class="nv">$ </span>git merge new-branch
+
+<span class="c"># finally, delete your old branch</span>
+<span class="nv">$ </span>git branch <span class="nt">-D</span> new-branch
+</code></pre></div></div>
+
+<h2 id="advantages-1">Advantages</h2>
+
+<ul>
+  <li>Avoids auto-generated commits of pulling/merging master into your feature branch or merging your branch into master</li>
+  <li>History appears cleaner. All of the new work you’ve done on your feature branch will be placed <strong>after</strong> the other
+commits on master. It’s kind of like telling git, “pretend I didn’t take 2 weeks to finish my feature, and make it
+seem like I started the work today and finished it all in a couple of minutes.”</li>
+</ul>
+
+<h2 id="disadvantage">Disadvantage</h2>
+
+<ul>
+  <li>Dealing with merge conflicts can be repetitive if your feature branch has lots of commits</li>
+  <li>If teammates create a branch off of YOUR branch (and not master), rewriting your git history in this manner will
+cause problems combining their work later.</li>
+</ul>
+
+<h2 id="to-rebase-or-not-to-rebase">To Rebase or Not to Rebase?</h2>
+
+<p>As a general rule, it works best to rebase regularly while you are working on a feature branch locally and
+individually. If anyone else is looking at or using your branch to base their work off of, rebasing is dangerous
+because rebasing will rewrite the commit history. Avoiding complicated rebases means rebasing almost as frequently
+as you are committing.</p>
+
+<h1 id="squashing-commits">Squashing Commits</h1>
+
+<p>Many open-source contributions will want you to “squash” your commits to remove unnecessary “work in progress” markers
+or commit messages that aren’t helpful for tracking your progress along the way. Some workplaces will encourage
+squashing unhelpful commit messages, but will generally discourage squashing ALL commit messages to a single commit.</p>
+
+<h2 id="scenario">Scenario</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># you've cloned a repo, and you make a feature branch</span>
+<span class="nv">$ </span>git checkout <span class="nt">-b</span> new-branch
+
+<span class="c"># you edit some files and leave for lunch but want to commit your work first</span>
+<span class="nv">$ </span>git add &lt;list of files&gt;
+<span class="nv">$ </span>git commit <span class="nt">-m</span><span class="s2">"morning work in progress"</span>
+
+<span class="c"># after lunch you do more work and want to commit before you leave work for the day</span>
+<span class="nv">$ </span>git add &lt;list of files&gt;
+<span class="nv">$ </span>git commit <span class="nt">-m</span><span class="s2">"afternoon work in progress"</span>
+
+<span class="c"># repeat for every day you work</span>
+</code></pre></div></div>
+
+<p>Suddenly your log history starts to look like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>| * 60ae30c wip
+| * d0129b5 wip
+| * aed52c2 wip
+| * c7a5ac7 wip
+| * 124578a wip
+| * 3562c99 wip
+| * ee1d6a6 wip
+| * d256033 wip
+</code></pre></div></div>
+
+<p>What if you could finish a portion of your work, undo all of those commit messages, and leave one meaningful commit
+instead?</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># rewind 5 commits, but keep all altered files</span>
+<span class="nv">$ </span>git reset HEAD~5
+
+<span class="c"># now you can add/stage and commit all of that work in one commit</span>
+<span class="nv">$ </span>git add &lt;list of files&gt;
+<span class="nv">$ </span>git commit <span class="nt">-m</span><span class="s2">"database integration done, more work needed on UI"</span>
+</code></pre></div></div>
+
+<p>This is <strong>extremely</strong> helpful when rebasing as well, so you can squash all feature work down into fewer commits.</p>
+
+<h2 id="disadvantages-1">Disadvantages</h2>
+
+<ul>
+  <li>You effectively lose the incremental work history of how you’ve built your project. Hiring managers and tech
+leads who evaluate your GitHub history may want to see your actual workflow so it doesn’t appear that you created
+all portions of a feature in one perfect commit.</li>
+</ul>
+
+<h1 id="gitconfig">.gitconfig</h1>
+
+<p>You probably already have a <code class="highlighter-rouge">.gitconfig</code> file in your <code class="highlighter-rouge">$HOME</code> folder (ie, <code class="highlighter-rouge">/Users/username/gitconfig</code>)</p>
+
+<h2 id="aliases-for-shortcuts">Aliases for shortcuts</h2>
+
+<p>Add a section to your <code class="highlighter-rouge">.gitconfig</code> to create shortcut aliases for things you do frequently</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[alias]
+  co = checkout
+  st = status
+</code></pre></div></div>
+
+<p>Save and close the file, and now you’ll have access to shorter commands such as:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git co your-branch
+<span class="nv">$ </span>git st
+</code></pre></div></div>
+
+<p>Some cool shortcuts:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[alias]
+
+  last = !sh -c 'test "$#" = 1 &amp;&amp; git log -$1 HEAD || git log -1 HEAD' -
+  # What is it:  retrieve only the last 'n' log entries
+  # Usage:       git last 5
+  # Notes:       If you don't include a numeric value, it will default to 1
+
+
+  br = branch -v
+  # What is it:  show all local branches
+  # Usage:       git br
+
+
+  cleanup = !git branch --merged master | grep -v 'master$' | xargs git branch -d
+  # What is it:  delete any local branch which has already been merged to master
+  # Usage:       git cleanup
+
+
+  unstage = reset HEAD --
+  # What is it:  reverse any files you've staged for commits, without losing your work
+  # Usage:       git unstage
+
+
+  graph = log --oneline --decorate --all --graph
+  # What is it:  see an ASCII-branched history of your repo
+  # Usage:       git graph
+</code></pre></div></div>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing">Git Book: Merge vs Rebase</a></li>
+  <li><a href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing">Atlassian: Merge vs Rebase</a></li>
+</ul>
+:ET

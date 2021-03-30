@@ -1,0 +1,85 @@
+I"L<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand how to use Brakeman to scan for common vulnerabilities</li>
+  <li>Get some experience attempting common exploits on an app</li>
+  <li>Practice reviewing another codebase for common security flaws.</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>10 - match up with pair and install brakeman; get one-another’s
+projects running on each machine, or just switch computers</li>
+  <li>15 - First partner attempts to exploit code of second partner.</li>
+  <li>5 - Break</li>
+  <li>15 - Second partner gets to exploit code of first partner.</li>
+  <li>10 - Begin code review 1</li>
+  <li>Break</li>
+  <li>5 - Finish code review 1</li>
+  <li>15 - Code review 2</li>
+  <li>5 - Wrapup</li>
+</ul>
+
+<h3 id="part-1-installing-and-running-brakeman">Part 1: Installing and Running Brakeman</h3>
+
+<p>Brakeman is a static analysis tool for detecting common security vulnerabilities.
+(http://en.wikipedia.org/wiki/Static_program_analysis)[http://en.wikipedia.org/wiki/Static_program_analysis]
+It installs as a normal gem:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem "brakeman", :require =&gt; false
+</code></pre></div></div>
+
+<p>And then you can run the analysis task from the root of your project
+with the command: <code class="highlighter-rouge">brakeman</code></p>
+
+<p>It’s generally useful to save the output to an html file so that we can
+read it more easily. We can do this with the <code class="highlighter-rouge">-o</code> option:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brakeman -o scan_output.html
+open scan_output.html
+</code></pre></div></div>
+
+<p>Get with your pair and:</p>
+
+<ul>
+  <li>Add brakeman to your projects</li>
+  <li>Run the reports against each project</li>
+</ul>
+
+<h3 id="part-2-hacker-time">Part 2: Hacker Time</h3>
+
+<p>Take 15 minutes each to attempt to exploit
+security flaws in your partner’s app. You can use the source
+code or the output of a brakeman scan to get ideas for attacks to try.</p>
+
+<p>Common things to look for include:</p>
+
+<ul>
+  <li>Un-scoped/Unprotected actions (#edit is protected but #update is not)</li>
+  <li>Strong params weaknesses (An endpoint openly accepts nested params)</li>
+  <li>Weak ownership checks (A user can view other user’s orders or update
+another user’s data)</li>
+</ul>
+
+<h3 id="part-3-code-review">Part 3: Code Review</h3>
+
+<p>Now that you’ve run brakeman and had some time to attempt to exploit
+your partner’s app, take turns doing a code review on each other’s
+projects, focusing on possible security flaws.</p>
+
+<p>Actual vulnerabilities should obviously receive the most attention,
+but don’t forget to look for possible improvements to existing
+security code as well.</p>
+
+<h3 id="wrapup">Wrapup</h3>
+
+<p>Let’s close with a few minutes of discussion.</p>
+
+<ul>
+  <li>What sort of issues did brakeman commonly report?</li>
+  <li>What issues if any were you able to exploit in your partner’s app?</li>
+  <li>What patterns did you find to help you protect yourself against these
+issues?</li>
+</ul>
+:ET

@@ -1,0 +1,233 @@
+I"@4<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the pub/sub pattern and its advantages over synchronous request and response</li>
+  <li>Implement pub/sub using Redis; create publishers and subscribers</li>
+  <li>Implement pub/sub in a Ruby/Sinatra application with external APIs</li>
+  <li>Understand the advantages of non-blocking and asynchronous code</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 - Warm up</li>
+  <li>20 - Lecture</li>
+  <li>5 - Break</li>
+  <li>15 - Experiments</li>
+  <li>10 - Discussion</li>
+  <li>5 - Break</li>
+  <li>25 - Experiments</li>
+</ul>
+
+<h2 id="materials">Materials</h2>
+
+<ul>
+  <li>The <a href="https://github.com/turingschool-examples/slacker">Slacker</a> repository</li>
+  <li>A running <a href="http://redistogo.com">Redis To Go</a> instance</li>
+  <li>A Slack channel with a webhook integration set up</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<p>In a gist—</p>
+
+<ol>
+  <li>How would you set up communication between two applications?</li>
+  <li>How about <em>n</em> different applications?</li>
+  <li>What if the communication had to be in real time?</li>
+</ol>
+
+<h2 id="lecture-part-one">Lecture (Part One)</h2>
+
+<ul>
+  <li>How would you wire up multiple applications that had to talk to each other?</li>
+  <li>One basic way would be to set up a series of requests and responses to facilitate communication between the applications.</li>
+  <li>On a basic level, this will work, but we’re hard coding these dependencies into our application.</li>
+  <li>Thinking back to Module 1, this is a bit of a code smell. It means that each time we want to add or remove a dependency, we have to modify the code for all of the other applications.</li>
+  <li>It also gets complex as the number of applications grows.</li>
+  <li>Lastly, Ruby is blocking. If we’re doing all of this in—let’s say—our controllers, then Ruby halts execution after each request until it gets a response from the other application. This can potentially take a while as the number of intercommunicating applications grows. We’re leaving the client waiting as we take care of our internal business.</li>
+  <li>Background workers are potentially an option, but what if we need this all to happen in real-time? What if we’re building a chat application?</li>
+  <li>What is pub/sub? It stands for publish and subscribe. In it’s simplest form, pub/sub allows us to build applications that broadcast messages and other applications who listen for those messages and act on them.</li>
+  <li>Pub/sub is asynchronous and non-blocking. This means after publishing a single message, execution in our controller can continue without blocking and waiting for a response.</li>
+  <li>This approach works as well with 2 clients as it does with <em>n</em> clients.</li>
+  <li>We can also scale up to having multiple publishers and multiple subscribers.</li>
+</ul>
+
+<h2 id="break">Break</h2>
+
+<ul>
+  <li>Make sure you have Redis installed (<code class="highlighter-rouge">brew install redis</code>)</li>
+  <li>Make sure you have the Redis gem installed (<code class="highlighter-rouge">gem install redis</code>)</li>
+</ul>
+
+<h2 id="a-first-experiment">A First Experiment</h2>
+
+<p>Open up three tabs in the terminal.</p>
+
+<p>In the first tab, start up Redis (<code class="highlighter-rouge">redis-cli monitor</code>).</p>
+
+<p>Open up a second tab and fire up <code class="highlighter-rouge">pry</code>. Enter the following:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'redis'</span>
+
+<span class="n">redis</span> <span class="o">=</span> <span class="no">Redis</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="n">redis</span><span class="p">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="s2">"sandwich_time"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+  <span class="n">event</span><span class="p">.</span><span class="nf">message</span> <span class="k">do</span> <span class="o">|</span><span class="n">channel</span><span class="p">,</span> <span class="n">body</span><span class="o">|</span>
+    <span class="nb">puts</span> <span class="s2">"I heard [</span><span class="si">#{</span><span class="n">body</span><span class="si">}</span><span class="s2">] on channel [</span><span class="si">#{</span><span class="n">channel</span><span class="si">}</span><span class="s2">]"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Check out your Redis tab; you should see something similar to the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1415105055.243106 [0 127.0.0.1:49407] "subscribe" "sandwich_time"
+</code></pre></div></div>
+
+<p>This will block up <code class="highlighter-rouge">pry</code>. So, we’ll use another tab and enter the following:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">redis</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="s2">"sandwich_time"</span><span class="p">,</span> <span class="s2">"the message"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Flipping back to that first <code class="highlighter-rouge">pry</code> tab, you should see <code class="highlighter-rouge">I heard [the message] on channel [sandwich_time]</code> and checking in our Redis server, we should see something along the lines of <code class="highlighter-rouge">1415105317.658196 [0 127.0.0.1:49322] "publish" "sandwich_time" "the message"</code>.</p>
+
+<p>Not satisfied? Let’s pop open a third <code class="highlighter-rouge">pry</code> window and subscribe as to our channel as well.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'redis'</span>
+
+<span class="n">redis</span> <span class="o">=</span> <span class="no">Redis</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="n">redis</span><span class="p">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="s2">"sandwich_time"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">event</span><span class="o">|</span>
+  <span class="n">event</span><span class="p">.</span><span class="nf">message</span> <span class="k">do</span> <span class="o">|</span><span class="n">channel</span><span class="p">,</span> <span class="n">body</span><span class="o">|</span>
+    <span class="nb">puts</span> <span class="s2">"I think [</span><span class="si">#{</span><span class="n">body</span><span class="si">}</span><span class="s2">] sounds great!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s also publish another message to the channel:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">redis</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="s2">"sandwich_time"</span><span class="p">,</span> <span class="s2">"Is this thing on?"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>A few things should have happened:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">redis-cli</code> logged something like <code class="highlighter-rouge">"publish" "sandwich_time" "Is this thing on?"</code></li>
+  <li>Our first <code class="highlighter-rouge">pry</code> window logged <code class="highlighter-rouge">I heard…</code></li>
+  <li>Our newest <code class="highlighter-rouge">pry</code> window logged <code class="highlighter-rouge">I think…</code></li>
+  <li>Our <code class="highlighter-rouge">redis.publish</code> method most likely returned <code class="highlighter-rouge">2</code> instead of <code class="highlighter-rouge">1</code>. Why is this?</li>
+</ul>
+
+<h2 id="a-brief-discussion-redis-pubsub-additional-features">A Brief Discussion: Redis Pub/Sub Additional Features</h2>
+
+<p>We won’t get into it much in this lesson, but Redis has a few more
+useful pub/sub features, including:</p>
+
+<ul>
+  <li><strong>Channel</strong> Subscriptions</li>
+  <li><strong>Pattern</strong> Subscriptions</li>
+</ul>
+
+<h3 id="channels">Channels</h3>
+
+<p>Channels can be used as a way to “namespace” or separate different types of
+messages. For example we could create one channel for <code class="highlighter-rouge">posts</code> and another for <code class="highlighter-rouge">clients</code>.</p>
+
+<p>If we need more specificity than this, a common redis convention is to use <code class="highlighter-rouge">:</code> to subdivide
+namespaces, for example: <code class="highlighter-rouge">posts:add</code> or <code class="highlighter-rouge">posts:destroy</code></p>
+
+<p>If we look back at the initial example where we used <code class="highlighter-rouge">redis.subscribe("sandwich_time")</code> to
+watch for incoming messages, we can now see that “sandwich_time” is the specific <em>channel</em>
+we were subscribing to.</p>
+
+<p><strong>Exercise: Channel filtering</strong></p>
+
+<p>Return to your original 3 tabs you fired up in the first example. If you shut them down,
+re-launch them. You should still have one watching on the channel “sandwich_time”.</p>
+
+<p>In your other pry terminal, try publishing a message on a channel besides “sandwich_time”.
+Verify that it doesn’t appear in the listening terminal.</p>
+
+<h3 id="patterns">Patterns</h3>
+
+<p>Another neat feature supported by Redis is the ability to subscribe to “patterns” of
+channels. This is done with the <code class="highlighter-rouge">psubscribe</code> function. Consider our previous example
+of multiple namespaced channels around “posts” (<code class="highlighter-rouge">posts:create</code>, <code class="highlighter-rouge">posts:destroy</code>, <code class="highlighter-rouge">posts:update</code>).</p>
+
+<p>If we wanted to subscribe to all updates relating to posts, we could use <code class="highlighter-rouge">psubscribe</code> to
+subscribe to a pattern containing “posts”</p>
+
+<p><strong>Exercise: psubscribe</strong></p>
+
+<p>Fire up a new Redis client using <code class="highlighter-rouge">redis-cli</code></p>
+
+<p>Subscribe to a new “sandwiches” pattern, using: <code class="highlighter-rouge">psubscribe "sandwiches:*"</code></p>
+
+<p>Then, from another tab, try publishing some messages onto various channels
+within the “sandwiches” namespace.</p>
+
+<p>Finally, pattern subscriptions are worthwhile if only because they
+give us the best-named programming API method: <strong><a href="http://redis.io/commands/punsubscribe">PUNSUBSCRIBE</a></strong>.</p>
+
+<p><a href="http://redis.io/topics/pubsub">Redis psubscribe docs</a></p>
+
+<h2 id="using-slacker">Using Slacker</h2>
+
+<p>Now, let’s practice using Redis’ pub/sub features more interactively.
+For this section we’ll use the example Slacker project.</p>
+
+<p><strong>Setup</strong></p>
+
+<p><a href="https://github.com/turingschool-examples/slacker">Clone Slacker from its repository.</a></p>
+
+<p>By default, Slacker uses your local Redis database, so make sure you have that up and running.</p>
+
+<p>Run <code class="highlighter-rouge">bundle</code>.</p>
+
+<p>In two separate tabs, run the following:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">ruby publishers/talker.rb</code></li>
+  <li><code class="highlighter-rouge">ruby subscribers/listener.rb</code></li>
+</ol>
+
+<p>Type something into the tab running <code class="highlighter-rouge">talker.rb</code> and check <code class="highlighter-rouge">listener.rb</code>.</p>
+
+<h3 id="all-together-now">All Together Now</h3>
+
+<p><strong>Setup</strong></p>
+
+<p>Your instructor should provide the group with a special Redis URL
+for everyone to connect to. Once you have this, re-run the above
+scripts, providing the new Redis URL as a <code class="highlighter-rouge">SLACKER_REDIS</code> environment
+variable.</p>
+
+<p><strong>Please, please note:</strong> you will be provided with a URL for the shared Redis server. Replace the <em>entirety</em> of `` with this URL.</p>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SLACKER_REDIS= ruby publishers/talker.rb
+# (in other tab)
+SLACKER_REDIS= ruby publishers/listener.rb
+</code></pre></div></div>
+
+<h3 id="further-exploration">Further Exploration</h3>
+
+<p>There are a few other small applications in the repository. Let’s explore each of them as a group.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">subscribers/logger.rb</code></li>
+  <li><code class="highlighter-rouge">subscribers/whisper.rb</code></li>
+  <li><code class="highlighter-rouge">publishers/webber.rb</code></li>
+</ul>
+
+<h2 id="pair-practice">Pair Practice</h2>
+
+<p>(Only do this if you’re doing the 180 minute version of this lesson or if time allows.)</p>
+
+<p>In pairs, let’s resurrect your old IdeaBox projects from Module 2. Can you create a logger that listens for new ideas and commits them to a log file?</p>
+
+<h2 id="wrap-up">Wrap-Up</h2>
+
+<p>What are some alternative uses for pub/sub that you can think of that we didn’t discuss today?</p>
+:ET

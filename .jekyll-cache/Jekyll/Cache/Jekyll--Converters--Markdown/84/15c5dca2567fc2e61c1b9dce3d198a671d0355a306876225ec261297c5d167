@@ -1,0 +1,19 @@
+I"�<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<p>First, read through these questions so that you know what you are expected to know coming out of these tutorials.</p>
+
+<ol>
+  <li>What is CSS?</li>
+  <li>What is a CSS selector? How do you use the ID selector? The class selector?</li>
+  <li>What are the three ways to include CSS in your HTML documents? What are the pros and cons of each?</li>
+  <li>What is the Box Model? Describe each component of the Box Model.</li>
+</ol>
+
+<h2 id="w3schools-css-tutorial">W3Schools CSS Tutorial</h2>
+
+<p>Complete the following sections of the <a href="https://www.w3schools.com/css/default.asp">W3Schools CSS Tutorial</a>. Play around with the “Try it Yourself” editors to explore how CSS works and to get some hands on practice. Make sure you are answering the Checks for Understanding as you work. Feel free to look into any sections you want, but the ones you <strong>must</strong> complete are:</p>
+
+<ol>
+  <li>Everything under the “CSS Tutorial” section from <a href="https://www.w3schools.com/css/css_intro.asp">CSS Introduction</a> to <a href="https://www.w3schools.com/css/css_font.asp">CSS Fonts</a>.</li>
+</ol>
+:ET

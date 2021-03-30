@@ -1,0 +1,365 @@
+I"�<p>Let’s start by cloning <a href="https://github.com/stevekinney/monstertorium">this repository</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/stevekinney/monstertorium
+</code></pre></div></div>
+
+<p>Most of the code from last time we visited this repository is in the <code class="highlighter-rouge">live-coding</code> branch. Let’s make a new branch based off of that branch.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout live-coding
+git checkout -b express
+</code></pre></div></div>
+
+<p>We’ll make a blank file for the server.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch server.js
+</code></pre></div></div>
+
+<p>We’ll also make a <code class="highlighter-rouge">package.json</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm init --yes
+</code></pre></div></div>
+
+<p>Let’s install some dependencies.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install express body-parser --save
+npm install supertest mocha chai --save-dev
+</code></pre></div></div>
+
+<p>We’ll move our static assets to a <code class="highlighter-rouge">public</code> directory.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir public
+mv index.html public
+mv style.css public
+mv script.js public
+mv dependencies public
+</code></pre></div></div>
+
+<p>Here is a first at our server side logic.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">response</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">The Monstertorium is live! (http://localhost:3000)</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We can spin up the server using <code class="highlighter-rouge">npm start</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm start
+</code></pre></div></div>
+
+<p>You should see “Hello World” in the browser.</p>
+
+<h2 id="serving-static-assets">Serving Static Assets</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kd">static</span><span class="p">(</span><span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">));</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">The Monstertorium is live! (http://localhost:3000)</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We should now see the same Monstertorium that we saw in Module 1.</p>
+
+<h2 id="storing-monsters">Storing Monsters</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// NEW!</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kd">static</span><span class="p">(</span><span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">));</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">The Monstertorium is live! (http://localhost:3000)</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="building-the-api">Building the API</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir test
+touch test/api-test.js
+</code></pre></div></div>
+
+<p>In <code class="highlighter-rouge">test/api-test.js</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">chai</span><span class="dl">'</span><span class="p">).</span><span class="nx">assert</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">supertest</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../server</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Let’s set up some scripts. In <code class="highlighter-rouge">package.json</code>:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">More</span><span class="w"> </span><span class="err">properties</span><span class="w"> </span><span class="err">...</span><span class="w">
+  </span><span class="nl">"scripts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mocha"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node server.js"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">More</span><span class="w"> </span><span class="err">properties</span><span class="w"> </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Go ahead and run <code class="highlighter-rouge">npm test</code>.</p>
+
+<p>…and watch it fail.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kd">static</span><span class="p">(</span><span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">));</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">The Monstertorium is live! (http://localhost:3000)</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">app</span><span class="p">;</span> <span class="c1">// NEW!</span>
+</code></pre></div></div>
+
+<p>This will work, but it will still spin up the server, which we don’t want. What we <em>do</em> want to happen is that if <code class="highlighter-rouge">server.js</code> is running as the main file, then—yea—spint up the server. Otherwise, don’t. We’re requiring it and want to be able to start it up and close it at will.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kd">static</span><span class="p">(</span><span class="dl">'</span><span class="s1">public</span><span class="dl">'</span><span class="p">));</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">module</span><span class="p">.</span><span class="nx">parent</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// NEW!</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">The Monstertorium is live! (http://localhost:3000)</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">app</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">npm test</code>, the server does not start up.</p>
+
+<h3 id="testing-the-endpoints">Testing the Endpoints</h3>
+
+<p>Let’s write our first test. We should get all of the monsters when we send a <code class="highlighter-rouge">GET</code> request to <code class="highlighter-rouge">/monsters</code>. Add the following to <code class="highlighter-rouge">test/api-test.js</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /monsters</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Steve</span><span class="dl">'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}];</span>
+  <span class="p">});</span>
+
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We’re not testing anything yet. All we’re doing is putting a monster in the array before each test. It’s good practice to clean up after ourselves. So, after each test, we’ll reset the array to it’s default state.</p>
+
+<p>Let’s start by making sure we can reach our endpoint.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return a 200 status code</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="nx">done</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<ul>
+  <li>We’re passing in <code class="highlighter-rouge">app</code> to the <code class="highlighter-rouge">request</code> function (which is pulled in from <code class="highlighter-rouge">supertest</code>).</li>
+  <li>We’re giving the <code class="highlighter-rouge">it</code> function an argument of <code class="highlighter-rouge">done</code>, which tells Mocha to wait until all of the asynchronous operations have completed before moving on to the next test.</li>
+</ul>
+
+<p>Let’s run the tests.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1) GET /monsters should return a 200 status code:
+ Error: expected 200 "OK", got 404 "Not Found"
+</code></pre></div></div>
+
+<p>This makes sense because we didn’t actually make the route yet. It’s add the route to <code class="highlighter-rouge">server.js</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">response</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="na">monsters</span><span class="p">:</span> <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Run out test suite. It passes. But, this test only checks that it returns the status of response, not the actual content. Let’s add a test.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return a set monsters stored in app.locals.monsters</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+    <span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">monsters</span><span class="p">:</span> <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span>
+    <span class="p">},</span> <span class="nx">done</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>It happens to pass because we were ambitious when we built that route earlier.</p>
+
+<h4 id="making-new-monsters">Making New Monsters</h4>
+
+<p>We can get the monsters, but we can’t make them yet. Bummer. Let’s start with a test. We’ll empty out the array in between every test so that we know that we’re always starting with a clean slate.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /monsters</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Cool. So now we have a setup, but we don’t have any tests. Ideally, when we sent a payload of monster data to the server, that monster should end up in the array, right?</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should create a new monster</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">monster</span> <span class="o">=</span> <span class="p">{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Steve</span><span class="dl">'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">2</span> <span class="p">};</span>
+
+  <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="na">monster</span><span class="p">:</span> <span class="nx">monster</span> <span class="p">})</span>
+    <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">201</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">end</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">,</span> <span class="p">[</span><span class="nx">monster</span><span class="p">]);</span>
+      <span class="nx">done</span><span class="p">();</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>It’ll fail because we didn’t implement it yet. When a monster comes in, we’ll just push it onto the array and then send the new version back to the user.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">monster</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">monster</span><span class="p">;</span>
+
+  <span class="nx">monster</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">monster</span><span class="p">.</span><span class="nx">id</span> <span class="o">||</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">monster</span><span class="p">);</span>
+
+  <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">201</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span> <span class="na">monster</span><span class="p">:</span> <span class="nx">monster</span> <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This isn’t perfect. It doesn’t sanitize the data or validate that both exist. But, let’s go with it for now. Run the tests and verify that they pass.</p>
+
+<p>It doesn’t.</p>
+
+<p>For reasons unbeknownst to your author, Express can’t parse the body of an HTTP request by default. We have to require and configure the <code class="highlighter-rouge">body-parser</code> module to get this working.</p>
+
+<p>Add the following towards the top of <code class="highlighter-rouge">server.js</code> after you’ve defined <code class="highlighter-rouge">app</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">bodyParser</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">body-parser</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">bodyParser</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">bodyParser</span><span class="p">.</span><span class="nx">urlencoded</span><span class="p">({</span> <span class="na">extended</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}));</span>
+</code></pre></div></div>
+
+<p>Run the test suite again. The tests pass.</p>
+
+<h4 id="updating-monsters">Updating Monsters</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">UPDATE /monsters/:id</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Steve</span><span class="dl">'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}];</span>
+  <span class="p">});</span>
+
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should update a record with the correct "id"</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">monster</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s2">`/monsters/</span><span class="p">${</span><span class="nx">monster</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="na">monster</span><span class="p">:</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Louisa</span><span class="dl">'</span> <span class="p">}</span> <span class="p">})</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">204</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">end</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Louisa</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">done</span><span class="p">();</span>
+      <span class="p">});</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>What would the might an implementation work?</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters/:id</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">monster</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">monster</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">index</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">sendStatus</span><span class="p">(</span><span class="mi">404</span><span class="p">);</span> <span class="p">}</span>
+
+  <span class="kd">const</span> <span class="nx">oldMonster</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">[</span><span class="nx">index</span><span class="p">];</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">oldMonster</span><span class="p">,</span> <span class="nx">monster</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">sendStatus</span><span class="p">(</span><span class="mi">204</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This is squirrelly and mostly related to the fact that we’re not using a real database right and we’re writing this logic by hand. Let it wash over you and relax.</p>
+
+<p>What if the client requests to update a monster that doesn’t exist?</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return a 404 status if there is no monster</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters/invalid</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="nx">done</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="destroying-monsters">Destroying Monsters</h4>
+
+<p>This is pretty much more of the same. So, let’s move quickly through it so that we can get to refactoring the front-end.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /monsters/:id</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+
+  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[{</span> <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Steve</span><span class="dl">'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">3</span> <span class="p">}];</span>
+  <span class="p">});</span>
+
+  <span class="nx">afterEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should delete a record</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s2">`/monsters/</span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">monster</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">204</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">end</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="nx">done</span><span class="p">();</span>
+      <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return a 404 status if there is no idea</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">request</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+      <span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters/invalid</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">expect</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="nx">done</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Alright, now what about an implementation?</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="dl">'</span><span class="s1">/monsters/:id</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">id</span> <span class="o">===</span> <span class="nx">id</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">404</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span>
+      <span class="na">error</span><span class="p">:</span> <span class="s2">`There is no monster with the "id" of </span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">.`</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">locals</span><span class="p">.</span><span class="nx">monsters</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">m</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">m</span><span class="p">.</span><span class="nx">id</span> <span class="o">!==</span> <span class="nx">id</span><span class="p">);</span>
+  <span class="nx">response</span><span class="p">.</span><span class="nx">sendStatus</span><span class="p">(</span><span class="mi">204</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+:ET

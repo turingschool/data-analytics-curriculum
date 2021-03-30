@@ -1,0 +1,109 @@
+I"<h2 id="vocab">Vocab</h2>
+<ul>
+  <li>render</li>
+  <li>partial</li>
+  <li>locals</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<p>This lesson builds off of the <a href="./sad_path_and_flash">Sad Path Testing and Flash Messages lesson</a>. You can find the completed code from this lesson on the <code class="highlighter-rouge">sad_path_and_flash</code> branch of <a href="https://github.com/turingschool-examples/set_list/tree/sad_path_and_flash">this repo</a></p>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<p>Discuss the following questions with a partner:</p>
+
+<ul>
+  <li>Thinking about plain Ruby, What are some strategies we use to DRY up our code within a class?</li>
+  <li>What about strategies to DRY up code from multiple classes (where there might be shared behavior)?</li>
+</ul>
+
+<p>Read the following excerpts from the Rails Guides:</p>
+
+<ul>
+  <li>The intro paragraph of <a href="https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials">3.4 Using Partials</a></li>
+  <li><a href="https://guides.rubyonrails.org/layouts_and_rendering.html#naming-partials">3.4.1 Naming Partials</a></li>
+  <li><a href="https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials-to-simplify-views">3.4.2 Using Partials to Simplify Views</a></li>
+</ul>
+
+<h2 id="drying-our-views">DRYing Our Views</h2>
+
+<p>Often, as we build out our applications, we find ourselves using the same code in multiple view files.  For example, when using forms, we generally see nearly identical code being used in <code class="highlighter-rouge">new.html.erb</code> and <code class="highlighter-rouge">edit.html.erb</code>.  Another example could be some shared code in <code class="highlighter-rouge">show.html.erb</code> and <code class="highlighter-rouge">index.html.erb</code> - we might be showing much of the same information in both places. With all this repeated code, things aren’t very DRY.  So, how can we DRY up these views?</p>
+
+<h3 id="using-a-partial">Using a Partial</h3>
+
+<p>A <strong>partial</strong> is a file we can leverage to house code that is shared across multiple views. Our partials live in our view directories, but have a specific naming convention that marks them as a partial: <code class="highlighter-rouge">_partial_name.html.erb</code>.  All partials will be named with a leading <code class="highlighter-rouge">_</code>.  If we wanted to create a partial for a form that would be used to create or update an artist resource, our file structure would probably look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/views/artists
+    _form.html.erb
+    edit.html.erb
+    new.html.erb
+</code></pre></div></div>
+
+<p>Once we have our partial created, we will need to tell our views to <strong>render</strong> that form: <code class="highlighter-rouge">&lt;%= render "form" %&gt;</code>.  We use this render method inside the view file that our controller looks for when compiling our response back to the client.  So, if we are using this <code class="highlighter-rouge">_form</code> partial for edit and new, we will render the partial on both <code class="highlighter-rouge">edit.html.erb</code> and <code class="highlighter-rouge">new.html.erb</code>.</p>
+
+<p>When rendering a partial, you will regularly need to send the partial some action-specific information. In the case of a <code class="highlighter-rouge">new</code> vs <code class="highlighter-rouge">edit</code> form, you may want to send the path information, the text for the submit button, and perhaps the method/verb that the form should use. To send this information, we can render our partial with <strong>local variables</strong> that can be used in the partial to customize it for each action:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= render partial: 'form', locals: { path: '/artists/1', method: :get, button_text: 'Update Artist' } %&gt;
+</code></pre></div></div>
+
+<p>Now, we are sending our render method some additional information, we need to be a bit more specific - we are telling it to render a partial, called <code class="highlighter-rouge">_form</code>, and to send that partial 3 local variables: <code class="highlighter-rouge">path</code>, <code class="highlighter-rouge">method</code>, and <code class="highlighter-rouge">button_text</code></p>
+
+<h3 id="implementing-a-partial-in-set-list">Implementing a Partial in Set List</h3>
+
+<p>Let’s see if we can put all this together to DRY up our <code class="highlighter-rouge">artists/edit</code> and <code class="highlighter-rouge">artists/new</code> views in our SetList app. Before peeking at the code snippets below, see if you and your partner can implement a partial, maintaining our passing tests!</p>
+
+<p><br />
+<br /></p>
+
+<hr />
+
+<p><br />
+<br /></p>
+
+<p>You should now have <code class="highlighter-rouge">artists/_form.html.erb</code>, <code class="highlighter-rouge">artists/new.html.erb</code> and <code class="highlighter-rouge">artists/edit.html.erb</code> files in your views directory that look somthing like this:</p>
+
+<p><code class="highlighter-rouge">_form/html.erb</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="sx">%= form_with url: path, method: method do |f| %&gt;
+  &lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:name</span> <span class="o">%&gt;</span>
+  <span class="o">&lt;</span><span class="sx">%= f.text_field :name %&gt;
+
+  &lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">submit</span> <span class="n">button_text</span> <span class="sx">%&gt;
+&lt;% end %&gt;</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><code class="highlighter-rouge">new.html.erb</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="sx">%= render partial: 'form', locals: {
+                                      path: "/artists",
+                                      method: :post,
+                                      button_text: 'Create Artist'} %&gt;
+
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<p><code class="highlighter-rouge">edit.html.erb</code></p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="ss">partial: </span><span class="s1">'form'</span><span class="p">,</span> <span class="ss">locals: </span><span class="p">{</span>
+                                      <span class="ss">path: </span><span class="s2">"/artists/</span><span class="si">#{</span><span class="vi">@artist</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                                      <span class="ss">method: :patch</span><span class="p">,</span>
+                                      <span class="ss">button_text: </span><span class="s1">'Update Artist'</span><span class="p">}</span> <span class="cp">%&gt;</span>
+
+</code></pre></div></div>
+
+<p>And our tests should still be passing!</p>
+
+<p><strong>We showed an example of refactoring a form, but partials are not limited to forms. Partials can be used for any repeated code in your views.</strong></p>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ol>
+  <li>What are partials, and why do we use them?</li>
+  <li>How do we send specific information to our partials?</li>
+  <li>Reviewing your project, are there any places where a partial could be used?</li>
+</ol>
+:ET

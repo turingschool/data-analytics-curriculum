@@ -1,0 +1,93 @@
+I"<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Be able to explain how a database is made up of tables, columns, and rows</li>
+  <li>Be able to select an appropriate datatype for a piece of data</li>
+  <li>Be able to write an SQL statement using <code class="highlighter-rouge">SELECT</code> and <code class="highlighter-rouge">WHERE</code></li>
+  <li>Be able to explain what a foreign key is and why it’s used</li>
+  <li>Have some understanding of SQL joins</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>Warmup</li>
+  <li>Lecture</li>
+  <li>Code-along</li>
+  <li>Wrapup</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Discuss the following questions with another student. Which answers do you know? Which are you unsure about?</p>
+
+<ol>
+  <li>What are database tables, column, and rows? What’s the purpose of each?</li>
+  <li>What’s the meaning and purpose of <code class="highlighter-rouge">SELECT</code>? What about <code class="highlighter-rouge">WHERE?</code></li>
+  <li>What’s a foreign key? What’s it used for?</li>
+</ol>
+
+<h2 id="lecture">Lecture</h2>
+
+<p><a href="https://docs.google.com/presentation/d/1ARR7ILvni6jeV3_5Ku0eEx-bxgG_njj8dcU-mlq8k-M/">Slides</a></p>
+
+<p>Let’s discuss the big picture of SQL:</p>
+
+<ul>
+  <li>Databases</li>
+  <li>Tables, Columns, and Rows</li>
+  <li>Data types – int, datetime, varchar, text, boolean, etc. See more <a href="http://www.tutorialspoint.com/sql/sql-data-types.htm">here</a>.</li>
+  <li>Primary keys</li>
+  <li>SELECT, INSERT, DELETE</li>
+  <li>WHERE</li>
+  <li>Foreign keys</li>
+  <li>Joins – see <a href="http://blog.codinghorror.com/a-visual-explanation-of-sql-joins/">Jeff Atwood’s blog post</a> for a visual explanation of joins</li>
+</ul>
+
+<h3 id="key-points">Key Points</h3>
+
+<ul>
+  <li>You must end SQL statements with a semicolon</li>
+  <li>Keywords in SQL, such as “SELECT” and “WHERE” do not have to be capitalized, but convention says they should</li>
+  <li>Indentation and multi-line queries make them MUCH easier to read</li>
+</ul>
+
+<h3 id="snippets">Snippets</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- comments in SQL usually start with a double dash</span>
+<span class="c1">-- each of the following is a separate command</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="k">column</span><span class="o">=</span><span class="n">value</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">table</span> <span class="p">(</span><span class="n">column1</span><span class="p">,</span> <span class="n">column2</span><span class="p">,</span> <span class="n">column3</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">value3</span><span class="p">);</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="k">column</span><span class="o">=</span><span class="n">value</span><span class="p">;</span>
+<span class="k">SELECT</span> <span class="k">column</span> <span class="k">FROM</span> <span class="n">table1</span> <span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">table2</span> <span class="k">ON</span> <span class="n">table1</span><span class="p">.</span><span class="k">column_name</span><span class="o">=</span><span class="n">table2</span><span class="p">.</span><span class="k">column_name</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="independent-work">Independent Work</h2>
+
+<p>Get together with your pair to complete the
+<a href="http://tutorials.jumpstartlab.com/topics/sql/fundamental_sql.html">Fundamental SQL tutorial</a>
+tutorial.</p>
+
+<h3 id="extra-challenge">Extra Challenge</h3>
+
+<p>Create a table of Customers and a table of Orders. Can you execute a <code class="highlighter-rouge">JOIN</code> that
+connects the two into one set of results?</p>
+
+<p>Want more? Check out the <a href="http://ruby.bastardsbook.com/chapters/sql/">Bastard’s Book of Ruby SQL Chapter</a>.</p>
+
+<h2 id="wrapup">Wrapup</h2>
+
+<p>Return to the warmup questions and improve your answers.</p>
+
+<h3 id="check-for-understanding-questions">Check For Understanding Questions</h3>
+
+<ul>
+  <li>What is a relational database, and how does it differ from any old database?</li>
+  <li>Name something you can do with SQL.</li>
+  <li>What does AUTOINCREMENT do? Why is this important, or how does it make our life easier?</li>
+</ul>
+
+<h2 id="practicehomework">Practice/Homework</h2>
+
+<p><a href="https://pgexercises.com/gettingstarted.html">Practice SQL online</a></p>
+:ET

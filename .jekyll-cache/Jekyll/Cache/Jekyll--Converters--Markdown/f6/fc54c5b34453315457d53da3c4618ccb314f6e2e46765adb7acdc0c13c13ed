@@ -1,0 +1,110 @@
+I"<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>explain the purpose of pairing</li>
+  <li>apply simple pairing patterns like Driver/Navigator and ping-pong</li>
+  <li>verbally establish a productive pairing arrangement</li>
+  <li>give specific, actionable, and kind feedback to pair</li>
+</ul>
+
+<h2 id="pair-programming">Pair Programming</h2>
+
+<ul>
+  <li>What have you heard about pair programming?</li>
+  <li>Defining pair programming</li>
+  <li>Who uses pairing?</li>
+  <li>Why do they do it?</li>
+  <li><a href="https://pragprog.com/magazines/2011-07/pair-programming-benefits">Benefits of Pair Programming</a></li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<ul>
+  <li>Switch to the directory where you keep your code</li>
+  <li>Clone the repo: <code class="highlighter-rouge">git clone https://github.com/turingschool/code_retreat.git</code></li>
+  <li><code class="highlighter-rouge">cd code_retreat</code></li>
+</ul>
+
+<h2 id="tools">Tools</h2>
+
+<p>During these sessions, you can try a few different tools:</p>
+
+<ul>
+  <li>Pairing on a laptop with one external keyboard</li>
+  <li>Pairing on a laptop with two external keyboards</li>
+  <li>Pairing with an external monitor and two keyboards</li>
+</ul>
+
+<h2 id="session-1-open-pairing">Session 1: Open Pairing</h2>
+
+<p>Let’s briefly warmup by pairing however you naturally see fit. <strong>Before you start, make sure to clarify with your pair exactly how you will be pairing</strong>.</p>
+
+<p>Work for ~20 minutes.</p>
+
+<h2 id="session-2-driver-navigator">Session 2: Driver-Navigator</h2>
+
+<p>In Driver-Navigator:</p>
+
+<ul>
+  <li>Person A does the thinking and talking, Person B does the syntax and typing</li>
+  <li>When a test/implementation cycle is completed, swap roles</li>
+  <li>Person B does the thinking and talking, Person A does the syntax and typing</li>
+  <li>When a test/implementation cycle is completed, swap roles</li>
+  <li>Continued…</li>
+</ul>
+
+<p>Work for ~20 minutes, then provide your pair with feedback.</p>
+
+<h2 id="session-3-challenger">Session 3: Challenger</h2>
+
+<p>In Challenger:</p>
+
+<ul>
+  <li>Person A writes the first test</li>
+  <li>Person B writes an intentionally weak implementation (<em>challenging</em> the test from Person A)</li>
+  <li>Person B writes the next test</li>
+  <li>Person A writes an intentionally weak implementation</li>
+  <li>Person A writes the next test</li>
+  <li>Continued…</li>
+</ul>
+
+<h2 id="other-patterns-ping-pong">Other Patterns Ping-Pong</h2>
+
+<p>Next we’ll experiment with ping-pong pairing:</p>
+
+<ul>
+  <li>Person A writes a test</li>
+  <li>Person B writes an implementation</li>
+  <li>Person A writes a test</li>
+  <li>Person B writes an implementation</li>
+  <li>Continued…</li>
+</ul>
+
+<p>At the end of this session, provide your pair with two pieces of feedback:</p>
+
+<p>1) Something your pair did that they should continue. Why?</p>
+
+<ul>
+  <li>
+    <p>It was really helpful when you used pencil and paper to explain <em>some concept</em> to me so that I could visualize it before we tried to implement it in code.</p>
+  </li>
+  <li>
+    <p>I liked that you weren’t afraid to stop me to ask me to explain why I was doing something. By having to verbalize my thinking, I was able to identify some of my own gaps in knowledge.</p>
+  </li>
+</ul>
+
+<p>2) Something your pair did that they should consider changing. Why?</p>
+
+<ul>
+  <li>
+    <p>You seem eager to figure out how to accomplish a task because you’re quick to try any solution you can think of until you find one that works. Sometimes, this makes it seem like you might not be thinking about why you’re doing something. Next time, let’s be more strategic in our choices. If you think of something that might work, I would like for you to explain your idea to me and let me know why you think it will work. That way, you can get feedback on your idea before trying it in code.</p>
+  </li>
+  <li>
+    <p>I can tell that you’re quick to pick up new things, but you sometimes leave me behind because I need a little more time to think about the problem that we’re trying to solve. It would help me if you could explain your thinking and implementation after each step so that I can keep up and contribute.</p>
+  </li>
+</ul>
+
+<p>Make sure your feedback is specific, actionable, and kind.</p>
+
+<p>SMART Feedback: Specific, Measurable, Achievable, Related to Task, Time-Based</p>
+:ET

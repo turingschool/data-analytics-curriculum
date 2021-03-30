@@ -1,0 +1,287 @@
+I"X<h2 id="introduction">Introduction</h2>
+
+<p>Pearson’s Law:</p>
+
+<blockquote>
+  <p>“That which is measured improves. That which is measured and reported improves exponentially.” - Karl Pearson</p>
+</blockquote>
+
+<p>Technology has enabled us to measure more, and shorten the period between measurement and reporting. Sensors are cheaper and smaller, computers are everywhere, and we can access data from anywhere. People who have recognized this, and applied it to themselves are part of a movement called “Quantified Self.”</p>
+
+<p>You are going to build a simple calorie tracker.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Create a Rails API given specified endpoints and response formats.</li>
+  <li>Create an Express API given specified endpoints and response formats.</li>
+  <li>Create an API in a new language of the students choice given specified endpoints and response formats.</li>
+  <li>Review and refactor code (in each of the three languages) so that it:
+    <ul>
+      <li>is well organized</li>
+      <li>clearly communicates intent</li>
+      <li>utilizes abstraction to hide complexity</li>
+      <li>breaks problems down into small methods/functions with a single responsibility</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="requirements-overview">Requirements Overview</h3>
+
+<p>You will be creating an API in three separate languages that supports a front-end that users will utilize to track calories in meals that they eat.</p>
+
+<p>Your requirements for the application are detailed in the cards <strong>you’re going to create on Pivotal Tracker</strong>.</p>
+
+<h4 id="background-the-front-end">Background: The Front End</h4>
+
+<p>The application that consumes your API will have two main layouts. A “foods” index page and a “diary” index page (as seen below).</p>
+
+<h5 id="manage-foods"><strong>Manage Foods</strong></h5>
+
+<p><img src="quantified-self-resource-management.png" alt="quantifed-self-resource-management.png" /></p>
+
+<h5 id="main-diary"><strong>Main Diary</strong></h5>
+
+<p><img src="quantified-self-diary.png" alt="quantified-self-diary.png" /></p>
+
+<p>At a high level, users will be able to:</p>
+
+<ul>
+  <li>CRUD foods</li>
+  <li>Add a food to a meal</li>
+  <li>Compare calories to goals (meal and total)</li>
+  <li>View calorie calculations in diary</li>
+  <li>Data persists across refreshes</li>
+</ul>
+
+<h4 id="back-end-features">Back End Features</h4>
+
+<p>During the three weeks of this project, you’ll get the opportunity to build an API in three interations. First, you’ll build it in Rails. Second, you’ll build it using Node, Express, and Knex. Lastly, you’ll use a wild card programming language.</p>
+
+<ul>
+  <li>You’ll start each of your new backend repositories from scratch.</li>
+  <li>You’ll need to accept your email invitation from Pivotal Tracker and use this as your Project Management tool.</li>
+  <li>Create a Pivotal Tracker board and write stories for each of your endpoints.</li>
+  <li>Add your assigned Technical Lead to your Pivotal Tracker and your repository.</li>
+</ul>
+
+<p>You will need to build nine endpoints for each of the technologies you will be using. All endpoints will return the data as JSON.</p>
+
+<h5 id="food-endpoints">Food Endpoints:</h5>
+
+<p><strong>GET /api/v1/foods</strong></p>
+
+<p>Returns all foods currently in the database</p>
+
+<p>Each individual food will be returned in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+<span class="p">},</span>
+</code></pre></div></div>
+
+<p><strong>GET /api/v1/foods/:id</strong></p>
+
+<p>Returns the food object with the specific <code class="highlighter-rouge">:id</code> you’ve passed in or 404 if the food is not found</p>
+
+<p><strong>POST /api/v1/foods</strong></p>
+
+<p>Allows creating a new food with the parameters:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="dl">"</span><span class="s2">food</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span> <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Name of food here</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Calories here</span><span class="dl">"</span><span class="p">}</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>If food is successfully created, the food item will be returned. If the food is not successfully created, a 400 status code will be returned. Both name and calories are required fields.</p>
+
+<p><strong>PATCH /api/v1/foods/:id</strong></p>
+
+<p>Allows one to update an existing food with the parameters:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="dl">"</span><span class="s2">food</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span> <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Mint</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">14</span><span class="dl">"</span><span class="p">}</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>If food is successfully updated (name and calories are required fields), the food item will be returned. If the food is not successfully updated, a 400 status code will be returned.</p>
+
+<p><strong>DELETE /api/v1/foods/:id</strong></p>
+
+<p>Will delete the food with the id passed in and return a 204 status code. If the food can’t be found, a 404 will be returned.</p>
+
+<h5 id="meal-endpoints">Meal Endpoints:</h5>
+
+<p><strong>GET /api/v1/meals</strong></p>
+
+<p>Returns all the meals in the database along with their associated foods</p>
+
+<p>If successful, this request will return a response in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Breakfast</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Yogurt</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">550</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">220</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Snack</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Gum</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">50</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Cheese</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">400</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Lunch</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Bagel Bites - Four Cheese</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">650</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Chicken Burrito</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">800</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">220</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Dinner</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Bagel Bites - Four Cheese</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">650</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Chicken Burrito</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">800</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p><strong>GET /api/v1/meals/:meal_id/foods</strong></p>
+
+<p>Returns all the foods associated with the meal with an id specified by :meal_id or a 404 if the meal is not found</p>
+
+<p>If successful, this request will return a response in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Breakfast</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Yogurt</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">550</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">220</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>POST /api/v1/meals/:meal_id/foods/:id</strong></p>
+
+<p>Adds the food with :id to the meal with :meal_id</p>
+
+<p>This creates a new record in the MealFoods table to establish the relationship between this food and meal. If the meal/food cannot be found, a 404 will be returned.</p>
+
+<p>If successful, this request will return a status code of 201 with the following body:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">message</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Successfully added FOODNAME to MEALNAME</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>DELETE /api/v1/meals/:meal_id/foods/:id</strong></p>
+
+<p>Removes the food with :id from the meal with :meal_id</p>
+
+<p>This deletes the existing record in the MealFoods table that creates the relationship between this food and meal. If the meal/food cannot be found, a 404 will be returned.</p>
+
+<p>If successful, this request will return:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">message</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Successfully removed FOODNAME to MEALNAME</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="getting-your-project-started">Getting your project started</h3>
+
+<p>You’ll have four separate code bases to complete this project.</p>
+
+<ul>
+  <li>A code base for the front end (which will be supplied to you), which you can deploy by following the instructions on the <a href="https://github.com/turingschool/qs-frontend-starter">Quantified Self Front End Starter Kit</a>.</li>
+  <li>A Rails code base.</li>
+  <li>An Express code base.</li>
+  <li>A code base in a language of your choice.</li>
+</ul>
+
+<p>You may run into some errors when trying to communicate between the two code bases (most likely CORS problems), which you will need to debug.</p>
+
+<h3 id="expectations">Expectations</h3>
+
+<ul>
+  <li>Tag instructors in PRs on Github wherever you’d like feedback.</li>
+  <li>Reach out for extra support if you feel like your team is falling behind.</li>
+  <li>If there’s any question about functionality, ask. There’s a <a href="slack://channel?team=T029P2S9M&amp;id=C3VFECP60">#qs-questions</a> channel specifically for this.</li>
+</ul>
+
+<h2 id="rubric">Rubric</h2>
+
+<p>You will be subjectively (Friday of Week Three via Github) graded by an instructor on the criteria in <a href="./rubric">this rubric</a>. You’ll need to self assess on this rubric when submitting your final project <a href="https://github.com/turingschool/ruby-submissions/tree/master/1711-b/4module/quantified_self">here</a>.</p>
+
+:ET

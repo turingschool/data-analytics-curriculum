@@ -1,0 +1,81 @@
+I"’<h2 id="research">Research</h2>
+
+<ol>
+  <li>Where do assets live in a rails project?</li>
+  <li>What is precompiling mean?</li>
+  <li>What is the purpose of the public folder in rails?</li>
+</ol>
+
+<h3 id="asset-pipeline-in-rails">Asset Pipeline in Rails</h3>
+
+<ul>
+  <li>Prepares JS, CSS and images for the browser to read.</li>
+</ul>
+
+<h4 id="where-do-assets-live">Where Do Assets Live?</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">app/assets</code>: assets owned by the application; includes custom CSS, JS files, and images</li>
+  <li><code class="highlighter-rouge">lib/assets</code>: assets you created, but arenâ€™t necessarily specific to your application</li>
+  <li><code class="highlighter-rouge">vendor/assets</code>: assets created by third-parties.</li>
+</ul>
+
+<p>note: the files in app/assets are never served directly in production.
+note: assets in lib/assets and vendor/assets will not automatically be included in the precompile process</p>
+
+<h4 id="concatenate-assets">Concatenate Assets</h4>
+
+<ul>
+  <li>Reduces the number of requests (time) it takes to render the page.</li>
+  <li>Rails inserts a SHA256 fingerprint for caching in production. Changing the file, will automatically change the SHA</li>
+</ul>
+
+<h4 id="minification-and-compression">Minification and Compression</h4>
+
+<ul>
+  <li>Removes whitespace and comments and creates a file with less lines of code.</li>
+</ul>
+
+<h4 id="pre-processing">Pre-processing</h4>
+
+<ul>
+  <li>Pre-processes other languages such as SASS, CoffeeScript, etc. into JS or CSS.</li>
+</ul>
+
+<h3 id="how-to-use-the-asset-pipeline">How to Use the Asset Pipeline</h3>
+
+<ul>
+  <li>In development, rails automatically prepares and pre-processes our assets but in production, we may need to manually do this: <code class="highlighter-rouge">ENV=production rake assets:precompile</code></li>
+  <li>This creates an <code class="highlighter-rouge">assets</code> directory in the public folder with the files compressed and compiled.</li>
+  <li>Our browser will automatically serve assets from the public folder but if files are put directly in that folder, they will bypass the asset pipeline.</li>
+</ul>
+
+<h4 id="manifest-files">Manifest Files</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">app/assets/javascripts/application.js</code></li>
+  <li><code class="highlighter-rouge">app/assets/stylesheets/application.css</code></li>
+</ul>
+
+<h4 id="directives-in-manifest-files">Directives in Manifest Files</h4>
+
+<ul>
+  <li>Processed top-to-bottom</li>
+  <li><code class="highlighter-rouge">require_tree .</code> recursively requires all files within app/assets</li>
+  <li>Files required in the manifest can live in app/assets, lib/assets, or vendor/assets</li>
+</ul>
+
+<h4 id="directives-in-manifest-files-1">Directives in Manifest Files</h4>
+
+<p><img src="manifest.png" alt="inline" /></p>
+
+<h4 id="how-does-your-app-know-about-the-master-js-and-css-file">How Does Your App Know About the Master JS and CSS File?</h4>
+
+<p>In app/views/layouts/application.html.erb:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">"application"</span><span class="p">,</span> <span class="ss">media: </span><span class="s2">"all"</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">"application"</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>As the file SHA changes in production, Rails has created this one file <code class="highlighter-rouge">application.js</code> and <code class="highlighter-rouge">application.css</code> to which we reference.</p>
+:ET

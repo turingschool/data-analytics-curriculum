@@ -1,0 +1,119 @@
+I"7<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Describe what a database is and how it relates to web applications</li>
+  <li>Describe what SQL is</li>
+  <li>Define key database vocabulary including “table”, “column”, “row”, “primary key”, and “schema”</li>
+  <li>Use Postico to visualize the Database</li>
+  <li>Describe what an ORM is and how it relates to the database</li>
+  <li>Use built in ActiveRecord methods to CRUD resources in the Rails Console</li>
+</ul>
+
+<h1 id="lesson">Lesson</h1>
+
+<h2 id="discussion-questions-pt-1">Discussion Questions pt. 1</h2>
+
+<ul>
+  <li>What is a database?</li>
+  <li>Compare and contrast a database with a collection of CSV files.</li>
+  <li>How does a DB relate to web applications?</li>
+  <li>Define each of the following terms
+    <ul>
+      <li>Table</li>
+      <li>Column</li>
+      <li>Row</li>
+      <li>Primary Key</li>
+      <li>Schema</li>
+    </ul>
+  </li>
+  <li>What is SQL? How does it relate to the DB?</li>
+</ul>
+
+<h2 id="postico-activity">Postico Activity</h2>
+
+<p>Use Postico to do the following:</p>
+
+<ul>
+  <li>Open your <code class="highlighter-rouge">task_manager_development</code> database</li>
+  <li>View all <code class="highlighter-rouge">tasks</code></li>
+  <li>Add some new rows to your tasks table</li>
+  <li>Change one of the attributes of a task</li>
+  <li>Delete any new rows that you made</li>
+  <li>Execute the following SQL queries
+    <ul>
+      <li>Retrieve all Tasks</li>
+      <li>Retrieve all Tasks with a title of “Laundry”</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Then, answer the following questions:</p>
+
+<ul>
+  <li>How many databases do you see in Postico?</li>
+  <li>How would you describe your <code class="highlighter-rouge">task_manager_development</code> database’s schema?</li>
+  <li>Why is there a <code class="highlighter-rouge">task_manager_development</code> database and a <code class="highlighter-rouge">task_manager_test</code> database?</li>
+  <li>Why isn’t there any data in the <code class="highlighter-rouge">task_manager_test</code> database?</li>
+</ul>
+
+<p><strong>Extensions</strong></p>
+
+<p>If you complete the activity and answer the follow up questions, try to execute the following SQL queries:</p>
+
+<ul>
+  <li>Add a new task to the Tasks table</li>
+  <li>Retrieve all tasks sorted by title in reverse alphabetical order</li>
+  <li>Find all Tasks where the description <strong>contains</strong> the string “shop”. (Need help? See <a href="https://www.postgresql.org/docs/8.3/functions-matching.html">this</a>)</li>
+  <li>Delete a task</li>
+  <li>Create a new table called “People”. A Person should have a name and an age.</li>
+</ul>
+
+<h2 id="discussion-questions-pt-2">Discussion Questions pt. 2</h2>
+
+<ul>
+  <li>What is an ORM? How does it relate to the DB?</li>
+  <li>Why would you want/need to use an ORM?</li>
+  <li>What is ActiveRecord?</li>
+  <li>What is a Model in a Rails application?</li>
+  <li>What is the Rails Console? Why would you use the Rails console?</li>
+</ul>
+
+<h2 id="rails-console-activity">Rails Console Activity</h2>
+
+<ol>
+  <li>First, open Postico and double check that you have deleted any tasks you made during the Postico Activity</li>
+  <li>In TaskManager, open up the Rails console by running <code class="highlighter-rouge">rails c</code> from the command line (make sure that you navigate to your TaskManager repo first)</li>
+  <li>Open up your <code class="highlighter-rouge">Tasks</code> table in Postico. Now run <code class="highlighter-rouge">tasks = Task.all</code> in your Rails console. Is this what you would expect? What type of object is returned from this method call? What SQL query do you see in the Rails Console after running this command? Now run <code class="highlighter-rouge">Task.all.to_sql</code>. How does this compare to the SQL command you saw in the Rails Console?</li>
+  <li>In the Rails Console, run <code class="highlighter-rouge">Task.create(title: "Laundry", description: "Clean the clothes")</code>. Now open up the Tasks table in Postico. Do you see your new Task? If not, try to refresh your table. What SQL query do you see in the Rails Console after running this command? What does the <code class="highlighter-rouge">create</code> method do?</li>
+  <li>In the Rails Console, run <code class="highlighter-rouge">task = Task.new(title: "Grocery Shopping", description: "need to eat")</code>. What <code class="highlighter-rouge">id</code> do you see stored in the new Task object? Now open up the Tasks table in Postico. Do you see your new Task? In the Rails Console, run <code class="highlighter-rouge">task.save</code>. Now what <code class="highlighter-rouge">id</code> do you see for the Task object? Do you see it stored in the Tasks table in Postico? What is the difference between <code class="highlighter-rouge">new</code> and <code class="highlighter-rouge">create</code>?</li>
+  <li>In the Rails Console, run <code class="highlighter-rouge">task.update(description: "go buy food")</code>. Now check your Tasks table in Postico. Did it change? Is this what you expected?</li>
+  <li>In the Rails Console, run <code class="highlighter-rouge">task.destroy</code>. Now check your Tasks table in Postico. Did it change? Is this what you expected?</li>
+  <li>In the Rails Console, run <code class="highlighter-rouge">Task.find(&lt;id&gt;)</code> where <code class="highlighter-rouge">&lt;id&gt;</code> is the <code class="highlighter-rouge">id</code> of a Task in your database. What does this return? Now run the same command with an <code class="highlighter-rouge">id</code> that is not in the database. What does this produce?</li>
+</ol>
+
+<p>Key Takeaways:</p>
+
+<ul>
+  <li>ActiveRecord objects are a representation of what is stored in the database</li>
+  <li>ActiveRecord has many built in methods for querying the database</li>
+  <li>All ActiveRecord commands execute SQL under the hood.</li>
+</ul>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>What is a database? How does a database relate to web applications? What is Postgresql?</li>
+  <li>What is the database schema?</li>
+  <li>What is an ORM? What is ActiveRecord? How do they relate to the database?</li>
+  <li>What is a model in a Rails application?</li>
+  <li>Assuming you have a <code class="highlighter-rouge">Song</code> model, what ActiveRecord methods would you use to do the following?
+    <ul>
+      <li>Retrieve a Song from the DB with a specific ID</li>
+      <li>Retrieve all Songs from the DB</li>
+      <li>Store a new Song in the database</li>
+      <li>Change the attributes of an existing Song in the DB</li>
+      <li>Delete a particular Song from the DB</li>
+    </ul>
+  </li>
+</ul>
+:ET

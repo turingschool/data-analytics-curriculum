@@ -1,0 +1,102 @@
+I"C<h1 id="primer-on-each">Primer on .each</h1>
+
+<h3 id="goals">Goals</h3>
+
+<ul>
+  <li>Learn how to use a debugger to pause and interact with running code</li>
+  <li>Understand how to use single-line and multi-line each</li>
+</ul>
+
+<h4 id="debuggers">Debuggers</h4>
+
+<p>As programmers we often make assumptions about what our code is doing. We are often wrong. One of the most important and effective debugging techniques is to validate your assumptions.</p>
+
+<p>Have you ever found yourself working on a programming problem and as you attempt to solve it, you are forced to run the entire file over and over again until you get the correct result? Wouldn’t it be awesome if you could pause your code at a specific line and interact with it? Enter debuggers.</p>
+
+<p>Debuggers are great to see what your code is actually doing. The most common debuggers in ruby are <code class="highlighter-rouge">byebug</code> and <code class="highlighter-rouge">pry</code>. You can pick whichever you prefer. For this exercise we will use <code class="highlighter-rouge">pry</code>.</p>
+
+<p>First, install it from the command line.
+<code class="highlighter-rouge">gem install pry</code></p>
+
+<p>You need to require it at the top of your Ruby file.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "pry"
+</code></pre></div></div>
+
+<p>Now you can use it like this…</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>favorite_things = ["Trapper Keeper", "Netscape Navigator", "Troll Doll"]
+binding.pry
+</code></pre></div></div>
+
+<p>We’re going to use your debugger to explore <code class="highlighter-rouge">.each</code> and on the challenges below.</p>
+
+<p>Let’s use <a href="https://gist.github.com/jmejia/04924190362f64fc49ab">this gist</a> as a guide.</p>
+
+<h4 id="what-are-enumerable-methods">What are enumerable methods?</h4>
+
+<ul>
+  <li>methods that can be used on arrays and hashes to go through each element or
+search for elements or a specific element.</li>
+</ul>
+
+<h4 id="what-is-each">What is .each?</h4>
+
+<ul>
+  <li>.each is the base for enumerable methods.</li>
+  <li>it allows you to traverse a collection</li>
+  <li>it returns the original collection</li>
+</ul>
+
+<h4 id="what-is-the-syntax-for-writing-enumerable-methods">What is the syntax for writing enumerable methods?</h4>
+<p>Multi-Line</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+  <span class="n">item</span><span class="p">.</span><span class="nf">do_something</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Single-Line</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">item</span><span class="p">.</span><span class="nf">do_something</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="basic-use-of-each">Basic use of .each</h4>
+
+<p>Let’s say we have an array of words, and we want to print out to the screen
+each word in the array, but in all capitalized letters.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"alice"</span><span class="p">,</span> <span class="s2">"bob"</span><span class="p">,</span> <span class="s2">"eve"</span><span class="p">]</span>
+
+<span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="nb">name</span><span class="p">.</span><span class="nf">upcase</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>This can also be written:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"alice"</span><span class="p">,</span> <span class="s2">"bob"</span><span class="p">,</span> <span class="s2">"eve"</span><span class="p">]</span>
+
+<span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span> <span class="nb">puts</span> <span class="nb">name</span><span class="p">.</span><span class="nf">upcase</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>What do you think each of these returns?</p>
+
+<p>Remember that there is a difference between what gets output to a screen
+and what a bit of code returns.</p>
+
+<h4 id="exercises">Exercises</h4>
+
+<p>Use your debugger to work through the following…</p>
+
+<ul>
+  <li>If you had an array of numbers, e.g. [1,2,3,4], how do you print out the
+doubles of each number? Triples?</li>
+  <li>If you had the same array, how would you only print out the even numbers?
+What about the odd numbers?</li>
+  <li>How could you create a new array which contains each number multipled by 2?</li>
+  <li>Given an array of first and last names, e.g. [“Alice Smith”, “Bob Evans”,
+“Roy Rogers”],  how would you print out the full names line by line?</li>
+  <li>How would you print out only the first name?</li>
+  <li>How would you print out only the last name?</li>
+  <li>How could you print out only the initials?</li>
+  <li>How can you print out the last name and how many characters are in it?</li>
+  <li>How can you create an integer which represents the total number of characters in all the names?</li>
+</ul>
+
+:ET

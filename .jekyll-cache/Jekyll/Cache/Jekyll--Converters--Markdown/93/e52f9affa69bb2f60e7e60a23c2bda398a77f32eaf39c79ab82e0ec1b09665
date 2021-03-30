@@ -1,0 +1,117 @@
+I"F<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Practice wrapping HTTP API calls in a Ruby class</li>
+  <li>Understand how Faraday is used to make web requests</li>
+  <li>Understand how VCR/mocks are used for testing</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>25 - Independent Work</li>
+  <li>Break</li>
+  <li>25 - Lecture/Demo</li>
+  <li>Break</li>
+  <li>25 - Paired Work</li>
+</ul>
+
+<h2 id="independent-work">Independent Work</h2>
+
+<p>Work for the first 15 minutes on your own to:</p>
+
+<ul>
+  <li>Clone the <a href="https://github.com/turingschool-examples/tweeter">Tweeter project</a></li>
+  <li>Bundle, migrate, and run <code class="highlighter-rouge">rake db:data:load</code></li>
+  <li>Get the server running locally on port 3000</li>
+  <li>Visit the “endpoints” to display an individual tweet and an individual poster in your broswer</li>
+  <li>Read the README for the Faraday gem</li>
+  <li>Load your console, require Faraday, and use it to make the same two requests to your local server</li>
+</ul>
+
+<p>If you complete those tasks:</p>
+
+<ul>
+  <li>Can you use Faraday to create a Poster? Create a tweet?</li>
+  <li>Can you use the PATCH verb to modify an existing tweet?</li>
+  <li>Think about / experiment with: how could you create a per-user token that acted like their password to “sign” API requests?</li>
+</ul>
+
+<h2 id="lecture">Lecture</h2>
+
+<p>Let’s come back together to discuss the theory and practice of wrapper gems.</p>
+
+<ul>
+  <li>Big Picture
+    <ul>
+      <li>Why create a wrapper gem?</li>
+      <li>What does the wrapper essentially do?</li>
+      <li>Making requests with HTTParty or Faraday</li>
+    </ul>
+  </li>
+  <li>Wrapper Approaches
+    <ul>
+      <li>The Convenience Wrapper</li>
+      <li>The Pattern-Shifting Wrapper</li>
+    </ul>
+  </li>
+  <li>Challenges of external dependencies
+    <ul>
+      <li>What if the API changes?</li>
+      <li>Gem to match different versions of the API</li>
+      <li>Your own services are dependencies</li>
+    </ul>
+  </li>
+  <li>The testing story
+    <ul>
+      <li>Interdependent testing sucks</li>
+      <li>HTTP requests suck</li>
+      <li>VCR is a pretty-good solution</li>
+      <li>Mocking is sometimes a better solution</li>
+    </ul>
+  </li>
+  <li>Wrapper Gem Expectations
+    <ul>
+      <li>Minimize the dependencies it drags into a project</li>
+      <li>Minimize knowledge of the including system</li>
+      <li>Tight semantic versioning with link to the API version</li>
+      <li>Bonus: offer a way to verify the actual API</li>
+      <li>Bonus: offer built-in mocking functionality</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="experimenting-with-tweeter-client">Experimenting with Tweeter-Client</h2>
+
+<p>Let’s return to the Tweeter project to dive into what a wrapper might look like in practice. Get together with your pair and:</p>
+
+<ul>
+  <li>Clone the <a href="https://github.com/turingschool-examples/tweeter-client">Tweeter-Client project</a></li>
+  <li>Spend about three minutes exploring the code and tests that are already there</li>
+  <li>Write tests for the same methods you worked with in the independent work</li>
+  <li><em>Write an implementation to pass the tests</em></li>
+</ul>
+
+<h3 id="extensions">Extensions</h3>
+
+<p>You’ll talk more about testing in a future lesson. But you can experiment now:</p>
+
+<ul>
+  <li>Add VCR to the project</li>
+  <li>Use VCR to record a successful test run</li>
+  <li>Make your test suite pass <em>without</em> the API app running</li>
+</ul>
+
+<h2 id="returning-to-monsterporium">Returning to Monsterporium</h2>
+
+<p>Yesterday you built up your <code class="highlighter-rouge">Rating</code> model as a wrapper of the service functionality.</p>
+
+<ul>
+  <li>Generate a new gem, <code class="highlighter-rouge">ratemachine</code></li>
+  <li>Move the <code class="highlighter-rouge">Rating</code> model, now just a PORO, to the gem</li>
+  <li>Bundle it as a gem</li>
+  <li>Open an IRB session, load the gem, and make it works to fetch ratings</li>
+  <li>Require the local gem from your Monsterporium <code class="highlighter-rouge">Gemfile</code></li>
+  <li>Load the app and prove that it works</li>
+</ul>
+:ET

@@ -1,0 +1,153 @@
+I"G*<h2 id="testing-against-3rd-party-apis">Testing Against 3rd Party APIs</h2>
+
+<h3 id="overview">Overview</h3>
+
+<p>As we build more and more sophisticated web applications, we’ll frequently want to make use of data we don’t control. Generally this data is provided to us by a 3rd party company or organization via a public-facing API on the web.</p>
+
+<p>While it’s great to get access to all this data so easily, it can sometimes create headaches for our test suite.</p>
+
+<h4 id="3rd-party-api-testing-problems">3rd Party API Testing Problems</h4>
+
+<p>Let’s consider a few difficulties when testing around a 3rd party
+API:</p>
+
+<ul>
+  <li><strong>Speed</strong> – even a “fast” API will still generally have latencies in the 10s of milliseconds, which can slow our tests down</li>
+  <li><strong>Rate Limits</strong> – We may be using an API which limits the volume of our usage. We certainly don’t want to waste these requests on repetitive test queries</li>
+  <li><strong>Repeatibility</strong> – The data on many endpoints will change over time. This will cause problems if our tests are designed around 1 set of data but the API starts providing something different. We’d like it to be consistent and repeatable.</li>
+  <li><strong>Network Tolerance</strong> – Our test suite should be isolated to our machine and shouldn’t be affected by network outages. This won’t be the case if we’re utilizing a real API in the test suite.</li>
+</ul>
+
+<h4 id="solutions">Solutions</h4>
+
+<p>There are a few common solutions we might take for these issues:</p>
+
+<ul>
+  <li><strong>Stubbing</strong> – often we can use in-process stubbing libraries to replace our API queries with canned, static responses that will be fast and reliable</li>
+  <li><strong>Network-level Mocking</strong> – sometimes we might want to capture the whole network response. Fortunately there are tools like VCR available for this.</li>
+</ul>
+
+<p>If you’re interested in reading about testing external APIs that don’t use VCR check out these two articles as a starting point:</p>
+
+<ul>
+  <li><a href="https://robots.thoughtbot.com/how-to-stub-external-services-in-tests">How to Stub External Services in Tests</a></li>
+  <li><a href="https://robots.thoughtbot.com/fake-it">Have you ever… Faked It?</a></li>
+</ul>
+
+<h3 id="workshop">Workshop</h3>
+
+<p>We are going to continue with the application that we created yesterday in our <a href="consuming_an_api">Consuming an API lesson</a>.</p>
+
+<p>Add the following gems:</p>
+
+<ul>
+  <li><a href="https://github.com/vcr/vcr">VCR</a>: records your requests and allows you to reuse the responses whenever you are testing functionality dependent on the return value of those requests</li>
+  <li><a href="https://github.com/bblimke/webmock">webmock</a>: is a library for stubbing and setting expectations on HTTP requests in Ruby</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+....
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+end
+</code></pre></div></div>
+
+<p>We need to configure webmock and VCR in our <code class="highlighter-rouge">spec/rails_helper.rb</code>. Below the line that requires <code class="highlighter-rouge">rspec/rails</code>, add lines to include <code class="highlighter-rouge">webmock/rspec' and </code>vcr`. We also add a VCR configuration block where we declare where it should look for cassettes (more on cassettes below).</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/rails_helper.rb</span>
+<span class="no">ENV</span><span class="p">[</span><span class="s1">'RAILS_ENV'</span><span class="p">]</span> <span class="o">||=</span> <span class="s1">'test'</span>
+<span class="nb">require</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s1">'../../config/environment'</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">'spec_helper'</span>
+<span class="nb">require</span> <span class="s1">'rspec/rails'</span>
+<span class="nb">require</span> <span class="s1">'webmock/rspec'</span>
+<span class="nb">require</span> <span class="s1">'vcr'</span>
+
+<span class="no">VCR</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">cassette_library_dir</span> <span class="o">=</span> <span class="s2">"spec/cassettes"</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">hook_into</span> <span class="ss">:webmock</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Additionally, add the following line to your <code class="highlighter-rouge">.gitignore</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sr">/spec/</span><span class="n">cassettes</span>
+</code></pre></div></div>
+
+<p>On the first line of the test we are declaring which VCR cassette we should use for this test. A <strong>cassette</strong> is a recorded response. All of our cassettes will be stored in <code class="highlighter-rouge">spec/cassettes</code> (as declared in the VCR configs in the test_helper). If VCR cannot find a cassette named <code class="highlighter-rouge">sunlight_service#legislators</code> it will make the call and save the response. If the cassette already exists, it will read the existing cassette.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/services/sunlight_service_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">SunlightService</span> <span class="k">do</span>
+  <span class="nb">attr_reader</span> <span class="ss">:service</span>
+
+    <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+      <span class="vi">@service</span> <span class="o">=</span> <span class="no">SunlightService</span><span class="p">.</span><span class="nf">new</span>
+    <span class="k">end</span>
+
+    <span class="n">describe</span> <span class="s2">"#legislators"</span> <span class="k">do</span>
+      <span class="n">it</span> <span class="s2">"finds all female legislators"</span> <span class="k">do</span>
+        <span class="no">VCR</span><span class="p">.</span><span class="nf">use_cassette</span><span class="p">(</span><span class="s2">"services/find_female_legislators"</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">legislators</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="nf">legislators</span><span class="p">(</span><span class="ss">gender: </span><span class="s2">"F"</span><span class="p">)</span>
+        <span class="n">legislator</span>  <span class="o">=</span> <span class="n">legislators</span><span class="p">.</span><span class="nf">first</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="n">legislators</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">[</span><span class="ss">:first_name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Liz'</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">[</span><span class="ss">:last_name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Cheney'</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="n">describe</span> <span class="s1">'#committess'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'can find a list of committees by chamber'</span> <span class="k">do</span>
+      <span class="no">VCR</span><span class="p">.</span><span class="nf">use_cassette</span><span class="p">(</span><span class="s2">"services/find_list_of_committees"</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">committees</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="nf">committees</span><span class="p">(</span><span class="ss">chamber: </span><span class="s1">'senate'</span><span class="p">)</span>
+        <span class="n">committee</span>  <span class="o">=</span> <span class="n">committees</span><span class="p">.</span><span class="nf">first</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="n">committees</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">committee</span><span class="p">[</span><span class="ss">:name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Federal Spending Oversight and Emergency Management'</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>Using that model, make adjustments to your model tests to also use VCR.</p>
+
+<h4 id="review-of-the-big-picture">Review of the Big Picture</h4>
+
+<ol>
+  <li>A test that makes an API call without a VCR cassette
+    <ul>
+      <li>What role do the following pieces play?</li>
+    </ul>
+    <ul>
+      <li>Rails app</li>
+      <li>External API (github, twitter, etc)</li>
+      <li>Webmock</li>
+      <li>VCR</li>
+      <li>cassettes</li>
+      <li>The Internet</li>
+      <li>Faraday</li>
+      <li>Figaro</li>
+    </ul>
+  </li>
+  <li>A test that makes an API call with VCR
+    <ul>
+      <li>What role do the following pieces play?</li>
+    </ul>
+    <ul>
+      <li>Rails app</li>
+      <li>External API (github, twitter, etc)</li>
+      <li>Webmock</li>
+      <li>VCR</li>
+      <li>cassettes</li>
+      <li>The Internet</li>
+      <li>Faraday</li>
+      <li>Figaro</li>
+    </ul>
+  </li>
+</ol>
+:ET

@@ -1,0 +1,152 @@
+I"�.<h2 id="ruby-project-etiquette-how-to-mind-your-ps-and-qs-in-a-ruby-project">Ruby Project Etiquette: How to Mind Your P’s and Q’s in a Ruby Project</h2>
+
+<h3 id="directory-and-file-organization">Directory and File Organization</h3>
+
+<h4 id="fileclass-naming-conventions">File/Class Naming Conventions</h4>
+
+<ol>
+  <li>Snake-case file names (<code class="highlighter-rouge">my_file.rb</code> rather than <code class="highlighter-rouge">myFile.rb</code> or <code class="highlighter-rouge">my-file.rb</code>)</li>
+  <li>End files in <code class="highlighter-rouge">.rb</code></li>
+  <li>Classes are named using PascalCase a.k.a. UpperCamelCase</li>
+  <li>Match file names to the class name – e.g. a file containing the class <code class="highlighter-rouge">RotationGenerator</code> should be <code class="highlighter-rouge">rotation_generator.rb</code></li>
+</ol>
+
+<h4 id="directory-structure">Directory Structure</h4>
+
+<p>Every project should have one top level directory that contains everything for that project. This is called the <strong>Root Directory</strong>. Be careful: “Root Directory” can also refer to the root of your computer. In this case, we are referring to the root of the project. Context is very important.</p>
+
+<p>In a standard Ruby project, we tend to organize code into 4 sub-directories underneath the root directory:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">lib</code> for source code</li>
+  <li><code class="highlighter-rouge">test</code> for test files</li>
+  <li><code class="highlighter-rouge">data</code> for data-related files (.txt, .csv, etc)</li>
+  <li><code class="highlighter-rouge">bin</code> for any “executable” files (you may not have encountered any of these yet; if you don’t have them, leave <code class="highlighter-rouge">bin</code> out)</li>
+</ol>
+
+<h4 id="example-directory-structure--naming">Example Directory Structure &amp; Naming</h4>
+
+<p>If we are creating an “Enigma” project that needs a <code class="highlighter-rouge">RotationGenerator</code> class, our directory structure would look like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">enigma</span>
+  <span class="err">├──</span> <span class="n">lib</span>
+  <span class="err">│  </span> <span class="err">├──</span> <span class="n">rotation_generator</span><span class="p">.</span><span class="nf">rb</span>
+  <span class="err">└──</span> <span class="nb">test</span>
+      <span class="err">├──</span> <span class="n">rotation_generator_test</span><span class="p">.</span><span class="nf">rb</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># lib/rotation_generator.rb</span>
+
+<span class="k">class</span> <span class="nc">RotationGenerator</span>
+
+  <span class="k">def</span> <span class="nf">first_method</span>
+    <span class="c1"># do a thing</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># lib/rotation_generator_test.rb</span>
+
+<span class="k">class</span> <span class="nc">RotationGeneratorTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+
+  <span class="k">def</span> <span class="nf">test_first_method</span>
+    <span class="c1"># test that is does a thing</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice the relationship between class and test class names, source code file and test file names, and file to class names.</p>
+
+<h3 id="require-statements">Require Statements</h3>
+<p>Require statements often trip us up, but there are some straightforward guidelines we can follow that make things much more reliable:</p>
+
+<h5 id="require-vs-require_relative"><code class="highlighter-rouge">require</code> vs. <code class="highlighter-rouge">require_relative</code></h5>
+
+<p>Here’s a quick overview of <em>how</em> <code class="highlighter-rouge">require</code> and <code class="highlighter-rouge">require_relative</code> work.</p>
+
+<p><code class="highlighter-rouge">require_relative</code> attempts to require a second file using a path relative to <em>the file that is requiring it</em>.</p>
+
+<ul>
+  <li>Does NOT matter where you run the test from (searches for path relative to the file the requirement is in)</li>
+  <li>As directory structure gets more complex, navigating relative to the file you require come can become convoluted (<code class="highlighter-rouge">require_relative '../../../lib/enigma'</code>) 🙀.</li>
+</ul>
+
+<p><code class="highlighter-rouge">require</code> attempts to require a second file relative to <em>the place</em> from which the first file is <strong>being run</strong> – that is, relative to your present working directory when you type <code class="highlighter-rouge">ruby file_one.rb</code></p>
+
+<ul>
+  <li>DOES matter where you run the test from</li>
+  <li>require tends to behave more consistently in complex scenarios and project structures (<code class="highlighter-rouge">require './lib/enigma'</code>)</li>
+  <li>require is also what we’ll use for external gems and libraries. This is because…
+    <ul>
+      <li>require is designed to cooperate with ruby’s $LOAD_PATH</li>
+      <li>Rails assumes we’re running from the main project directory.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="err-on-the-side-of-require">Err on the Side of <code class="highlighter-rouge">require</code></h4>
+
+<p>Consider a project with the following structure.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enigma
+  ├── lib
+  │   ├── enigma.rb
+  └── test
+      ├── enigma_test.rb
+</code></pre></div></div>
+
+<p>Generally within the Ruby community it is assumed that you will be running your test files from the root directory, in this case “enigma”, <em>and not from within the <code class="highlighter-rouge">/test</code> directory</em>.</p>
+
+<p><strong>Avoid the temptation to navigate into go into test or lib directories through terminal to run code (i.e. <code class="highlighter-rouge">test$ ruby enigma_test</code>). Use <code class="highlighter-rouge">enigma$ ruby test/enigma_test.rb</code> instead.</strong></p>
+
+<h5 id="why-do-we-prefer-require">Why do we prefer <code class="highlighter-rouge">require</code>?</h5>
+
+<p>Assuming the directory structure above, <code class="highlighter-rouge">enigma_test.rb</code> could include either of the following lines (remember you can leave <code class="highlighter-rouge">.rb</code> off when you are requiring a file):</p>
+
+<p><code class="highlighter-rouge">require './lib/enigma'</code>
+<code class="highlighter-rouge">require_relative '../lib/enigma'</code></p>
+
+<p>If you are running your test files from within the <code class="highlighter-rouge">project</code> directory, both of these will work the same. If you move down into the <code class="highlighter-rouge">project/test</code> directory, the first would then be unable to find the <code class="highlighter-rouge">enigma.rb</code> file. So why would we use something that might break depending on where we execute our code? Well, there are tradeoffs.</p>
+
+<p>What seems more brittle in this case is likely actually more resilient to future changes. Remember the example above: if our application and test suite grow, we may decide that we want to include subdirectories for our tests. If we use <code class="highlighter-rouge">require_relative</code> that means that we have to add a <code class="highlighter-rouge">../</code> to each and every one of our tests. If we use <code class="highlighter-rouge">require</code> we can simply move our files to a new subdirectory and continue to run our tests from the <code class="highlighter-rouge">project</code> directory as we have been doing.</p>
+
+<p>Additionally, using require tends to be more common within the community. Programmers get worked up about weird things and sometimes it’s best to just <code class="highlighter-rouge">go with the flow</code>.</p>
+
+<h2 id="rakefiles">Rakefiles</h2>
+
+<p>Rake tasks come from <a href="https://www.computerhope.com/unix/umake.htm">make</a> tasks, Unix origins. They are used for task management and building projects. For a C project, “building” means compiling and verifying that things work. Ruby projects don’t get compiled, so what does “building” mean for a Ruby project?</p>
+
+<p>Rake tries to create a standardized solution for this problem so that you can interact with build and program prep the same no matter which application you’re running. Not only does it give you set commands, but you can also build your own tasks and run them through Rake.</p>
+
+<p>By default, Rake will look for a file name <code class="highlighter-rouge">Rakefile</code> in the root of your project. You’ll define your RakeTasks in that file.</p>
+
+<h3 id="rakefile-to-run-all-your-tests">Rakefile to Run all your Tests</h3>
+
+<p>In your project’s root directory, create a file called <code class="highlighter-rouge">Rakefile</code>. Add this code to it:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rake/testtask'</span>
+
+<span class="no">Rake</span><span class="o">::</span><span class="no">TestTask</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">pattern</span> <span class="o">=</span> <span class="s2">"test/**/*_test.rb"</span>
+<span class="k">end</span>
+
+<span class="n">task</span> <span class="ss">default: </span><span class="p">[</span><span class="s2">"test"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>A “task” is referring to something rake can do for you. The <code class="highlighter-rouge">Rake::TestTask</code> is a special task built in to rake for running all your tests. Instead of having to run all your test individually by calling <code class="highlighter-rouge">ruby test/file_name</code> for each test file, you can run the command <code class="highlighter-rouge">rake</code> in the command line from your project root directory and it will run all of the test files inside your test directory as if it were one, big test file.</p>
+
+<p><strong>note:</strong> You may need to <code class="highlighter-rouge">gem install rake</code>.</p>
+
+<p>Notice that the <code class="highlighter-rouge">Rake::TestTask</code> is being passed a block, kind of like how we pass blocks to enumerables. This block is specifying where the test files are located with the line <code class="highlighter-rouge">t.pattern = "test/**/*_test.rb"</code>. The <code class="highlighter-rouge">*</code> is a wildcard character, which means it will pattern match anything. This line of code is saying “our tests are located in the test directory in files that end with <code class="highlighter-rouge">_test.rb</code>”.</p>
+
+<p>The line <code class="highlighter-rouge">task default: ["test"]</code> is setting our default task to “test”. Normally when you run <code class="highlighter-rouge">rake</code>, you have to specify the name of task you want to run, but setting “test” as the default allows us to just run <code class="highlighter-rouge">rake</code> from the command line to run all the tests.</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li><a href="http://www.stuartellis.name/articles/rake/">Using Rake to Automate Tasks</a></li>
+  <li>You may see alternate patterns in older Ruby Versions <a href="https://docs.ruby-lang.org/en/2.1.0/Rake/TestTask.html">Testing Rake Task</a></li>
+</ul>
+:ET

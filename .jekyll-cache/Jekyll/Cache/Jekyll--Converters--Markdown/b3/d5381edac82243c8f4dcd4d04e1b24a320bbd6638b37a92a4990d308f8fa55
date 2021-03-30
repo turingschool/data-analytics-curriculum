@@ -1,0 +1,102 @@
+I"m+<h3 id="iteration-1">Iteration 1</h3>
+
+<p>Clone this <a href="https://github.com/turingschool-examples/award-show.git">Repository</a></p>
+
+<p>Use the tests in <code class="highlighter-rouge">actor_test.rb</code> and <code class="highlighter-rouge">movie_test.rb</code> to drive the development of the functionality described below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">actress_1</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Jennifer Lawrence"</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="s2">"110000000"</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Actor...&gt;</span>
+<span class="n">actress_1</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1">#=&gt; "Jennifer Lawrence"</span>
+<span class="n">actress_1</span><span class="p">.</span><span class="nf">birth_year</span>
+<span class="c1">#=&gt; 1990</span>
+<span class="n">actress_1</span><span class="p">.</span><span class="nf">net_worth</span>
+<span class="c1">#=&gt; 110000000</span>
+<span class="n">movie_1</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Hunger Games"</span><span class="p">,</span> <span class="mi">2012</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Movie...&gt;</span>
+<span class="n">movie_1</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1">#=&gt; "Hunger Games"</span>
+<span class="n">movie_1</span><span class="p">.</span><span class="nf">release_year</span>
+<span class="c1">#=&gt; 2012</span>
+</code></pre></div></div>
+
+<h3 id="iteration-2">Iteration 2</h3>
+
+<p>Writing your own tests to drive development, create a <code class="highlighter-rouge">Nominee</code> and <code class="highlighter-rouge">AwardShow</code> class with the functionality described below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">actress_1</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Jennifer Lawrence"</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="s2">"110000000"</span><span class="p">)</span>
+<span class="n">movie_1</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Hunger Games"</span><span class="p">,</span> <span class="mi">2012</span><span class="p">)</span>
+<span class="n">nominee_1</span> <span class="o">=</span> <span class="no">Nominee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">actress_1</span><span class="p">,</span> <span class="n">movie_1</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Nominee...&gt;</span>
+<span class="n">nominee_1</span><span class="p">.</span><span class="nf">actor</span>
+<span class="c1">#=&gt; &lt;Actor...&gt;</span>
+<span class="n">nominee_1</span><span class="p">.</span><span class="nf">movie</span>
+<span class="c1">#=&gt; &lt;Movie...&gt;</span>
+
+<span class="n">actress_2</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Brie Larson"</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="s2">"10000000"</span><span class="p">)</span>
+<span class="n">movie_2</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Room"</span><span class="p">,</span> <span class="mi">2015</span><span class="p">)</span>
+<span class="n">nominee_2</span> <span class="o">=</span> <span class="no">Nominee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">actress_2</span><span class="p">,</span> <span class="n">movie_2</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Nominee...&gt;</span>
+
+<span class="n">show</span> <span class="o">=</span> <span class="no">AwardShow</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2017</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;AwardShow...&gt;</span>
+<span class="n">show</span><span class="p">.</span><span class="nf">year</span>
+<span class="c1">#=&gt; 2017</span>
+<span class="n">show</span><span class="p">.</span><span class="nf">nominees</span>
+<span class="c1">#=&gt; []</span>
+</code></pre></div></div>
+
+<h3 id="iteration-3">Iteration 3</h3>
+
+<p>Writing your own tests to drive development, create the functionality for the <code class="highlighter-rouge">AwardShow</code> class described below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">show</span> <span class="o">=</span> <span class="no">AwardShow</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2017</span><span class="p">)</span>
+<span class="n">actress_1</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Jennifer Lawrence"</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="s2">"110000000"</span><span class="p">)</span>
+<span class="n">movie_1</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Hunger Games"</span><span class="p">,</span> <span class="mi">2012</span><span class="p">)</span>
+<span class="n">nominee_1</span> <span class="o">=</span> <span class="no">Nominee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">actress_1</span><span class="p">,</span> <span class="n">movie_1</span><span class="p">)</span>
+
+<span class="n">actress_2</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Brie Larson"</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="s2">"10000000"</span><span class="p">)</span>
+<span class="n">movie_2</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Room"</span><span class="p">,</span> <span class="mi">2015</span><span class="p">)</span>
+<span class="n">nominee_2</span> <span class="o">=</span> <span class="no">Nominee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">actress_2</span><span class="p">,</span> <span class="n">movie_2</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">nominees</span>
+<span class="c1">#=&gt; []</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">add_nominee</span><span class="p">(</span><span class="n">nominee_1</span><span class="p">)</span>
+<span class="n">show</span><span class="p">.</span><span class="nf">nominees</span>
+<span class="c1">#=&gt; [&lt;Nominee...&gt;]</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">add_nominee</span><span class="p">(</span><span class="n">nominee_2</span><span class="p">)</span>
+<span class="n">show</span><span class="p">.</span><span class="nf">nominees</span>
+<span class="c1">#=&gt; [&lt;Nominee...&gt;, &lt;Nominee...&gt;]</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">nominated_movies</span>
+<span class="c1">#=&gt; [&lt;Movie...&gt;, &lt;Movie...&gt;]</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">average_salary</span>
+<span class="c1">#=&gt; 60000000</span>
+</code></pre></div></div>
+
+<h3 id="iteration-4">Iteration 4</h3>
+
+<p>Writing your own tests to drive development, add the following features to <code class="highlighter-rouge">AwardShow</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">show</span> <span class="o">=</span> <span class="no">AwardShow</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2017</span><span class="p">)</span>
+<span class="n">actress_1</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Jennifer Lawrence"</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="s2">"110000000"</span><span class="p">)</span>
+<span class="n">movie_1</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Hunger Games"</span><span class="p">,</span> <span class="mi">2012</span><span class="p">)</span>
+<span class="n">nominee_1</span> <span class="o">=</span> <span class="no">Nominee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">actress_1</span><span class="p">,</span> <span class="n">movie_1</span><span class="p">)</span>
+
+<span class="n">actress_2</span> <span class="o">=</span> <span class="no">Actor</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Brie Larson"</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="s2">"10000000"</span><span class="p">)</span>
+<span class="n">movie_2</span> <span class="o">=</span> <span class="no">Movie</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Room"</span><span class="p">,</span> <span class="mi">2015</span><span class="p">)</span>
+<span class="n">nominee_2</span> <span class="o">=</span> <span class="no">Nominee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">actress_2</span><span class="p">,</span> <span class="n">movie_2</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">add_nominee</span><span class="p">(</span><span class="n">nominee_1</span><span class="p">)</span>
+<span class="n">show</span><span class="p">.</span><span class="nf">add_nominee</span><span class="p">(</span><span class="n">nominee_2</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">nominees_total_net_worth</span>
+<span class="c1">#=&gt; 120000000</span>
+
+<span class="n">show</span><span class="p">.</span><span class="nf">nominees_alphabetical_last_names</span>
+<span class="c1">#=&gt; ["Larson", "Lawrence"]</span>
+</code></pre></div></div>
+:ET

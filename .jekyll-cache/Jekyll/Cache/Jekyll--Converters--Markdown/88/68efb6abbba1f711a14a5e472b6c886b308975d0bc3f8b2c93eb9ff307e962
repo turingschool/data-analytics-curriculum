@@ -1,0 +1,213 @@
+I"�;<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students recognize that AJAX is Yet Another T&amp;T Cycle</li>
+  <li>Students are able to apply HTTP request/response in multiple contexts</li>
+  <li>Students are able to implement AJAX in their project</li>
+  <li>Students are able to resolve CORS errors</li>
+</ul>
+
+<h2 id="what-are-the-parts-of-ajax">What are the parts of AJAX?</h2>
+
+<p>You’ve had one class on AJAX. Some of you have attempted implementing some AJAX in your personal project. Some of you have not. But I think you know AJAX better than you think you do.</p>
+
+<h3 id="an-example-psuedo-code-ajax-interaction">An Example psuedo-code AJAX interaction</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">HTML</span> <span class="o">=</span> <span class="nx">makeHTMLString</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+  <span class="nx">appendHTMLToDOM</span><span class="p">(</span><span class="nx">HTML</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://some.api/url</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">handleResponse</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="aka">AKA</h4>
+
+<ol>
+  <li>Make a request to some API</li>
+  <li>Do something with the response</li>
+</ol>
+
+<p>You’ve done these two steps before. Where have you seen this pattern?</p>
+
+<p>Here’s those steps in Ruby:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'faraday'</span>
+<span class="nb">require</span> <span class="s1">'json'</span>
+
+<span class="k">def</span> <span class="nf">get_post</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+  <span class="no">Faraday</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"http://birdeck.herokuapp.com/api/v1/posts/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span><span class="p">).</span><span class="nf">body</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">parse_json</span><span class="p">(</span><span class="n">json</span><span class="p">)</span>
+  <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">json</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">render_post</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">"id: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:id</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">puts</span> <span class="s2">"description: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:description</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">puts</span> <span class="s2">"created_at: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:created_at</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">puts</span> <span class="s2">"updated_at: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:updated_at</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+
+<span class="n">post_json</span> <span class="o">=</span> <span class="n">get_post</span><span class="p">(</span><span class="mi">324</span><span class="p">)</span>
+<span class="n">post_data</span> <span class="o">=</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">post_json</span><span class="p">)</span>
+<span class="n">render_post</span><span class="p">(</span><span class="n">post_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Let’s say you wanted to do the same thing in JavaScript using AJAX. Just get some JSON from an API, and output it to the console.</p>
+
+<ul>
+  <li>How would you break down what’s happening above?</li>
+  <li>What information would you need before you could do that?</li>
+  <li>How might you get that information?</li>
+</ul>
+
+<p>Take a minute to come up with a plan, and then we’ll implement your plan. We’ll write the above code using AJAX in JavaScript.</p>
+
+<h3 id="ajax-goes-both-ways">AJAX goes both ways</h3>
+
+<p>Here’s some more pseudo code</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">handleResponse</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">HTML</span> <span class="o">=</span> <span class="nx">makeHTMLString</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+  <span class="nx">appendHTMLToDOM</span><span class="p">(</span><span class="nx">HTML</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">data</span> <span class="o">=</span> <span class="nx">somethingFromTheDOM</span><span class="p">()</span>
+<span class="nx">someData</span> <span class="o">=</span> <span class="p">{</span><span class="na">some</span><span class="p">:</span> <span class="nx">data</span><span class="p">}</span>
+<span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://some.api/url</span><span class="dl">'</span><span class="p">,</span> <span class="nx">someData</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">handleResponse</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="aka-1">AKA</h4>
+
+<ol>
+  <li>Collect the data you need</li>
+  <li>Make a request to some API, and include some data</li>
+  <li>Do something with the response</li>
+</ol>
+
+<p>And here’s the Ruby:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'faraday'</span>
+<span class="nb">require</span> <span class="s1">'json'</span>
+
+<span class="k">def</span> <span class="nf">post_data</span>
+  <span class="p">{</span> <span class="ss">description: </span><span class="s2">"I'll see you in court"</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">make_json</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+  <span class="no">JSON</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">parse_json</span><span class="p">(</span><span class="n">json</span><span class="p">)</span>
+  <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">json</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">render_post</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">"id: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:id</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">puts</span> <span class="s2">"description: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:description</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">puts</span> <span class="s2">"created_at: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:created_at</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">puts</span> <span class="s2">"updated_at: </span><span class="si">#{</span><span class="n">post</span><span class="p">[</span><span class="ss">:updated_at</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">send_post</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+  <span class="n">response</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">post</span> <span class="s2">"http://birdeck.herokuapp.com/api/v1/posts.json"</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="o">|</span>
+    <span class="n">req</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'Content-Type'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'application/json'</span>
+    <span class="n">req</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="n">body</span>
+  <span class="k">end</span>
+  <span class="n">response</span><span class="p">.</span><span class="nf">body</span>
+<span class="k">end</span>
+
+<span class="n">new_post_json</span> <span class="o">=</span> <span class="n">make_json</span><span class="p">(</span><span class="n">post_data</span><span class="p">)</span>
+<span class="n">created_post_json</span> <span class="o">=</span> <span class="n">send_post</span><span class="p">(</span><span class="n">new_post_json</span><span class="p">)</span>
+<span class="n">created_post</span> <span class="o">=</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">created_post_json</span><span class="p">)</span>
+<span class="n">render_post</span><span class="p">(</span><span class="n">created_post</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>I realize that <code class="highlighter-rouge">post</code> means both the record we’re creating, and the HTTP verb used to send data to the server, but stick with me.</p>
+
+<p>Put your plan together for figuring this out in JS, and then we’ll code it together.</p>
+
+<h3 id="checks-for-understanding">Checks for understanding</h3>
+
+<ul>
+  <li>How is AJAX the same as Faraday?</li>
+  <li>How is it different?</li>
+  <li>What are some things that AJAX would enable you to do on the front end?</li>
+</ul>
+
+<h2 id="cors-oh-this-thing">CORS: Oh this thing</h2>
+
+<h3 id="the-problem">The problem</h3>
+
+<p>Browsers implement the “Same Origin Policy”. Basically, the policy allows JavaScript to download data from servers into the current page you’re on, but only if the data you download comes from the same “origin”. I’ve dug into why this is a policy multiple times, and haven’t ever really come up with a good reason that this is a thing. Sorry, it’s just a thing.</p>
+
+<p>What does this mean for us? It means that you’re not allowed to download data if the domain doesn’t match between the client and the server. If I’m visiting a page on <code class="highlighter-rouge">example.com</code> and I want to make an AJAX request to <code class="highlighter-rouge">api.com</code>, the browser won’t let me.</p>
+
+<h3 id="the-solution">The solution</h3>
+
+<p>CORS stands for Cross Origin Resource Sharing. You can’t change the rules of the browser. But the rules are slightly more complex. If you add some additional headers to your server, and you tell the browser that it’s totally fine for clients at other domains to download from you, then the browser will allow it.</p>
+
+<h3 id="how-to-cors">How to CORS</h3>
+
+<p>Firstly, there’s a good overview at <a href="https://enable-cors.org">https://enable-cors.org</a>. CORS works by adding at least the <code class="highlighter-rouge">Access-Control-Allowed-Origin</code> header to the responses from your server. This is where you can put another domain that is allowed to connect via AJAX. If you’re hosting your site at <code class="highlighter-rouge">neight-allen.github.io</code>, simply add <code class="highlighter-rouge">Access-Control-Allowed-Origin: neight-allen.github.io</code> to your headers.</p>
+
+<p>There are several uses of this header, as well as some other headers you can use. I don’t really care if you’re CORS experts. Instead of going into the weeds with CORS options, let me just recommend a package and a gem that will allow you to easily configure these headers.</p>
+
+<ul>
+  <li><a href="https://github.com/expressjs/cors">Express CORS Middleware package</a></li>
+  <li><a href="https://github.com/cyu/rack-cors">Rack CORS gem</a></li>
+</ul>
+
+<p>Let’s spend a minute getting CORS set up in your Express API.</p>
+
+<h2 id="transport-and-translate">Transport and Translate</h2>
+
+<p>The client to server (AJAX) and server to server (Faraday) communication we’ve discussed is just one form of what I call “Transport and Translate”. In fact, an obnoxious amount of what we spend our time doing is moving data from one place to another, or changing the format or presentation of said data.</p>
+
+<h3 id="transport">Transport</h3>
+
+<p>Let’s list out some of the ways we’ve moved our data around before:</p>
+
+<ul>
+  <li>Getting data out of a database into memory</li>
+  <li>Extracting data from an HTML form</li>
+  <li>Storing data in session</li>
+</ul>
+
+<p>What are some other sources and destinations for data?</p>
+
+<h3 id="translate">Translate</h3>
+
+<p>Let’s list out some of the ways we’ve translated data from one form to another</p>
+
+<ul>
+  <li>Parsing JSON into an object or hash</li>
+  <li>Mapping an objects into a table row in HTML</li>
+  <li>Converting an array of hashes to rows of a CSV</li>
+</ul>
+
+<p>What other format translations have you done?</p>
+
+<h3 id="breaking-it-down">Breaking it down</h3>
+
+<p>You’re often performing multiple rounds transport and translate. Here’s a few steps involved in serving data from an API.</p>
+
+<ol>
+  <li>Transport JSON from API via HTTP</li>
+  <li>Parse JSON into hash</li>
+  <li>Convert hash into class instance</li>
+  <li>Send instance to view</li>
+  <li>Render instance to HTML</li>
+  <li>Send HTML via HTTP</li>
+</ol>
+
+<p>Can you think about the steps involved in Quantified self? Write out the steps to go from a food record in the database, to a rendered table row of HTML on the screen.</p>
+
+<h2 id="closing-thoughts">Closing thoughts</h2>
+
+<p>I should have some of these. What do you think? What are your thoughts?</p>
+:ET

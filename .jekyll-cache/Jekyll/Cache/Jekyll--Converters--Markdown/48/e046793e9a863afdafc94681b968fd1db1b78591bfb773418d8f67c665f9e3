@@ -1,0 +1,94 @@
+I"�<h2 id="iteration-1-tests-provided">ITERATION 1 (tests provided)</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">demi</span> <span class="o">=</span> <span class="no">Musician</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Demi Lovato"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Musician:943576874387&gt;</span>
+<span class="n">demi</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1"># =&gt; "Demi Lovato"</span>
+<span class="n">demi</span><span class="p">.</span><span class="nf">songs</span>
+<span class="c1"># =&gt; []</span>
+<span class="n">demi</span><span class="p">.</span><span class="nf">song_count</span>
+<span class="c1"># =&gt; 0</span>
+</code></pre></div></div>
+
+<p><strong>Tests:</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+
+<span class="k">class</span> <span class="nc">MusicianTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def</span> <span class="nf">test_it_exists</span>
+    <span class="n">musician</span> <span class="o">=</span> <span class="no">Musician</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Demi Lovato"</span><span class="p">)</span>
+
+    <span class="n">assert_instance_of</span> <span class="no">Musician</span><span class="p">,</span> <span class="n">musician</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_it_has_name</span>
+    <span class="n">skip</span>
+    <span class="n">musician</span> <span class="o">=</span> <span class="no">Musician</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Demi Lovato"</span><span class="p">)</span>
+
+    <span class="n">assert_equal</span> <span class="s2">"Demi Lovato"</span><span class="p">,</span> <span class="n">musician</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_it_has_songs</span>
+    <span class="n">skip</span>
+    <span class="n">musician</span> <span class="o">=</span> <span class="no">Musician</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Justin Bieber"</span><span class="p">)</span>
+
+    <span class="n">assert_equal</span> <span class="p">[],</span> <span class="n">musician</span><span class="p">.</span><span class="nf">songs</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_it_has_song_count</span>
+    <span class="n">skip</span>
+    <span class="n">musician</span> <span class="o">=</span> <span class="no">Musician</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Selena Gomez"</span><span class="p">)</span>
+
+    <span class="n">assert_equal</span> <span class="mi">0</span><span class="p">,</span> <span class="n">musician</span><span class="p">.</span><span class="nf">song_count</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="iteration-2">ITERATION 2</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Cool for the Summer"</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="s2">"Confident"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Song:876876423423&gt;</span>
+<span class="n">song</span><span class="p">.</span><span class="nf">title</span>
+<span class="c1"># =&gt; "Cool for the Summer"</span>
+<span class="n">song</span><span class="p">.</span><span class="nf">year</span>
+<span class="c1"># =&gt; 2015</span>
+<span class="n">song</span><span class="p">.</span><span class="nf">album</span>
+<span class="c1"># =&gt; "Confident"</span>
+<span class="n">song</span><span class="p">.</span><span class="nf">rank</span>
+<span class="c1"># =&gt; 3</span>
+</code></pre></div></div>
+
+<h2 id="iteration-3">ITERATION 3</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">song_1</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Cool for the Summer"</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="s2">"Confident"</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">song_2</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Stone Cold"</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="s2">"Confident"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">song_3</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"This is Me"</span><span class="p">,</span> <span class="mi">2008</span><span class="p">,</span> <span class="s2">"Camp Rock"</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">musician</span> <span class="o">=</span> <span class="no">Musician</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Demi Lovato"</span><span class="p">)</span>
+
+<span class="n">musician</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="n">song_1</span><span class="p">)</span>
+<span class="n">musician</span><span class="p">.</span><span class="nf">song_count</span>
+<span class="c1"># =&gt; 1</span>
+<span class="n">musician</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="n">song_2</span><span class="p">)</span>
+<span class="n">musician</span><span class="p">.</span><span class="nf">song_count</span>
+<span class="c1"># =&gt; 2</span>
+<span class="n">musician</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="n">song_3</span><span class="p">)</span>
+<span class="n">musician</span><span class="p">.</span><span class="nf">average_rank</span>
+<span class="c1"># =&gt; 5</span>
+</code></pre></div></div>
+
+<h2 id="iteration-4">ITERATION 4</h2>
+
+<p>```ruby
+song_1 = Song.new(“Cool for the Summer”, 2015, “Confident”, 1)
+song_2 = Song.new(“Stone Cold”, 2015, “Confident”, 5)
+song_3 = Song.new(“This is Me”, 2008, “Camp Rock”, 10)</p>
+
+<p>m = Musician.new(“Demi Lovato”)</p>
+
+<p>musician.add_song(song_1)
+musician.add_song(song_2)
+musician.add_song(song_3)
+musician.songs_by_album</p>
+<h1 id="--confident--2-camp-rock--1-">=&gt; { “Confident” =&gt; 2, “Camp Rock” =&gt; 1 }</h1>
+:ET

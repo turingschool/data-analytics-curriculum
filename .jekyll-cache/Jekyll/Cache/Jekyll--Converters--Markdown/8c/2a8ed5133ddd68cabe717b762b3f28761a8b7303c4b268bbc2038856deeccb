@@ -1,0 +1,304 @@
+I"M<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Define scope</li>
+  <li>Understand scope as it relates to local variables, methods, and instance variables</li>
+  <li>Predict how variables will behave when multiple scopes are involved</li>
+  <li>Be able to debug scope issues</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Scope</li>
+  <li>Local Variable</li>
+  <li>Method</li>
+  <li>Instance Variable</li>
+  <li>Global Scope</li>
+  <li>Method Scope</li>
+  <li>Block Scope</li>
+  <li>Class Scope</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Have you ever written code in one place, but have had trouble accessing it? What are some ways to solve those problems?</p>
+
+<h1 id="intro">Intro</h1>
+
+<p><strong>Scope</strong> is what you have access to and where you have access to it.</p>
+
+<p>Scope is the kind of thing that you think you don’t need to know until it starts causing you trouble. Even then, it is generally unnecessary to know the rules of how scope works in Ruby. It’s more important that when you see unexpected behavior, that scope of your variables/method names is one of the things on your list to check.</p>
+
+<p>Today, we will be exploring several different elements of Ruby that have different scopes:</p>
+
+<ul>
+  <li>Local Variables</li>
+  <li>Methods</li>
+  <li>Instance Variables</li>
+</ul>
+
+<p>While you are working through these activities, copy and paste the code rather than typing it. It is important to discuss with your partner what you think will happen before you run each code snippet.</p>
+
+<h2 id="local-variables">Local Variables</h2>
+
+<p>When you create a variable like <code class="highlighter-rouge">x = 4</code>, you are creating a <strong>local variable</strong>. You create it using the <strong>assignment operator</strong> <code class="highlighter-rouge">=</code>. Local variables are available in whatever scope you define them. That’s what local means in this context. It is local to where you define it. We will go through several different scopes where you could define a local variable:</p>
+
+<ul>
+  <li>A <strong>Method Scope</strong></li>
+  <li>A <strong>Block Scope</strong></li>
+  <li>The <strong>Global Scope</strong></li>
+</ul>
+
+<p>Remember, the key to understanding how the local variable will behave is that <strong>local variables are LOCAL to whatever scope you define them in</strong></p>
+
+<h2 id="exploration---part-1">Exploration - Part 1</h2>
+
+<p>Work through the following examples with a partner. For each example, copy and paste the code into a playground.rb file rather than typing it to save time. Take a moment to examine the code individually, and then discuss with your partner what you think the output will be. Once you’ve had a moment to discuss, run the code and check your predictions. If your predictions were right or wrong, make sure to take a minute and try to make sense of and explain why the outcome was what it was.</p>
+
+<p>Remember, what is important here is that you get a feel for where variables are available to you. You don’t need to be able to quote the intricacies of scope verbatim. Some of these examples get weird and do things that you just shouldn’t do… but we’re going to do them and see what happens.</p>
+
+<p><a href="https://gist.github.com/megstang/1c51aa919cc082e9c3ceb1114cc57747">View Global Scope Examples 1-5 Here</a></p>
+
+<h3 id="global-scope---part-1-debrief">Global Scope - Part 1 Debrief</h3>
+
+<p>Let’s look at this code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="nb">puts</span> <span class="n">x</span>
+</code></pre></div></div>
+
+<p>Every time you create a class, method, or block you create a new <strong>scope</strong>. Anything that is not inside one of those is in a default scope known as the <strong>global scope</strong> (sometimes referred to as “top-level scope”). Every program has exactly 1 <strong>global scope</strong>. Since we will almost always write code that is contained in a class or method, working in the <strong>global scope</strong> is rare, but it does happen.</p>
+
+<p><code class="highlighter-rouge">x</code> is currently defined in the <strong>global scope</strong>, so it is available in the global scope (and nowhere else).</p>
+
+<h2 id="exploration---part-2">Exploration - Part 2</h2>
+
+<p><a href="https://gist.github.com/megstang/e239c2dd61704e404f7c323416a97db7">View Method Scope Examples 6-9 Here</a></p>
+
+<h3 id="method-scope---part-2-debrief">Method Scope - Part 2 Debrief</h3>
+
+<p>If we create a method, we are creating a new scope called a <strong>method</strong> scope:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">def</span> <span class="nf">print_variable</span>
+  <span class="nb">puts</span> <span class="n">x</span>
+<span class="k">end</span>
+<span class="n">print_variable</span>
+</code></pre></div></div>
+
+<p>Remember, local variables are local to whatever <strong>scope</strong> you define them in. Because <code class="highlighter-rouge">x</code> is defined in the global scope, trying to call it in the <code class="highlighter-rouge">print_variable</code> <strong>method scope</strong> will throw an error. This works the other way around:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">print_variable</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+  <span class="nb">puts</span> <span class="n">x</span>
+<span class="k">end</span>
+<span class="n">print_variable</span>
+<span class="nb">puts</span> <span class="n">x</span>
+</code></pre></div></div>
+
+<p>When <code class="highlighter-rouge">x</code> is defined in the <strong>method scope</strong>, it is not available in the <strong>global scope</strong>.</p>
+
+<p>It’s also important to note that Ruby reads through a scope sequentially. So if something hasn’t been defined in the scope before you try to call it, it will throw an error:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="n">x</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+</code></pre></div></div>
+
+<h2 id="exploration---part-3">Exploration - Part 3</h2>
+
+<p><a href="https://gist.github.com/megstang/258b44b1ceb30d22d1df7a0c39bb0d63">View Argumet Scope Examples 10-13 Here</a></p>
+
+<h3 id="arguments---part-3-debrief">Arguments - Part 3 Debrief</h3>
+
+<p>An argument implicitly creates a local variable. So if you define an argument on a method, you are essentially creating a local variable.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">print_variable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">x</span>
+<span class="k">end</span>
+
+<span class="n">print_variable</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The argument <code class="highlighter-rouge">x</code> on the <code class="highlighter-rouge">print_variable</code> method creates a local variable inside that method. When we call <code class="highlighter-rouge">print_variable(4)</code>, we are giving that variable <code class="highlighter-rouge">x</code> the value of <code class="highlighter-rouge">4</code>. It is as if <code class="highlighter-rouge">x = 4</code> is happening in the background.</p>
+
+<p>Arguments allow us to pass data between scopes.</p>
+
+<h2 id="exploration---part-4">Exploration - Part 4</h2>
+
+<p><a href="https://gist.github.com/megstang/b2a97b1151facb99ac01e6811f49cb25">View Block Scope Examples 14-19 Here</a></p>
+
+<h3 id="block-scope---part-4-debrief">Block Scope - Part 4 Debrief</h3>
+
+<p><strong>Block Scope</strong> refers to what is available inside a block (everything between the <code class="highlighter-rouge">do</code> and <code class="highlighter-rouge">end</code>). Remember what we’ve been saying: <strong>local variables</strong> are local to wherever you define them. But blocks are special. Blocks <em>DO</em> allow you to access variables created outside of them, however, they work the same as methods in that any local variable created <em>inside</em> the block is local to the block. This applies to the block variable as well. You can think of a block variable like an argument to the block.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">numbers</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+  <span class="n">greeting</span> <span class="o">=</span> <span class="s2">"hello"</span>
+  <span class="n">total</span> <span class="o">+=</span> <span class="n">number</span>
+<span class="k">end</span>
+
+<span class="nb">p</span> <span class="n">total</span>
+</code></pre></div></div>
+
+<p>In this example, we’ll see that even though we created <code class="highlighter-rouge">total</code> outside the block, it is still available inside the block. However, if we try to print the variable <code class="highlighter-rouge">greeting</code> or the block variable <code class="highlighter-rouge">number</code> after the block we will get an error.</p>
+
+<p>A block is a type of <strong>closure</strong>. It encloses the surrounding variables. That isn’t essential information, but it’s nice to know.</p>
+
+<h2 id="methods">Methods</h2>
+
+<p>In the previous activity, we learned that methods create a scope called the <strong>method scope</strong>. But methods also have a scope (where you can and can’t call a method). Methods behave similarly to local variables in that <strong>methods are available in whatever scope you define them in</strong>. However, methods have one additional special ability: <strong>methods are available to other methods in the same scope</strong>. This is sometimes referred to as the “sister scope”.</p>
+
+<h2 id="methods-in-the-global-scope">Methods in the Global Scope</h2>
+
+<p>Let’s revisit our example from earlier. Change <code class="highlighter-rouge">scope.rb</code> to the following, run the file, and examine the error.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="nb">puts</span> <span class="n">x</span>
+<span class="nb">puts</span> <span class="n">y</span>
+</code></pre></div></div>
+
+<p>The error is undefined local variable <em>or</em> method <code class="highlighter-rouge">y</code>. From Ruby’s perspective looking up a variable or looking up a method are very similar things. Before we defined a local variable to fix this problem. Let’s define a method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">y</span>
+<span class="mi">20</span>
+<span class="k">end</span>
+<span class="nb">puts</span> <span class="n">y</span>
+</code></pre></div></div>
+
+<p>But just like with local variables, methods need to have been defined in the scope before you call them:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="n">y</span>
+<span class="k">def</span> <span class="nf">y</span>
+  <span class="mi">20</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This will throw an error because when we call <code class="highlighter-rouge">y</code> on line 1, <code class="highlighter-rouge">y</code> hasn’t been defined yet.</p>
+
+<p>Methods can call other methods in the same scope:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">print_variable</span>
+  <span class="nb">puts</span> <span class="n">y</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">y</span>
+  <span class="mi">20</span>
+<span class="k">end</span>
+
+<span class="n">print_variable</span>
+</code></pre></div></div>
+
+<p>This is how calling a method is different than calling a local variable. The above example works, but if we change <code class="highlighter-rouge">y</code> to a local variable:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">print_variable</span>
+  <span class="nb">puts</span> <span class="n">y</span>
+<span class="k">end</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">print_variable</span>
+</code></pre></div></div>
+
+<p>It will throw an error.</p>
+
+<h3 id="class-scope">Class Scope</h3>
+
+<p><strong>Class Scope</strong> is another kind of scope that refers to what is available in a class (everything in between the <code class="highlighter-rouge">class</code> and its corresponding <code class="highlighter-rouge">end</code>). Just like with methods defined in the global scope, methods defined in a class have access to the other methods in that class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nf">greeting</span>
+    <span class="s2">"Hello! My name is </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">name</span>
+    <span class="s2">"Bob Ross"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span>
+<span class="nb">puts</span> <span class="n">person</span><span class="p">.</span><span class="nf">greeting</span>
+</code></pre></div></div>
+
+<p>In this example, the <code class="highlighter-rouge">name</code> method can be called from the <code class="highlighter-rouge">greeting</code> method because they are both defined in the <code class="highlighter-rouge">Person</code> class. You can’t call a method defined in a class from outside the class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nf">greeting</span>
+    <span class="s2">"Hello! My name is </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">name</span>
+    <span class="s2">"Bob Ross"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span>
+<span class="nb">puts</span> <span class="n">greeting</span>
+</code></pre></div></div>
+
+<h2 id="instance-variables">Instance Variables</h2>
+
+<p>Instance variables are available within the class scope. This includes any methods within the class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">greeting</span>
+    <span class="s2">"Hello! My name is </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Bob Ross"</span><span class="p">)</span>
+<span class="nb">p</span> <span class="n">person</span><span class="p">.</span><span class="nf">greeting</span>
+</code></pre></div></div>
+
+<p>Contrast this with the following example where we try to access an instance variable defined in the class outside of the class, and vice versa:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">greeting</span>
+    <span class="s2">"Hello! My name is </span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2">. I am a </span><span class="si">#{</span><span class="vi">@job</span><span class="si">}</span><span class="s2">."</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="vi">@job</span> <span class="o">=</span> <span class="s2">"Painter"</span>
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Bob Ross"</span><span class="p">)</span>
+<span class="nb">p</span> <span class="n">person</span><span class="p">.</span><span class="nf">greeting</span>
+<span class="nb">p</span> <span class="vi">@name</span>
+</code></pre></div></div>
+
+<p>Notice that unlike local variables and methods, when an instance variable is out of scope, Ruby won’t give you an error. Instead, that instance variable will default to <code class="highlighter-rouge">nil</code>. This can be very dangerous.</p>
+
+<h2 id="turn--talk">Turn &amp; Talk</h2>
+
+<ul>
+  <li>What is scope?</li>
+  <li>For each of the following types of scope, what are the Ruby keywords that begin and end the scope?
+    <ul>
+      <li>Method Scope</li>
+      <li>Block Scope</li>
+      <li>Class Scope</li>
+      <li>Global Scope</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="activity">Activity</h2>
+
+<p>Clone <a href="https://github.com/turingschool-examples/scope_exercise">this repository</a></p>
+
+<p>Follow the instructions in the README.</p>
+
+<h3 id="exit-ticket">Exit Ticket</h3>
+
+<p>You’ll have 10 minutes to complete the exit ticket independently.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Scope is a pretty complicated topic, especially in Ruby. While it’s not important to know every rule of scope, it is important to know when you create a variable or method, where you have access to it, and what it has access to. Scope can also get much more complicated when you have many things named the same, so the easiest solution is to give each thing its own unique name.</p>
+:ET

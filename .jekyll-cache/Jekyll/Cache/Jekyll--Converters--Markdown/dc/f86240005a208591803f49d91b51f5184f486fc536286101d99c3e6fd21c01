@@ -1,0 +1,219 @@
+I"�8<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>Understand how callbacks work.</li>
+  <li>Start to understand how to implement a PORO in place of a complicated scope.</li>
+  <li>Use callbacks to your advantage.</li>
+  <li>Use previous knowledge of class methods with Active Record.</li>
+  <li>Use scopes for basic filtering.</li>
+  <li>Understand the differences, advantages and disadvantages to both scopes and class methods.</li>
+</ul>
+
+<h2 id="repository">Repository</h2>
+
+<p>If you’d like to code along, go ahead and do the following:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">git clone -b starting_point https://github.com/Carmer/kitty_castle.git</code></li>
+  <li>We will start on the <code class="highlighter-rouge">starting_point</code> branch for this lesson</li>
+</ul>
+
+<h2 id="callbacks-and-poros">Callbacks and POROs.</h2>
+
+<ul>
+  <li>This is our problem.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ReservationsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">credit_card</span> <span class="o">=</span> <span class="n">reservation_params</span><span class="p">[</span><span class="ss">:credit_card_number</span><span class="p">]</span>
+    <span class="n">credit_card</span> <span class="o">=</span> <span class="n">credit_card</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/-|\s/</span><span class="p">,</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">reservation_params</span><span class="p">[</span><span class="ss">:credit_card_number</span><span class="p">]</span> <span class="o">=</span> <span class="n">credit_card</span>
+
+    <span class="vi">@reservation</span> <span class="o">=</span> <span class="no">Reservation</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">reservation_params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="vi">@reservation</span><span class="p">.</span><span class="nf">save</span>
+      <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Reservation was created."</span>
+      <span class="no">ReservationMailer</span><span class="p">.</span><span class="nf">reservation_confirmation</span><span class="p">(</span><span class="vi">@reservation</span><span class="p">.</span><span class="nf">kitty</span><span class="p">).</span><span class="nf">deliver</span>
+      <span class="vi">@reservation</span><span class="p">.</span><span class="nf">kitty</span><span class="p">.</span><span class="nf">update_attributes</span><span class="p">(</span><span class="ss">status: </span><span class="err">“</span><span class="n">active</span><span class="err">”</span><span class="p">)</span>
+      <span class="n">redirect_to</span> <span class="n">current_kitty</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">reservation_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:reservation</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:credit_card_number</span><span class="p">,</span> <span class="ss">:kitty_id</span><span class="p">,</span> <span class="ss">:castle_id</span><span class="p">,</span> <span class="ss">:start_date</span><span class="p">,</span> <span class="ss">:end_date</span> <span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>This <code class="highlighter-rouge">create</code> action is doing entirely too much. We’re sanitizing the card number, sending an email if successful, and then updating the current_kitty.</li>
+  <li>This gets messy if we need to add additional behaviors. So we can refactor using callbacks like so…</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Reservation</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">before_validation</span> <span class="ss">:sanitize_credit_card</span>
+  <span class="n">after_create</span> <span class="ss">:send_reservation_confirmation</span>
+  <span class="n">after_save</span> <span class="ss">:set_kitty_to_active</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">sanitize_credit_card</span>
+    <span class="n">credit_card</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/-|\s/</span><span class="p">,</span><span class="s1">''</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">send_reservation_confirmation</span>
+    <span class="no">ReservationMailer</span><span class="p">.</span><span class="nf">reservation_confirmation</span><span class="p">(</span><span class="n">kitty</span><span class="p">).</span><span class="nf">deliver</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">set_kitty_to_active</span>
+    <span class="n">kitty</span><span class="p">.</span><span class="nf">update_attributes</span><span class="p">(</span><span class="ss">status: </span><span class="err">“</span><span class="n">active</span><span class="err">”</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This refactor can be seen on the <code class="highlighter-rouge">refactor_controller</code> branch.</p>
+
+<ul>
+  <li>Meet <code class="highlighter-rouge">before_save</code> and <code class="highlighter-rouge">after_create</code></li>
+  <li>We just pulled a TON of things out of the controller and into the model.</li>
+  <li>This is pretty good, but we can do better.</li>
+  <li>The danger here is that the Reservation class knows entirely too much about other classes.</li>
+  <li>
+    <p>This is dangerous because if you make a mistake somewhere, and say there’s a problem with something of the Kitty class, the Reservation class isn’t really the first place a person would go look.</p>
+  </li>
+  <li>As a change of pace, before we correct this, we’re going to take a slight detour.</li>
+  <li>These are some additional callbacks with their order of operations:</li>
+</ul>
+
+<ol>
+  <li>before_validation</li>
+  <li>after_validation</li>
+  <li>before_save</li>
+  <li>before_create <strong><em>WRITE TO THE DATABASE happens here</em></strong></li>
+  <li>after_create</li>
+  <li>after_save</li>
+  <li>before_update</li>
+  <li>after_update</li>
+  <li>before_destroy</li>
+  <li>after_destroy</li>
+</ol>
+
+<ul>
+  <li>
+    <p>Note: <code class="highlighter-rouge">before_save</code> gets called when we update and when we create, but <code class="highlighter-rouge">before_create</code> only gets called before a create.</p>
+  </li>
+  <li>So, our previous problem.</li>
+  <li>If we keep this up, and we get a pretty unwieldy Reservation class that touches way too many other things.</li>
+  <li>We should use a PORO instead:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ReservationCompletion</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:reservation</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">reservation</span><span class="p">)</span>
+    <span class="vi">@reservation</span> <span class="o">=</span> <span class="n">reservation</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+     <span class="n">send_reservation_confirmation</span>
+     <span class="n">set_kitty_to_active</span>
+   <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">send_reservation_confirmation</span>
+    <span class="no">ReservationMailer</span><span class="p">.</span><span class="nf">reservation_confirmation</span><span class="p">(</span><span class="n">kitty</span><span class="p">).</span><span class="nf">deliver</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">set_kitty_to_active</span>
+    <span class="n">reservation</span><span class="p">.</span><span class="nf">kitty</span><span class="p">.</span><span class="nf">update_attributes</span><span class="p">(</span><span class="ss">status: </span><span class="err">“</span><span class="n">active</span><span class="err">”</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This refactor can be seen on the <code class="highlighter-rouge">refactor_to_poro</code> branch.</p>
+
+<ul>
+  <li>Here, we’ve moved all logic in reservation completion to a single place.</li>
+  <li>You should only use a callback when it deals with the model instance you’re currently working with.</li>
+  <li><code class="highlighter-rouge">after callbacks</code> are often code smells. That’s why we fixed it.</li>
+  <li>
+    <p>Callbacks that can trigger callbacks in other classes are Bad News catBears.</p>
+  </li>
+  <li>We encourage you to see if you can use a callback in your Little Shop app (only if it makes sense - don’t force it!).</li>
+</ul>
+
+<h2 id="class-methods">Class Methods</h2>
+
+<ul>
+  <li>We can use class methods to do some filtering, and pushing logic down the stack.</li>
+  <li>If we want to put the top three most expensive items in our index view, how can we get the information we need?</li>
+  <li>Logic doesn’t belong in the view. It doesn’t belong in the controller either.</li>
+  <li>There’s one last place it can go. The model.</li>
+</ul>
+
+<h2 id="scopes">Scopes</h2>
+
+<ul>
+  <li>Scopes allow you to define and chain query criteria in a declarative and reusable manner.</li>
+  <li>Scopes take lambdas.</li>
+  <li>A lambda is a function without a name.</li>
+  <li>We won’t go into lambdas right now, but at the bottom of the page, there are resources where you can learn more about lambdas.</li>
+  <li>Here’s some examples.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Reservation</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+
+  <span class="n">scope</span> <span class="ss">:complete</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="ss">complete: </span><span class="kp">true</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">scope</span> <span class="ss">:today</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="s2">"start_date &gt;= ?"</span><span class="p">,</span>
+                           <span class="no">Time</span><span class="p">.</span><span class="nf">zone</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">beginning_of_day</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>They can also take arguments.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Reservation</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+
+    <span class="n">scope</span> <span class="ss">:newer_than</span><span class="p">,</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">where</span><span class="p">(</span><span class="s2">"start_date &gt; ?"</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+          <span class="p">}</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="scopes-vs-class-methods">Scopes vs Class Methods</h2>
+<ul>
+  <li>These look eerily similar.</li>
+  <li>But there are key differences.</li>
+  <li>Scopes can always be chained.</li>
+  <li>Class methods can be chained only if they return an object that can be chained.</li>
+  <li>Scopes automatically work on has_many relationships.</li>
+  <li>You can set up a default scope (this can be dangerous though).</li>
+</ul>
+
+<h3 id="referring-back-to-what-we-did">Referring back to what we did</h3>
+
+<p>You can see all the work we did at <code class="highlighter-rouge">github.com/carmer/kitty_castle</code> on 5 different branches. <code class="highlighter-rouge">git clone https://github.com/Carmer/kitty_castle.git</code></p>
+
+<ol>
+  <li><code class="highlighter-rouge">git checkout starting_point</code> is our base starting point for this work</li>
+  <li><code class="highlighter-rouge">git checkout refactor_controller</code> is our first iteration of refactoring the logic out of the controller</li>
+  <li><code class="highlighter-rouge">git checkout refactor_reservation_to_poro</code> is our second iteration of refactoring logic our of the controller</li>
+  <li><code class="highlighter-rouge">git checkout scopes</code> has our work of putting scopes into the project</li>
+  <li><code class="highlighter-rouge">git checkout class_methods</code> has our work of putting class_methods into the project</li>
+</ol>
+
+<h2 id="other-resources">Other Resources:</h2>
+
+<ul>
+  <li>https://rubymonk.com/learning/books/1-ruby-primer/chapters/34-lambdas-and-blocks-in-ruby/lessons/77-lambdas-in-ruby</li>
+  <li>https://rubymonk.com/learning/books/4-ruby-primer-ascent/chapters/18-blocks/lessons/64-blocks-procs-lambdas</li>
+  <li>http://www.reactive.io/tips/2008/12/21/understanding-ruby-blocks-procs-and-lambdas/</li>
+  <li><a href="http://vrybas.github.io/blog/2014/08/15/a-way-to-organize-poros-in-rails/">Where to Put POROs</a></li>
+</ul>
+:ET

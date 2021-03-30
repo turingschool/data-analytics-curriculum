@@ -1,0 +1,311 @@
+I"�I<h2 id="why">Why</h2>
+
+<p>As applications grow in complexity it’s common to break out child applications, often called “services” or “workers.” Message queues provide a language-agnostic, asynchronous way for applications to speak with each other.</p>
+
+<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Student can explain the lifespan of a message</li>
+  <li>Student can add messages to a queue</li>
+  <li>Student can read messages from a queue</li>
+  <li>Student can perform work based on a queue message</li>
+  <li>Student can describe how/why work is extracted out into a secondary application</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>Theory - 55 Minutes</li>
+  <li>Break ~ 5 Minutes</li>
+  <li>Solo Practice - 30 Minutes</li>
+  <li>Break ~ 10 Minutes</li>
+  <li>Paired Practice - 55 Minutes</li>
+  <li>Recap ~ 5 Minutes</li>
+</ul>
+
+<h2 id="part-1-theory">Part 1: Theory</h2>
+
+<p>Let’s diagram and explore these roles and idea:</p>
+
+<ul>
+  <li>Primary application</li>
+  <li>Message service</li>
+  <li>Message queue</li>
+  <li>Connection / Handle</li>
+  <li>Anatomy of a Message</li>
+  <li>Sitting in the queue</li>
+  <li>Client</li>
+  <li>Client Connection / Handle</li>
+  <li>Polling vs Push</li>
+  <li>Retrieving a message</li>
+  <li>Timeout / Repeat / Problems</li>
+</ul>
+
+<h3 id="demonstrating-your-understanding">Demonstrating Your Understanding</h3>
+
+<p>Let’s model the message lifecycle in the physical space:</p>
+
+<ul>
+  <li>Pair Up</li>
+  <li>Establish a physical space for a queue</li>
+  <li>Person on the right is the publisher</li>
+  <li>Person on the left is the subscriber</li>
+  <li>Publisher builds messages on scraps of paper</li>
+  <li>Publisher puts them on to the queue one at a time</li>
+  <li>Subscriber watches the queue</li>
+  <li>Subscriber reads “Got the message: “ followed by the message</li>
+</ul>
+
+<p>What happens when two pairs combine so there’s one publisher and three subscribers?</p>
+
+<ul>
+  <li>How many total work cycles happen?</li>
+  <li>What’s the effective work time?</li>
+  <li>Does each subscriber do the same amount of work?</li>
+  <li>What if there is no subscriber?</li>
+  <li>What if I’m subscribed and the publisher goes to get coffee?</li>
+</ul>
+
+<h2 id="part-2-solo-practice">Part 2: Solo Practice</h2>
+
+<h3 id="a-remote-queue-server">A Remote Queue Server</h3>
+
+<p>We don’t want to get bogged down in the ops-side of configuring a message queue server. Therefore we’ve setup a server for you that we can all share.</p>
+
+<p>How it works:</p>
+
+<ul>
+  <li>We have a DigitalOcean VPS (Virtual Private Server) running in THE CLOUD (OOOH!)</li>
+  <li>On that VPS we’ve installed RabbitMQ, a powerful queue server</li>
+  <li>The RabbitMQ server has a user account setup that’ll be shared with you in Slack</li>
+  <li>You’ll connect to the server from your program (as a <em>client</em>)</li>
+  <li>You’ll interact with the server’s message queues</li>
+</ul>
+
+<h3 id="queue-names--collisions">Queue Names &amp; Collisions</h3>
+
+<p>If we’re sharing a server and login, then how do we differentiate ourselves? If we’re all pumping messages into and reading off of the same queue it’ll be chaos.</p>
+
+<p>Queues are “free” – so we’ll just each create our own queues on the server.</p>
+
+<p><strong>In the below code snippets, you’ll see queue names like <code class="highlighter-rouge">XYZ.counter_1</code>. Replace the <code class="highlighter-rouge">XYZ</code> with your first and last name in lowercase without punctuation, like <code class="highlighter-rouge">alanturing.counter_1</code>.</strong></p>
+
+<h3 id="organizing-your-code">Organizing Your Code</h3>
+
+<p>To complete the exercises below you’ll want to create a folder to hold your work and individual Ruby files for each section. We won’t be using tests since we’re just experimenting.</p>
+
+<h3 id="setup-bunny">Setup Bunny</h3>
+
+<p>We’ll use the Bunny library to connect to and interact with RabbitMQ. Install it at your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem install bunny
+</code></pre></div></div>
+
+<h3 id="first-steps-with-one-queue">First Steps with One Queue</h3>
+
+<p>Let’s start with a small demo program to illustrate some of the functionality. Put this whole snippet into its own file so you can easily change it and run it from the terminal.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'bunny'</span>
+<span class="nb">require</span> <span class="s1">'pry'</span>
+
+<span class="c1"># Connect to the RabbitMQ Instance</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="no">Bunny</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+  <span class="ss">:host</span> <span class="o">=&gt;</span> <span class="s2">"experiments.turing.io"</span><span class="p">,</span>
+  <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="s2">"5672"</span><span class="p">,</span>
+  <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="s2">"replace with correct account"</span><span class="p">,</span>
+  <span class="ss">:pass</span> <span class="o">=&gt;</span> <span class="s2">"replace with correct password"</span>
+<span class="p">)</span>
+<span class="n">connection</span><span class="p">.</span><span class="nf">start</span>
+
+<span class="c1"># Establish a "channel" on that connection</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="p">.</span><span class="nf">create_channel</span>
+
+<span class="c1"># Create a single queue</span>
+<span class="n">queue</span>   <span class="o">=</span> <span class="n">channel</span><span class="p">.</span><span class="nf">queue</span><span class="p">(</span><span class="s2">"XYZ.counter"</span><span class="p">)</span>
+
+<span class="c1"># Publish some messages to the queue</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="nb">puts</span> <span class="s2">"Publishing </span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2"> Messages to the Queue"</span>
+<span class="n">n</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+  <span class="n">queue</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="s2">"This is message </span><span class="si">#{</span><span class="n">i</span><span class="si">}</span><span class="s2"> published at </span><span class="si">#{</span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="s1">'%H:%M:%S.%L'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+  <span class="nb">sleep</span> <span class="mf">0.2</span>
+<span class="k">end</span>
+<span class="nb">puts</span> <span class="s2">"Publishing complete"</span>
+
+<span class="nb">sleep</span> <span class="mi">5</span>
+
+<span class="nb">puts</span> <span class="s2">"Starting the Queue Subscription"</span>
+<span class="n">queue</span><span class="p">.</span><span class="nf">subscribe</span> <span class="k">do</span> <span class="o">|</span><span class="n">delivery_info</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">payload</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="s2">"Found message at </span><span class="si">#{</span><span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="s1">'%H:%M:%S.%L'</span><span class="p">)</span><span class="si">}</span><span class="s2">: [</span><span class="si">#{</span><span class="n">payload</span><span class="si">}</span><span class="s2">]"</span>
+  <span class="nb">sleep</span> <span class="mi">1</span>
+<span class="k">end</span>
+<span class="nb">puts</span> <span class="s2">"Queue Subscription Processed"</span>
+
+<span class="c1"># puts "Type ctrl-c to stop"</span>
+<span class="c1"># loop do</span>
+<span class="c1">#  sleep 1</span>
+<span class="c1"># end</span>
+
+<span class="nb">sleep</span> <span class="mi">1</span>
+<span class="n">connection</span><span class="p">.</span><span class="nf">close</span>
+</code></pre></div></div>
+
+<p>It should run without error. Then continue with the questions below:</p>
+
+<h4 id="essential-understandings">Essential Understandings</h4>
+
+<p>Run the code as presented above:</p>
+
+<ol>
+  <li>Do you see all the “Found Message” lines?</li>
+  <li>Where does “Queue Subscription Processed” print relative to the messages?</li>
+  <li>What does this tell you about how subscriptions are handled?</li>
+  <li>Run the code again. What messages come out?</li>
+</ol>
+
+<p>Uncomment the four lines toward the end and re-run:</p>
+
+<ol>
+  <li>Did anything change about which messages are displayed?</li>
+  <li>What can you infer about threads? What role is the <code class="highlighter-rouge">loop</code> playing?</li>
+  <li>Which version, with or without the <code class="highlighter-rouge">loop</code>, better matches your expectations for the functionality?</li>
+</ol>
+
+<h4 id="explorations">Explorations</h4>
+
+<p>If you have time in the work period, try these:</p>
+
+<ol>
+  <li>What happens if you move the <code class="highlighter-rouge">subscribe</code> chunk up above the message publishing?</li>
+  <li>Can you break the code into two separate files, one responsible for publishing and one responsible for subscribing?</li>
+  <li>What if you increase <code class="highlighter-rouge">n</code> to <code class="highlighter-rouge">50</code> and add a <code class="highlighter-rouge">sleep 0.5</code> inside the <code class="highlighter-rouge">n.times do</code> block? What does the output tell you?</li>
+</ol>
+
+<p>You can find the API documentation for <a href="http://reference.rubybunny.info/Bunny/Queue.html">Bunny’s <code class="highlighter-rouge">Queue</code> class here</a>.</p>
+
+<ol>
+  <li>Try using the <code class="highlighter-rouge">message_count</code> method to output the size of the pending queue each time you fetch a message.</li>
+  <li>Experiment with using the <code class="highlighter-rouge">pop</code> method. How does it seem to differ from <code class="highlighter-rouge">subscribe</code>?</li>
+  <li>Check out <a href="http://rubybunny.info/articles/queues.html">the Bunny Queue documentation</a> for other ideas you can pursue.</li>
+</ol>
+
+<h2 id="part-3-paired-challenge">Part 3: Paired Challenge</h2>
+
+<p>Let’s work in pairs and write two different programs. They can both run on the same machine or one on each machine at your preference.</p>
+
+<p><em>Imagine</em> we’re an e-commerce shop selling <a href="http://www.brawndo.com/">Brawndo, the Thirst Mutilator</a>. We have a web application that conducts all the sales process for users, but we need our warehouse to keep track of the total number of pallets to be shipped by the end of the day.</p>
+
+<h3 id="sales-publisher">Sales Publisher</h3>
+
+<p>Write a ruby program that:</p>
+
+<ul>
+  <li>Connects to a message queue (call it <code class="highlighter-rouge">XYZ.brawndo</code>)</li>
+  <li>Publishes a message every two seconds while the program is running</li>
+  <li>Formats the messages in JSON like below:</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"order_id"</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="nl">"quantity"</span><span class="p">:</span><span class="mi">24</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Where the <em>quantity</em> is a random number between 2 and 36 and <em>order_id</em> just increments linearly.</p>
+
+<h3 id="warehouse-aggregator">Warehouse Aggregator</h3>
+
+<p>Write a ruby program that:</p>
+
+<ul>
+  <li>Connects to the same message queue</li>
+  <li>Subscribes to messages</li>
+  <li>Outputs aggregates to the screen each time a message is read like the following:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Daily Total: 12 orders, 212 units, 5 pallets
+</code></pre></div></div>
+
+<p>Where there are <em>48 units per pallet</em> and pallets can’t be divided.</p>
+
+<h4 id="pro-tip">Pro-Tip</h4>
+
+<p>Did you know that you can get the effect of “updating” a single line of text in your terminal output? Try running this snippet in IRB:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">length</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">length</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+  <span class="nb">print</span> <span class="s2">"</span><span class="se">\r</span><span class="s2">[</span><span class="si">#{</span><span class="s1">'='</span> <span class="o">*</span> <span class="n">i</span><span class="si">}#{</span><span class="s1">' '</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="si">}</span><span class="s2">]"</span>
+  <span class="nb">sleep</span> <span class="mf">0.5</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The trick here is the <code class="highlighter-rouge">\r</code> which <em>returns</em> the cursor back to the beginning of the current line.</p>
+
+<p>Can you update your aggregator to update a single line rather than scrolling as results come in?</p>
+
+<h3 id="extra-challenge">Extra Challenge</h3>
+
+<p>Could you add another layer? Create another queue so messages don’t overlap.</p>
+
+<ul>
+  <li>When the Warehouse Aggregator gets enough orders to add a pallet, it publishes a message for the Pallet Puller</li>
+  <li>The Pallet Puller sees the new pallet message like this:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Fetch daily pallet 4, requested at 08:10:21.614
+</code></pre></div></div>
+
+<h2 id="recap">Recap</h2>
+
+<ul>
+  <li>How would the warehouse program work differently if we had multiple instances of the warehouse subscription? What about multiple instances of the publishing application?</li>
+  <li>Recap the learning goals</li>
+  <li>Reviewing the big-picture message lifecycle</li>
+  <li>Questions</li>
+</ul>
+
+<h2 id="addendum">Addendum</h2>
+
+<p>Some additional resources related to RabbitMQ and message queues:</p>
+
+<ul>
+  <li><a href="https://github.com/ruby-amqp/bunny">Bunny’s GitHub page</a></li>
+  <li>For another take on how to consume messages from RabbitMQ, check out <a href="https://github.com/jondot/sneakers">Sneakers</a></li>
+  <li>Check out <a href="http://blog.sundaycoding.com/blog/2015/03/22/using-message-queue-in-rails/">this blog post from Adam Niedzielski for another walk-through</a></li>
+</ul>
+
+<h3 id="two-queues-in-one-program">Two Queues in One Program</h3>
+
+<p>Here’s a little sample app that runs cross-publishes to two queues in one program.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'bunny'</span>
+<span class="nb">require</span> <span class="s1">'pry'</span>
+
+<span class="c1"># Connect to the RabbitMQ Instance</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="no">Bunny</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">connection</span><span class="p">.</span><span class="nf">start</span>
+
+<span class="c1"># Establish a "channel" on that connection</span>
+<span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="p">.</span><span class="nf">create_channel</span>
+
+<span class="c1"># Create two "queue" instances</span>
+<span class="n">queue_1</span>   <span class="o">=</span> <span class="n">channel</span><span class="p">.</span><span class="nf">queue</span><span class="p">(</span><span class="s2">"sample.counter_1"</span><span class="p">)</span>
+<span class="n">queue_2</span>   <span class="o">=</span> <span class="n">channel</span><span class="p">.</span><span class="nf">queue</span><span class="p">(</span><span class="s2">"sample.counter_2"</span><span class="p">)</span>
+
+<span class="n">queue_1</span><span class="p">.</span><span class="nf">subscribe</span> <span class="k">do</span> <span class="o">|</span><span class="n">delivery_info</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">payload</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="s2">"Q1: </span><span class="si">#{</span><span class="n">payload</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">sleep</span> <span class="nb">rand</span><span class="o">*</span><span class="mi">2</span>
+<span class="k">end</span>
+
+<span class="n">queue_2</span><span class="p">.</span><span class="nf">subscribe</span> <span class="k">do</span> <span class="o">|</span><span class="n">delivery_info</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">payload</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="s2">"Q2: </span><span class="si">#{</span><span class="n">payload</span><span class="si">}</span><span class="s2">"</span>
+  <span class="nb">sleep</span> <span class="nb">rand</span><span class="o">*</span><span class="mi">2</span>
+<span class="k">end</span>
+
+<span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+  <span class="n">queue_1</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">to_s</span><span class="p">)</span>
+  <span class="n">queue_2</span><span class="p">.</span><span class="nf">publish</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">to_s</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="nb">sleep</span> <span class="mi">10</span>
+
+<span class="n">connection</span><span class="p">.</span><span class="nf">close</span>
+</code></pre></div></div>
+:ET

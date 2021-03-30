@@ -1,0 +1,59 @@
+I"�<p><em><a href="./index">Back to Project Home</a></em></p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Follow an interaction pattern</li>
+  <li>Write readable code that adheres to Ruby convention</li>
+  <li>Write tests</li>
+  <li>Create an Object Oriented Solution to a problem (objects should interact to achieve the stated goal)</li>
+  <li>Host code on Github</li>
+</ul>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th><br /></th>
+      <th><strong>Exceptional</strong></th>
+      <th><strong>Meets Expectations</strong></th>
+      <th><strong>Below Expectations</strong></th>
+      <th><strong>Well Below Expectations</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Functionality</strong></td>
+      <td>Application is robust and can handle a variety of inputs including invalid inputs and completes iteration 4</td>
+      <td>Application adheres to the flow outlined in the specification and can handle a variety of valid inputs (not just what is outlined in spec). Iteration 3 is complete.</td>
+      <td>Only up to Iteration 2 is complete or the application does not follow the flow outlined in the specification.</td>
+      <td>Iteration 2 is not complete.</td>
+    </tr>
+    <tr>
+      <td><strong>Ruby Mechanics</strong></td>
+      <td>Project includes appropriate uses of hashes and enumerables not covered in class</td>
+      <td>Appropriately uses Ruby’s built in datatypes and methods, flow control, and enumerables.</td>
+      <td>Does not appropriately use one or two of the following: Ruby’s built in datatypes and methods, flow control, and enumerables</td>
+      <td>Does not appropriately use Ruby’s built in datatypes and methods, flow control, and enumerables, or does not build classes</td>
+    </tr>
+    <tr>
+      <td><strong>Ruby Conventions</strong></td>
+      <td>Classes, methods, and variables are well named so that they clearly communicate their purpose. Code is all properly indented and syntax is consistent.</td>
+      <td>Code is mostly properly indented, spaced, and lines are not excessively long. Class, method, variable, and file names follow convention</td>
+      <td>Code demonstrates some proper indenting and spacing. Class, method, variable, and file names inconsistently follow convention</td>
+      <td>Code is not properly indented and spaced and lines are excessively long. Class, method, variable, and file names do not follow convention</td>
+    </tr>
+    <tr>
+      <td><strong>Testing</strong></td>
+      <td>All methods that do not require command line input/output are accurately tested. Best use assertions are made.</td>
+      <td>Each class has its own test file. Every method listed on the specification is tested. Most tests are written to accurately verify expected behavior.</td>
+      <td>Tests are written for most methods listed on the specification, but the tests may be in an incorrect location or the tests may not accurately verify the expected behavior</td>
+      <td>Fewer than 7 tests written (in addition to the card tests provided)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="version-control">Version Control</h2>
+<p>Code is required to be hosted on a GitHub repository, and will have at least 20 commits and one pull request.</p>
+:ET

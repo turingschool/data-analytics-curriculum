@@ -1,0 +1,40 @@
+I"ý	<h3 id="a-clear-detailed-explanation-of-the-issue-and-a-specific-question-for-the-instructor">A clear, detailed explanation of the issue and a specific question for the instructor.</h3>
+<hr />
+
+<ul>
+  <li>Example: My CSS is not loading in production. When I spin up the server in a production environment and open the inspection tools, I see that the CSS file is there but the changes are not applied. How can I include my CSS changes in production?</li>
+</ul>
+
+<h3 id="what-five-key-termsqueries-have-you-used-in-google">What <strong>five</strong> key terms/queries have you used in Google?</h3>
+<hr />
+
+<ul>
+  <li>Example of <strong>one</strong> of the queries: CSS not loading in Rails 5.2 production</li>
+</ul>
+
+<h3 id="provide-the-five-links-that-you-have-read-on-the-issue-and-1-2-sentences-of-what-you-took-from-that-link">Provide the five links that you have read on the issue and 1-2 sentences of what you took from that link?</h3>
+<hr />
+
+<ul>
+  <li>Example of <strong>one</strong> link &amp; summary:  https://github.com/thoughtbot/administrate/issues/725
+This link talks about running a local production environment and ensuring that <code class="highlighter-rouge">config.public_file_server.enabled = true</code> inside <code class="highlighter-rouge">production.rb</code> is set. This is done in my application and did not solve my issue.</li>
+</ul>
+
+<h3 id="provide-link-to-your-github-pr-that-is-highlighting-the-issue-and-a-summary-of-the-steps-youve-taken-to-try-to-resolve-this-issue-on-your-own">Provide link to your GitHub PR that is highlighting the issue and a summary of the steps youâ€™ve taken to try to resolve this issue on your own.</h3>
+<hr />
+
+<ul>
+  <li>Example: github.com/user_name/repo_name
+I followed the instructions posted here to run my production environment: https://gist.github.com/rwarbelow/40bd72b2aee8888d6d91
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Add gem 'rails_12factor' to your Gemfile. This will add error logging and the ability for your app to serve static assets.
+bundle
+Run RAILS_ENV=production rake db:create db:migrate db:seed
+Run rake secret and copy the output
+From the command line: export SECRET_KEY_BASE=output-of-rake-secret
+To precompile your assets, run rake assets:precompile. This will create a folder public/assets that contains all of your assets.
+Run RAILS_ENV=production rails s and you should see your app.
+</code></pre></div>    </div>
+    <p>I have tried clobbering my assets and running the precompile command again.</p>
+  </li>
+</ul>
+:ET

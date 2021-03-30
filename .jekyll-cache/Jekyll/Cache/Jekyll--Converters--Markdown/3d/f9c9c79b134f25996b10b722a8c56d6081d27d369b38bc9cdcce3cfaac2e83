@@ -1,0 +1,122 @@
+I"}(<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Learn how to use &amp; recreate the functionality of <code class="highlighter-rouge">.map</code> using <code class="highlighter-rouge">.each</code></li>
+  <li>Understand when and how to use <code class="highlighter-rouge">.map</code> appropriately.</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>enumerable</li>
+  <li>iterate</li>
+  <li>map</li>
+  <li>return value</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>What is an <strong>enumerable</strong>? What is a use case for one?</li>
+  <li>In your notebook, write the block of code to use <code class="highlighter-rouge">.each</code> to print each letter in the following array <code class="highlighter-rouge">dynasty_1 = ["K", "e", "n", "n", "e", "d", "y"]</code></li>
+</ul>
+
+<h2 id="intro">Intro</h2>
+
+<p>We’ve already learned how to use each, and we can do some really cool
+things with it, but let’s do better.</p>
+
+<h3 id="map--collect"><code class="highlighter-rouge">map</code> / <code class="highlighter-rouge">collect</code></h3>
+
+<p><code class="highlighter-rouge">map</code> is a lot like <code class="highlighter-rouge">each</code>.</p>
+
+<p>The difference is that <code class="highlighter-rouge">map</code> actually <em>returns whatever we do in the block</em>. Think about how this is different from each which will always return the content of the <em>original</em> array.</p>
+
+<p>Let’s look at this in code. Taking an array of the numbers, we want to end up with an array with the doubles of each of those numbers. With <code class="highlighter-rouge">each</code>, we would do it like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">double</span>                    <span class="c1"># define a method called double</span>
+  <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>   <span class="c1"># declare a numbers variable with the value of an array</span>
+
+  <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>                 <span class="c1"># declare a variable, results, with the value of an empty array</span>
+
+  <span class="n">numbers</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>       <span class="c1"># use `.each` to iterate over the numbers array</span>
+    <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span>         <span class="c1"># shovel the current number x 2 into the result array</span>
+  <span class="k">end</span>                         <span class="c1"># end the `.each` method</span>
+
+  <span class="n">result</span>                      <span class="c1"># return the result array</span>
+<span class="k">end</span>                           <span class="c1"># end the double method</span>
+
+<span class="n">result</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>           <span class="c1"># our array of doubles</span>
+
+<span class="n">numbers</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>            <span class="c1"># numbers array, which is unchanged</span>
+</code></pre></div></div>
+
+<p>We’ve written a method called <code class="highlighter-rouge">double</code>. We start off with <code class="highlighter-rouge">result</code>, which we set to an empty array. With each, we iterate through each item of <code class="highlighter-rouge">numbers</code>, and with each element, we are doubling the number and we are putting it into the <code class="highlighter-rouge">result</code> array. At the end, we are returning the <code class="highlighter-rouge">result</code> variable, which should now contain [2, 4, 6, 8, 10].</p>
+
+<p>This code is decent. But there are things about it I’m not entirely thrilled about. For example, we are temporarily storing things in a variable, <code class="highlighter-rouge">result</code>, which is inefficient. You want to avoid the use of unnecessary variables when you can. This is how we can achieve the same result using <code class="highlighter-rouge">.map</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">double</span>                <span class="c1"># define a method called double</span>
+  <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>   <span class="c1"># declare a numbers variable with the value of an array</span>
+
+  <span class="n">numbers</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>    <span class="c1"># iterate over numbers with `.map`</span>
+    <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span>               <span class="c1"># number x 2</span>
+  <span class="k">end</span>                     <span class="c1"># end the `.map` method</span>
+
+<span class="k">end</span>                       <span class="c1"># end the double method</span>
+
+<span class="n">double</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>       <span class="c1"># our numbers array has been changed!</span>
+</code></pre></div></div>
+
+<p>Instinctually, this should look better to you. We don’t have any unnecessary variable assignment and <code class="highlighter-rouge">map</code> is handling all we need to return.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">double</span>
+  <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+  <span class="n">numbers</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+    <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="nb">puts</span> <span class="s2">"I really love math"</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="discuss">Discuss:</h4>
+<ul>
+  <li>With this code, what do you think this method returns? Why?</li>
+  <li>Many folks are tempted to save the result of map to a variable. Why might I disagree with this choice?</li>
+</ul>
+
+<h4 id="independent-practice">Independent Practice</h4>
+<p>The method below returns an array of the brothers names in all caps; your job is to write one using the <code class="highlighter-rouge">map</code> method. (Touch an <code class="highlighter-rouge">enums_practice.rb</code> file in your M1 directory and write the code in that file)</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">kennedy_brothers</span>
+  <span class="n">brothers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Robert"</span><span class="p">,</span> <span class="s2">"Ted"</span><span class="p">,</span> <span class="s2">"Joseph"</span><span class="p">,</span> <span class="s2">"John"</span><span class="p">]</span>
+
+  <span class="n">caps_brothers</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="n">brothers</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">brother</span><span class="o">|</span>
+    <span class="n">caps_brothers</span> <span class="o">&lt;&lt;</span> <span class="n">brother</span><span class="p">.</span><span class="nf">upcase</span>
+  <span class="k">end</span>
+
+  <span class="n">caps_brothers</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+<p><strong>Annotate</strong>
+Annotate each line of your new code the way the examples above were, to describe exactly what is happening at each line.</p>
+
+<p><strong>Turn &amp; Talk</strong><br />
+Share you code with your neighbor.  Talk them through your annotations - be specific. What is similar/different? Why did you make the choices you made?</p>
+
+<h2 id="final-cfu">Final CFU</h2>
+<ul>
+  <li>What do <code class="highlighter-rouge">#map</code>, and <code class="highlighter-rouge">#each</code> do? What do they return?</li>
+  <li>When is <code class="highlighter-rouge">#map</code> preferable to <code class="highlighter-rouge">#each</code></li>
+</ul>
+
+<h3 id="additional-practice">Additional Practice</h3>
+<ul>
+  <li>Work on the <code class="highlighter-rouge">map</code>, <code class="highlighter-rouge">find</code>, and <code class="highlighter-rouge">select</code> exercises for <a href="https://github.com/turingschool/enums-exercises">Enums-Exercises</a>.</li>
+</ul>
+:ET

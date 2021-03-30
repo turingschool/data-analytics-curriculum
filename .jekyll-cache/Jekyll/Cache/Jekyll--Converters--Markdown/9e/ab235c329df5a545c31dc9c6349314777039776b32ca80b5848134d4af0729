@@ -1,0 +1,53 @@
+I"�<h2 id="exercise-1">Exercise 1</h2>
+
+<p>Open a Ruby file and create a variable called <code class="highlighter-rouge">pets</code> that holds an Array of three Strings representing the names of pets. Then, write Ruby code to print out the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The pets are &lt;first pet name&gt; and &lt;second pet name&gt; and &lt;third pet name&gt;
+The first pet's name ends with a &lt;last letter of first pet's name&gt;.
+The second pet's name is &lt;length of pet name&gt; letters long.
+The third pet's name &lt;does/does not&gt; contain the letter s.
+</code></pre></div></div>
+
+<p>The output in the angle brackets <code class="highlighter-rouge">&lt; &gt;</code> should change depending on the values in your <code class="highlighter-rouge">pets</code> array.</p>
+
+<h2 id="code-share">Code Share</h2>
+
+<p>With a partner, share the code you wrote for exercise 1.</p>
+
+<h2 id="exercise-2">Exercise 2</h2>
+
+<p>Write a program that will ask the user to enter some text.</p>
+
+<ul>
+  <li>If the text has an odd number of characters, print “ODD!”</li>
+  <li>If the text has an even number of characters, print “EVEN!”</li>
+  <li>The program should repeat this process until the user enters “q” or “quit”</li>
+</ul>
+
+<p><strong>Bonus</strong>: Create three versions of this program that use three different types of loops: <code class="highlighter-rouge">while</code>, <code class="highlighter-rouge">until</code>, and <code class="highlighter-rouge">loop do</code></p>
+
+<h2 id="code-share-1">Code Share</h2>
+
+<p>With a partner, share the code you wrote for exercise 2.</p>
+
+<h2 id="extension">Extension</h2>
+
+<p>Write a program that will count the number of times a word is used in a sentence. It is recommended that you pseudo-code this out with your partner before actually attacking this challenge with Ruby.</p>
+
+<ul>
+  <li>If the input is “My dogs are the best dogs in the world”,</li>
+  <li>The output should be:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="s2">"My"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"dogs"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s2">"are"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"the"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"best"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"in"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"the"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"world"</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

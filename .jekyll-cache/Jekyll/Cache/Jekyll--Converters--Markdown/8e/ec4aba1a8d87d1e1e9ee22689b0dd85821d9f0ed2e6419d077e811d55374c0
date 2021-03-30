@@ -1,0 +1,42 @@
+I":<h2 id="events-in-javascript">Events in Javascript</h2>
+
+<h3 id="big-picture-discussion--event-systems-as-a-ui-paradigm">Big Picture Discussion – Event Systems as a UI Paradigm</h3>
+
+<ul>
+  <li>User Interface “Events” – why do we care?</li>
+  <li>Event-driven programming model</li>
+  <li>Event systems as a UI paradigm – browser, cocoa, android</li>
+</ul>
+
+<p><strong>Ingredients of an Event System</strong></p>
+
+<p>So we’ve agreed that an event-based system is a great fit for UI
+programming (it’s a great fit for a lot of other models as well).</p>
+
+<p>What goes into a good event system? There are a few key things
+we’ll want to <em>know</em>:</p>
+
+<ul>
+  <li>What <em>type</em> of event happened?</li>
+  <li>What thing in the UI was the event targeting?</li>
+</ul>
+
+<p>Think about your experience with JQuery: What are some of the event
+types you’ve encountered thus far? Given what you know about browser
+interactions, what are some others that might exist?</p>
+
+<p>Assuming we have all these events occurring in the browser, what things
+would we need to be able to do in order to do something useful with
+them?</p>
+
+<ul>
+  <li><em>Listening</em> for events to occur</li>
+  <li><em>Binding</em> some behavior (i.e. <strong>function</strong>) to happen whenever
+the event does occur</li>
+</ul>
+
+<p>Now that we have a sense of some of the topics involved, let’s look
+at some more hands-on applications using JQuery.</p>
+
+<p>As we go, follow along with this <a href="https://github.com/mdn/advanced-js-fundamentals-ck/tree/gh-pages/tutorials/04-events">tutorial</a>.</p>
+:ET

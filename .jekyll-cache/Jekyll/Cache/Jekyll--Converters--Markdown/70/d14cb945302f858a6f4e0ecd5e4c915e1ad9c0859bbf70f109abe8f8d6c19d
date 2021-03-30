@@ -1,0 +1,380 @@
+I"�U<h3 id="learning-goals">Learning Goals</h3>
+
+<p>In this lesson, you will learn how to:</p>
+
+<ul>
+  <li>Start a project with Git</li>
+  <li>Make local version contributions to a project using Git
+<!-- * Use `hub` to interact with Github --></li>
+  <li>Make changes to branches and merge them into master</li>
+</ul>
+
+<h3 id="vocabulary">Vocabulary</h3>
+
+<ul>
+  <li>Branch (Noun)</li>
+  <li>Branch (Verb)</li>
+  <li>Merge</li>
+  <li>Repository</li>
+  <li>Remote/Local</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+<ul>
+  <li>What do you know about git? Why do we use it?</li>
+  <li>How have you used git so far?</li>
+</ul>
+
+<h2 id="a-basic-git-workflow">A Basic Git Workflow</h2>
+
+<p>Git contains many features. Fortunately, in 99% of cases we don’t have to
+know or use most of them. Instead, we can rely on a very simple and straightforward workflow:</p>
+
+<ol>
+  <li>Create a new git repository within your project directory (<code class="highlighter-rouge">git init</code>)</li>
+  <li>Do work / Change files</li>
+  <li>“Stage” changes using <code class="highlighter-rouge">git add</code></li>
+  <li>“Commit” your changes using <code class="highlighter-rouge">git commit</code></li>
+  <li>Repeat steps 2-5 until done</li>
+</ol>
+
+<h3 id="basic-workflow-in-practice">Basic Workflow in Practice</h3>
+
+<p>Let’s go through a more concrete example all together.</p>
+
+<p>First, create and navigate into an empty directory to simulate a new project
+we might be working on:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir intro_git &amp;&amp; cd intro_git
+</code></pre></div></div>
+
+<p>Next, let’s create an empty file to simulate some code changes we
+might have made:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch Readme.md
+</code></pre></div></div>
+
+<p>Now we need to tell git to create a new, empty “repository” within the directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git init
+</code></pre></div></div>
+
+<p>We sometimes use the terms <code class="highlighter-rouge">repository</code> and <code class="highlighter-rouge">directory</code> interchangeably in the context of git, but technically they are separate things. The directory contains all our working files, as well as the hidden files used by git to track all of our work. The repository is composed of files and directories within the hidden <code class="highlighter-rouge">.git</code> directory where git does its magic.</p>
+
+<p>Let’s check the status of our repository.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git status
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">status</code> command shows us git’s perspective on the current state of our repository. It tells us the current branch we’re working from, but it also tells us the current state of any uncommitted files. We’ll see changes in 3 possible states here:</p>
+
+<ol>
+  <li><strong>Unstaged</strong> (we have made changes but not told git that we would like to commit them)</li>
+  <li><strong>Staged</strong> (we have made changes and told git that we are getting ready to commit them)</li>
+  <li><strong>Committed</strong> (we have committed our changes to the repository’s log of commits)</li>
+</ol>
+
+<p>Our <code class="highlighter-rouge">Readme.md</code> file will be showing as Unstaged at this point, so let’s add it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add Readme.md
+</code></pre></div></div>
+
+<p>We can verify the <code class="highlighter-rouge">add</code> worked by using the status command again:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git status
+</code></pre></div></div>
+
+<p>We’ll now see that <code class="highlighter-rouge">Readme.md</code> (and the changes we made to it) have moved to the “staging” area – they are ready to be committed.</p>
+
+<h4 id="git-commit"><code class="highlighter-rouge">git commit</code></h4>
+
+<p>Finally, let’s make a commit!</p>
+
+<p>We use the <code class="highlighter-rouge">git commit</code> command for this. One key component of every commit is a “message” describing what the commit does. We can provide this message from the command line using the <code class="highlighter-rouge">-m</code> flag, like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -m "Initial Commit -- Add Readme"
+</code></pre></div></div>
+
+<p>Commit messages should be in an active present tense, this may be ‘Add’ or ‘Adds’ but not ‘Added’ or ‘Adding’.  For more on git convention check out this <a href="https://chris.beams.io/posts/git-commit/">blog post</a>.</p>
+
+<p>Run <code class="highlighter-rouge">git status</code> one more time. Since we committed all of our changes,
+our working directory is now “clean”.</p>
+
+<p>Check <code class="highlighter-rouge">git log</code>. It will show detailed information about each commit. Right now, we only have one.
+You can also run <code class="highlighter-rouge">git log --oneline</code>.</p>
+
+<p>This cycle – make changes, stage changes (<code class="highlighter-rouge">git add</code>), and commit changes –
+is the backbone of a standard git workflow.</p>
+
+<p>You should use these steps frequently as you’re working on a project.</p>
+
+<h3 id="check-for-understanding">Check for Understanding</h3>
+
+<p>Write on the following questions to synthesize what’s been covered.</p>
+<ul>
+  <li>What’s the difference between unstaged, staged, and committed changes?</li>
+  <li>Whare are each of the commands we have covered so far? What does each do?</li>
+  <li>How are <code class="highlighter-rouge">git status</code> and <code class="highlighter-rouge">git log</code> used to review the status of our code? How are they different?</li>
+</ul>
+
+<p>When you’re finished, post your answers in Slack.</p>
+
+<h2 id="github">Github</h2>
+
+<p>Github is a platform for hosting git repositories online. Before github, developers or companies configured and ran their own independent git servers, and things were much more fragmented. Now Github has become the de facto community standard for hosting and sharing repositories.</p>
+
+<p>You certainly don’t need Github to use git, but its popularity and dominance, especially within the open source community, have made the 2 somewhat synonymous for many users.</p>
+
+<p>As you progress through becoming a more practiced git user, don’t forget that these 2 are really distinct things – <code class="highlighter-rouge">git</code> provides the core technology for tracking and managing source control changes, while GitHub provides a shared location for hosting git projects.</p>
+
+<h3 id="basic-workflow-for-using-github">Basic Workflow for Using GitHub</h3>
+
+<p>There are a few things we’ll need to do to use GitHub to host our newly-created repository:</p>
+
+<ol>
+  <li>Create a new repo on GitHub</li>
+  <li>Add the online repo as a “remote” for our local repository</li>
+  <li><code class="highlighter-rouge">push</code> changes from our local repository to the remote copy that Github is tracking for us</li>
+</ol>
+
+<!-- ### Creating a Repository with [Hub](https://github.com/github/hub)
+
+We can create a repository via the GitHub web interface, but fortunately there's also a very handy command line utility called `Hub` that makes this even easier.
+
+Let's install it using homebrew:
+
+```
+brew install hub
+```
+
+Hub provides a command-line interface to streamline many of the common interactions we have with GitHub. It uses GitHub's API to do things like creating repositories, opening issues, etc.
+
+You can read more about the commands available in Hub's [documentation](https://github.com/github/hub#commands), but for now we're going to be using the `create` command.
+
+Hub will help us create a relationship to our remote repository. Before we do that, though, let's check whether we currently have any remote relationships defined. -->
+
+<p>Make sure you’re in the <code class="highlighter-rouge">intro_git</code> directory we created earlier and let’s check whether we currently have any remote relationships defined.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote -v
+</code></pre></div></div>
+
+<p>We should see no results when we run this command. Now let’s add the relationship.</p>
+
+<!-- Make sure you're in the `intro_git` directory we created earlier, and create a new (GitHub) repository to host this content online. Use Hub's `create` command:
+
+```
+hub create
+```
+
+If this is your first time using Hub, you'll be prompted for your github username and password. After that, hub will do 2 things:
+
+1. Create the repository on GitHub
+2. Add that repository as a "remote" within our local repository (on our machine) -->
+
+<h3 id="1-create-a-new-github-repository-to-host-this-content-online">1. Create a new (GitHub) repository to host this content online.</h3>
+
+<p>Go to your GitHub profile &amp; click on the <code class="highlighter-rouge">Repositories</code> tab. Click the green “New” button in the upper-right corner.</p>
+
+<p>Fill in the name with the name of your project (usually corresponding to its assigned title).</p>
+
+<p>Click “Create repository”</p>
+
+<h3 id="2-add-the-online-repo-as-a-remote-for-our-local-repository">2. Add the online repo as a “remote” for our local repository</h3>
+
+<p>Click the “Copy to Clipboard” button next to the “…or push an existing repository from the command line” section.</p>
+
+<p>Navigate to your CLI and make sure you’re in your project directory.</p>
+
+<p>Paste (<code class="highlighter-rouge">cmmd-v</code>) the copied commands into your CLI.</p>
+
+<p>Check <code class="highlighter-rouge">git remote -v</code> to see that the <code class="highlighter-rouge">origin</code> remote has been set to our remote repo address: <code class="highlighter-rouge">origin git@github.com:username/repo_name.git</code></p>
+
+<h3 id="3-push-changes-to-our-new-remote">3. Push changes to our new remote</h3>
+
+<p><strong>Discussion:</strong> Remote vs. Local Copies of Repo</p>
+
+<p>Since we now have a remote repo (on GitHub), we can push our local changes to it. We’ll do this with the <code class="highlighter-rouge">git push</code> command, which takes <strong>2 arguments</strong>:</p>
+
+<ol>
+  <li>A “remote” to push to (most often this will be <code class="highlighter-rouge">origin</code>)</li>
+  <li>The “branch” we’d like to push to (for now this will usually be <code class="highlighter-rouge">master</code>)</li>
+</ol>
+
+<p>So we can push our code so far like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin master
+</code></pre></div></div>
+
+<p>Now we can go to our GitHub repo to view our changes.</p>
+
+<!-- Now let's use Hub to go to our repo page on github and view our changes:
+
+```
+hub browse
+``` -->
+
+<h3 id="check-for-understanding-1">Check for Understanding</h3>
+
+<p>Write on the following questions to synthesize what’s been covered.</p>
+
+<ul>
+  <li>How is Github different from Git?
+<!-- * What does Hub help us with? --></li>
+  <li>What relationship does a <code class="highlighter-rouge">remote</code> repository have with our <code class="highlighter-rouge">local</code> repository?</li>
+  <li>What does pushing to a remote branch do for us?</li>
+</ul>
+
+<p>When you’re finished, post your answers in Slack.</p>
+
+<h3 id="working-on-branches">Working on Branches</h3>
+
+<p>Branches are helpful when working on teams, but also just for developing new functionality. <a href="http://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging">This link</a> shows some helpful visuals related to git branches.</p>
+
+<h4 id="the-master-branch">The master branch</h4>
+
+<p>When we type <code class="highlighter-rouge">git status</code>, part of the message we get back is “On branch master”. Let’s discuss the what git means by a “branch”, and what is “master”?</p>
+
+<p>In Git, there is this concept of branches. They represent a line of development. The master branch is typically the branch where the code works without known bugs.</p>
+
+<p>Ideally, we want to keep the master branch “clean” of bugs. So if we want to write new code, then we can branch off of master.</p>
+
+<p>When you branch off of the master branch, that new branch can serve as a <code class="highlighter-rouge">sandbox</code> for development where you can make changes or experiment with a <code class="highlighter-rouge">research spike</code> without affecting the master branch.</p>
+
+<p><a href="https://www.atlassian.com/git/tutorials/using-branches/git-branch">More info on branching.</a></p>
+
+<p>The general workflow is:</p>
+
+<ul>
+  <li>Make a new branch based on a feature you want to add</li>
+  <li>Checkout the branch</li>
+  <li>Make changes, add and commit the changes</li>
+  <li>Checkout master</li>
+  <li>Pull from remote master into local master</li>
+  <li>Checkout branch you were working on</li>
+  <li>Merge master into your branch</li>
+  <li>Push your updated branch to GitHub</li>
+  <li>Put in a Pull Request(PR) to merge your branch into master</li>
+</ul>
+
+<p>Let’s practice this.</p>
+
+<h4 id="creating-a-branch">Creating A Branch</h4>
+
+<p>(<code class="highlighter-rouge">git branch</code> and <code class="highlighter-rouge">git checkout</code>)</p>
+
+<p>Before we make a new branch, let’s check what branch we are currently on.</p>
+
+<p>Command to identify current branch: <code class="highlighter-rouge">git branch</code><br />
+This command lists all of the branches you have made and also tells us what branch we are on.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span> master
+</code></pre></div></div>
+
+<p>We only have the default branch master right now, so it lists only <code class="highlighter-rouge">master</code>. The <code class="highlighter-rouge">*</code> denotes what branch we are currently on. In this case: <code class="highlighter-rouge">master</code>.</p>
+
+<p>Let’s make a new branch! The command to make a new branch is <code class="highlighter-rouge">git branch [branch name]</code>. Branch names typically follow the “Kebab Case” convention. This just means that you separate words with dashes (-) as though they’re all skewered on a kebab.</p>
+
+<p>Type <code class="highlighter-rouge">git branch node-class</code> in the terminal. Now run <code class="highlighter-rouge">git branch</code> again. What do we see? We see our new branch name! However, the <code class="highlighter-rouge">*</code> is still next to the master branch.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node-class
+<span class="k">*</span> master
+</code></pre></div></div>
+
+<p>To change to our new branch, we need to “checkout” the branch.</p>
+
+<p>Let’s checkout the new branch using the command <code class="highlighter-rouge">git checkout node-class</code>. To checkout any branch, the command is <code class="highlighter-rouge">git checkout branch-name</code>. Now if we enter <code class="highlighter-rouge">git branch</code>, the asterisk shows we are on the new branch we just created.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span> node-class
+  master
+</code></pre></div></div>
+
+<p>Note: You’re doing it so often, there’s a shortcut for creating and checking out a new branch. It is <code class="highlighter-rouge">git checkout -b branch-name</code>.</p>
+
+<h4 id="make-changes-on-the-new-branch">Make changes on the new branch</h4>
+
+<p>Now that we’ve checked out the new feature branch, we can start making changes on the branch. Since we’re using TDD for our project, let’s create a test folder, and fill it with a test for our new Node class.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir test
+cd test
+touch node_test.rb
+</code></pre></div></div>
+
+<p>Add the file to staging, and commit the changes: <code class="highlighter-rouge">git add test/node_test.rb</code> and then <code class="highlighter-rouge">git commit -m "Add empty node_test file"</code>.</p>
+
+<p>Run <code class="highlighter-rouge">git status</code> and <code class="highlighter-rouge">git log</code> to get an idea of whats going on.</p>
+
+<p>Now it’s your turn. Create and add a placeholder for our <code class="highlighter-rouge">Node</code> class also. Create, add and commit <code class="highlighter-rouge">lib/node.rb</code>. Your <code class="highlighter-rouge">lib</code> folder should live in <code class="highlighter-rouge">intro_git</code>, at the “root” of the project, not inside the <code class="highlighter-rouge">test</code> folder (our current folder).</p>
+
+<h4 id="merge-feature-work-to-master-branch-git-merge">Merge feature work to master branch (<code class="highlighter-rouge">git merge</code>)</h4>
+
+<p>Let’s pretend that we’ve filled out files, and all of our tests pass for our <code class="highlighter-rouge">Node</code> class. We’re ready to merge our branch back into the <code class="highlighter-rouge">master</code> branch.</p>
+
+<p>Let’s start by switching back to our <code class="highlighter-rouge">master</code> branch with <code class="highlighter-rouge">git checkout</code>, and confirm that we’re on the right branch with <code class="highlighter-rouge">git branch</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout master
+git branch
+</code></pre></div></div>
+
+<p>Now, let me show you something scary. Run <code class="highlighter-rouge">ls</code> to see the contents of your folder.</p>
+
+<p><strong>What happened to my work?!</strong></p>
+
+<p><img src="https://media.giphy.com/media/zUGqX3EtG6l1u/giphy.gif" alt="Table Flip" /></p>
+
+<p>Don’t worry. Git still has it. Git never forgets. It’s just not part of the master branch. We’ve been working inside of our <code class="highlighter-rouge">node-class</code> branch specifically so that our changes didn’t affect our master branch. But now we want to bring that work into our master branch.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull origin master 
+git checkout node-class 
+</code></pre></div></div>
+
+<p>To merge changes locally between branches, you should first move to the branch you want to update. Then run the command <code class="highlighter-rouge">git merge [branch you want to merge changes from]</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git merge master
+ls
+</code></pre></div></div>
+
+<p>We have now successfully made changes on a feature branch and kept master clean of unwanted code.</p>
+
+<p>Our changes are not yet public on Github. Our work only exists locally. If you open your GitHub repo, you’ll see that the <em>remote</em> repository does not have our most up-to-date commit.
+<!-- 
+Our changes are not yet public on Github. Our work only exists locally. If you run `hub browse` now, you'll see that the _remote_ repository does not have our most up-to-date commit. --></p>
+
+<p>Let’s wrap up by publishing (pushing) our changes to github.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin node-class
+</code></pre></div></div>
+
+<p>Now refresh your repository on github, and you should see your most recent work on the node-class branch. You can also see all your commits by clicking on “code”. In order to get our updates onto master on GitHub, we need to put in a PR. Follow step 6 in these <a href="https://github.com/turingschool/backend-curriculum-site/blob/gh-pages/module1/lessons/friday_challenge_work_flow.md">directions</a>.</p>
+
+<h3 id="typical-git-workflow">Typical Git Workflow</h3>
+
+<p>From the example we worked through above, we can come up with a common workflow when we are only using Git locally (without worrying about GitHub yet).</p>
+
+<ol>
+  <li>Make a new project directory</li>
+  <li>Initialize the directory (<code class="highlighter-rouge">git init</code>)</li>
+  <li>Create a GitHub repo</li>
+  <li>Connect an <code class="highlighter-rouge">origin</code> remote to your GitHub repo on your local machine</li>
+  <li>Make and checkout a feature branch (<code class="highlighter-rouge">git branch</code> and <code class="highlighter-rouge">git checkout</code>)</li>
+  <li>Make changes to the code, add to staging area, and then commit the changes (<code class="highlighter-rouge">git add</code>, <code class="highlighter-rouge">git commit</code>) (repeat this step until you have a functional feature)</li>
+  <li>Checkout the master branch and merge changes into master from the feature branch (<code class="highlighter-rouge">git merge</code>)</li>
+  <li>Push your changes to GitHub</li>
+  <li>Repeat steps 5. - 8. with more feature branches!</li>
+</ol>
+
+<h2 id="independent-practice">Independent Practice</h2>
+
+<p>If you’re brand new to git, start with <a href="https://try.github.io/levels/1/challenges/1">Try Github</a>.</p>
+
+<p>If you’ve used git before (or if you complete try.github), work through <a href="http://gitimmersion.com/">Git Immersion</a>. Atlassian also has a helpful <a href="https://www.atlassian.com/git/tutorials/setting-up-a-repository">Git Tutorial</a>.</p>
+
+<p>And, if you just can’t get enough Git, check out the <a href="http://git-scm.com/book">Pro Git book</a>.</p>
+
+<h2 id="wrapup">Wrapup</h2>
+
+<ul>
+  <li>What is the difference between git and github?</li>
+  <li>What are the standard git commands? What do they do and when should you use them?</li>
+  <li>What is the workflow for using branches?</li>
+</ul>
+:ET

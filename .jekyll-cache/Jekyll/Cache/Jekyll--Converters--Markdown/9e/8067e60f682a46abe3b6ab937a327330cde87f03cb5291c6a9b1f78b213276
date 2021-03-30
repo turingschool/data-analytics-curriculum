@@ -1,0 +1,39 @@
+I",<h3 id="goals">Goals</h3>
+
+<ul>
+  <li>Familiarize students with other Git commands that they can use in their Git workflow</li>
+  <li>Introduce Git rebase</li>
+</ul>
+
+<h3 id="kicking-off-the-lesson">Kicking Off the Lesson</h3>
+
+<ul>
+  <li>Lesson should take 1.5 - 2 hours</li>
+  <li>10 minutes to go over learning goals, structure of the lesson, and divide into groups</li>
+  <li>25 minutes for everyone’s first station to allow for them to get setup</li>
+  <li>40 minutes total for the remaining stations (20 minutes per station)</li>
+  <li>Leave post-its on the table for students to write questions on and collect between each station change (if possible)</li>
+  <li>Give pom after all stations have been completed</li>
+  <li>Whole Group Review:
+    <ul>
+      <li>Begin with a Turn and Talk: What is one command you will incorporate in your workflow and why?</li>
+      <li>Review Git rebase workflow and have students talk about what they learned during their research</li>
+      <li>Answer post-it questions, if they haven’t been answered already and any remaining student questions</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="stations">Stations</h3>
+<ul>
+  <li><a href="./station-1.md">Git 2.0 - Git History</a></li>
+  <li><a href="./station-2.md">Git 2.0 - Git Fixes</a></li>
+  <li><a href="./station-3.md">Git 2.0 - Git Rebase</a></li>
+</ul>
+
+<h3 id="instructor-set-up">Instructor Set Up</h3>
+
+<ul>
+  <li>Print enough copies for each students to be able to work through the information on their own when at that station</li>
+  <li>Print out student exit tickets</li>
+</ul>
+:ET

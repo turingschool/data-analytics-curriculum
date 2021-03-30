@@ -1,0 +1,210 @@
+I"8@<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students understand how JavaScript executes synchronously vs asynchronously</li>
+  <li>Students can read and explain JavaScript that executes asynchronously</li>
+  <li>Students are able to explain how asynchronous JavaScript can be handled</li>
+</ul>
+
+<p><a href="./asynchronous_js_instructor">Instructor Materials</a></p>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>synchronous</li>
+  <li>asynchronous</li>
+  <li>call stack</li>
+  <li>queue</li>
+  <li>Web APIs</li>
+  <li>Event Loop</li>
+  <li>JS Engine/runtime</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>What is your version of a ten second history of JavaScript? Where did it start?</li>
+  <li>Review the code below:</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">waitTwoSeconds</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">I am starting to wait...</span><span class="dl">"</span><span class="p">);</span>
+  <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">I've waited two seconds</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">},</span> <span class="mi">2000</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Done waiting.</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">waitTwoSeconds</span><span class="p">();</span>
+</code></pre></div></div>
+
+<ul>
+  <li>What do you expect the output to be?</li>
+  <li>Type the code into a file called <code class="highlighter-rouge">async.js</code> and run it using <code class="highlighter-rouge">node async.js</code></li>
+  <li>What happens? How could you use this behavior to your advantage? What might be some pitfalls?</li>
+</ul>
+
+<h3 id="synchronous-vs-asynchronous">Synchronous vs. Asynchronous</h3>
+
+<h4 id="synchronous-javascript">Synchronous JavaScript</h4>
+
+<p>Let’s talk about the drive-thru at Starbucks.</p>
+
+<h4 id="asynchronous-javascript">Asynchronous JavaScript</h4>
+
+<p>Let’s talk about ordering inside the store at Starbucks.</p>
+
+<h3 id="when-will-we-need-this">When Will We Need This?</h3>
+
+<p>The concepts we’re going to talk about happen most often in the following situations:</p>
+
+<ul>
+  <li>Loading external data (APIs, files, databases)</li>
+  <li>Events (clicks, keydowns, scrolls, etc)</li>
+</ul>
+
+<p>Asynchronous code allows us to keep up with the expectations of users. If we could only run synchronous code in the browser, we couldn’t keep up with what users expect from applications. Say hello to asynchronous code, brought to you by your browser!</p>
+
+<h4 id="the-event-loop">The Event Loop</h4>
+
+<p>We now know that JavaScript runs synchronously.</p>
+
+<p>JavaScript’s <strong>call stack</strong> is a data structure that keeps track of where we are in the sense of this synchronous thread of execution.</p>
+
+<blockquote>
+  <p>“If we step into a function, we step into the stack. If we return from a function, we pop off the top of the stack.” - Philip Roberts</p>
+</blockquote>
+
+<p>Asynchronous processes are able to run concurrently because, while the JS runtime can only execute a single thread, your browser provides more threads for you. Async takes advantage of this and passes processes to JavaScript’s <strong>queue</strong>, and one by one, once the async process is finished, the <strong>event loop</strong> will grab from the queue and put the process back onto the <strong>stack</strong>.</p>
+
+<p>Let’s watch Philip Roberts further explain: <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">Philip Roberts, JSConf EU 2014</a></p>
+
+<h2 id="application-of-knowledge">Application of Knowledge</h2>
+
+<h3 id="experiments-in-ordering">Experiments in Ordering</h3>
+
+<p>With your partner, take your assign chunk of code and try to predict what interactions will happen. <strong>Then</strong> run the code in your browser’s console to verify your assumptions.</p>
+
+<ol>
+  <li>Snack Time</li>
+</ol>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">hungry</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">very</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hungry</span><span class="p">);</span>
+
+<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">hungry</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">not anymore</span><span class="dl">"</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`async hungry is </span><span class="p">${</span><span class="nx">hungry</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hungry</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ol>
+  <li>Ballon</li>
+</ol>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">balloon</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">empty</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">balloon</span><span class="p">);</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">body</span><span class="dl">'</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">balloon</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">filled</span><span class="dl">"</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`async balloon is </span><span class="p">${</span><span class="nx">balloon</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">balloon</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ol>
+  <li>Repos</li>
+</ol>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">repos</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">repos</span><span class="p">);</span>
+
+<span class="nx">fetch</span><span class="p">(</span><span class="dl">"</span><span class="s2">https://api.github.com/users/turingschool/repos</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">allRepos</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">repos</span> <span class="o">=</span> <span class="nx">allRepos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">repos</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">repos</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ol>
+  <li>Dinner Time</li>
+</ol>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">hungry</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">very</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hungry</span><span class="p">);</span>
+
+<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">hungry</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">a little</span><span class="dl">"</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`async hungry is </span><span class="p">${</span><span class="nx">hungry</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+
+<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">hungry</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">stuffed</span><span class="dl">"</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`async hungry is </span><span class="p">${</span><span class="nx">hungry</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">5000</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">hungry</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Once you’ve made sense of why this worked the way it did, whiteboard (or make a poster) a visual to show what happened with the call stack in the code snippet you chose.</p>
+
+<h3 id="callbacks">Callbacks</h3>
+
+<p>Callbacks, by nature are not asynchronous. They are, however, used widely by asynchronous code.</p>
+
+<p>As a refresher, a <code class="highlighter-rouge">callback</code> is a second function that is being passed as a parameter to a first function and will be invoked by the original function.</p>
+
+<p>For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doubleNumber</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">doubleNumber</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="callbacks-with-events">Callbacks with Events</h4>
+
+<p>You’ve seen callbacks before in array prototypes (think, Ruby enumerables), but also in event listeners. Take this example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">#my-button</span><span class="dl">"</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">You clicked my button!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>You’ve probably seen a click event handled like this before. You pass a function to be executed later upon a <code class="highlighter-rouge">'click'</code> event. I want to frame this in a slightly different way to help you understand how JavaScript interprets this. I’m going to write the same thing in without jQuery to help illustrate.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">.my-button</span><span class="dl">'</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">You clicked by button!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>The method <code class="highlighter-rouge">addEventListener()</code> does a better job of telling you what’s actually happening. When writing asynchronous JavaScript, it can sometimes feel like your code is being run out of order. JavaScript is still being read from top to bottom. When it gets to the <code class="highlighter-rouge">addEventListener()</code>, it does just that. It adds a listener to the element, and it moves on to its next instruction. It’s not that JavaScript comes back to this code later. You packed it up and sent it off. Your callback function now exists all alone, waiting to be invoked by the browser upon a ‘click’ event.</p>
+
+<h4 id="wrap-up">Wrap Up</h4>
+
+<p>Write your answers to the following in your notebook:</p>
+
+<ul>
+  <li>When an asynchronous function is called, what does the JavaScript engine do with it?</li>
+  <li>When you get asked in an interview: “What do you know about asynchronous JavaScript?” - what will you say? Don’t paraphrase, literally prepare yourself for how you will answer that (pretty big) question!</li>
+</ul>
+
+<h2 id="going-further">Going Further</h2>
+
+<p>Here’s a couple JavaScript concepts you’ll sometimes see associated with asynchronicity. They’re worth glancing over to avoid being completely confused when you come across them.</p>
+
+<p><strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*">Generators</a></strong></p>
+
+<p>A lot of the same “running code at a later time” can be done using generators. You know you’re working with a generator when the function has a <code class="highlighter-rouge">*</code> at the end, and the keyword <code class="highlighter-rouge">yield</code> is used inside the function.</p>
+
+<p><strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function">Async and Await</a></strong></p>
+
+<p>These are a pair of keywords defined in ES7. They’re just another way to ensure that things happen in a given order, but not necessarily at any given time.</p>
+:ET

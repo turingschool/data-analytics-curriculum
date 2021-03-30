@@ -1,0 +1,55 @@
+I"�<p>Let’s build a system to do some analysis on futbol team performance.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Build classes with single responsibilities.</li>
+  <li>Write organized readable code.</li>
+  <li>Use TDD as a design strategy</li>
+  <li>Design an Object Oriented Solution to a problem</li>
+  <li>Practice algorithmic thinking</li>
+  <li>Work in a group</li>
+  <li>Use Pull Requests to collaborate among multiple partners</li>
+</ul>
+
+<h2 id="project-description">Project Description</h2>
+
+<p>We will be using data from a fictional soccer league to analyze team performance for specific seasons and across seasons. We want to see who the best and worst performers are, as well as be able to pull statistics for individual teams. To that end we will create a <code class="highlighter-rouge">StatTracker</code> class that will provide us with the information we need.</p>
+
+<p>The first half of the project will focus on building the base statistics functionality through our <code class="highlighter-rouge">StatTracker</code>.  As you build out this class, you will quickly realize that there is waaaay too much going on in one class; so, for the second half of the project we will switch our focus to reorganizing our code to practice good SRP!</p>
+
+<h2 id="organization">Organization</h2>
+
+<p>A key goal of this project is to write readable, organized, object-oriented code. Each of the methods we will implement should be defined as instance methods on <code class="highlighter-rouge">StatTracker</code>. However, all of the code for your project should not be contained in the <code class="highlighter-rouge">StatTracker</code> class. You should break your code into logical, organized components.</p>
+
+<p>We recommend taking a “red, green, refactor” approach. First, write tests, write code that makes the tests pass, and then focus on refactoring and organizing after you have working tests and code. It will be easier to make decisions about new classes, modules, methods, etc. when you have seen working code.</p>
+
+<p>We also encourage you to track your progress by utilizing a project management tool such as GitHub Projects; we will not be requiring a project management tool for the project, but it is a good habit to get into!</p>
+
+<p>See <a href="./rubric">the evaluation rubric</a> for more details and what exactly you should accomplish in this project.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>Another key goal of this project is to utilize Test Driven Development. Because the data set is so large, it will be inefficient to use the actual dataset as your test data. Instead, you should make up your own test data. You can do this either by creating dummy CSV files, known as fixture files, or you can create dummy data within your test files. Either is a valid approach.</p>
+
+<p>Earlier in the mod, we introduced <a href="../../lessons/mocks_stubs">Mocks and Stubs</a>, which is another testing strategy that may come in handy during this project. We recommend starting with fixture files or dummy data in the test setup, and refactoring to using mocks and stubs if you feel comfortable with those tools.</p>
+
+<h3 id="spec-harness">Spec Harness</h3>
+
+<p>In addition to your own tests, instructors will use <a href="https://github.com/turingschool-examples/futbol_spec_harness">This Spec Harness</a> to assess the completion of your project. Prior to your evaluation, follow the direction in the README to set up the spec harness and verify that your code passes the tests. <strong>NOTE: the spec harness is not a replacement for writing your own tests</strong>.</p>
+
+<h2 id="iterations">Iterations</h2>
+
+<p>We have separated the methods required for this project into sections below.</p>
+
+<ul>
+  <li><strong>Iteration 1:</strong> <a href="./iterations/file_io">Setup and File I/O</a></li>
+  <li><strong>Iteration 2:</strong> <a href="./iterations/statistics">Statistics</a></li>
+  <li><strong>Iteration 3:</strong> <a href="./iterations/reorganization">Re-Organization</a></li>
+  <li><strong>Iteration 4:</strong> <a href="./iterations/website">Build a Website</a></li>
+</ul>
+
+<h2 id="evaluation-rubric">Evaluation Rubric</h2>
+
+<p>Your project will be assessed using <a href="./rubric">this rubric</a></p>
+:ET

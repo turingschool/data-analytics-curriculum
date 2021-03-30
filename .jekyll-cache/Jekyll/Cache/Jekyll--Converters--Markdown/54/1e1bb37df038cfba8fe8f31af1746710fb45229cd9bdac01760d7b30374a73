@@ -1,0 +1,295 @@
+I"�G<h2 id="setting-up-rails">Setting Up Rails</h2>
+
+<p>First and foremost, let’s create a new project with all of the appropriate settings. (If you’re working with <a href="https://github.com/turingschool-examples/idea-bin">idea-bin</a>—you can skip this step as this has already been done for you. 🎉)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new idea-bin -jB --skip-turbolinks
+</code></pre></div></div>
+
+<h4 id="side-note-curious-about-the-flags-we-used">Side Note: Curious about the flags we used?</h4>
+<ul>
+  <li><code class="highlighter-rouge">-j</code> - ‘Preconfigure for selected JavaScript library’</li>
+  <li><code class="highlighter-rouge">-B</code> - ‘Skip bundle’</li>
+  <li><code class="highlighter-rouge">--skip-turbolinks</code> - <a href="http://wlowry88.github.io/blog/2014/07/28/pros-and-cons-of-turbolinks-in-rails-4-applications/">Pros and Cons of Turbolinks</a></li>
+</ul>
+
+<p>We’ll be using some new gems as we go along, but let’s make sure that they are all accounted for now so we can avoid bundling every four minutes.</p>
+
+<p>Add the following to the Gemfile in the <code class="highlighter-rouge">development</code> and <code class="highlighter-rouge">test</code> groups:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s1">'teaspoon'</span>
+<span class="n">gem</span> <span class="s1">'teaspoon-mocha'</span>
+</code></pre></div></div>
+
+<p>Once those are added, go ahead and <code class="highlighter-rouge">bundle install</code></p>
+
+<p>To run Teaspoon headless you’ll need PhantomJS, Selenium Webdriver or Capybara Webkit. We recommend PhantomJS, which you can install with homebrew, npm or as a download.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">npm</span> <span class="nx">install</span> <span class="nx">phantom</span> <span class="o">-</span><span class="nx">g</span>
+</code></pre></div></div>
+
+<h2 id="installing-teaspoon-and-chai">Installing Teaspoon and Chai</h2>
+
+<p>Teaspoon can actually take care of installing itself, we just have to tell it to go ahead and do so.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails generate teaspoon:install --framework=mocha
+</code></pre></div></div>
+
+<p>If all went well, you should see something like this in your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>→ rails generate teaspoon:install --framework=mocha
+      create  spec/teaspoon_env.rb
+      create  spec/javascripts/support
+      create  spec/javascripts/fixtures
+      create  spec/javascripts/spec_helper.js
++============================================================================+
+Congratulations!  Teaspoon was successfully installed.  Documentation and more
+can be found at: https://github.com/modeset/teaspoon
+</code></pre></div></div>
+
+<p>Teaspoon is a bridge that lets your JavaScript testing framework of choice hook into the Asset Pipeline. As a bonus, it includes many of the libraries needed to get up and running testing JavaScript. We decided to use Mocha as our test runner in this example, but you could just as easily chosen to use Jasmine or Qunit.</p>
+
+<p><a href="https://mochajs.org">Mocha</a> runs your tests, but it doesn’t come with an assertion library. We’ll use the excellent and popular <a href="https://chaijs.com">Chai</a> assertion library. (More on Chai in a little bit.)</p>
+
+<p>We’ll make sure our <code class="highlighter-rouge">spec_helper.js</code> includes Chai and loads our favorite assertion library. The Asset Pipeline has a special syntax for including files, <code class="highlighter-rouge">//=</code>, which is only slightly different than JavaScript’s comment syntax, <code class="highlighter-rouge">//</code>.</p>
+
+<p>Change line 4 in <code class="highlighter-rouge">spec/javascripts/spec_helper.js</code> from the first line below to the second:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// require support/chai</span>
+<span class="c1">//= require support/chai</span>
+</code></pre></div></div>
+
+<p>Chai comes in multiple flavors. Choose to write your assertion/expectations in any of the following styles:</p>
+
+<ul>
+  <li>Assert: <code class="highlighter-rouge">assert(true)</code> and <code class="highlighter-rouge">assert.equal(2 + 2, 4)</code></li>
+  <li>Expect: <code class="highlighter-rouge">expect(2 + 2).to.equal(4);</code></li>
+  <li>Should: <code class="highlighter-rouge">'foo'.should.have.length(3);</code></li>
+</ul>
+
+<p>You’re welcome to use any style that suits your tastes, but I’ll be using the assertion style in examples and tutorials.</p>
+
+<p>To turn on Chai variety of your choice, take a look at lines 38-40 in <code class="highlighter-rouge">spec/javascripts/spec_helper.js</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// window.assert = chai.assert;</span>
+<span class="c1">// window.expect = chai.expect;</span>
+<span class="c1">// window.should = chai.should();</span>
+</code></pre></div></div>
+
+<p>Uncomment the line with the style you’d like to use.</p>
+
+<p>So, for instance, if you want to use <code class="highlighter-rouge">assert</code>, then you code should look like this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">window</span><span class="p">.</span><span class="nx">assert</span> <span class="o">=</span> <span class="nx">chai</span><span class="p">.</span><span class="nx">assert</span><span class="p">;</span>
+<span class="c1">// window.expect = chai.expect;</span>
+<span class="c1">// window.should = chai.should();</span>
+</code></pre></div></div>
+
+<h2 id="writing-your-first-unit-test">Writing Your First Unit Test</h2>
+
+<p>At this point you should be set up writing your first JavaScript unit test in Rails. Teaspoon will look for anything in the <code class="highlighter-rouge">spec/javascripts</code> directory that ends with <code class="highlighter-rouge">_spec.js</code>.</p>
+
+<p>Let’s try the simplest thing possible thing:</p>
+
+<p>Create a new file in spec/javascripts called <code class="highlighter-rouge">myFirstTest_spec.js</code>, then add the following lines into that file.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">our awesome test suite</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should work, right?</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+  <span class="p">});</span>
+
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Once that is done, start the teaspoon server by typing <code class="highlighter-rouge">rake teaspoon</code> into your command line
+You should see something like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Starting the Teaspoon server...
+Teaspoon running default suite at http://127.0.0.1:50627/teaspoon/default
+.
+
+Finished in 0.00700 seconds
+1 example, 0 failures
+</code></pre></div></div>
+
+<p>If you’re more of a visual person, you can spin up your server using <code class="highlighter-rouge">rails s</code> and head over to <code class="highlighter-rouge">http://localhost:3000/teaspoon/default</code> and you should see something like this:</p>
+
+<p><img src="https://cldup.com/YUWvY1H7SL.png" alt="Teaspoon" /></p>
+
+<p>As mentioned before. Teaspoon hooks into the Asset Pipeline, so any JavaScript that you write in <code class="highlighter-rouge">app/assets/javascript</code> will be available for you in your tests.</p>
+
+<h2 id="writing-your-second-unit-test">Writing Your Second Unit Test</h2>
+
+<p>Now, let’s test write a slightly more complicated test.</p>
+
+<p>Let’s say we need to have a function that will remove spaces from a string. Create a new file in spec/javascripts called <code class="highlighter-rouge">remove_space_spec.js</code>.</p>
+
+<p>First, we want to require the javascript file that has the method we’re testing. Since this is a unit test, we don’t want to require ALL the JavaScript files by including <code class="highlighter-rouge">application.js</code> - so instead let’s add a specific file.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//= require remove_space</span>
+</code></pre></div></div>
+
+<p>When we run <code class="highlighter-rouge">rake teaspoon</code>, we should see a huge error message that begins with <code class="highlighter-rouge">Error: ActionView::Template::Error: couldn't find file 'remove_space' with type 'application/javascript'</code></p>
+
+<p>In <code class="highlighter-rouge">app/assets/javascripts</code> let’s create a <code class="highlighter-rouge">remove_space.js</code> file.</p>
+
+<p>Back in our spec file, let’s write our first test.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//= require remove_space</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">removeSpace</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">removes spaces from a string</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// assertion goes here.</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>If <code class="highlighter-rouge">removeSpace</code> is a function, we can now pass it a sample string in our test and assert that it equals the same string without any spaces! Since we’re using Chai, we can <a href="http://chaijs.com/api/assert/">look up the assertion syntax</a> and find that there is a <code class="highlighter-rouge">.equal</code> method we can use.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//= require remove_space</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">removeSpace</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">removes spaces from a string</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">str</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">I have spaces</span><span class="dl">'</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Ihavespaces</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">removeSpace</span><span class="p">(</span><span class="nx">str</span><span class="p">),</span> <span class="nx">result</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This test will fail until we create a removeSpace function!</p>
+
+<p>We can get the test to pass by adding the following code to our <code class="highlighter-rouge">app/assests/javascripts/remove_space.js</code> file</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kd">var</span> <span class="nx">removeSpace</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">\s</span><span class="sr">+/g</span><span class="p">,</span> <span class="dl">''</span><span class="p">);</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="your-turn">Your Turn</h3>
+
+<ul>
+  <li>Add another test to see what the <code class="highlighter-rouge">removeSpace</code> method does when a string has multiple spaces in a row.</li>
+  <li>Write a test to see what <code class="highlighter-rouge">removeSpace</code> does when it is passed a number instead of a string.</li>
+  <li>If it returns an error, either write a test that proves this OR write a test for the preferred behavior and get it to pass.</li>
+</ul>
+
+<h2 id="writing-a-test-that-interacts-with-the-dom">Writing a Test that Interacts with the DOM</h2>
+
+<p>So let’s say we have a feature in mind where we hide all ideas that that are tagged as ‘old’.</p>
+
+<p>Let’s take a look at how we plan to set up our html to start.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class="ideas"&gt;
+  &lt;div class="idea"&gt;
+    &lt;h3&gt; New Idea &lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;div class="idea"&gt;
+    &lt;h3&gt; Existing Idea &lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;div class="idea old"&gt;
+    &lt;h3&gt; Old Idea &lt;/h3&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;button class="hide-old"&gt;Hide Old Ideas&lt;/button&gt;
+</code></pre></div></div>
+
+<p>Let’s say this is what we expect our html to look like:</p>
+
+<ul>
+  <li>We have a upper level <code class="highlighter-rouge">div</code> with the class <code class="highlighter-rouge">ideas</code></li>
+  <li>The <code class="highlighter-rouge">ideas</code> div has nested divs, each one has the class <code class="highlighter-rouge">idea</code></li>
+  <li>The idea called Old Idea has a class called <code class="highlighter-rouge">old</code></li>
+  <li>There is a button which says Hide Old Ideas</li>
+</ul>
+
+<p>Can we write a unit test to do this?</p>
+
+<p>It depends on how cleanly we write our code and how much magic of testing we want to use. Let’s think about the psuedo-code we would use to make this feature.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// When the button is clicked
+// Grab the divs on the page
+// Filter through the ideas
+// Hide all ideas that have the .old class
+</code></pre></div></div>
+
+<p>What’s great about Teaspoon is that we can create document elements in our tests themselves to test units of code. Clicking a button falls in the category of a feature test - but the thing that happens after the button is clicked, where ideas are filtered, that’s a unit of functionality.</p>
+
+<p>So let’s create a spec file called <code class="highlighter-rouge">spec/javascripts/filter_spec.js</code>.</p>
+
+<p>In that file, let’s create a basic test case:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//= require filter
+
+describe('filter', function () {
+  it('can remove all old ideas', function () {
+  });
+});
+</code></pre></div></div>
+
+<p>In our test case, let’s go ahead and create the html that we outlined in the example!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  it('can remove all old ideas', function () {
+    var ideas = document.createElement('div');
+    ideas.className = 'ideas';
+    var idea1 = document.createElement('div');
+    idea1.className = 'idea';
+    ideas.appendChild(idea1);
+    var idea2 = document.createElement('div');
+    idea2.className = 'idea';
+    ideas.appendChild(idea2);
+    var idea3 = document.createElement('div');
+    idea3.className = 'idea old';
+    ideas.appendChild(idea3);
+  });
+</code></pre></div></div>
+
+<p>Obviously, there is a lot of repetition here that we can clean up. We can put a link generator in the test helpers. We can refactor the duplicating code.</p>
+
+<p>For now - let’s just move this in to a function.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>describe('filter', function () {
+  it('can remove all old ideas', function () {
+    var ideas = setUpIdeas();
+  });
+});
+
+function setUpIdeas(){
+  var ideas = document.createElement('div');
+  ideas.className = 'ideas';
+  var idea1 = document.createElement('div');
+  idea1.className = 'idea';
+  ideas.appendChild(idea1);
+  var idea2 = document.createElement('div');
+  idea2.className = 'idea';
+  ideas.appendChild(idea2);
+  var idea3 = document.createElement('div');
+  idea3.className = 'idea old';
+  ideas.appendChild(idea3);
+  return ideas;
+}
+</code></pre></div></div>
+
+<p>So now let’s think about how we would test this? We can use the powers of jQuery to get us there!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>describe('filter', function () {
+  it('can remove all old ideas', function () {
+    var ideas = setUpIdeas();
+    // we use our generator to create some HTML
+    assert.equal($(ideas).find('.old').length, 1);
+    // we assert that there is one old idea
+    filterOldIdeas(ideas);
+    // we call our soon to be created function that filters out old ideas
+    assert.equal($(ideas).find('.old').length, 0);
+    // we assert that now there are no nodes with the .old class
+  });
+});
+</code></pre></div></div>
+
+<h3 id="your-turn-1">Your Turn</h3>
+
+<ul>
+  <li>Can you write a <code class="highlighter-rouge">filterOldIdeas</code> function that causes the test to pass?</li>
+</ul>
+:ET

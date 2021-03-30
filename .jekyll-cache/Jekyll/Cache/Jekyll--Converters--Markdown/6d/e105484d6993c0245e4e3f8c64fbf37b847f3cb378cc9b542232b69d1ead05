@@ -1,0 +1,29 @@
+I"ô<h2 id="objectives">Objectives</h2>
+<ul>
+  <li>Practice more complex iteration patterns</li>
+  <li>Iterate over multiple collections</li>
+  <li>Use <code class="highlighter-rouge">pry</code> to debug / as an implementation tool</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Given the following array:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span> <span class="o">=</span> <span class="p">[</span><span class="ss">:dog</span><span class="p">,</span> <span class="ss">:cat</span><span class="p">,</span> <span class="ss">:zebra</span><span class="p">,</span> <span class="ss">:quokka</span><span class="p">,</span> <span class="ss">:unicorn</span><span class="p">,</span> <span class="ss">:bear</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Use an enumerable to</p>
+<ol>
+  <li>Return an array of animals as strings</li>
+  <li>Return an array of animals with length &gt;= 4</li>
+  <li>Return a hash where the keys are the animal, and the values are the length. ex: <code class="highlighter-rouge">{dog: 3, cat: 3, zebra: 5 ... }</code></li>
+</ol>
+
+<h2 id="practice">Practice</h2>
+
+<p>We will be using the tools we have already learned (<code class="highlighter-rouge">.each</code>, <code class="highlighter-rouge">.map</code>, <code class="highlighter-rouge">pry</code>, etcâ€¦) to tackle some more complex iterations.  Up to now we have focused on iterating over a single collection to get some information, but you will often need to look at multiple collections to get the desired information.  To help us practice, clone <a href="https://github.com/turingschool-examples/ruby_nested_iteration">this repo</a>.</p>
+
+<p>In the repo, you will find 4 skipped tests.  Starting with <code class="highlighter-rouge">course_test.rb</code>, write the implemenation code to make these tests pass.  The first test will help familiarize you with the code base.  After <code class="highlighter-rouge">course_test</code>, move on to the skipped tests in <code class="highlighter-rouge">school_test.rb</code>. We will be stopping and checking in as a group throughout the exercise.</p>
+
+<p>As you work, use <code class="highlighter-rouge">pry</code> OFTEN to verify your assumptions and try things out!</p>
+:ET

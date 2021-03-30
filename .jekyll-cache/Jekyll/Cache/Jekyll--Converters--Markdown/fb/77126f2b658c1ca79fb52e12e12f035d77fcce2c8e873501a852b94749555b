@@ -1,0 +1,21 @@
+I"<h2 id="introduction-to-background-workers">Introduction to Background Workers</h2>
+
+<h3 id="discussion---what-are-background-workers">Discussion - What are Background Workers</h3>
+
+<ul>
+  <li>Asynchrony overview</li>
+  <li>Background processing as an intro to SOA – 2 processes communicating via a Queue</li>
+  <li>Any sufficiently complex program probably has a background / queueing mechanism</li>
+</ul>
+
+<p>TODO – probably should re-write this lesson in terms of sidekiq, since that’s what
+all our other lessons are using</p>
+
+<h3 id="materials">Materials</h3>
+
+<ul>
+  <li><a href="https://www.dropbox.com/s/pmf39q8jtzrr07l/Turing%20-%20Introduction%20to%20Workers.key?dl=0">slides</a></li>
+  <li><a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_04-apis_and_scalability/background_workers_revisited.markdown">background workers revisited</a></li>
+  <li><a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_04-apis_and_scalability/workers_at_scale.markdown">workers at scale</a></li>
+</ul>
+:ET

@@ -1,0 +1,58 @@
+I"�<h2 id="promises-can-get-unruly-at-times">Promises can get unruly at times</h2>
+<p>One of the downsides to using Promises is that we can get lost in the chaining many <code class="highlighter-rouge">.then</code>’s. Luckily there is a way that we can make things a bit more manageable for our own purposes.</p>
+
+<h3 id="enter-asyncawait">Enter async/await</h3>
+
+<h4 id="so-what-are-the-differences">So what are the differences?</h4>
+
+<p>The primary difference between the two is simple:</p>
+<ul>
+  <li>If you’re using standard Promises, only the Promise chain itself is asynchronous. We see this with the use of many <code class="highlighter-rouge">.then</code>s.</li>
+  <li>If you’re using <code class="highlighter-rouge">async/await</code>, then the entire wrapper function is asynchronous.</li>
+  <li>Another big difference is that Promises with <code class="highlighter-rouge">async/await</code> will only continue its work once the previous Promise has resolved.</li>
+</ul>
+
+<h4 id="a-simple-example-with-asyncawait">A simple example with async/await</h4>
+
+<p>Below is a simple example of how we can use <code class="highlighter-rouge">async</code> and <code class="highlighter-rouge">await</code> with the same third party API that we saw in class. We simply want to fetch a list of posts, extract them out of the Promise, and then display them in the console.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// This function allows us to get async/await. Notice a difference?</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">fetchAsync</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://jsonplaceholder.typicode.com/posts</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">posts</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">posts</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// This is how we use our async function</span>
+<span class="nx">fetchAsync</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">))</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">reason</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">reason</span><span class="p">.</span><span class="nx">message</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="discussion-how-is-this-bit-of-code-working-above-what-is-different-than-using-standard-promises">Discussion: How is this bit of code working above? What is different than using standard Promises?</h4>
+
+<h3 id="error-handling">Error handling</h3>
+
+<p>Let’s take a quick look at how we can handling any errors that may occur while fetching data.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">fetchAsync</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://jsonplaceholder.typicode.com/posts</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">posts</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">posts</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="which-one-do-i-pick-to-use">Which one do I pick to use?</h4>
+
+<p>The easiest way to know which one to pick standard Promises or go down the async route is the number of <code class="highlighter-rouge">.then</code>s that you may be using to extract data from a server. If you find yourself chaining on multiple promises together, it may be a better idea to use <code class="highlighter-rouge">async</code> instead of the standard Promise.</p>
+
+<h2 id="hedgehog-party---revisited">Hedgehog Party - Revisited</h2>
+<p>Let’s use the same <a href="https://github.com/turingschool-examples/fetch-hedgehog-party">Hedgehog Party Repo</a>  as yesterday. If you need another reminder on how the API works, take a minute to look over the README another time.</p>
+
+<p>You can also use your Base JS repo that we used yesterday. Once you have that setup and ready to go, let’s try to hit the first endpoint from the Hedgehog Party repo and grab all of the invites using <code class="highlighter-rouge">async/await</code>.</p>
+:ET

@@ -1,0 +1,64 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Be able to explain why we’d want to generate SQL</li>
+  <li>Understand the role of an Object Relational Mapper (ORM)</li>
+  <li>Be able to generate <code class="highlighter-rouge">SELECT</code> and <code class="highlighter-rouge">INSERT</code> statements with <code class="highlighter-rouge">WHERE</code> using Sequel</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 - Warmup</li>
+  <li>15 - Lecture</li>
+  <li>20 - Sequel Tutorial</li>
+  <li>5 - Break</li>
+  <li>20 - Sequel Tutorial</li>
+  <li>15 - Sequel Playground</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>With a partner, discuss the following questions:</p>
+
+<ol>
+  <li>What’s hard about SQL? Why is that a big deal?</li>
+  <li>Why would SQL be a difficult match for Object-Oriented programming like Ruby?</li>
+</ol>
+
+<h2 id="key-points">Key Points</h2>
+
+<p><a href="https://www.dropbox.com/s/75t98l4lnmr1ub4/intro_to_sequel.key?dl=0">slides</a></p>
+
+<ul>
+  <li>SQL is no fun</li>
+  <li>Declarative programming vs. Object-oriented programming</li>
+  <li>Object-Relational Mappers (ORMs)</li>
+  <li>ActiveRecord (lots), DataMapper (few), Sequel (practically none)</li>
+  <li>Why should we use Sequel?</li>
+</ul>
+
+<h2 id="independent-work">Independent Work</h2>
+
+<p>Get together with your pair to complete the
+<a href="http://tutorials.jumpstartlab.com/topics/sql/sequel.html">Sequel tutorial</a>.</p>
+
+<h2 id="sequel-playground">Sequel Playground</h2>
+
+<p>Ok, so how do you use Sequel with Sinatra? Let’s check out a simple app that uses Sequel.</p>
+
+<ul>
+  <li><a href="https://github.com/rwarbelow/sequel-playground">Sequel Playground</a></li>
+</ul>
+
+<h3 id="extra-challenge">Extra Challenge</h3>
+
+<p>Return to the SQL tutorial and try to re-implement each of those steps using
+Sequel instead of raw SQL.</p>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="http://sequel.jeremyevans.net/rdoc/files/doc/cheat_sheet_rdoc.html">Sequel Cheat Sheet</a></li>
+</ul>
+:ET

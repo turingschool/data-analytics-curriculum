@@ -1,0 +1,101 @@
+I"a<h3 id="goals">Goals</h3>
+
+<ul>
+  <li>Explore a new codebase.</li>
+  <li>Refactor your project with the help of your pair.</li>
+</ul>
+
+<h3 id="structure">Structure</h3>
+
+<h4 id="how-do-we-approach-a-new-project">How do we approach a new project?</h4>
+
+<p>Let’s get started by watching an instructor jump into a new project.</p>
+
+<h4 id="pair-refactor-and-code-review">Pair refactor and code review</h4>
+
+<ul>
+  <li>Take this time to get with your pair begin a code review. Make sure you split the time remaining for this evenly.</li>
+</ul>
+
+<h5 id="what-should-i-be-looking-for">What should I be looking for?</h5>
+
+<ul>
+  <li>Refactoring opportunities.
+    <ul>
+      <li>logic in views such calculations, formatting, or queries</li>
+      <li>unclear method or variable names</li>
+      <li>long methods or <strong>unclear/unconcise</strong> code</li>
+      <li>too much login in controllers</li>
+      <li>Bad or hard to read formatting</li>
+    </ul>
+  </li>
+  <li>Look for things your pair did different than you did.</li>
+  <li>How did the other person test their application?</li>
+  <li>Refactoring within tests</li>
+</ul>
+
+<h2 id="evaluation-rubric">Evaluation Rubric</h2>
+
+<h3 id="1-feature-completeness">1. Feature Completeness</h3>
+
+<ul>
+  <li>4: All features are correctly implemented along with two extensions</li>
+  <li>3: All features defined in the assignment are correctly implemented</li>
+  <li>2: There are one or two features missing or incorrectly implemented</li>
+  <li>1: There are bugs/crashes in the features present</li>
+</ul>
+
+<h3 id="2-views">2. Views</h3>
+
+<ul>
+  <li>4: Views show logical refactoring into layout(s), partials and helpers, with no logic present</li>
+  <li>3: Views make use of layout(s), partials and helpers, but some logic leaks through</li>
+  <li>2: Views don’t make use of partials or show weak understanding of <code class="highlighter-rouge">render</code></li>
+  <li>1: Views are poorly organized</li>
+</ul>
+
+<h3 id="3-controllers">3. Controllers</h3>
+
+<ul>
+  <li>4: Controllers show significant effort to push logic down the stack</li>
+  <li>3: Controllers are generally well organized with three or fewer particularly ugly parts</li>
+  <li>2: There are four to seven ugly controller methods that should have been refactored</li>
+  <li>1: There are more than seven unsatisfactory controller methods</li>
+</ul>
+
+<h3 id="4-models">4. Models</h3>
+
+<ul>
+  <li>4: Models show excellent organization, refactoring, and appropriate use of Rails features</li>
+  <li>3: Models show an effort to push logic down the stack, but need more internal refactoring</li>
+  <li>2: Models are somewhat messy and/or make poor use of Rails features</li>
+  <li>1: Models show weak use of Ruby and weak structure</li>
+</ul>
+
+<h3 id="5-testing">5. Testing</h3>
+
+<ul>
+  <li>4: Project has a running test suite that exercises the application at multiple levels</li>
+  <li>3: Project has a running test suite that tests and multiple levels but fails to cover some features</li>
+  <li>2: Project has sporadic use of tests and multiple levels</li>
+  <li>1: Project did not really attempt to use TDD</li>
+</ul>
+
+<h3 id="6-usability">6. Usability</h3>
+
+<ul>
+  <li>4: Project is highly usable and ready to deploy to customers</li>
+  <li>3: Project is highly usable, but needs more polish before it’d be customer-ready</li>
+  <li>2: Project needs more attention to the User Experience, but works</li>
+  <li>1: Project is difficult or unpleasant to use, or needs significantly more attention to user experience</li>
+</ul>
+
+<h3 id="7-workflow">7. Workflow</h3>
+
+<ul>
+  <li>4: Excellent use of branches, pull requests, and a project management tool.</li>
+  <li>3: Good use of branches, pull requests, and a project-management tool.</li>
+  <li>2: Sporadic use of branches, pull requests, and/or project-management tool.</li>
+  <li>1: Little use of branches, pull requests, and/or a project-management tool.</li>
+</ul>
+:ET

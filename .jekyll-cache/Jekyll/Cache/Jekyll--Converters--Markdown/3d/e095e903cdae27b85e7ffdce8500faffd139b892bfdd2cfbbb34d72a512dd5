@@ -1,0 +1,23 @@
+I"€<p><img src="http://vignette4.wikia.nocookie.net/battleship/images/f/fd/Battleship-1.jpg/revision/latest?cb=20120303020432" alt="Classic fun for the whole patriarchy!" /></p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Utilize Test Driven Development</li>
+  <li>Practice Algorithmic Thinking</li>
+  <li>Create an Object Oriented solution to a problem without being given full specifications</li>
+  <li>Work in a pair</li>
+  <li>Use Pull Requests to collaborate with a partner</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>In this project youâ€™ll use Ruby to build a command line implementation of the classic game Battleship. More detail can be found in the pages below:</p>
+
+<ul>
+  <li><a href="./setup">Setup</a></li>
+  <li><a href="./requirements">Requirements</a></li>
+  <li><a href="./submission">Submission</a></li>
+  <li><a href="./rubric">Evaluation Rubric</a></li>
+</ul>
+:ET

@@ -1,0 +1,257 @@
+I"&E<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>construct forms using built-in Rails form helpers</li>
+  <li>construct links using built-in Rails helpers</li>
+  <li>create user interfaces for CRUD functionality in a Rails app</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rails new book_shelf
+$ cd book_shelf
+$ rails g model Book title:text price:decimal quantity:integer
+$ rake db:migrate
+</code></pre></div></div>
+
+<p>Let’s add a few tools from the console:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rails c
+Book.create(name: "The Lord of the Rings", price: 100.00, quantity: 10)
+Book.create(name: "The Catcher and the Rye", price: 15.99, quantity: 10)
+Book.create(name: "The Alchemist", price: 20.00, quantity: 10)
+Book.create(name: "Charlotte's Web", price: 5.99, quantity: 10)
+Book.create(name: "To Kill a Mockingbird", price: 19.99, quantity: 10)
+Book.create(name: "One Hundred Years of Solitude", price: 23.99, quantity: 10)
+</code></pre></div></div>
+
+<h2 id="routes">Routes</h2>
+
+<p>Add RESTful routes for Books:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">draw</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:books</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">$ rake routes</code> and look at the output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Prefix Verb   URI Pattern                    Controller#Action
+     books GET    /books(.:format)               books#index
+           POST   /books(.:format)               books#create
+  new_book GET    /books/new(.:format)           books#new
+ edit_book GET    /books/:id/edit(.:format)      books#edit
+      book GET    /books/:id(.:format)           books#show
+           PATCH  /books/:id(.:format)           books#update
+           PUT    /books/:id(.:format)           books#update
+           DELETE /books/:id(.:format)           books#destroy
+</code></pre></div></div>
+
+<p>Create a controller for Book:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch app/controllers/books_controller.rb
+</code></pre></div></div>
+
+<h3 id="index">Index</h3>
+
+<p>Inside of that file:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BooksController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@books</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">all</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Create a view:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mkdir app/views/books
+$ touch app/views/books/index.html.erb
+</code></pre></div></div>
+
+<p>Inside of that file:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%</span> <span class="vi">@books</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">book</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">book</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span> - <span class="cp">&lt;%=</span> <span class="n">book</span><span class="p">.</span><span class="nf">price</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Start up your server (<code class="highlighter-rouge">rails s</code>) and navigate to <code class="highlighter-rouge">localhost:3000/books</code>.</p>
+
+<h2 id="route-helpers">Route Helpers</h2>
+
+<p>We can use the prefixes from our <code class="highlighter-rouge">rake routes</code> output to generate routes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    Prefix Verb   URI Pattern                    Controller#Action
+     books GET    /books(.:format)               books#index
+           POST   /books(.:format)               books#create
+  new_book GET    /books/new(.:format)           books#new
+ edit_book GET    /books/:id/edit(.:format)      books#edit
+      book GET    /books/:id(.:format)           books#show
+           PATCH  /books/:id(.:format)           books#update
+           PUT    /books/:id(.:format)           books#update
+           DELETE /books/:id(.:format)           books#destroy
+</code></pre></div></div>
+
+<p>If we want to go to <code class="highlighter-rouge">/books</code>, we can create a link to <code class="highlighter-rouge">books_path</code>. If we want to go to <code class="highlighter-rouge">/books/new</code>, we can create a link to <code class="highlighter-rouge">new_book_path</code>. Notice that we just add on <code class="highlighter-rouge">_path</code> to the prefix.</p>
+
+<p>Rails also has a link helper that looks like this:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"Book Index"</span><span class="p">,</span> <span class="n">books_path</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Which will generate the equivalent of:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/books"</span><span class="nt">&gt;</span>Book Index<span class="nt">&lt;/a&gt;</span>
+</code></pre></div></div>
+
+<p>We can add a link to view individual books with this:</p>
+
+<p>Inside of that file:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%</span> <span class="vi">@books</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tool</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="n">book</span><span class="p">.</span><span class="nf">title</span><span class="p">,</span> <span class="n">book_path</span><span class="p">(</span><span class="n">book</span><span class="p">)</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>1) What is <code class="highlighter-rouge">book_path(book)</code>?</p>
+
+<h3 id="show">Show</h3>
+
+<p>Add a route for show:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BooksController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@books</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">all</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">show</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s create a view to show the individual book: <code class="highlighter-rouge">$ touch app/views/books/show.html.erb</code>.</p>
+
+<p>Inside of that file:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@book</span><span class="p">.</span><span class="nf">name</span> <span class="cp">%&gt;</span> - <span class="cp">&lt;%=</span> <span class="vi">@book</span><span class="p">.</span><span class="nf">quantity</span> <span class="cp">%&gt;</span><span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;h3&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@book</span><span class="p">.</span><span class="nf">price</span> <span class="cp">%&gt;</span><span class="nt">&lt;/h3&gt;</span>
+</code></pre></div></div>
+
+<h3 id="new">New</h3>
+
+<p>1) Ok, back to the index (<code class="highlighter-rouge">/books</code>). How can we create a link to go to a form where we can enter a new book? Let’s put that link on our <code class="highlighter-rouge">index.html.erb</code> page.</p>
+
+<p>This link relies on a new action in our controller, so let’s add that:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BooksController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@books</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">all</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">show</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">new</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Add a <code class="highlighter-rouge">new.html.erb</code> file in your books views folder.</p>
+
+<p>Inside of that file:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="vi">@book</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:title</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:title</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:price</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:price</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:quantity</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:quantity</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">submit</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Let’s start up our server and check out this form. If we inspect the elements, where will this form go when we click submit?</p>
+
+<h3 id="create">Create</h3>
+
+<p>Add a <code class="highlighter-rouge">create</code> action in the controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BooksController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@books</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">all</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">show</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">new</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">book_params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="vi">@book</span><span class="p">.</span><span class="nf">save</span>
+      <span class="n">redirect_to</span> <span class="n">book_path</span><span class="p">(</span><span class="vi">@book</span><span class="p">)</span>   <span class="c1"># Rails is 'smart' enough to also do =&gt; 'redirect_to @book'</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">book_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:book</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="ss">:price</span><span class="p">,</span> <span class="ss">:quantity</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="edit">Edit</h3>
+
+<p>Let’s go to the show view and add a link to edit. What will this link look like?</p>
+
+<p>Add a route in the controller for edit.</p>
+
+<p>Add a view for edit which contains a <code class="highlighter-rouge">form_for(@book)</code>. This form looks EXACTLY THE SAME as our <code class="highlighter-rouge">new.html.erb</code>. What can we do to get rid of duplicated code?</p>
+
+<p>Better question: If we use a partial, how does Rails know which route to use depending on if it’s a <code class="highlighter-rouge">new</code> or an <code class="highlighter-rouge">edit</code>?</p>
+
+<h3 id="update">Update</h3>
+
+<p>Add an update method in the controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">update</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+    <span class="k">if</span> <span class="vi">@book</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">book_params</span><span class="p">)</span>
+      <span class="n">redirect_to</span> <span class="n">book_path</span><span class="p">(</span><span class="vi">@book</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:edit</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="destroy">Destroy</h3>
+
+<p>Add a link on the book show view to destroy the book:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"Delete"</span><span class="p">,</span> <span class="n">book_path</span><span class="p">(</span><span class="vi">@book</span><span class="p">),</span> <span class="ss">method: :delete</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Add a <code class="highlighter-rouge">destroy</code> action in your controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">destroy</span>
+    <span class="vi">@book</span> <span class="o">=</span> <span class="no">Book</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+    <span class="vi">@book</span><span class="p">.</span><span class="nf">destroy</span>
+    <span class="n">redirect_to</span> <span class="n">books_path</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+:ET

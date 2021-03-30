@@ -1,0 +1,332 @@
+I"�J<h2 id="expectation-setting">Expectation Setting</h2>
+
+<p>In 40 minutes, you:</p>
+
+<ul>
+  <li>Probably won’t
+    <ul>
+      <li>Walk out with a gem that is super useful in a lot of situations.</li>
+      <li>Know all there is to know about gems, executables, namespacing, etc.</li>
+      <li>Write tests for your gem.</li>
+    </ul>
+  </li>
+  <li>Probably will
+    <ul>
+      <li>Learn some stuff!</li>
+      <li>Have an idea of where to go from here if you want to keep exploring!</li>
+    </ul>
+  </li>
+  <li>Might
+    <ul>
+      <li>Build a gem that does a very simple thing!</li>
+      <li>Publish it so others can install it on their machines!</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="goal">Goal</h2>
+
+<p>Get from 0 to gem as fast as possible!</p>
+
+<p>I want to see if we can build a thing that we can run from the terminal. If we can do that, I’m convinced you have the tools you need to keep tinkering to make something that’s actually interesting! We’ll layer in more important pieces later, but to start we’re going to move fast and see if we can get a bare bones implementation working.</p>
+
+<h2 id="using-bundler-to-generate-some-files">Using Bundler to Generate Some Files</h2>
+
+<h3 id="do-you-have-bundler">Do you have bundler?</h3>
+
+<p>First check to see that you have bundler installed by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundler -v
+</code></pre></div></div>
+
+<p>You should get something like <code class="highlighter-rouge">Bundler version 2.1.4</code> back. As long as the version is higher than 1.9.0, you should be good. If you didn’t get that back, try to run <code class="highlighter-rouge">gem install bundler</code> and then try again.</p>
+
+<h3 id="generating-a-skeleton">Generating a Skeleton</h3>
+
+<p>Now, you’ll use bundler to run a command to generate some files that you’ll be able to use to create your first gem.</p>
+
+<p>The syntax for this command is <code class="highlighter-rouge">bundler gem --flag(s) gemname</code>. I want that <code class="highlighter-rouge">gemname</code> to be unusual enough that I won’t have conflicts when I try to publish it. For our purposes, let’s write a gem that prints out “Vote for me!” when we run it from the command line. For that, we can use something like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundler gem --exe espinosa2020
+</code></pre></div></div>
+
+<p><em>Note:</em> That <code class="highlighter-rouge">exe</code> flag means that we are going to generate an executable file, which will allow us to run this gem from the command line. If you wanted to generate a gem that included code that you could just use in other Ruby files, leave this off.</p>
+
+<p>You should get output that looks something like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Creating gem 'espinosa2020'...
+MIT License enabled in config
+Code of conduct enabled in config
+      create  espinosa2020/Gemfile
+      create  espinosa2020/lib/espinosa2020.rb
+      create  espinosa2020/lib/espinosa2020/version.rb
+      create  espinosa2020/espinosa2020.gemspec
+      create  espinosa2020/Rakefile
+      create  espinosa2020/README.md
+      create  espinosa2020/bin/console
+      create  espinosa2020/bin/setup
+      create  espinosa2020/.gitignore
+      create  espinosa2020/.travis.yml
+      create  espinosa2020/.rspec
+      create  espinosa2020/spec/spec_helper.rb
+      create  espinosa2020/spec/espinosa2020_spec.rb
+      create  espinosa2020/LICENSE.txt
+      create  espinosa2020/CODE_OF_CONDUCT.md
+      create  espinosa2020/exe/espinosa2020
+Initializing git repo in /Users/southfork/Desktop/espinosa2020
+Gem 'espinosa2020' was successfully created. For more information on making a RubyGem visit https://bundler.io/guides/creating_gem.html
+</code></pre></div></div>
+
+<h3 id="setting-up-git">Setting Up Git</h3>
+
+<p>Great! Let’s get into that directory and take care of some Git housekeeping.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd espinosa2020
+$ git add ./
+$ git commit -m "Initial commit"
+$ git branch -m master main
+</code></pre></div></div>
+
+<p>Look <a href="http://www.kapwing.com/blog/how-to-rename-your-master-branch-to-main-in-git/">here</a> for more info on that last one.</p>
+
+<h3 id="cleaning-up-the-generated-gemspec">Cleaning Up the Generated Gemspec</h3>
+
+<p>There’s one more thing we need to do before we can get to the fun parts: update our Gemspec.</p>
+
+<p>When Bundler created our skeleton, it also created a Gemspec for our project. In doing so, it generated some reminders that we’ll need to clean up before we can really do anything with this project.</p>
+
+<p>If you open the file with the <code class="highlighter-rouge">.gemspec</code> extension, you’ll see quite a few lines that have <code class="highlighter-rouge">TODO</code> in them. Let’s clean those up now.</p>
+
+<p>This is what my file currently looks like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require_relative 'lib/espinosa2020/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = "espinosa2020"
+  spec.version       = Espinosa2020::VERSION
+  spec.authors       = ["Sal Espinosa"]
+  spec.email         = ["sal@turing.io"]
+
+  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
+  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.license       = "MIT"
+  spec.required_ruby_version = Gem::Requirement.new("&gt;= 2.3.0")
+
+  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  end
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+end
+</code></pre></div></div>
+
+<p>I’m going to delete the <code class="highlighter-rouge">allowed_push_host</code> and <code class="highlighter-rouge">changelog_uri</code> (we won’t need those unless this turns into a larger project), and then add text for the summary, description, homepage, and remaining metadata tags. When I’m done, my file will look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require_relative 'lib/espinosa2020/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = "espinosa2020"
+  spec.version       = Espinosa2020::VERSION
+  spec.authors       = ["Sal Espinosa"]
+  spec.email         = ["sal@turing.io"]
+
+  spec.summary       = %q{Vote for me!}
+  spec.description   = %q{I'm running for prez!}
+  spec.homepage      = "https://github.com/s-espinosa/espinosa2020"
+  spec.license       = "MIT"
+  spec.required_ruby_version = Gem::Requirement.new("&gt;= 2.3.0")
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "https://github.com/s-espinosa/espinosa2020"
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  end
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+end
+</code></pre></div></div>
+
+<p>Notice I used the GitHub link that I’m assuming I’ll push to when I’m ready for both the homepage and <code class="highlighter-rouge">source_code_uri</code>. I’m not currently fancy enough to think I’ll need a whole separate webpage for this project.</p>
+
+<p>Okay! We should be ready to go!</p>
+
+<h2 id="poking-around">Poking Around</h2>
+
+<p>Now that we got all of that out of the way, let’s take a quick look around.</p>
+
+<h3 id="exe">exe</h3>
+
+<p>Look inside the exe directory. There is a file there that might be a little different from files you’ve worked with in the past. First off, notice that it doesn’t have a file extension? There’s nothing in the file name to tell your computer what kind of file this is. Let’s open the file up in our text editor and take a look.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
+
+<span class="nb">require</span> <span class="s2">"espinosa2020"</span>
+</code></pre></div></div>
+
+<p>That second line sure looks like Ruby! But what’s going on with the first line?</p>
+
+<p>The combination of the <code class="highlighter-rouge">#!</code> characters  at the beginning of this file tell Unix that you want to run the remainder of the contents of the file as a script along with giving it the information it needs to figure out how to run the rest of the commands in the file. In this case, we’re telling our system that we want to use Ruby to interpret the commands in this file, which means that we can use the M1 Ruby we know in the lines below!</p>
+
+<p>There’s just one change we need to make to this file to allow us to run it: we have to tell our system that it’s okay to run this as a script. In order to do that we’ll need to change the permissions on this file. Run the following command from your command line, replacing <code class="highlighter-rouge">espinosa2020</code> with the name of the file you have in your <code class="highlighter-rouge">exe</code> directory.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ chmod +x exe/espinosa2020
+</code></pre></div></div>
+
+<p>Now, we should be able to run the code in this file in a way that is similar to the way we run other commands. In order to do that, type the following in your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec ./exe/espinosa2020
+</code></pre></div></div>
+
+<p>Nothing happened? Good! We don’t really have any code in there. If you got errors, it might be because you still need to clean something up in your Gemspec. Go back and double check that file for any remaining <code class="highlighter-rouge">TODO</code>s.</p>
+
+<p>Let’s add some code to just see if we can get a better indication that it’s working. Inside of the <code class="highlighter-rouge">./exe/espinosa2020</code> file, add a puts statement.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
+
+<span class="nb">require</span> <span class="s2">"espinosa2020"</span>
+<span class="nb">puts</span> <span class="s2">"It's working!"</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">bundle exec ./exe/espinosa2020</code> again to see if it will print <code class="highlighter-rouge">It's working!</code> to your terminal. If so, we’re in good shape.</p>
+
+<p>If that was all that we wanted to do or if our task was equally simple, we could just include code in this file and move forward. However, that’s no way to organize more complicated projects. Think of this file like a runner file. We’re going to only include the bare minimum we need to get things going in this file.</p>
+
+<p>In most of our M1 projects we’ve asked you to put your execution code in a <code class="highlighter-rouge">lib</code> directory. This will be no different. Let’s go ahead and poke around in there to see what we find.</p>
+
+<h3 id="lib">lib</h3>
+
+<p>Inside of lib you’ll find a directory and a file each with the name of the gem you created. If you open up the file (for me it’s called <code class="highlighter-rouge">espinosa2020.rb</code>), you’ll find something that looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "espinosa2020/version"
+
+module Espinosa2020
+  class Error &lt; StandardError; end
+  # Your code goes here...
+end
+</code></pre></div></div>
+
+<p>Look at that! It tells you right there where to put your code!</p>
+
+<p>One quick thing to notice is the <code class="highlighter-rouge">module</code> at the top level of this code. Modules can be used in a few ways in Ruby. In this case, we’re using the module as a way to namespace the classes that we create. Why do this? Mainly because we want to make sure that if we create an <code class="highlighter-rouge">Item</code> class and one of the people using our gem in a project also creates an <code class="highlighter-rouge">Item</code> class, Ruby won’t be confused between the two.</p>
+
+<h2 id="adding-some-code">Adding Some Code</h2>
+
+<h3 id="lib-1">lib</h3>
+
+<p>Given that bundler set up this nice little file for us and told us to add some code, let’s take them up on the offer.</p>
+
+<p>I’m going to adjust the <code class="highlighter-rouge">./lib/espinosa2020.rb</code> file so that it includes the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"espinosa2020/version"</span>
+
+<span class="k">module</span> <span class="nn">Espinosa2020</span>
+  <span class="k">class</span> <span class="nc">Error</span> <span class="o">&lt;</span> <span class="no">StandardError</span><span class="p">;</span> <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">Vote</span>
+    <span class="k">def</span> <span class="nf">for_me</span>
+      <span class="nb">puts</span> <span class="s2">"Vote for me!"</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I replaced the <code class="highlighter-rouge"># Your code goes here...</code> line with a Vote class that has a single <code class="highlighter-rouge">for_me</code> method. Now we should be able to use that code in our <code class="highlighter-rouge">exe/espinosa2020</code> file. Let’s go do that now.</p>
+
+<h3 id="exe-1">exe</h3>
+
+<p>Open <code class="highlighter-rouge">exe/espinosa2020</code> in your text editor and update it so that instead of printing something it creates an instance of our newly created Vote class and let’s it do the printing.</p>
+
+<p>My revised file looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
+
+<span class="nb">require</span> <span class="s2">"espinosa2020"</span>
+<span class="n">v</span> <span class="o">=</span> <span class="no">Espinosa2020</span><span class="o">::</span><span class="no">Vote</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">v</span><span class="p">.</span><span class="nf">for_me</span>
+</code></pre></div></div>
+
+<p>Let’s see if we can run that.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundle exec ./exe/espinosa2020
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Vote for me!</code> should print out to the terminal. If so, you’re almost there!</p>
+
+<h2 id="turning-our-bundle-of-code-into-a-gem">Turning Our Bundle of Code Into a Gem</h2>
+
+<p>There are two more commands to run in order to get this packaged up as a gem.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake build
+$ rake install
+</code></pre></div></div>
+
+<p>Run those, and then try to type the gem name at your terminal to see what happens. For me, this would be:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ espinosa2020
+</code></pre></div></div>
+
+<p>If that works, you’ve done it! This gem should have been installed on your machine so that you can access it anywhere. Go ahead and open a new terminal window, move to a random directory, and see if you can still type just the gem name to have it run.</p>
+
+<h2 id="committing-and-publishing">Committing and Publishing</h2>
+
+<p>Almost there! Let’s start by creating a remote on GitHub and pushing to it.</p>
+
+<h3 id="pushing-to-github">Pushing to GitHub</h3>
+
+<ul>
+  <li><a href="https://docs.github.com/en/enterprise/2.13/user/articles/creating-a-new-repository">Create a new repository on GitHub</a></li>
+  <li><a href="https://docs.github.com/en/github/using-git/adding-a-remote">Link your new remote repository to your local repository</a></li>
+  <li>Push to your new remote: <code class="highlighter-rouge">git push --set-upstream origin main</code></li>
+</ul>
+
+<p>Check to see if your repo is up to date on GitHub.</p>
+
+<h3 id="pushing-to-rubygems">Pushing to RubyGems</h3>
+
+<p>Go <a href="https://guides.rubygems.org/publishing/#publishing-to-rubygemsorg">here</a> to see a more detailed overview of this process.</p>
+
+<ul>
+  <li><a href="https://rubygems.org/sign_up">Sign Up for an Account on RubyGems</a></li>
+  <li>Run <code class="highlighter-rouge">ls pkg</code> to see the full name of the gem you’re going to push.</li>
+  <li><code class="highlighter-rouge">gem push pkg/espinosa2020-0.1.0.gem</code> where <code class="highlighter-rouge">pkg/espinosa2020-0.1.0.gem</code> is the path to the gem file in the pkg directory.</li>
+  <li>Enter your credentials.</li>
+  <li>Profit?</li>
+</ul>
+
+<p>Send the name of your gem to a friend and see if they can install successfully! On their computer they should run something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem install espinosa2020
+$ espinosa20202
+</code></pre></div></div>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li>For info on how to build a gem without using bundler to create a skeleton, go <a href="https://guides.rubygems.org/make-your-own-gem/">here</a></li>
+  <li>For info on how to build a similar gem with some testing and incorporating <a href="http://whatisthor.com/">Thor</a> to create a CLI, look at <a href="https://bundler.io/guides/creating_gem.html">this tutorial</a></li>
+  <li>For a different take on building a CLI with Thor, go <a href="https://medium.com/magnetis-backstage/how-to-write-your-first-cli-with-thor-9da6636bf744">here</a></li>
+</ul>
+
+<h2 id="challenges">Challenges</h2>
+
+<ul>
+  <li>Wrap one of your M1 projects in a gem so you can run it from the command line.</li>
+  <li>Create a gem that prints out public information about you from the <a href="https://docs.github.com/en/rest">GitHub API</a> (e.g. number of repos, username, etc.)</li>
+  <li>Create a gem that allows you to encode and decode secret messages.</li>
+</ul>
+
+:ET

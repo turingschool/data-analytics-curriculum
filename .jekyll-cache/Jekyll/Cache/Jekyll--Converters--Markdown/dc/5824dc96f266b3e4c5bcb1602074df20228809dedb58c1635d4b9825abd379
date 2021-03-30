@@ -1,0 +1,263 @@
+I"c,<h1 id="flow-control">Flow Control</h1>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>explain the flow of execution through a chunk of code</li>
+  <li>use <code class="highlighter-rouge">if</code> statements to control execution</li>
+  <li>use an <code class="highlighter-rouge">else</code> statement to create an alternative path</li>
+  <li>combine <code class="highlighter-rouge">if</code>, <code class="highlighter-rouge">elsif</code>, and <code class="highlighter-rouge">else</code> to create multiple branches</li>
+  <li>use <code class="highlighter-rouge">while</code> and <code class="highlighter-rouge">until</code> to repeat instructions</li>
+  <li>apply the <code class="highlighter-rouge">times</code> method to repeat instructions</li>
+  <li>use <code class="highlighter-rouge">loop</code> and <code class="highlighter-rouge">break</code> to repeat instructions</li>
+  <li>break out of an infinite loop in both IRB and regular Ruby</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>flow control</li>
+  <li>if/elsif/else</li>
+  <li>loop</li>
+  <li>while</li>
+  <li>until</li>
+  <li>times</li>
+  <li>infinite loop</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+<p>5 min  - WarmUp <br />
+20min - Intro to Branching &amp; Loops <br />
+5 min  - Break<br />
+20min - Paired Exercises <br />
+5 min  - WrapUp</p>
+
+<h2 id="warmup">WarmUp</h2>
+<p>In your journal, with a partner, and using the internet as a tool, answer the following:</p>
+<ul>
+  <li>What tools have you seen or used to determine what happens next in your code base?</li>
+  <li>What are some use cases for each of these?</li>
+</ul>
+
+<h2 id="looping">Looping</h2>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>A loop is a set of instructions that is executed repeatedly until some condition is met. This condition may be a certain number of times that the loop is executed, or it may be a question that returns a true/false (boolean) answer.</p>
+
+<h4 id="examples">Examples:</h4>
+
+<ul>
+  <li>While looking for a parking spot at a crowded sporting event, a car continues to drive up and down the rows until an empty spot is found (empty == true). <br />
+(Loop that executes until a question returns true or false)</li>
+  <li>After baking cookies, you pull the cookie sheet out of the oven which holds 24 cookies. One by one, you remove each of the cookies from the sheet and place them on a cooling rack. (24.times do…)
+(Set of instructions that executes 24 times)</li>
+</ul>
+
+<p><strong>Turn &amp; Talk</strong></p>
+
+<p>What are some other examples of looping in the real world?</p>
+
+<h3 id="some-looping-options-while-until-times">Some looping options: while, until, times</h3>
+
+<p>Let’s look at three of the more popular loops Ruby offers.</p>
+
+<p>What are some differences you notice among them?</p>
+
+<h4 id="while"><code class="highlighter-rouge">while</code></h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="n">condition</span>
+ <span class="c1"># code to execute as long as condition is true</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="until"><code class="highlighter-rouge">until</code></h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">until</span> <span class="n">condition</span> 
+  <span class="c1"># code to execute if above condition evaluates to false, stop when condition evaluates to true  </span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="times"><code class="highlighter-rouge">times</code></h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span>
+  <span class="c1"># code to execute given number of times  </span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+ <span class="c1"># code to execute given number of times </span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If your program gets stuck, you are likely in an infite loop. You can exit using <code class="highlighter-rouge">ctl-c</code>.  If you want your loop to exit once something is done, you can use <code class="highlighter-rouge">break</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>count = 0
+loop do 
+  count += 1
+  break if count == 3
+end
+</code></pre></div></div>
+
+<h3 id="conditional-branching">Conditional Branching</h3>
+
+<p>In programming, branching refers to a choice that is made depending on whether or not a condition is true or false. Think of branching as “choose your own adventure”.</p>
+
+<p>Examples:</p>
+
+<ul>
+  <li>If a student earns a 3.8 GPA or higher, then they are invited to the honor roll ceremony. (One branch)</li>
+  <li>If you want to spend a lot of money for dinner, go to a fancy restaurant. Otherwise, cook at home. (Two branches)</li>
+</ul>
+
+<p><em>Try it</em>: What are some other examples of branching in the real world?</p>
+
+<ul>
+  <li><code class="highlighter-rouge">if</code></li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">condition</span>
+  <span class="c1"># code to execute</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">else</code></li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">condition</span>
+  <span class="c1"># code to execute if true</span>
+<span class="k">else</span>
+  <span class="c1"># code to execute if false</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">elsif</code></li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">condition1</span>
+  <span class="c1"># code to execute if above condition1 evaluates to true</span>
+<span class="k">elsif</span> <span class="n">condition2</span>
+  <span class="c1"># code to execute if above condition2 evaluates to true</span>
+<span class="k">else</span>
+  <span class="c1"># code to execute if both evaluate to false</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="exercises">Exercises</h2>
+<p>With a partner, each of you creating a version on your computer:</p>
+
+<h3 id="branching">Branching</h3>
+<p>You’ll need a few tools to work with user input and output.</p>
+
+<ul>
+  <li>How do we tell Ruby to print text to the screen?</li>
+  <li>How do we tell Ruby to bring in text from the user?</li>
+</ul>
+
+<h4 id="1-basic-puts--gets">1. Basic <code class="highlighter-rouge">puts</code> / <code class="highlighter-rouge">gets</code></h4>
+
+<p>Write a simple Ruby program which prompts the user to enter a message, then prints that message to the terminal. <br />
+For example:<br />
+From the command line:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch flow_control.rb
+</code></pre></div></div>
+<p>In <code class="highlighter-rouge">flow_control.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Type your message:"</span>  
+<span class="n">message</span> <span class="o">=</span> <span class="nb">gets</span><span class="p">.</span><span class="nf">chomp</span>
+<span class="nb">puts</span> <span class="s2">"You typed: </span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+<p>From the command line:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ruby flow_control.rb
+Type your message:
+$ pizza
+You typed: pizza
+</code></pre></div></div>
+
+<h4 id="2-basic-branching">2. Basic Branching</h4>
+
+<p>Extend your previous program so that if the text the user enters has an even number of letters, it prints “EVEN!”, and if it has an odd number of letters, it prints “ODD!”.</p>
+
+<h4 id="3-multi-pronged-branching">3. Multi-pronged branching</h4>
+
+<p>Write a new program that prompts the user for a message, then, depending on the following conditions, prints an appropriate message:</p>
+
+<ul>
+  <li>If the message ends with a consonant, print “CONSONANT!”</li>
+  <li>If the message ends with a vowel, print “VOWEL!”</li>
+  <li>If the message ends with a “y”, print “DON’T KNOW!”</li>
+</ul>
+
+<p>##Turn&amp; Talk
+Turning the other direction, use English to explain the flow of your code with your partner.</p>
+
+<h3 id="looping-1">Looping</h3>
+<p>Back with your original partner:</p>
+<h4 id="1-easy-looping">1. Easy Looping</h4>
+
+<p>Use a <code class="highlighter-rouge">times</code> loop to generate this output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Line
+Line
+Line
+Line
+Line
+</code></pre></div></div>
+
+<h4 id="2-looping-with-a-condition">2. Looping with a Condition</h4>
+
+<p>Build on your answer from the problem above and add an <code class="highlighter-rouge">if</code>/<code class="highlighter-rouge">else</code> to generate output like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Line is even
+Line is odd
+Line is even
+Line is odd
+Line is even
+</code></pre></div></div>
+
+<h4 id="3-three-loops">3. Three Loops</h4>
+
+<p>Generate the output below using three totally separate implementations (<code class="highlighter-rouge">times</code>, <code class="highlighter-rouge">while</code> and <code class="highlighter-rouge">until</code>):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This is my output line 1
+This is my output line 2
+This is my output line 3
+This is my output line 4
+This is my output line 5
+</code></pre></div></div>
+
+<h4 id="4-rando-guesser">4. Rando-Guesser</h4>
+
+<p>Write two implementations, one with <code class="highlighter-rouge">while</code> and one with <code class="highlighter-rouge">until</code> that output the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(The secret number is 8)
+Guess is 4
+Guess again!
+Guess is 5
+Guess again!
+Guess is 9
+Guess again!
+Guess is 4
+Guess again!
+Guess is 8
+You win!
+</code></pre></div></div>
+
+<p>The secret number and the guesses are both random numbers 0 through 10.</p>
+
+<h2 id="turn--talk">Turn &amp; Talk</h2>
+<p>Turning the other direction, use English to explain the flow of your code with your partner.</p>
+
+<h2 id="wrapup">WrapUp</h2>
+<ul>
+  <li>What are two ways to control the flow of execution in a code base?</li>
+  <li>Describe a use cases for each type of flow control covered today.(should be about 6)</li>
+</ul>
+
+<h2 id="extensions">Extensions</h2>
+
+<p>If you have time or would like more practice, try <a href="flow_control_alt_exercise.markdown">this challenge</a>.</p>
+:ET

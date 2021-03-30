@@ -1,0 +1,138 @@
+I".<p>In this lesson, we’ll discuss some of the common techniques
+and idioms for writing Javascript in an object-oriented style.</p>
+
+<h3 id="goals">Goals:</h3>
+
+<ul>
+  <li>Understand the prototype mechanism in javascript</li>
+  <li>Learn how to create new objects ad-hoc using <code class="highlighter-rouge">Object.create</code></li>
+  <li>Learn how object property queries are passed up the prototype chain</li>
+  <li>See how constructor functions give us some nicer support around this
+  behavior</li>
+  <li>Discuss some of the pros and cons of OOP in javascript</li>
+</ul>
+
+<h3 id="object-basics-in-javascript">Object Basics in Javascript</h3>
+
+<ul>
+  <li>Object literals – our ad-hoc way of creating objects in JS</li>
+  <li>Behaves somewhat like a Map or Hash in other languages, but has
+some additional features layered on top</li>
+  <li>We can set properties on an object as needed, and they will be
+specific to that object</li>
+</ul>
+
+<h3 id="prototypes">Prototypes</h3>
+
+<p>Prototypes are Javascript’s main mechanism for sharing behavior
+across similar objects. That is, we have a function, and would like
+it to be accessible across all objects of a given type</p>
+
+<p>We can find out what the prototype of a given object using
+<code class="highlighter-rouge">Object.getPrototypeOf</code></p>
+
+<p><strong>Try it</strong></p>
+
+<p>Check the prototype of these objects:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">"pizza"</code></li>
+  <li><code class="highlighter-rouge">1234</code></li>
+  <li><code class="highlighter-rouge">{}</code></li>
+</ul>
+
+<p>In short, any function defined on an object is also available to
+any object of which it is a prototype.</p>
+
+<h3 id="assigning-prototypes">Assigning Prototypes</h3>
+
+<p>So how do we set the prototype of a new object?</p>
+
+<p>One very basic way is to use the <code class="highlighter-rouge">Object.create</code> method.</p>
+
+<p>It looks like this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">parent</span> <span class="o">=</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Hi i'm the parent</span><span class="dl">"</span><span class="p">};</span>
+<span class="kd">var</span> <span class="nx">child</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">parent</span><span class="p">);</span>
+<span class="nx">child</span><span class="p">.</span><span class="nx">name</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Object.create</code> takes a single argument, which will become the prototype
+of the new object it creates. Thus, <code class="highlighter-rouge">child</code> is a brand new object with, so
+far, no properties of its own.</p>
+
+<p>However since we assigned <code class="highlighter-rouge">parent</code> as its prototype, it can freely
+access properties on the parent as if they were its own.</p>
+
+<p><strong>Try it</strong></p>
+
+<ul>
+  <li>Create a new object called <code class="highlighter-rouge">studentProto</code>; give it a property of
+  <code class="highlighter-rouge">school</code> set to <code class="highlighter-rouge">Turing</code></li>
+  <li>Use <code class="highlighter-rouge">Object.create</code> to create a new object, <code class="highlighter-rouge">student</code>, with
+  <code class="highlighter-rouge">studentProto</code> as its prototype</li>
+  <li>Assign a <code class="highlighter-rouge">name</code> property to <code class="highlighter-rouge">student</code> with your name</li>
+  <li>Verify you can access <code class="highlighter-rouge">name</code> (and get your own name) and <code class="highlighter-rouge">school</code> (and
+  get <code class="highlighter-rouge">Turing</code>)</li>
+  <li>Use <code class="highlighter-rouge">Object.getPrototypeOf</code> on <code class="highlighter-rouge">student</code> to check its prototype</li>
+</ul>
+
+<p>In practice, we generally don’t actually use <code class="highlighter-rouge">Object.create</code> to assign
+prototype relationships. There are better ways. But it is useful for
+making very clear how the relationships are getting assigned, as we have
+done here.</p>
+
+<h3 id="prototypes-vs-classes">Prototypes vs. Classes</h3>
+
+<p>This is a topic that has been hashed out to great length on the
+internet. In some ways there are a lot of similarities between
+classes in a language like ruby and prototypes in a language like
+javascript:</p>
+
+<ul>
+  <li>Both allow child instances of their type to access their methods and
+  behavior</li>
+  <li>Both use a “chain” mechanism to continue searching for requested
+  properties in their parent</li>
+  <li>Both can be used (via constructor invocation) to “set up” new objects
+when they are created</li>
+</ul>
+
+<p>However, there are also some major differences</p>
+
+<ul>
+  <li>Prototypes don’t really provide a mechanism for encapsulation of
+  state, which is one of the major principles of most OO languages.
+  Javascript doesn’t provide an OO-style mechanism for “private”
+  functions (although we can achieve something similar with closures).</li>
+  <li>Prototypes don’t distinguish between their own methods and the methods
+  provided to their children (i.e. class methods vs. instance methods).</li>
+</ul>
+
+<p><strong>Zen Contemplation:</strong></p>
+
+<p>Javascript’s object model is similar to what Ruby’s would be if
+there were no metaclasses (aka anonymous superclasses aka eigenclasses).</p>
+
+<h3 id="prototype-chains">Prototype Chains</h3>
+
+<p>As in most OO languages, prototypes actually form a “chain” stretching
+back from the current object to the “root” object in the system –
+<code class="highlighter-rouge">Object</code> itself.</p>
+
+<p>Behavior for an object can come from any point in this chain, with
+entries closer to the object (further <em>down</em> the chain) taking
+precedence.</p>
+
+<p><strong>Exercise: Retrieving Prototype Chains</strong></p>
+
+<p>Write a function, <code class="highlighter-rouge">protoChain(object)</code>, which, given an object, returns
+an array of all the objects in its prototype chain.</p>
+
+<h3 id="constructors-and-prototypes-in-practice">Constructors and Prototypes in Practice</h3>
+
+<p>Let’s see how we would use some of these techniques in practice.
+To look at this, we’ll work through this tutorial from Mozilla:</p>
+
+<p><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/03-object-oriented-javascript/01-introduction-to-object-oriented-javascript.md">Advanced JS Tutorial</a></p>
+:ET

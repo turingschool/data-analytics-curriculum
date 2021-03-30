@@ -1,0 +1,448 @@
+I"��<h1 id="configuring-your-projects">Configuring Your Projects</h1>
+
+<p>Adding dependencies, bundling your JavaScript files with Webpack, adding style loaders writing npm scripts, linting your code, preventing files from being added to github … This lesson will begin to draw back the veil on these mysteries!</p>
+
+<p>In this lesson, we will hand-roll a boilerplate repo that can be used for a life-changing app - a <a href="https://github.com/turingschool-examples/webpack-npm-wombat">Wombat Greeter</a>.</p>
+
+<h2 id="vocab">Vocab</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">Dependency</code> Something your program needs in order to do it’s job that is provided by an external source</li>
+  <li><code class="highlighter-rouge">NPM</code> Node Package Manager is a repository of JavaScript libraries</li>
+  <li><code class="highlighter-rouge">Webpack</code> Broadly, a thing that takes your many files and combines them into just a few files a web browser can understand</li>
+</ul>
+
+<hr />
+
+<h2 id="npm">NPM</h2>
+
+<p><a href="https://docs.npmjs.com/">NPM documentation</a></p>
+
+<h4 id="what-is-npm">What is NPM?</h4>
+<p><strong>N</strong>ode <strong>P</strong>ackage <strong>M</strong>anager</p>
+
+<p>A <strong>package</strong> is a bit of reusable code!</p>
+<ul>
+  <li>usually solves a single problem</li>
+  <li>SOMEONE wrote it and shared it</li>
+  <li>makes your life easier</li>
+</ul>
+
+<blockquote>
+  <p>You can compare these to <code class="highlighter-rouge">gems</code> from your Rails experience.</p>
+</blockquote>
+
+<p>You can write your own packages, bundle them up, and publish them (either on the <a href="https://www.npmjs.com/">NPM library</a> or on GitHub) for other devs to use!</p>
+
+<p>NPM is a <strong>manager</strong>; it includes a set of tools that let you use and control node packages. Using it, you can:</p>
+<ul>
+  <li>install packages into your project as dependencies (aka, code that your project <em>depends</em> on)</li>
+  <li>create custom scripts to run code</li>
+  <li>specify specific packages to use when deploying your app to production</li>
+</ul>
+
+<p>You are so far pretty familiar with cloning down a repo, changing into the directory, and running <code class="highlighter-rouge">npm install</code>. Let’s unpack what’s happening when you do that!</p>
+
+<h3 id="packagejson">package.json</h3>
+<p><a href="https://docs.npmjs.com/files/package.json">package.json documentation</a></p>
+
+<p>The <code class="highlighter-rouge">package.json</code> file is created when we initialize npm in a repo (the terminal command is <code class="highlighter-rouge">npm init</code>). It keeps track of our dependencies, lets us write npm scripts, and is the instruction manual NPM follows when we run <code class="highlighter-rouge">npm install</code>.</p>
+
+<blockquote>
+  <p>You can compare to you Gemfile and Rakefile combined in one.</p>
+</blockquote>
+
+<p>Let’s take a look at an example <code class="highlighter-rouge">package.json</code> file:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Shih-Tzus</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">version</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1.0.0</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">It has very important shih-tzu information.</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">main</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">index.js</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">dependencies</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">jquery</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">^3.3.1</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">node</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">6.11.1</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">devDependencies</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">chai</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">^4.0.2</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">mocha</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">^3.4.2</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">scripts</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">test</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">./node_modules/mocha/bin/mocha --timeout 5000</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">repository</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">git</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">git+https://github.com/ameseee/SuperRadApp.git</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">keywords</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">furry</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">fun</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">soft</span><span class="dl">"</span><span class="p">],</span>
+  <span class="dl">"</span><span class="s2">author</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Sodie Holt</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">license</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ISC</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Take a minute to look over this. What’s familiar? What’s confusing?</p>
+
+<p>Let’s break this down. The package.json is just meta data about our installed packages. It can be helpful to think of the <code class="highlighter-rouge">package.json</code> as the recipe for our app.</p>
+
+<h4 id="dependencies-production">dependencies (production):</h4>
+
+<p>We’re listing what ingredients we need for the app to run: we need jquery, and we need version 3.3.1 or any version compatible with 3.3.1.
+(You can read up on the what the symbols by the package version numbers mean <a href="https://docs.npmjs.com/files/package.json#dependencies">here</a>, and learn a bit about what the version numbers themselves even mean <a href="https://semver.org/">here</a>.)</p>
+
+<p>To install a package as a production dependency:
+<code class="highlighter-rouge">npm install [PACKAGE NAME OR GITHUB URL]</code></p>
+
+<p>When you install a package this way, a new key-value pair with that package’s information will be added to the <code class="highlighter-rouge">"dependencies"</code> object for you.</p>
+
+<h4 id="devdependencies-development">devDependencies (development):</h4>
+
+<p>The devDependencies are the tools that our chefs will need in order to work on our app - like our testing libraries, mocha and chai. The end user of an app will not need to have mocha and chai on their computers, since they will never be running the testing suite of the app. We designate those libraries as <code class="highlighter-rouge">devDependencies</code> because they are packages that only developers working on the app will use.</p>
+
+<p>To install a package as a development dependency:
+<code class="highlighter-rouge">npm install [PACKAGE NAME OR GITHUB URL] --save-dev</code>
+Note: you <strong>must</strong> use the <code class="highlighter-rouge">--save-dev</code> flag. Otherwise, the dependency will be installed as a production dependency.</p>
+
+<p>When you install a package this way, a new key-value pair with that package’s information will be added to the <code class="highlighter-rouge">"devDependencies"</code> object for you.</p>
+
+<h4 id="scripts">scripts:</h4>
+
+<p>Our <code class="highlighter-rouge">package.json</code> recipe also has instructions. The <code class="highlighter-rouge">scripts</code> object has a key of <code class="highlighter-rouge">"test"</code> whose value is <code class="highlighter-rouge">"./node_modules/mocha/bin/mocha --timeout 5000"</code>.</p>
+
+<p>We’re creating a shortcut; we can now run <code class="highlighter-rouge">npm test</code> in our terminal, and it is equivalent to running <code class="highlighter-rouge">npm run ./node_modules/mocha/bin/mocha --timeout 5000</code> in the terminal, but obviously much shorter and easier for us.</p>
+
+<p>We’re able to create any scripts. One thing to be aware of: scripts named <code class="highlighter-rouge">start</code> or <code class="highlighter-rouge">test</code> are so ubiquitous that they can be run in the terminal by simply typing in <code class="highlighter-rouge">npm start</code> and <code class="highlighter-rouge">npm test</code>. For <strong>any other script</strong>, however, you must add the keyword <code class="highlighter-rouge">run</code> into the terminal command.</p>
+
+<p>For example, if you create a script called <code class="highlighter-rouge">deploy</code>, to run that script in the terminal, you must type <code class="highlighter-rouge">npm run deploy</code>.</p>
+
+<p><em>Note: you can always edit the <code class="highlighter-rouge">package.json</code> file manually! Just go in there and create key value pairs to your heart’s content!</em></p>
+
+<p><em>Another note: Additional reading about the <code class="highlighter-rouge">package-lock.json</code> file <a href="https://docs.npmjs.com/files/package-lock.json">here</a>. It is a log of snapshots of your dependency tree. It ensures that a team or production build is using the exact same dependencies, and is also a log that allows you to “time travel” into earlier versions of the dependency tree.</em></p>
+
+<h4 id="common-npm-commands">Common NPM Commands</h4>
+
+<h4 id="--npm-init-and-optionally-npm-init---yes">- <code class="highlighter-rouge">npm init</code> and optionally <code class="highlighter-rouge">npm init --yes</code></h4>
+
+<p>Initializes npm and creates the <code class="highlighter-rouge">package.json</code> file. If run without the <code class="highlighter-rouge">--yes</code> flag, it will run you through a dialogue designed to help customize the <code class="highlighter-rouge">package.json</code> file. The file can always be edited and updated at any point.</p>
+
+<h4 id="--npm-install">- <code class="highlighter-rouge">npm install</code></h4>
+
+<p>Install package dependencies and devDependencies listed in <code class="highlighter-rouge">package.json</code></p>
+
+<h4 id="--npm-install-package-name">- <code class="highlighter-rouge">npm install [package-name]</code></h4>
+
+<p>Install package locally in folder location <code class="highlighter-rouge">node_modules</code></p>
+
+<h4 id="--npm-install--g-package-name">- <code class="highlighter-rouge">npm install -g [package-name]</code></h4>
+
+<p>Install package globally, usually to <code class="highlighter-rouge">/usr/local/lib/node_modules</code></p>
+
+<h4 id="--npm-install---save-package-name">- <code class="highlighter-rouge">npm install --save [package-name]</code></h4>
+
+<p>Install package locally in folder location <code class="highlighter-rouge">node_modules</code> and update <code class="highlighter-rouge">package.json</code> dependencies</p>
+
+<h4 id="--npm-install---save-dev-package-name">- <code class="highlighter-rouge">npm install --save-dev [package-name]</code></h4>
+
+<p>Install package locally in folder location <code class="highlighter-rouge">node_modules</code> and update <code class="highlighter-rouge">package.json</code> developer dependencies. Shortcut: <code class="highlighter-rouge">npm install -D</code>.</p>
+
+<h4 id="--npm-start">- <code class="highlighter-rouge">npm start</code></h4>
+
+<p>Run start script located in <code class="highlighter-rouge">package.json</code></p>
+
+<h4 id="--npm-test">- <code class="highlighter-rouge">npm test</code></h4>
+
+<p>Run test script located in <code class="highlighter-rouge">package.json</code></p>
+
+<h4 id="--npm-run-custom-script">- <code class="highlighter-rouge">npm run [custom script]</code></h4>
+
+<p>Run custom script located in <code class="highlighter-rouge">package.json</code></p>
+
+<ul>
+  <li>NOTE: Notice that the –save-dev flags can be typed before <em>or</em> after the package name.</li>
+</ul>
+
+<h3 id="in-your-wombat-repo">In your wombat repo:</h3>
+
+<ol>
+  <li>
+    <p>Run <code class="highlighter-rouge">npm init</code> to create the <code class="highlighter-rouge">package.json</code> file. You will need to answer a series of questions before you file is created. Shortcut: <code class="highlighter-rouge">npm init --yes</code>, but you might want to go through the process for your first time.</p>
+  </li>
+  <li>
+    <p>Edit the <code class="highlighter-rouge">scripts</code> portion of the <code class="highlighter-rouge">package.json</code> file:</p>
+
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="dl">"</span><span class="s2">test</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">./node_modules/mocha/bin/mocha --require babel-core/register test</span><span class="dl">"</span><span class="p">,</span>
+ <span class="dl">"</span><span class="s2">start</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">webpack</span><span class="dl">"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Install the following dev dependencies:
+    <ul>
+      <li>mocha</li>
+      <li>chai</li>
+    </ul>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> npm <span class="nb">install </span>mocha <span class="nt">-D</span>
+ npm <span class="nb">install </span>chai <span class="nt">-D</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Install the following dependencies:
+    <ul>
+      <li>webpack</li>
+      <li>webpack-dev-server</li>
+      <li>webpack-cli</li>
+      <li>babel-loader</li>
+      <li>babel-cli</li>
+      <li>babel-preset-env</li>
+      <li>babel-preset-es2015</li>
+      <li>babel-core@7</li>
+      <li>style-loader</li>
+      <li>css-loader</li>
+    </ul>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> npm <span class="nb">install </span>webpack webpack-cli babel-loader babel-cli babel-preset-env style-loader css-loader
+</code></pre></div>    </div>
+    <hr />
+  </li>
+</ol>
+
+<h2 id="webpack-basics">Webpack Basics</h2>
+<p><a href="https://webpack.js.org/guides/getting-started/">Webpack ‘Getting Started’ documentation</a></p>
+
+<p><a href="https://blog.envylabs.com/getting-started-with-webpack-2-ed2b86c68783">Webpack intro blog post</a></p>
+
+<h3 id="what-is-webpack">What is Webpack?</h3>
+
+<p>Webpack is a build tool that takes multiple JavaScript modules and bundles them up into a single, unified file.</p>
+
+<blockquote>
+  <p>You can compare webpack to the Asset Pipeline.</p>
+</blockquote>
+
+<h3 id="why-do-we-like-it">Why Do We Like It?</h3>
+
+<p>While webpack can be difficult to understand at first, it makes our lives much easier.</p>
+
+<ul>
+  <li>
+    <p>We can organize our code into separate files. This makes it easier to find specific pieces of code and improves maintainability.</p>
+  </li>
+  <li>
+    <p>Webpack creates a unique scope for each our files, helping to prevent adding things to the global and naming collisions.</p>
+  </li>
+  <li>
+    <p>By bundling all of our JS into a single file, the browser only needs to request, wait for, and process through one file.</p>
+
+    <ul>
+      <li>
+        <p>Otherwise, it would have to request every JS file and individual dependency!</p>
+      </li>
+      <li>
+        <p>Network requests are expensive (they take a long time), which slows down the app and makes for a poor user experience.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>We can even bundle up our HTML and CSS files by using loaders, further reducing the number of files the browser has to request and process.</p>
+  </li>
+</ul>
+
+<h3 id="configuring-webpack-and-babel">Configuring Webpack (and Babel)</h3>
+
+<p><a href="https://webpack.js.org/concepts/">Core Webpack Concepts</a></p>
+
+<p><a href="https://webpack.js.org/configuration/">Configuring Webpack</a></p>
+
+<p>Here is the <code class="highlighter-rouge">webpack.config.js</code> file from the <a href="https://github.com/turingschool-examples/game-time-starter-kit-FEm1">gametime</a> repo:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">devtool</span><span class="p">:</span> <span class="dl">'</span><span class="s1">inline-source-map</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">entry</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">main</span><span class="p">:</span> <span class="dl">"</span><span class="s2">./lib/index.js</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">test</span><span class="p">:</span> <span class="dl">"</span><span class="s2">mocha-loader!./test/index.js</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="na">mode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">output</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">path</span><span class="p">:</span> <span class="nx">__dirname</span><span class="p">,</span>
+    <span class="na">filename</span><span class="p">:</span> <span class="dl">"</span><span class="s2">[name].bundle.js</span><span class="dl">"</span>
+  <span class="p">},</span>
+  <span class="na">module</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">rules</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="na">test</span><span class="p">:</span> <span class="sr">/</span><span class="se">\.</span><span class="sr">css$/</span><span class="p">,</span> <span class="na">exclude</span><span class="p">:</span> <span class="sr">/node_modules/</span><span class="p">,</span> <span class="na">use</span><span class="p">:</span> <span class="p">[</span> <span class="dl">'</span><span class="s1">style-loader</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">css-loader</span><span class="dl">'</span> <span class="p">]},</span>
+      <span class="p">{</span> <span class="na">test</span><span class="p">:</span> <span class="sr">/</span><span class="se">\.</span><span class="sr">js$/</span><span class="p">,</span> <span class="na">exclude</span><span class="p">:</span> <span class="sr">/node_modules/</span><span class="p">,</span> <span class="na">use</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">babel-loader</span><span class="dl">'</span><span class="p">]</span> <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="na">resolve</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">extensions</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">.js</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.json</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.css</span><span class="dl">'</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h4 id="devtool">devtool</h4>
+<p>This provides a map of our bundled code, so that when we run into errors it will tell us in the console where the error is in our pre-bundled code.</p>
+
+<h4 id="entry">entry</h4>
+<p>This is where webpack will start bundling up our app. It should be the entry point to your application.</p>
+
+<h4 id="output">output</h4>
+<p>This defines where where webpack will create your bundled code and what it will name the file.</p>
+
+<h4 id="loaders">loaders</h4>
+<p>Let’s focus on the <code class="highlighter-rouge">rules</code> key-value pair inside the <code class="highlighter-rouge">module</code> object.</p>
+
+<p>Loaders transform different non-JS code into valid JS modules so they can be included when webpack bundles everything up into a single file for the browser.</p>
+
+<p>Loaders have two parts: a npm module, and a configuration object which is added to the <code class="highlighter-rouge">webpack.config.js</code> file.</p>
+
+<p>Let’s walk through how the <code class="highlighter-rouge">css-loader</code> was added to the react starter kit repo.</p>
+
+<ol>
+  <li>
+    <p>Install the style and css loaders
+<code class="highlighter-rouge">npm install style-loader css-loader --save-dev</code></p>
+  </li>
+  <li>
+    <p>In the <code class="highlighter-rouge">webpack.config.js</code> file, we add our configuration object</p>
+  </li>
+</ol>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="nl">test</span><span class="p">:</span> <span class="sr">/</span><span class="se">\.</span><span class="sr">css$/</span><span class="p">,</span>
+  <span class="nx">exclude</span><span class="p">:</span> <span class="o">/</span><span class="nx">node_modules</span><span class="o">/</span><span class="p">,</span>
+  <span class="nx">use</span><span class="p">:</span> <span class="dl">'</span><span class="s1">style-loader!css-loader</span><span class="dl">'</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>That’s it! But what is that object doing?</p>
+
+<p>The regular expression inside the object looks for all files whose extension is <code class="highlighter-rouge">.css</code> and identifies them as code to be transformed into a JS, using the style-loader and css-loader npm packages.</p>
+
+<p>When we run webpack, it transforms the css files into JS modules, which are then bundled together with the rest of our JS into a single file, <code class="highlighter-rouge">bundle.js</code> (as specified in the <code class="highlighter-rouge">output</code> section of the <code class="highlighter-rouge">webpack.config.js</code> file!).</p>
+
+<p>You can read more about loaders <a href="https://webpack.js.org/concepts/#loaders">here</a>.</p>
+
+<h4 id="using-our-bundled-file">Using Our Bundled File</h4>
+
+<p>In the HTML of the project, we point our <code class="highlighter-rouge">&lt;script&gt;</code> tag to <code class="highlighter-rouge">"bundle.js"</code>, so it references the all-neatly-bundled-up JS file that webpack made for us!</p>
+
+<h3 id="in-your-wombat-repo-1">In your wombat repo:</h3>
+
+<ol>
+  <li>Create a new file in the root of your repo: <code class="highlighter-rouge">webpack.config.js</code></li>
+  <li>
+    <p>Create a new file in the root of your repo: <code class="highlighter-rouge">.babelrc</code></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">touch </span>webpack.config.js .babelrc
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Paste the following code into the <code class="highlighter-rouge">.babelrc</code> file. <code class="highlighter-rouge">preset-env</code> is a smart preset that allows us to use the latest JavaScript without needing to micromanage syntax and browser polyfills.</p>
+
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="p">{</span>
+   <span class="dl">"</span><span class="s2">presets</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">env</span><span class="dl">"</span><span class="p">]</span>
+ <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Paste the following code to the <code class="highlighter-rouge">webpack.config.js</code> file:</p>
+
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">);</span>
+
+ <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="na">devtool</span><span class="p">:</span> <span class="dl">'</span><span class="s1">inline-source-map</span><span class="dl">'</span><span class="p">,</span>
+   <span class="na">entry</span><span class="p">:</span> <span class="p">{</span>
+     <span class="na">main</span><span class="p">:</span> <span class="dl">"</span><span class="s2">./lib/index.js</span><span class="dl">"</span>
+   <span class="p">},</span>
+   <span class="na">output</span><span class="p">:</span> <span class="p">{</span>
+     <span class="na">path</span><span class="p">:</span> <span class="nx">__dirname</span><span class="p">,</span>
+     <span class="na">filename</span><span class="p">:</span> <span class="dl">"</span><span class="s2">dist/[name].bundle.js</span><span class="dl">"</span>
+   <span class="p">},</span>
+   <span class="na">mode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">,</span>
+   <span class="na">module</span><span class="p">:</span> <span class="p">{</span>
+     <span class="na">rules</span><span class="p">:</span> <span class="p">[</span>
+       <span class="p">{</span>
+         <span class="na">test</span><span class="p">:</span> <span class="sr">/</span><span class="se">\.</span><span class="sr">css$/</span><span class="p">,</span>
+         <span class="na">exclude</span><span class="p">:</span> <span class="sr">/node_modules/</span><span class="p">,</span>
+         <span class="na">loader</span><span class="p">:</span> <span class="dl">"</span><span class="s2">style-loader!css-loader</span><span class="dl">"</span>
+       <span class="p">},</span>
+       <span class="p">{</span>
+         <span class="na">test</span><span class="p">:</span> <span class="sr">/</span><span class="se">\.</span><span class="sr">js$/</span><span class="p">,</span>
+         <span class="na">loader</span><span class="p">:</span> <span class="dl">'</span><span class="s1">babel-loader</span><span class="dl">'</span><span class="p">,</span>
+         <span class="na">query</span><span class="p">:</span> <span class="p">{</span>
+           <span class="na">presets</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">es2015</span><span class="dl">'</span><span class="p">]</span>
+         <span class="p">}</span>
+       <span class="p">}</span>
+     <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="na">resolve</span><span class="p">:</span> <span class="p">{</span>
+     <span class="na">extensions</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">.js</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.json</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">.css</span><span class="dl">'</span><span class="p">]</span>
+   <span class="p">}</span>
+ <span class="p">};</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>In the <code class="highlighter-rouge">test/index-test.js</code> file, let’s require chai and write one test to see that mocha and chai are properly hooked up:</p>
+
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">import</span> <span class="p">{</span> <span class="nx">assert</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">chai</span><span class="dl">'</span><span class="p">;</span>
+
+ <span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return true</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+   <span class="p">});</span>
+ <span class="p">});</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>In your terminal, run <code class="highlighter-rouge">npm test</code></p>
+  </li>
+  <li>
+    <p>Before this will work, we need to change the file we are providing to <code class="highlighter-rouge">index.html</code>. The script tag should point to <code class="highlighter-rouge">./dist/main.bundle.js</code>.</p>
+  </li>
+  <li>In your terminal, run <code class="highlighter-rouge">npm start</code>. Visit localhost:8080 to view in your browser.</li>
+</ol>
+
+<hr />
+
+<h2 id="gitignore-basics">.gitignore Basics</h2>
+<p><a href="https://git-scm.com/docs/gitignore">gitignore documentation</a></p>
+
+<p><a href="https://help.github.com/articles/ignoring-files/">github documentation on ignoring files</a></p>
+
+<p>.gitignore is a file we can add to any git repo. This file contains filepaths and types of files we do not want to add to our git repo.</p>
+
+<p>Common things to add to your <code class="highlighter-rouge">.gitignore</code> file are:</p>
+<ul>
+  <li>dependency directories</li>
+  <li>log files</li>
+  <li>files generated by compilers</li>
+  <li>API keys, other sensitive data
+  (note: there are better ways to obscure and protect data that will be covered in Mod 4)</li>
+</ul>
+
+<h3 id="in-your-wombat-repo-2">In your wombat repo:</h3>
+
+<ol>
+  <li>Create a new file in the root of your repo: <code class="highlighter-rouge">.gitignore</code></li>
+  <li>In that file, add the filepaths of the directories or files we don’t want added to github.</li>
+</ol>
+
+<p>That’s it!</p>
+
+<p>An example <code class="highlighter-rouge">.gitignore</code> file might look like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dependencies
+/node_modules
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+APIkey.js
+
+# logs
+*.log
+</code></pre></div></div>
+
+<p>The lines beginning with <code class="highlighter-rouge">#</code> are simply comments that make it easier to navigate and maintain the <code class="highlighter-rouge">.gitignore</code> file. Notice that the contents of the file are filepaths. Any file with <code class="highlighter-rouge">/node_modules</code> in its filepath will not be added, committed, or pushed to github. If we want to ignore an entire type of file we can use the <code class="highlighter-rouge">*</code> to indicate all, and then follow it with the file extension we want to ignore.</p>
+:ET

@@ -1,0 +1,31 @@
+I" <h1 id="iteration-4---additional-methods---find-pop-includes">Iteration 4 - Additional Methods - <code class="highlighter-rouge">find</code>, <code class="highlighter-rouge">pop</code>, <code class="highlighter-rouge">includes?</code></h1>
+
+<p>Perfect, we are almost there! Next is to add <code class="highlighter-rouge">find</code>, <code class="highlighter-rouge">pop</code> and <code class="highlighter-rouge">includes?</code> methods.</p>
+
+<p><code class="highlighter-rouge">find</code> takes two parameters, the first indicates the first position to return and the second parameter specifies how many elements to return.</p>
+
+<p><code class="highlighter-rouge">includes?</code> gives back true or false whether the supplied value is in the list.</p>
+
+<p><code class="highlighter-rouge">pop</code> removes elements the last element from the list.</p>
+
+<p>Expected behavior:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">...</span><span class="p">.</span>
+<span class="nf">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">to_string</span>
+<span class="o">=&gt;</span> <span class="s2">"deep woo shi shu blop"</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="s2">"shi"</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="s2">"woo shi shu"</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">includes?</span><span class="p">(</span><span class="s2">"deep"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">includes?</span><span class="p">(</span><span class="s2">"dep"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="kp">false</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">pop</span>
+<span class="o">=&gt;</span> <span class="s2">"blop"</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">pop</span>
+<span class="o">=&gt;</span> <span class="s2">"shu"</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">to_string</span>
+<span class="o">=&gt;</span> <span class="s2">"deep woo shi"</span>
+</code></pre></div></div>
+:ET

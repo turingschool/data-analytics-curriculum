@@ -1,0 +1,267 @@
+I"�`<p>Updated to work with Ruby 2.5.3 and Rails 5.2.4.3</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<p>We’ll explore sending email in Rails by building a project that requires this functionality. By the end you should understand:</p>
+
+<ul>
+  <li>How to use ActionMailer</li>
+  <li>Send email locally using Mailcatcher</li>
+  <li>How to test that a mailer is working</li>
+</ul>
+
+<hr />
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>Why are emails important?</li>
+</ul>
+
+<hr />
+
+<h2 id="friendly-advice-exercise">Friendly Advice Exercise</h2>
+
+<p>We are going to build an application that allows us to send our friend some friendly advice via email.</p>
+
+<p>What we’d like our app to do:</p>
+
+<ol>
+  <li>Allow us to sign up / log in</li>
+  <li>Allow us to enter a friend’s email address</li>
+  <li>Send that friend some advice.</li>
+</ol>
+
+<h2 id="researching-with-the-docs">Researching with the Docs</h2>
+<ul>
+  <li><a href="http://whatismyipaddress.com/smtp">What is SMTP?</a></li>
+  <li><a href="http://guides.rubyonrails.org/action_mailer_basics.html">Action Mailer</a></li>
+</ul>
+
+<hr />
+
+<h2 id="sending-email-locally-with-mailcatcher">Sending Email locally with Mailcatcher</h2>
+
+<h3 id="getting-started">Getting Started</h3>
+
+<p>For this tutorial, we are going to setup our emails to “send” through Mailcatcher locally. And in production, you’ll want to set up your Rails environment to send all emails through a third-party service like SendGrid.</p>
+
+<p>First things first, go ahead and clone down <a href="https://github.com/turingschool-examples/friendly-advice">this repo</a></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/turingschool-examples/friendly-advice.git friendly-advice
+<span class="nv">$ </span><span class="nb">cd </span>friendly-advice
+<span class="nv">$ </span>bundle
+<span class="nv">$ </span>rake db:<span class="o">{</span>drop,create,migrate,seed<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="rails-setup">Rails Setup</h3>
+<p>Run your server to see what we’ve already got in our repo</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails s
+</code></pre></div></div>
+<p>Inspect the Form/Input field, where does this route to?</p>
+
+<p>Make sure the route is in the routes file:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">post</span> <span class="s1">'/advice'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'advice#create'</span>
+</code></pre></div></div>
+
+<p>Next we’ll open our Advice Controller. The form asks for a POST route so we’ll need to update the create action where we will call our mailer.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AdviceController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">show</span>
+   <span class="n">redirect_to</span> <span class="n">root_path</span> <span class="k">unless</span> <span class="n">logged_in?</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@advice</span> <span class="o">=</span> <span class="no">AdviceGenerator</span><span class="p">.</span><span class="nf">new</span>
+    <span class="c1"># `recipient` is the email address that should be receiving the message</span>
+    <span class="n">recipient</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="ss">:friends_email</span><span class="p">]</span>
+
+    <span class="c1"># `email_info` is the information that we want to include in the email message.</span>
+    <span class="n">email_info</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="ss">user: </span><span class="n">current_user</span><span class="p">,</span>
+      <span class="ss">friend: </span><span class="n">params</span><span class="p">[</span><span class="ss">:friends_name</span><span class="p">],</span>
+      <span class="ss">message: </span><span class="vi">@advice</span><span class="p">.</span><span class="nf">message</span>
+    <span class="p">}</span>
+
+    <span class="no">FriendNotifierMailer</span><span class="p">.</span><span class="nf">inform</span><span class="p">(</span><span class="n">email_info</span><span class="p">,</span> <span class="n">recipient</span><span class="p">).</span><span class="nf">deliver_now</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Thank you for sending some friendly advice.'</span>
+    <span class="n">redirect_to</span> <span class="n">advice_url</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="creating-the-mailer">Creating the Mailer</h3>
+
+<p>First, we set up our ApplicationMailer to set an automatic “From” address for every outgoing email. There’s no easy way to change this in the default setup of Rails; you can do this with a third-party email service like SendGrid.</p>
+
+<p>The ‘layout’ option tells Rails where in <code class="highlighter-rouge">/app/views/layouts/</code> to look for layout files, similar to how <code class="highlighter-rouge">/app/views/layouts/application.html.erb</code> affects all HTML view pages with a <code class="highlighter-rouge">yield</code> command. In this case, we’re configuring our setup to look for <code class="highlighter-rouge">/app/views/layouts/mailer.html.erb</code> and <code class="highlighter-rouge">/app/views/layouts/mailer.text.erb</code> for HTML-based emails and plaintext-based emails, respectively.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/mailers/application_mailer.rb</span>
+
+<span class="k">class</span> <span class="nc">ApplicationMailer</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">default</span> <span class="ss">from: </span><span class="s1">'friendly@advice.io'</span>
+  <span class="n">layout</span> <span class="s1">'mailer'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Our next step will be to create the FriendNotifer mailer to send our friends advice. We’ll use a generator for this, but the generator will ignore the <code class="highlighter-rouge">-T</code> we used to create the Rails app and generate some scaffolding for tests under a <code class="highlighter-rouge">/test/</code> folder, which we can delete afterward.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g mailer FriendNotifier
+<span class="nb">rm</span> <span class="nt">-rf</span> <span class="nb">test</span>/
+</code></pre></div></div>
+
+<p>This creates our <code class="highlighter-rouge">friend_notifer_mailer</code> inside <code class="highlighter-rouge">app/mailers</code> and a <code class="highlighter-rouge">friend_notifer_mailer</code> folder in <code class="highlighter-rouge">app/views</code>. Let’s first open the <code class="highlighter-rouge">friend_notifer_mailer</code> in mailers and add our inform method.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># mailers/friend_notifier_mailer.rb</span>
+
+<span class="k">class</span> <span class="nc">FriendNotifierMailer</span> <span class="o">&lt;</span> <span class="no">ApplicationMailer</span>
+  <span class="k">def</span> <span class="nf">inform</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">recipient</span><span class="p">)</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="ss">:user</span><span class="p">]</span>
+    <span class="vi">@message</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="ss">:message</span><span class="p">]</span>
+    <span class="vi">@friend</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="ss">:friend</span><span class="p">]</span>
+
+    <span class="n">mail</span><span class="p">(</span>
+      <span class="ss">reply_to: </span><span class="vi">@user</span><span class="p">.</span><span class="nf">email</span><span class="p">,</span>
+      <span class="ss">to: </span><span class="n">recipient</span><span class="p">,</span>
+      <span class="ss">subject: </span><span class="s2">"</span><span class="si">#{</span><span class="vi">@user</span><span class="p">.</span><span class="nf">name</span><span class="si">}</span><span class="s2"> is sending you some advice"</span>
+    <span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice that in our call to <a href="https://apidock.com/rails/ActionMailer/Base/mail">ActionMailer::Base#mail</a> that we’re setting a reply-to email address of our user. This allows the recipient to hit ‘reply’ on an email and their response will go back to our user, not to our “default” email address of “friendly@advice.io”</p>
+
+<p>Next we’ll make the views that will have the body of the email that is sent. Similar to controllers, any instance variables you create in your mailer method will be available in your mailer view.</p>
+
+<p>In <code class="highlighter-rouge">app/views/friend_notifier_mailer</code> create two files, <code class="highlighter-rouge">inform.html.erb</code> and <code class="highlighter-rouge">inform.text.erb</code></p>
+
+<p>Depending on the person’s email client you’re sending the email to, it will render either the plain text or the HTML view. We don’t have control over that, so we want to accomodate both and make them have the same content.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># inform.html.erb and inform.text.erb
+
+Hello &lt;%=@friend%&gt;!
+
+&lt;%= @user.name %&gt; has sent you some advice: &lt;%= @message %&gt;
+</code></pre></div></div>
+
+<p>You can add VERY VERY simple HTML within the <code class="highlighter-rouge">.html.erb</code> file, but you cannot use the typical CSS layouts nor rely on class/id attributes of CSS. If you really want to style your email, you must look into “inline” styling like this:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;p</span> <span class="na">style=</span><span class="s">"background:yellow;"</span><span class="nt">&gt;</span>This background is yellow<span class="nt">&lt;/p&gt;</span>
+</code></pre></div></div>
+
+<h3 id="configuring-mailcatcher">Configuring Mailcatcher</h3>
+
+<p>Take a moment to see what you can figure out from the <a href="https://mailcatcher.me/">MailCatcher</a> docs.</p>
+
+<p>Mailcatcher allows you to test sending email. It is a simple SMTP server that intercepts (catches) outgoing emails, and it gives you a web interface that allows you to inspect them. Mailcatcher does not allow the emails to actually go out, and so you are able to test that emails send, without having to worry about that email being flooded with emails.</p>
+
+<p>Let’s get it set up.</p>
+
+<p>You want to install the Mailcatcher gem, <strong>but you do not want to add it to your gemfile</strong> in order to prevent conflicts with your applications gems.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gem <span class="nb">install </span>mailcatcher
+</code></pre></div></div>
+
+<p>Now let’s setup our development config to send the emails to the mailcatcher port. Add the following code to your <code class="highlighter-rouge">config/environments/development.rb</code> file, within the <code class="highlighter-rouge">Rails.application.configure</code> block of code where you see other <code class="highlighter-rouge">config.</code> settings.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># config/environments/development.rb</span>
+
+<span class="n">config</span><span class="p">.</span><span class="nf">action_mailer</span><span class="p">.</span><span class="nf">delivery_method</span> <span class="o">=</span> <span class="ss">:smtp</span>
+<span class="n">config</span><span class="p">.</span><span class="nf">action_mailer</span><span class="p">.</span><span class="nf">smtp_settings</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:address</span> <span class="o">=&gt;</span> <span class="s2">"localhost"</span><span class="p">,</span> <span class="ss">:port</span> <span class="o">=&gt;</span> <span class="mi">1025</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>The mail is sent through port 1025, but in order to view the Mailcatcher interface we want to visit port 1080. To start up Mailcatcher:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mailcatcher
+</code></pre></div></div>
+
+<p>Now open up http://localhost:1080 and you should see the interface for where emails are sent. Now let’s test to see emails come through.</p>
+
+<p>If you open up the app in a browser locally, and run through the steps to send an email, you should see the email come through on mailcatcher.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>I know, I know, TDD all the things, and we didn’t do that here. Here are some helpful steps for testing that your mailer is working:</p>
+
+<h4 id="in-your-test-files">In your test files</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expect</span><span class="p">(</span><span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">deliveries</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">email</span> <span class="o">=</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">deliveries</span><span class="p">.</span><span class="nf">last</span>
+</code></pre></div></div>
+<p>This will catch an email object of the last thing sent to ActionMailer</p>
+
+<p>Next, we can test that the subject line and Reply-To email address were set correctly</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="nf">subject</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Nancy Drew is sending you some advice'</span><span class="p">)</span>
+
+<span class="c1"># note: the reply_to address will come through as an array, not a single string</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="nf">reply_to</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">([</span><span class="s1">'nancydrew@detective.com'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Finally, since we sent a multi-part email message with both plaintext and HTML parts, can test that the content came through correctly:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># we can test that the plaintext portion of the email worked as intended</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="nf">text_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Hello Leroy Brown'</span><span class="p">)</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="nf">text_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Nancy Drew has sent you some advice:'</span><span class="p">)</span>
+
+<span class="c1"># we can test that the HTML portion of the email worked as intended</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="nf">html_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Hello Leroy Brown'</span><span class="p">)</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="nf">html_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Nancy Drew has sent you some advice:'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="should-that-really-be-in-a-controller-feature-test-though">Should that really be in a controller feature test though?</h4>
+
+<p>Let’s do this as a mailer spec test, within <code class="highlighter-rouge">spec/mailers/friendnotifier_mailer_spec.rb</code></p>
+
+<p>This will feel more like a proper “unit test” of our mailer setup.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">FriendNotifierMailer</span><span class="p">,</span> <span class="ss">type: :mailer</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s1">'inform'</span> <span class="k">do</span>
+    <span class="n">sending_user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span>
+      <span class="ss">first_name: </span><span class="s1">'Rey'</span><span class="p">,</span>
+      <span class="ss">last_name: </span><span class="s1">'Palpatine'</span><span class="p">,</span>
+      <span class="ss">email: </span><span class="s1">'rey@dropofgoldensun.com'</span><span class="p">,</span>
+      <span class="ss">password: </span><span class="s1">'thebestjedi'</span>
+    <span class="p">)</span>
+
+    <span class="n">email_info</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="ss">user: </span><span class="n">sending_user</span><span class="p">,</span>
+      <span class="ss">friend: </span><span class="s1">'Kylo Ren'</span><span class="p">,</span>
+      <span class="ss">message: </span><span class="s1">'Work through your anger with exercise, and wear a mask'</span>
+    <span class="p">}</span>
+
+    <span class="n">let</span><span class="p">(</span><span class="ss">:mail</span><span class="p">)</span> <span class="p">{</span> <span class="no">FriendNotifierMailer</span><span class="p">.</span><span class="nf">inform</span><span class="p">(</span><span class="n">email_info</span><span class="p">,</span> <span class="s1">'kyloren@besties.com'</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="n">it</span> <span class="s1">'renders the headers'</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">subject</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Rey Palpatine is sending you some advice'</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">to</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">([</span><span class="s1">'kyloren@besties.com'</span><span class="p">])</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">from</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">([</span><span class="s1">'friendly@advice.io'</span><span class="p">])</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">reply_to</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">([</span><span class="s1">'rey@dropofgoldensun.com'</span><span class="p">])</span>
+    <span class="k">end</span>
+
+    <span class="n">it</span> <span class="s1">'renders the body'</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">text_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Hello Kylo Ren'</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">text_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Rey Palpatine has sent you some advice: Work through your anger with exercise, and wear a mask'</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">html_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Hello Kylo Ren'</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">html_part</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">to_s</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Rey Palpatine has sent you some advice: Work through your anger with exercise, and wear a mask'</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">encoded</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Hello Kylo Ren'</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">mail</span><span class="p">.</span><span class="nf">body</span><span class="p">.</span><span class="nf">encoded</span><span class="p">).</span><span class="nf">to</span> <span class="kp">include</span><span class="p">(</span><span class="s1">'Rey Palpatine has sent you some advice: Work through your anger with exercise, and wear a mask'</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<h3 id="additional-resources">Additional Resources</h3>
+
+<ul>
+  <li><a href="../slides/emails"> Slides </a></li>
+  <li><a href="../lessons/production_email_checklist">Production Email Checklist using SendGrid</a></li>
+  <li><a href="https://guides.rubyonrails.org/testing.html#testing-your-mailers">Additional Rails docs on Testing Emails</a></li>
+</ul>
+:ET

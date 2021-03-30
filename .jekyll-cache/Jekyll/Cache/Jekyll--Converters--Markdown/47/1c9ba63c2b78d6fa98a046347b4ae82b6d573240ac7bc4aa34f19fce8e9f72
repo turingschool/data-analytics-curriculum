@@ -1,0 +1,214 @@
+I"�K<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Be able to use mocks to represent domain objects in a test</li>
+  <li>Be able to use stubs to override or stand in for object behavior</li>
+  <li>Be able to inject a dependency into a collaborating object</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 - Intro</li>
+  <li>20 - Session 1</li>
+  <li>20 - Session 2</li>
+  <li>20 - Session 3</li>
+  <li>15 - Q &amp; A</li>
+</ul>
+
+<h2 id="content">Content</h2>
+
+<h3 id="intro">Intro</h3>
+
+<p>Let’s talk for a few minutes together before you break up to learn each subject.</p>
+
+<p>Clone <a href="https://github.com/turingschool-examples/testing-dependency-injection">this repository</a> so you have the code we’re working with.</p>
+
+<p>Take a second to explore the code and run the tests. You’ll find that we’re working on a system to organize and report on the data for a school/class/student.</p>
+
+<p>For much of our work we’re going to use the Mocha library. Open up the <code class="highlighter-rouge">./test/test_helper.rb</code> file and you’ll see the require statements that we’re going to use across test files. Each of our actual test files will require this test helper so we have the libraries loaded up. run ‘gem install mocha’ to make sure you have access to the Mocha library.</p>
+
+<p>You may need to run <code class="highlighter-rouge">bundle</code> to make sure you have all the proper gems installed.</p>
+
+<h3 id="topic-1-mocks">Topic 1: Mocks</h3>
+
+<p>Mocks are objects that stand in for other objects. The other object might be one that’s not implemented yet, doesn’t yet have the functionality we need, or maybe we just want to work with a simpler situation.</p>
+
+<p>Open the <code class="highlighter-rouge">./test/section_test.rb</code> and read the tests there. Note that the second and third tests are skipped. Run <code class="highlighter-rouge">mrspec</code> before you make any changes and they should be passing with the skips in place. Unskip the second test in <code class="highlighter-rouge">section_test.rb</code>, run the tests with <code class="highlighter-rouge">mrspec</code>, and see that the test is failing.</p>
+
+<p>Why? The test doesn’t know what a <code class="highlighter-rouge">Student</code> is. We could go create it!</p>
+
+<p>But <em>wait</em>. We’re trying to write a unit test here. We’re trying to test a <code class="highlighter-rouge">Section</code>, not a <code class="highlighter-rouge">Student</code>. The <code class="highlighter-rouge">Student</code> class might be a whole can of worms we’re not willing to deal with right now. Let’s use a mock!</p>
+
+<h4 id="a-first-mock">A First Mock</h4>
+
+<p>A mock is a simple object that stands in for another object. At the base level, a mock is just a “thing” – a blank canvas that we can use for just about anything. You create a mock like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_thing</span> <span class="o">=</span> <span class="n">mock</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Looks weird, right? Read this code carefully and figure out:</p>
+
+<ul>
+  <li>what is <code class="highlighter-rouge">mock</code>, from a Ruby perspective? (like an “object”, “integer”, what?)</li>
+  <li>what type thing is <code class="highlighter-rouge">'name'</code>?</li>
+</ul>
+
+<p>Let’s try to put it to use. Replace the two <code class="highlighter-rouge">Student.new</code> lines in the test with these:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">student_1</span> <span class="o">=</span> <span class="n">mock</span><span class="p">(</span><span class="s1">'student'</span><span class="p">)</span>
+<span class="n">student_2</span> <span class="o">=</span> <span class="n">mock</span><span class="p">(</span><span class="s1">'student'</span><span class="p">)</span>
+<span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>Run your test and pry should pause things. Figure out what the class of <code class="highlighter-rouge">student_1</code> and <code class="highlighter-rouge">student_2</code> is. Find the documentation for this class on the web to get an idea of what’s possible. Query the <code class="highlighter-rouge">student_1</code> object to find out what methods it has. Exit pry.</p>
+
+<p>Remove the <code class="highlighter-rouge">binding.pry</code>, run the test, and it still fails. Add the functionality needed to <code class="highlighter-rouge">Section</code> to make it work!</p>
+
+<p>Now that your tests are passing, notice how the mocks allowed you to build out the <code class="highlighter-rouge">Section</code> functionality without actually implementing a <code class="highlighter-rouge">Student</code>.</p>
+
+<h4 id="mock-expectations">Mock Expectations</h4>
+
+<p>Mocks can do more than just stand there. Remove the <code class="highlighter-rouge">skip</code> from the third <code class="highlighter-rouge">section_test.rb</code> and run it. It fails on the <code class="highlighter-rouge">Student.new</code> line.</p>
+
+<p>Wait a second before you drop a <code class="highlighter-rouge">mock</code> in there. Read the rest of the tests. See how we need the first names? The previous test didn’t use that name data, but now we need it. Let’s build a smarter mock.</p>
+
+<p>When you look at the mocha documentation you’ll find that a Mock has methods we can call on it.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">.expects</code> defines a method that can be called on the mock</li>
+  <li><code class="highlighter-rouge">.returns</code> defines the value that the expected method should return</li>
+</ul>
+
+<p>Putting that together we replace the first <code class="highlighter-rouge">Student.new</code> with this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">student_1</span> <span class="o">=</span> <span class="n">mock</span><span class="p">(</span><span class="s1">'student'</span><span class="p">)</span>
+<span class="n">student_1</span><span class="p">.</span><span class="nf">expects</span><span class="p">(</span><span class="ss">:first_name</span><span class="p">).</span><span class="nf">returns</span><span class="p">(</span><span class="s2">"Frank"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Also replace <code class="highlighter-rouge">student_2</code> with a similar two lines. Then add a <code class="highlighter-rouge">binding.pry</code> and run the tests.</p>
+
+<p>Once you’re in pry, try calling the <code class="highlighter-rouge">first_name</code> method on <code class="highlighter-rouge">student_1</code>. Does it work? Call it again? Does it work?</p>
+
+<p>Now go ahead and implement the <code class="highlighter-rouge">student_names</code> method in <code class="highlighter-rouge">Section</code> to make the test pass.</p>
+
+<p>That’s how mocks work. You create a mock to stand in for other objects and can add some simple capabilities to get you the functionality you need.</p>
+
+<h3 id="topic-2-stubs">Topic 2: Stubs</h3>
+
+<p>A stub is a fake method added to or overriding an existing method on an object.</p>
+
+<h4 id="a-first-stub">A First Stub</h4>
+
+<p>Unskip the first test in <code class="highlighter-rouge">./test/metrics_calculator_test.rb</code>, run it with <code class="highlighter-rouge">mrspec</code>, and see it fail. Make it pass without using any mocks/stubs just yet.</p>
+
+<p>With that in place, unskip the second test, run it, and see if fail. Read the test body and figure out what’s going on here.</p>
+
+<p>The <code class="highlighter-rouge">MetricsCalculator</code> needs to have a <code class="highlighter-rouge">total_students</code> method. Logically that method needs to ask each <code class="highlighter-rouge">Section</code> about how many students there are. But our <code class="highlighter-rouge">Section</code> doesn’t yet track actual students. What do we do?</p>
+
+<p>We’re working on testing the <code class="highlighter-rouge">MetricsCalculator</code>, not <code class="highlighter-rouge">Section</code>. Why go off adding functionality in <code class="highlighter-rouge">Section</code>? Let’s, instead, pretend that <code class="highlighter-rouge">Section</code> has the functionality we want with a <em>stub</em>.</p>
+
+<p>In the test find the comment that says that section 1 should have 22 students. Replace that line with this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sec_1</span><span class="p">.</span><span class="nf">stubs</span><span class="p">(</span><span class="ss">:student_count</span><span class="p">).</span><span class="nf">returns</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Replace the later two comments with similar lines. The <code class="highlighter-rouge">stubs</code> method is essentially tacking a <code class="highlighter-rouge">student_count</code> method onto the existing <code class="highlighter-rouge">sec_1</code>. The <code class="highlighter-rouge">returns</code> sets the return value for that method call. Run the test again.</p>
+
+<p>Now it fails because <code class="highlighter-rouge">total_students</code> is undefined. Define that method in <code class="highlighter-rouge">MetricsCalculator</code> assuming that each section instance now has a <code class="highlighter-rouge">student_count</code> method. The test should now pass.</p>
+
+<h4 id="combining-stubs">Combining Stubs</h4>
+
+<p>Then check out the next test in <code class="highlighter-rouge">metrics_calculator_test.rb</code>. Unskip it and make it pass without changing <code class="highlighter-rouge">Section</code>. Note that this is a <em>weighted</em> average based on the number of students in each section and their average score.</p>
+
+<h3 id="topic-3-dependency-injection">Topic 3: Dependency Injection</h3>
+
+<p>Many classes rely on other classes which is why we have all these strategies around unit or isolation testing.</p>
+
+<p>But Ruby has a super-power that we can exploit: a flexible typing system. It’s often called “Duck Typing” – if it looks like a duck, quacks like a duck, then it’s a duck.</p>
+
+<p>So what is dependency injection? When “Class A” internally uses “Class B”, we’d say that A depends on B. Typically that’s programmed in a way where B is a “hard” dependency – the name of the class is embedded right in A’s source code. But, with a bit of work, we can turn B into a “soft” dependency – one that’s determined at runtime.</p>
+
+<h4 id="getting-started">Getting Started</h4>
+
+<p>First let’s just write a little code. Open up the <code class="highlighter-rouge">./test/schedule_test.rb</code>, unskip the second test, then write the code in <code class="highlighter-rouge">Schedule</code> to make it pass.</p>
+
+<h4 id="building-with-a-dependency">Building with a Dependency</h4>
+
+<p>The third test gets a little more complicated. It starts by deleting a file named <code class="highlighter-rouge">schedule.txt</code> if it exists, so we can guess there’s some kind of File I/O happening. Then it checks that the file is actually deleted.</p>
+
+<p>In the middle of the test we have some looping to create a bunch of classes, likely a realistic-ish schedule. Then a <code class="highlighter-rouge">schedule.write</code> which is likely related to the File I/O seen above. Finally there’s an assertion to verify the existence of <code class="highlighter-rouge">schedule.txt</code>.</p>
+
+<p>So we can deduce that our <code class="highlighter-rouge">.write</code> method needs to create a file on the file system named <code class="highlighter-rouge">schedule.txt</code>, but we don’t yet care what’s actually in it.</p>
+
+<p>Write an implementation inside <code class="highlighter-rouge">Schedule</code> to make this pass.</p>
+
+<h4 id="making-the-dependency-explicit">Making the Dependency Explicit</h4>
+
+<p>After you passed the previous test your code surely uses <code class="highlighter-rouge">File</code>, likely <code class="highlighter-rouge">File.write</code>. That reliance on the <code class="highlighter-rouge">File</code> class is a dependency. Let’s see what we can do to massage the dependency into a different spot.</p>
+
+<p>Let’s have your <code class="highlighter-rouge">write</code> method explicitly create a file handle object instead of using the <code class="highlighter-rouge">.write</code> class method. A simple version of that would look like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">write</span>
+  <span class="n">sections</span><span class="p">.</span><span class="nf">sort_by</span><span class="p">{</span><span class="o">|</span><span class="n">s</span><span class="o">|</span> <span class="n">s</span><span class="p">.</span><span class="nf">name</span><span class="p">}.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+    <span class="n">output_target</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="nf">name</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">output_target</span><span class="p">.</span><span class="nf">close</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run your tests and the three active tests in <code class="highlighter-rouge">schedule_test.rb</code> should still be passing.</p>
+
+<p>Now, what can we do with <code class="highlighter-rouge">output_target</code>?</p>
+
+<ul>
+  <li>Add an <code class="highlighter-rouge">attr_reader</code> named <code class="highlighter-rouge">output_target</code></li>
+  <li>Move the <code class="highlighter-rouge">File.open('schedule.txt', 'w')</code> to the initialize and store the file handle it returns into <code class="highlighter-rouge">@output_target</code></li>
+  <li>Cut that first line out of your <code class="highlighter-rouge">.write</code> method</li>
+</ul>
+
+<p>Run the tests and they should still be passing. Finally it’s time to unskip the next test (“specifying the file system”). Run <code class="highlighter-rouge">mrspec</code> and see the test fail.</p>
+
+<p>The change here is that the test is creating <code class="highlighter-rouge">output_file_handle</code> and expecting to supply that to the <code class="highlighter-rouge">initialize</code> of <code class="highlighter-rouge">Schedule</code>. We need the <code class="highlighter-rouge">initialize</code> to take in this argument, but also default to no arguments for the previous tests to pass. Here’s the easiest way to do that:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+  <span class="vi">@sections</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="vi">@output_target</span> <span class="o">=</span> <span class="n">target</span> <span class="o">||</span> <span class="no">File</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s1">'schedule.txt'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">target</code> parameter is set to <code class="highlighter-rouge">nil</code> by default, making it optional. Then when we set <code class="highlighter-rouge">@output_target</code> we use a common Ruby pattern: the short-circuit OR:</p>
+
+<ul>
+  <li>If <code class="highlighter-rouge">target</code> is a truthy thing (anything except <code class="highlighter-rouge">nil</code> or <code class="highlighter-rouge">false</code>), then it’ll get stored into <code class="highlighter-rouge">@output_target</code></li>
+  <li>If <code class="highlighter-rouge">target</code> is falsey (in this case, <code class="highlighter-rouge">nil</code>) then the right side of the OR will be run and that object will get stored into <code class="highlighter-rouge">@output_target</code></li>
+</ul>
+
+<p>The resulting structure boils down to “if a <code class="highlighter-rouge">target</code> is passed in store that into <code class="highlighter-rouge">@output_target</code>, otherwise create a new file handle and store that into <code class="highlighter-rouge">@output_target</code>”.</p>
+
+<p>Run the test and it should pass. The test is passing in the exact same file handle that the <code class="highlighter-rouge">Schedule</code> would have otherwise created, but the important part is that we’re now injecting the dependency.</p>
+
+<p>Prove it? Go back to your test. Replace the four occurrences of the filename <code class="highlighter-rouge">schedule.txt</code> with the name <code class="highlighter-rouge">output.txt</code>. Run the test and see it pass, still. The only way it could be writing to the right file is if the <code class="highlighter-rouge">Section</code> is making use of the file handle we created in the test and passed in.</p>
+
+<h4 id="injecting-a-different-dependency">Injecting a Different Dependency</h4>
+
+<p>Let’s say that we don’t want our tests writing files to the file system. We could now inject a different dependency to the <code class="highlighter-rouge">Section</code>. What would it have to do? Well, look at your implementation. What methods are called on <code class="highlighter-rouge">output_target</code>?</p>
+
+<p>The only two methods called are <code class="highlighter-rouge">.write</code> and <code class="highlighter-rouge">.close</code>. We’d call this the “interface” – <code class="highlighter-rouge">output_target</code> can be anything that at least offers those two methods. If we create another object that has both of them, we can send that into the <code class="highlighter-rouge">initialize</code> of <code class="highlighter-rouge">Section</code>.</p>
+
+<p>Unskip the next test. Read through the small <code class="highlighter-rouge">FakeFile</code> class that is written in your test file. See how it has a simple string (<code class="highlighter-rouge">content</code>) and any calls to <code class="highlighter-rouge">write</code> just append to that string? That’ll be easy to work with because we’re not creating and destroying files – we’re just reading a string.</p>
+
+<p>Run the test and, just that easy! All tests in this test file should be passing.</p>
+
+<h3 id="wrapup--q--a">Wrapup / Q &amp; A</h3>
+
+<p>Did you survive? Surely you have some questions. Consider:</p>
+
+<ul>
+  <li>What was easy?</li>
+  <li>What was challenging?</li>
+  <li>What made sense?</li>
+  <li>What didn’t make sense?</li>
+</ul>
+:ET

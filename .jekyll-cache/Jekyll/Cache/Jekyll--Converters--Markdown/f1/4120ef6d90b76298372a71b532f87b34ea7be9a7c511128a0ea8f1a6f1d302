@@ -1,0 +1,63 @@
+I"2<p>For the project eval, you should come prepared for a 10 minute presentation of your code to an evaluator.</p>
+
+<p>The technical presentation portion is outlined below with what points should be covered. <strong>You should be able to present on all points even if you did not implement in code.</strong>  If you have questions about the presentation, please let an instructor know before the evaluation day.</p>
+
+<p>You should review each section of the rubric and strive to have a 3 in each section before attempting any 4s.</p>
+
+<h3 id="technical-presentation">Technical Presentation</h3>
+
+<ul>
+  <li>4: The student has a well organized presentation that addresses each point directly and uses technical vocabulary correctly throughout the presentation.</li>
+  <li>3: Student presents their code and is able to talk about all the presentation points.</li>
+  <li>2: Student presents their code and is able to talk about 3-4 of the presentation points.</li>
+  <li>1: Student is unprepared for the presentation and requires prompts from the instructor to talk about the code.</li>
+</ul>
+
+<p>Presentation points:</p>
+
+<p>[ ] Demonstration of functional completeness (Running the spec harness &amp; Rails Driver)</p>
+
+<p>[ ] Technical quality and organization of the code</p>
+
+<p>[ ] Identifying code that should be refactored and how it would be refactored</p>
+
+<p>[ ] Discussion of test coverage (happy and sad path and edge cases)</p>
+
+<p>[ ] Approach to their ActiveRecord queries</p>
+
+<h3 id="feature-delivery">Feature Delivery</h3>
+
+<ul>
+  <li>4: Project completes all requirements and at least one extension.</li>
+  <li>3: Project completes all requirements</li>
+  <li>2: Project fails to complete 1 - 3 required endpoints</li>
+  <li>1: Project fails to complete more than 3 endpoints</li>
+</ul>
+
+<h3 id="test-driven-development">Test Driven Development</h3>
+
+<ul>
+  <li>4: Project achieves 100% test coverage at the unit and integration levels. The tests include sad path and edge case testing.</li>
+  <li>3: Project achieves greater than 90% test coverage</li>
+  <li>2: Project achieves greater than 80% test coverage</li>
+  <li>1: Project does not have 80% test coverage.</li>
+</ul>
+
+<h3 id="technical-quality">Technical Quality</h3>
+
+<ul>
+  <li>4: Project demonstrates exceptionally well factored code.</li>
+  <li>3: Project demonstrates solid code quality and MVC principles.</li>
+  <li>2: Project demonstrates some gaps in code quality and/or application of MVC principles.</li>
+  <li>1: Project demonstrates poor factoring and/or understanding of MVC.</li>
+</ul>
+
+<h3 id="activerecord">ActiveRecord</h3>
+
+<ul>
+  <li>4: Project makes good use of an advanced ActiveRecord concept not taught in class</li>
+  <li>3: Project demonstrates good use of ActiveRecord using no ruby to process data that could otherwise be done by the database</li>
+  <li>2: Project makes good use of <code class="highlighter-rouge">ActiveRecord</code>, but drops to ruby enumerables for some query methods.</li>
+  <li>1: Project frequently uses Ruby where ActiveRecord could be used, or fails to use ActiveRecord effectively</li>
+</ul>
+:ET

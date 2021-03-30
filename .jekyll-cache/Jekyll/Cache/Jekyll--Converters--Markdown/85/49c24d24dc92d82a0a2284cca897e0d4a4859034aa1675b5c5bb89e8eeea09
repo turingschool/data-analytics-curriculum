@@ -1,0 +1,118 @@
+I"i<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understanding the importance of security in software development</li>
+  <li>Learning how to avoid common security exploits
+    <ul>
+      <li>Privilege escalation</li>
+      <li>Mass Assignment</li>
+      <li>Cross-site Scripting</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="setup-prior-to-class">Setup Prior to Class</h2>
+
+<ul>
+  <li>Set up <a href="https://github.com/turingschool-examples/store_engine">OregonSale</a> prior to class. There won’t be time for us to set up during class. Look at the <code class="highlighter-rouge">README</code> for details.</li>
+  <li>Download the <a href="https://www.getpostman.com/">Postman App</a></li>
+</ul>
+
+<p><code class="highlighter-rouge">$ git clone https://github.com/turingschool-examples/store_engine.git fundamental_security</code></p>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/fundamental_rails_security">here</a></p>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>Warmup</li>
+  <li>Share</li>
+  <li>Exploit an Existing Application</li>
+  <li>Share</li>
+  <li>Review Prevention Tools</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Get into groups of three and assign each person a number.</p>
+
+<ul>
+  <li>Person 1 will research Privilege Escalation.</li>
+  <li>Person 2 will research Mass Assignment.</li>
+  <li>Person 3 will research Cross Site Scripting.</li>
+</ul>
+
+<p>Each person will complete the task below on their topic.</p>
+
+<ul>
+  <li>Draft a high level definition of the security exploit.</li>
+  <li>Provide an example of how we might expose ourselves to this exploit in a Rails application.</li>
+  <li>Provide an example of steps we might take to prevent this exploit.</li>
+</ul>
+
+<p>Share with your group, then we will share with the class.</p>
+
+<h2 id="attempting-an-exploit">Attempting an Exploit</h2>
+
+<p>In your group, using only tools available to a visitor to your page, see if you can do the following:</p>
+
+<ul>
+  <li>Mass Assignment
+    <ul>
+      <li>Create an account and some orders associated with that account in the browser.</li>
+      <li>Using Postman or cURL:
+        <ul>
+          <li>change the total for that order to $0.</li>
+          <li>change the status of an order.</li>
+          <li>delete an order</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Mass Assignment/Privilege Escalation
+    <ul>
+      <li>See if you can find a way to access admin functionality.</li>
+      <li><em>Tip:</em> where might you be able to set a users role?</li>
+    </ul>
+  </li>
+  <li>Cross-Site Scripting
+    <ul>
+      <li>Adjust the application so that users can use HTML in their comments (e.g. bold certain words, include links, etc.).</li>
+      <li>Create a comment that shows a pop-up message each time users visit a page with that comment on it.</li>
+      <li><em>Tip:</em> <code class="highlighter-rouge">&lt;script&gt;</code> tags will allow you to embed JavaScript directly into a page. Look into the JavaScript <code class="highlighter-rouge">alert</code> function.</li>
+      <li>Try to see if you can make other adjustments to the site (e.g. make the body fade out, make item titles bigger/change their color, make buttons blink)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="prevention">Prevention</h2>
+
+<p>One tool that you can use to help identify vulnerabilities is <a href="https://github.com/presidentbeef/brakeman">Brakeman</a>. Install that now:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install brakeman
+</code></pre></div></div>
+
+<p>This will allow us to run the command <code class="highlighter-rouge">brakeman</code> from our command line. This should give us a list of potential security vulnerabilities.</p>
+
+<p>One note: Brakeman is a static analysis tool. At a high level, this means that Brakeman will look at our code and report on what it finds. It <em>will not</em> monitor traffic to our site or notify us of suspicious activity.</p>
+
+<h2 id="things-to-remember">Things to Remember</h2>
+
+<ul>
+  <li>Be suspicious of any class method in a controller.</li>
+  <li>Scope all queries to a trusted object, like the current user.</li>
+  <li>Be careful with your order of operations, don’t change any data until you’ve found a specified record.</li>
+</ul>
+
+<h2 id="supporting-materials">Supporting Materials</h2>
+
+<ul>
+  <li><a href="http://tutorials.jumpstartlab.com/topics/architecture/fundamental_security.html">Tutorial</a></li>
+  <li><a href="https://drive.google.com/open?id=0B4C6lfVKu-E7V2F1SzRlQl8wRUk">Notes</a></li>
+  <li><a href="https://drive.google.com/open?id=0B4C6lfVKu-E7UGxzdHYyNFBFTVU">Slides</a></li>
+  <li><a href="https://vimeo.com/129022094">Video 1502</a></li>
+</ul>
+
+:ET

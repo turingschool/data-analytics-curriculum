@@ -1,0 +1,182 @@
+I"D<h1 id="unit-testing-in-javascript-an-overview">Unit Testing in JavaScript: An Overview</h1>
+
+<h2 id="unit-testing-vs-integration-testing">Unit Testing vs Integration Testing</h2>
+
+<p>Integration tests are great, but they are just smoke tests. They test what you assume the page is doing, but not the assumptions you’ve made about your own logic.</p>
+
+<p>Unit Tests test units of functionality (try saying that one three times in a row). Given a certain input, test that this block of code gives certain output.</p>
+
+<p>If you want a good overview of unit testing in JavaScript, check out this conference talk <a href="https://www.youtube.com/watch?v=OzjogCFO4Zo">Writing Testable JavaScript</a></p>
+
+<p>Unit Testing can be difficult in JavaScript for many reasons - so this lesson aims to give you context and arm you with examples to start feeling more comfortable with it.</p>
+
+<h5 id="we-will-cover">We Will Cover</h5>
+<ul>
+  <li>An Overview of Testing Frameworks and Related Terms</li>
+  <li>Basic Mocha Syntax</li>
+  <li>Assertions and Chai</li>
+  <li>Trying Things Out</li>
+  <li>A Note on Unit Testing in Rails</li>
+  <li>The Connection to Game Time</li>
+</ul>
+
+<h2 id="general-overview-of-testing-frameworks-and-related-terms">General Overview of Testing Frameworks and Related Terms</h2>
+
+<p>There are a lot of names that float around when you’re trying to get into JavaScript testing. While not all of the following terms relate directly to unit testing, it’s helpful to at least know what all of these words are.</p>
+
+<h4 id="unit-testing-frameworks">Unit Testing Frameworks</h4>
+<ul>
+  <li><a href="http://qunitjs.com/">QUnit</a> - QUnit is an early unit testing framework. It doesn’t come with a lot of bells and whistles, or really, any bells and whistles.</li>
+  <li><a href="https://mochajs.org/">Mocha</a> - Mocha describes itself as the ‘simple, flexible, fun’ testing framework. The reason for the flexibility is that things like spy frameworks and assertion libraries are not built in to Mocha - so if you want these things, you add them in piecemeal.</li>
+  <li><a href="https://github.com/jasmine/jasmine">Jasmine</a> - Jasmine describes itself as a ‘Dom-less simple JavaScript testing framework’. It has a built in mocking library (unlike Mocha) and is generally thought of as an ‘all-one-package’.</li>
+</ul>
+
+<p>There are (way) more JavaScript unit testing frameworks - but these are the major ones at the time of writing.</p>
+
+<h4 id="nice-things-to-add-to-your-testing-framework">Nice Things to Add to Your Testing Framework</h4>
+<ul>
+  <li><a href="http://chaijs.com/">Chai</a> - Chai is an ‘assertion library’ which can be added to any testing framework to beef up the language and readable style of tests. If you think about the syntactic sugar of RSpec, Chai will give you familiar ways to chain assertions that make tests more readable. It is usually used with Mocha, as Mocha does not have a built in assertion library. Other assertion libraries include <code class="highlighter-rouge">should.js</code>, <code class="highlighter-rouge">expect.js</code>, <code class="highlighter-rouge">better-assert</code>. <code class="highlighter-rouge">unexpected</code>.</li>
+  <li><a href="http://sinonjs.org">Sinon.JS</a> - A library  used to add test spies, mocks and stubs to your tests. Works with QUnit, Jasmine and Mocha.</li>
+</ul>
+
+<h4 id="test-and-task-runners">Test and Task Runners</h4>
+<ul>
+  <li><a href="http://gruntjs.com/">Grunt</a> - A JavaScript based task runner. Task runners can be configured to perform repetitive tasks for you, including running all of your test files.</li>
+  <li><a href="http://gulpjs.com/">Gulp</a> - Yet another JavaScript task runner.</li>
+  <li><a href="http://karma-runner.github.io/0.13/index.html">Karma</a> - a JavaScript <strong><em>test</em></strong> runner built with Node.js</li>
+  <li><a href="https://github.com/modeset/teaspoon">Teaspoon</a> - a JavaScript test runner built for use with rails.</li>
+</ul>
+
+<h4 id="drivers-and-browsers-and-dom-manipulation-oh-my">Drivers and Browsers and DOM Manipulation, Oh My</h4>
+
+<p>JavaScript code that was written to require a DOM needs to be run somewhere - normally it is run in a browser. When you are writing integration tests, you’ll use a driver to simulate the DOM.</p>
+
+<ul>
+  <li><a href="http://www.seleniumhq.org/">selenium</a> - Selenium is a browser automation library, usually used for testing web-applications. Selenium can fire up a browser that it controls in order to run tests on it. <a href="http://www.seleniumhq.org/">selenium-webdriver</a> comes with the ability to use major browsers or a headless browser, Phantom.js, which we’ll cover below.</li>
+  <li><a href="http://phantomjs.org/">Phantom.js</a> - A headless browser used for automating web page interaction.  PhantomJS doesn’t draw out a screen (thus the term ‘headless’). This makes PhantomJS much faster. PhantomJS is NOT a testing framework, it is built to work with one (like Mocha, Jasmine, etc).</li>
+  <li><a href="https://github.com/jnicklas/capybara">Capybara</a> - Capybara is an acceptance test framework for web applications written in Ruby. It supports the use of different drivers. The default driver is rack_test, but can be switched to other drivers for the purposes of testing JavaScript interactions.
+    <ul>
+      <li><a href="https://github.com/SeleniumHQ/selenium/tree/master/javascript/node/selenium-webdriver">selenium-webdriver</a> - See above. Can be used with Capybara.</li>
+      <li><a href="https://github.com/thoughtbot/capybara-webkit">Capybara-Webkit</a> - A capybara driver which uses <a href="https://webkit.org/">WebKit</a> directly</li>
+      <li><a href="https://github.com/teampoltergeist/poltergeist">poltergeist</a> - A capybara driver for PhantomJS (a headless browser built on <a href="https://webkit.org/">WebKit</a>)</li>
+    </ul>
+  </li>
+  <li><a href="https://webkit.org/">WebKit</a> - an open source browser engine. WebKit is at the core of Safari and many other OS X applications. Chromium also uses an implementation of WebKit (Chrome, however, has it’s own implementation for JavaScript execution called <a href="https://en.wikipedia.org/wiki/V8_%28JavaScript_engine%29">V8</a>). As you can see above, many testing libraries work directly with WebKit.</li>
+</ul>
+
+<p>Integration style testing will be covered more in the integration testing with JavaScript lesson.</p>
+
+<h2 id="basic-mocha-syntax">Basic Mocha syntax</h2>
+
+<p>We’re going to try out some unit testing with Mocha. Before we dig into some exercises, let’s look at some basic Mocha syntax.</p>
+
+<h4 id="the-interface">The Interface</h4>
+<p>Mocha has different ‘interface’ systems that allow developers to choose the DSL style.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">BDD</code> will give you an RSpec style of testing syntax, including: <code class="highlighter-rouge">describe()</code>, <code class="highlighter-rouge">context()</code>, <code class="highlighter-rouge">it()</code>, <code class="highlighter-rouge">before()</code>, <code class="highlighter-rouge">after()</code>, <code class="highlighter-rouge">beforeEach()</code>, and <code class="highlighter-rouge">afterEach()</code>.
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Array</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">before</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">});</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">#indexOf()</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">context</span><span class="p">(</span><span class="dl">'</span><span class="s1">when not present</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should not throw an error</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="p">}).</span><span class="nx">should</span><span class="p">.</span><span class="nx">not</span><span class="p">.</span><span class="k">throw</span><span class="p">();</span>
+    <span class="p">});</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return -1</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="nx">should</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  <span class="nx">context</span><span class="p">(</span><span class="dl">'</span><span class="s1">when present</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return the index where the element first appears in the array</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nx">should</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+<span class="p">});</span>
+<span class="c1">///example taken from the mochajs.org page</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">TDD</code> will give you a MiniTest or TestUnit style of testing syntax, including: <code class="highlighter-rouge">suite()</code>, <code class="highlighter-rouge">test()</code>, <code class="highlighter-rouge">suiteSetup()</code>, <code class="highlighter-rouge">suiteTeardown()</code>, <code class="highlighter-rouge">setup()</code>, and <code class="highlighter-rouge">teardown()</code>.</p>
+
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">suite</span><span class="p">(</span><span class="dl">'</span><span class="s1">Array</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">setup</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">});</span>
+
+<span class="nx">suite</span><span class="p">(</span><span class="dl">'</span><span class="s1">#indexOf()</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">test</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return -1 when not present</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+<span class="p">});</span>
+<span class="c1">///example taken from the mochajs.org page</span>
+</code></pre></div>    </div>
+    <ul>
+      <li>Mocha also provides <code class="highlighter-rouge">Exports</code>, <code class="highlighter-rouge">QUnit</code> and <code class="highlighter-rouge">Require</code> styles.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The default style that you’ll likely see is BDD.</p>
+
+<h2 id="assertions-and-chai">Assertions and Chai</h2>
+
+<p>As we mentioned above, Mocha does not have a default assertion library. We can add on our preferred assertion library, such as <a href="http://chaijs.com/">Chai</a> to add them in.</p>
+
+<p>The easiest way to see this in action is to look at a very basic implementation.</p>
+
+<ol>
+  <li>
+    <p>Fork this <a href="https://github.com/turingschool-examples/js-unit-testing-basics.git">js-unit-testing-basics</a> project.</p>
+  </li>
+  <li>
+    <p>In this project, you’ll see that we’ve snagged the chai.js and mocha.js files in <code class="highlighter-rouge">vendor</code> and included them in a JavaScript test.</p>
+  </li>
+  <li>
+    <p>Open the <code class="highlighter-rouge">test.html</code> file in the main directory in your browser. You should see one passing test.</p>
+  </li>
+  <li>
+    <p>Open the <code class="highlighter-rouge">test.js</code> file in your text editor and remove the first line from it.</p>
+  </li>
+  <li>
+    <p>Now, when you refresh the <code class="highlighter-rouge">test.html</code> file in the browser, you should see an error indicating that <code class="highlighter-rouge">assert</code> is not defined.</p>
+  </li>
+</ol>
+
+<p>Chai can be used to add <code class="highlighter-rouge">expect</code> and <code class="highlighter-rouge">should</code> style assertions as well in the manner. Check out <a href="http://chaijs.com/">Chai</a> to get more test assertion inspiration.</p>
+
+<p>In future projects, mocha and chai will be brought in through <code class="highlighter-rouge">npm</code> or <code class="highlighter-rouge">bower</code> or gems - but feel free to use this simple implementation to play around with writing tests.</p>
+
+<h2 id="lets-try-it-out">Let’s Try It Out</h2>
+
+<p>We’ll try some examples out now to dig a little bit deeper into unit testing JavaScript.</p>
+
+<ul>
+  <li>Fork this repository: <a href="https://github.com/turingschool-examples/testing-javascript">Testing JavaScript</a></li>
+  <li>Check out the <code class="highlighter-rouge">bower.json</code> file in the main directory. You’ll see that the dependancies object will include many of the libraries we mentioned above.</li>
+</ul>
+
+<p>We’ll now to through the following examples:</p>
+
+<ul>
+  <li><a href="https://github.com/turingschool-examples/testing-javascript/tree/master/examples/1-basic-mocha">1-basic-mocha</a></li>
+  <li><a href="https://github.com/turingschool-examples/testing-javascript/tree/master/examples/2-add-two-and-mocha">2-add-two-and-mocha</a></li>
+  <li><a href="https://github.com/turingschool-examples/testing-javascript/tree/master/examples/3-mocha-and-the-dom">3-mocha-and-the-dom</a></li>
+  <li><a href="https://github.com/turingschool-examples/testing-javascript/tree/master/examples/4-notes">4-notes</a></li>
+</ul>
+
+<p>Challenge Level: Check out the <code class="highlighter-rouge">qunit</code> branch of the <code class="highlighter-rouge">testing-javascript</code> repo and try the exercises there.</p>
+
+<h2 id="a-note-on-unit-testing-in-rails">A Note on Unit Testing in Rails</h2>
+<p>Rails does not make it easy to unit test JavaScript. Many developers will test their JavaScript in a rails application only with integration tests for this reason. The <a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_04-apis_and_scalability/testing_javascript_in_rails.markdown">Testing JavaScript In Rails</a> lesson plan is an excellent resource for preparing your testing suite in rails to unit test your JavaScript.</p>
+
+<h2 id="connection-to-gametime">Connection to GameTime</h2>
+
+<p>The Game Time Starter Kit comes packaged with some of our old friends. <a href="https://github.com/turingschool-examples/game-time-starter-kit/blob/master/package.json#L27">Check out the package.json file.</a></p>
+:ET

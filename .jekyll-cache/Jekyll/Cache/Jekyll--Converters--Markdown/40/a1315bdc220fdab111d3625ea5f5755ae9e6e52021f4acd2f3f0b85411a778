@@ -1,0 +1,182 @@
+I"t><h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Practice breaking a program into logical components</li>
+  <li>Testing components in isolation and in combination</li>
+  <li>Applying Enumerable techniques in a real context</li>
+  <li>Reading text from and writing text to files</li>
+</ul>
+
+<h2 id="completeme">CompleteMe</h2>
+
+<p>Everyone in today’s smartphone-saturated world has had their share of interactions with textual “autocomplete.” You may have sometimes even wondered if autocomplete is worth the trouble, given the ridiculous completions it sometimes attempts.</p>
+
+<p>But how would you actually <strong>make</strong> an autocomplete system?</p>
+
+<p>In this project, <strong>CompleteMe</strong>, we’ll be exploring this idea by a simple textual autocomplete system. Perhaps in the process we will develop some sympathy for the developers who built the seemingly incompetent systems on our phones…</p>
+
+<h3 id="data-structure--introduction-to-tries">Data Structure – Introduction to Tries</h3>
+
+<p>A common way to solve this problem is using a data structure called a <strong>Trie</strong>. The name comes from the idea of a Re-trie-val tree, and it’s useful for storing and then fetching paths through arbitrary (often textual) data.</p>
+
+<p>A Trie is somewhat similar to binary trees, but whereas each node in a binary tree points to up to 2 subtrees, nodes within our retrieval tries will point to <code class="highlighter-rouge">N</code> subtrees, where <code class="highlighter-rouge">N</code> is the size of the alphabet we want to complete within.</p>
+
+<p>Thus, for a simple latin-alphabet text trie, each node will potentially have 26 children, one for each character that could potentially follow the text entered in a search so far. (In graph theory terms, we could classify this as a Directed, Acyclic graph of order 26, but hey, who’s counting?)</p>
+
+<p>What we end up with is a broadly-branched tree where paths from the root to the leaves represent “words” within the dictionary.</p>
+
+<p>Take a moment and read more about Tries:</p>
+
+<ul>
+  <li><a href="https://github.com/turingschool/data_structures_and_algorithms/tree/master/tries">Tries writeup in the DSA Repo</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Trie">Tries Wikipedia Article</a></li>
+</ul>
+
+<h3 id="input-file">Input File</h3>
+
+<p>Of course, our Trie won’t be very useful without a good dataset to populate it. Fortunately, our computers ship with a special file containing a list of standard dictionary words. You can find it in the terminal at this path: <code class="highlighter-rouge">/usr/share/dict/words</code></p>
+
+<p>Using the unix utility <code class="highlighter-rouge">wc</code> (word count), we can see that the file contains 235886 words:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ wc -l /usr/share/dict/words
+235886
+</code></pre></div></div>
+
+<p>Should be enough for us!</p>
+
+<h2 id="support-tooling">Support Tooling</h2>
+
+<p>Please make sure that, before your evaluation, your project has the following:</p>
+
+<ul>
+  <li><a href="https://github.com/colszowka/simplecov">SimpleCov</a> reporting accurate test coverage statistics</li>
+</ul>
+
+<h2 id="iteration-1">Iteration 1</h2>
+
+<h3 id="basic-interaction-model-interface">Basic Interaction Model (Interface)</h3>
+
+<p>We’ll expect to interact with your completion project from an interactive pry session, following a model something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># open pry from root project directory</span>
+<span class="c1"># We are not concerned about the return values of methods unless explicitly indicated below.</span>
+<span class="nb">require</span> <span class="s2">"./lib/complete_me"</span>
+
+<span class="n">completion</span> <span class="o">=</span> <span class="no">CompleteMe</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="s2">"pizza"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">count</span>
+<span class="o">=&gt;</span> <span class="mi">1</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">suggest</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"pizza"</span><span class="p">]</span>
+
+<span class="n">dictionary</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s2">"/usr/share/dict/words"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">populate</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">count</span>
+<span class="o">=&gt;</span> <span class="mi">235886</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">suggest</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"pize"</span><span class="p">,</span> <span class="s2">"pizza"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">,</span> <span class="s2">"pizzicato"</span><span class="p">,</span> <span class="s2">"pizzle"</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="iteration-2">Iteration 2</h2>
+
+<h3 id="usage-weighting">Usage Weighting</h3>
+
+<p>The common gripe about autocomplete systems is that they give us suggestions that are technically valid but not at all what we wanted.</p>
+
+<p>A solution to this problem is to “train” the completion dictionary over time based on the user’s actual selections. So, if a user consistently selects “pizza” in response to completions for “pizz”, it probably makes sense to recommend that as their first suggestion.</p>
+
+<p>To facilitate this, your library should support a <code class="highlighter-rouge">select</code> method, which takes a substring and the selected suggestion. You will need to record this selection in your trie and use it to influence future selections to make.</p>
+
+<p>Here’s what that interaction model should look like:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./lib/complete_me"</span>
+
+<span class="n">completion</span> <span class="o">=</span> <span class="no">CompleteMe</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="n">dictionary</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s2">"/usr/share/dict/words"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">populate</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">suggest</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"pize"</span><span class="p">,</span> <span class="s2">"pizza"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">,</span> <span class="s2">"pizzicato"</span><span class="p">,</span> <span class="s2">"pizzle"</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">suggest</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"pizzeria"</span><span class="p">,</span> <span class="s2">"pize"</span><span class="p">,</span> <span class="s2">"pizza"</span><span class="p">,</span> <span class="s2">"pizzicato"</span><span class="p">,</span> <span class="s2">"pizzle"</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+</code></pre></div></div>
+
+<h3 id="substring-specific-selection-tracking">Substring-Specific Selection Tracking</h3>
+
+<p>A simple approach to tracking selections would be to simply “count” the number of times a given word is selected (e.g. “pizza” - 4 times, etc). But a more sophisticated solution would allow us to track selection information <em>per completion string</em>.</p>
+
+<p>That is, we want to make sure that when <code class="highlighter-rouge">select</code>ing a given word, that selection is only counted toward subsequent suggestions against the same substring. Here’s an example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./lib/complete_me"</span>
+
+<span class="n">completion</span> <span class="o">=</span> <span class="no">CompleteMe</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="n">dictionary</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s2">"/usr/share/dict/words"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">populate</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">)</span>
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">)</span>
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"pi"</span><span class="p">,</span> <span class="s2">"pizza"</span><span class="p">)</span>
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"pi"</span><span class="p">,</span> <span class="s2">"pizza"</span><span class="p">)</span>
+<span class="n">completion</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s2">"pi"</span><span class="p">,</span> <span class="s2">"pizzicato"</span><span class="p">)</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">suggest</span><span class="p">(</span><span class="s2">"piz"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"pizzeria"</span><span class="p">,</span> <span class="s2">"pize"</span><span class="p">,</span> <span class="s2">"pizza"</span><span class="p">,</span> <span class="s2">"pizzicato"</span><span class="p">,</span> <span class="s2">"pizzle"</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+<span class="n">completion</span><span class="p">.</span><span class="nf">suggest</span><span class="p">(</span><span class="s2">"pi"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"pizza"</span><span class="p">,</span> <span class="s2">"pizzicato"</span><span class="p">,</span> <span class="s2">"pize"</span><span class="p">,</span> <span class="s2">"pizzeria"</span><span class="p">,</span> <span class="s2">"pizzle"</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>In this example, against the substring “piz” we choose “pizzeria” 3 times, making it the dominant choice for this substring.</p>
+
+<p>However for the substring “pi”, we choose “pizza” twice and “pizzicato” once. The previous selections of “pizzeria” against “piz” don’t count when suggesting against “pi”, so now “pizza” and “pizzicato” come up as the top choices.</p>
+
+<h2 id="iteration-3">Iteration 3</h2>
+
+<h3 id="word-deletion-and-tree-pruning">Word Deletion and Tree Pruning</h3>
+
+<p>Let’s add a feature that lets us delete words from the tree. When deleting a node, we’ll need to consider a couple of cases.</p>
+
+<p>First, make sure that we adjust our tree so that the node relating to the removed word no longer seen that word as a valid word. This means that subsequent suggestions should no longer return it as a match for any of its substrings.</p>
+
+<p>For “intermediate” nodes (i.e. nodes that still have children below them), this is all you need to do.</p>
+
+<p>However, for <strong>leaf nodes</strong> (i.e. nodes at the end of the tree), we will also want to <strong>completely remove</strong> those nodes from the tree. Since the leaf node in question no longer represents a word, and there are no remaining nodes below it, there’s no point in keeping the leaf node in the tree, so we should remove it.</p>
+
+<p><strong>Additionally</strong>, once we remove this node, we would also want to remove any of its parents for which it was the only child. That is – if, once we remove our word in question, the node above it is now a path to nowhere, we should also remove that node. This process would repeat up the chain until we finally reach a “word” node that we want to keep around.</p>
+
+<p>For example, if the word <code class="highlighter-rouge">trying</code> was in our Trie (as well as the word <code class="highlighter-rouge">try</code>) then the ‘y’ node and ‘g’ node would be “word” nodes. If we were to delete the word <code class="highlighter-rouge">trying</code> from the Trie, then the nodes for ‘i’, ‘n’ and ‘g’ should be removed, not just the ‘g’ node.</p>
+
+<h2 id="iteration-4">Iteration 4</h2>
+
+<h3 id="denver-addresses">Denver Addresses</h3>
+
+<p>Working with words was interesting, but what about a bigger dataset? Check out <a href="https://www.denvergov.org/opendata/dataset/city-and-county-of-denver-addresses">this data file</a> (you’ll want the CSV version) that contains all the known addresses in the city of Denver. Use the <code class="highlighter-rouge">full_address</code> field (the last column in the row). Can you make your autocomplete work with that dataset?</p>
+
+<h3 id="substrings">Substrings</h3>
+
+<p>Could your word lookup possibly handle middle-of-the-word matches? So that <code class="highlighter-rouge">com</code> would list both the possibilities <code class="highlighter-rouge">complete</code> and <code class="highlighter-rouge">incomplete</code>? How does this change the memory requirements of your running program?</p>
+
+<h3 id="visual-interface">Visual Interface</h3>
+
+<p>Can you create a graphical user interface for your code? Something that a “normal person” might plausibly use? Consider a toolkit like <a href="http://shoesrb.com/">Shoes</a> or <a href="https://github.com/jashkenas/ruby-processing">Ruby Processing</a>.</p>
+
+<h2 id="expectations">Expectations</h2>
+
+<p>This project will be evaluated according to the Mod 1 Project <a href="../project_rubric">Rubric</a></p>
+:ET

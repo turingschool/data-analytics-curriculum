@@ -1,0 +1,37 @@
+I"ê<h2 id="these-wireframes-are-guidelines">These wireframes are GUIDELINES</h2>
+
+<p>Your interface does not need to look EXACTLY like these wireframes.</p>
+
+<h3 id="welcome">Welcome</h3>
+
+<p><img src="./assets/welcome.png" alt="welcome wireframe" /></p>
+
+<h3 id="registration">Registration</h3>
+
+<p><img src="./assets/registration.png" alt="registration wireframe" /></p>
+
+<h3 id="dashboard">Dashboard</h3>
+
+<p><img src="./assets/dashboard.png" alt="dashboard wireframe" /></p>
+
+<h3 id="discover-movies">Discover Movies</h3>
+
+<p><img src="./assets/discover.png" alt="discover wireframe" /></p>
+
+<h3 id="movies-results">Movies Results</h3>
+<p><em>Displaying results from top rated search</em>
+<img src="./assets/discover-top-rated.png" alt="top rated results wireframe" /></p>
+
+<p><em>Displaying results from keyword title search</em>
+<img src="./assets/discover-by-movie-title.png" alt="movie title results wireframe" /></p>
+
+<h3 id="movie-details">Movie Details</h3>
+
+<p><img src="./assets/movie-details.png" alt="movie details wireframe" /></p>
+
+<h3 id="create-viewing-party">Create Viewing Party</h3>
+
+<p>Note that the URL here does not include query parameters!</p>
+
+<p><img src="./assets/new-viewing-party.png" alt="create viewing party wireframe" /></p>
+:ET

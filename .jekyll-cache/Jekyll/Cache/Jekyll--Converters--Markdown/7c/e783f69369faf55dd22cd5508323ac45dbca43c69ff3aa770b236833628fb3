@@ -1,0 +1,33 @@
+I"�<h1 id="iteration-1---append-to-string-and-count-single-node">Iteration 1 - Append, To String, and Count (Single Node)</h1>
+
+<p>Great! We have nodes. In this iteration we’ll create the <code class="highlighter-rouge">LinkedList</code> class and start filling in the basic functionality needed to append our <em>first node</em>.</p>
+
+<p>We’ll be adding the following methods:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">.append</code> - adds a new piece of data (data can really be anything) to the list</li>
+  <li><code class="highlighter-rouge">.count</code> - tells us how many things are in the list</li>
+  <li><code class="highlighter-rouge">.to_string</code> - generates a string of all the families in the list</li>
+</ol>
+
+<p>But for now, focus on building these functions so they work for just the <strong>first</strong> element of data appended to the list (we’ll handle multiple elements in the next iteration).</p>
+
+<p>Expected behavior:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="nb">require</span> <span class="s2">"./lib/linked_list"</span>
+<span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="no">LinkedList</span><span class="p">.</span><span class="nf">new</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">LinkedList</span> <span class="vi">@head</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#45678904567&gt;</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">head</span>
+<span class="o">=&gt;</span> <span class="kp">nil</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s2">"West"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Node</span> <span class="vi">@surname</span><span class="o">=</span><span class="s2">"West"</span> <span class="vi">@next_node</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#5678904567890&gt;</span>
+<span class="o">&gt;</span> <span class="n">list</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">LinkedList</span> <span class="vi">@head</span><span class="o">=&lt;</span><span class="no">Node</span> <span class="vi">@surname</span><span class="o">=</span><span class="s2">"West"</span> <span class="o">...</span> <span class="o">&gt;</span> <span class="c1">#45678904567&gt;</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">head</span><span class="p">.</span><span class="nf">next_node</span>
+<span class="o">=&gt;</span> <span class="kp">nil</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">count</span>
+<span class="o">=&gt;</span> <span class="mi">1</span>
+<span class="o">&gt;</span> <span class="n">list</span><span class="p">.</span><span class="nf">to_string</span>
+<span class="o">=&gt;</span> <span class="s2">"The West family"</span>
+</code></pre></div></div>
+:ET

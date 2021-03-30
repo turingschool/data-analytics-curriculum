@@ -1,0 +1,61 @@
+I"<h3 id="intro">Intro</h3>
+
+<p>Breaking down what you want to build is incredibly important when it comes to software. Too often, we decide that we’re going to build an application that does something specific without much upfront planning. This is where we can utilize writing stories to help us know what lego blocks we’ll need to build out in order to accomplish our final end goal.</p>
+
+<h3 id="vocabulary">Vocabulary</h3>
+
+<ul>
+  <li>Project board</li>
+  <li>Features</li>
+  <li>User stories</li>
+  <li>Chores</li>
+  <li>Bugs</li>
+  <li>Story labels</li>
+  <li>Persona</li>
+  <li>Acceptance criteria</li>
+  <li>Sprint</li>
+</ul>
+
+<h3 id="discussion-how-are-you-currently-writing-user-stories">Discussion: How are you currently writing user stories?</h3>
+
+<h4 id="questions-to-ask-while-writing-user-stories">Questions to ask while writing user stories</h4>
+
+<ul>
+  <li>Who is the persona you are focusing on? This should be defined</li>
+  <li>What is the goal of the persona for your story?</li>
+  <li>What should happen when the persona is successful in their goal?</li>
+  <li>What should happen when the person isn’t successful in their goal?</li>
+  <li>What is the acceptance criteria for your user story?</li>
+</ul>
+
+<h4 id="user-story-titles">User story titles</h4>
+
+<p>The titles of your user stories should convey what is being worked on and what the user will be able to do once it has been accomplished. For example:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">User can create a new account with the /sign_up endpoint</code></li>
+  <li><code class="highlighter-rouge">User can updatee user_profile information to an existing profile</code></li>
+  <li><code class="highlighter-rouge">Admin can update account information in their organization</code></li>
+</ul>
+
+<h4 id="story-details">Story details</h4>
+
+<p>Each story should be descriptive and outline a few things:</p>
+
+<ul>
+  <li>Is this a JSON endpoint? If so, what does the request and response payloads look like? What happens when the user is unsuccessful?</li>
+  <li>Is this a frontend story? If so, what is the entire workflow of the user when attempting to accomplish the stories task?</li>
+  <li>Are there any additional resources that would make the story more clear? This could include wireframes, schema designs, etc.</li>
+  <li>The more information given in the story will allow you to start working without the need to ask too many questions.</li>
+</ul>
+
+<h4 id="bugs-and-chores">Bugs and Chores</h4>
+
+<p>If a <em>bug</em> is discovered in the middle of working on a feature, a new story should be created in order to track it. If you are busy working on a particular feature, another person on your team could take care of it in the meantime. If the bug blocks you from completing your current story, you should save your work, flip to a new branch, and begin working on fixing it. Once completed, you may return to your original story.</p>
+
+<p><em>Chores</em> are tasks that can be taken care of towards the end of a project or sprint. These tasks include refactoring, updating documentation, and a variety of project clean up. Reserve doing these stories until the end of your prescribed sprint(s).</p>
+
+<h4 id="labels">Labels</h4>
+
+<p>One way to organize your work is to use labels. Labels give us the ability to classify different pieces of our work into smaller chunks. If you are working on JSON endpoints, then a label of <code class="highlighter-rouge">endpoint</code> may be useful in letting your teammates know what kind of a story they’d be picking up. This could also apply to frontend stories as well.</p>
+:ET

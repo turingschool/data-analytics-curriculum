@@ -1,0 +1,45 @@
+I"�<h2 id="summary">Summary</h2>
+<p>We’re going to build a tiny application that explores user registration, authentication, and authorization.  To begin, our application will be limited to allowing users to register for our site and afterward login and logout.  Once our application has this functionality, we’ll look at authorization - allowing logged in users access to content that guests cannot access.</p>
+
+<h3 id="working-with-sessions">Working with Sessions</h3>
+<p>In the vanilla world of HTTP, our web applications don’t recognize when two requests come from the same browser; they treat each request the same way.  In this exercise, we’ll learn to use sessions in Rails, which store
+data using HTTP cookies.  We use cookies to retain state across web requests—in this challenge, we’ll use them so that our application recognizes that a user is logged in.</p>
+
+<h3 id="protecting-user-data">Protecting User Data</h3>
+<p>When users sign up to use our application, they will be trusting us with their data:  names, e-mail addresses, passwords.  We want to do everything we can to protect our users in case our database is compromised.  We should never store a user’s plain-text password in our database, but for this exercise, we are going to stick with plain-text passwords for now. We’ll have a class later this week that explores hashing passwords using <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a>.</p>
+
+<h3 id="application-description">Application Description</h3>
+<p>Our application will have only one model: <code class="highlighter-rouge">User</code>.  We’ll work with our user model to build an application that supports a few core actions:</p>
+
+<ul>
+  <li>User registration (i.e., creating an account)</li>
+  <li>Login</li>
+  <li>Logout</li>
+</ul>
+
+<p>Once this functionality is built, we’ll begin to restrict access to our application to logged in users.  In other words, when a user attempts to see a page in our application, they will be redirected to the login page, unless they have already been logged in.</p>
+
+<p>As we build our application, we’ll need to make decisions about the routes that we need and the types of requests the browser should make (e.g., get, post, etc.).</p>
+
+<h2 id="iterations">Iterations</h2>
+
+<p><a href="./auth_exp_it0">Iteration 0: Setup</a>
+<a href="./auth_exp_it1">Iteration 1: User Registration</a>
+<a href="./auth_exp_it2">Iteration 2: User Login</a>
+<a href="./auth_exp_it3">Iteration 3: User Logout</a>
+<a href="./auth_exp_it4">Iteration 4: Authorization</a></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Think about the apps we use everyday:  Twitter, Instagram, GitHub, etc.  User registration, authentication, and authorization are key aspects in these applications.  These are skills that we must have.  We’ve gotten an introduction to these concepts in this challenge.  Moving forward, we’ll receive more practice with them as we’ll continue building user authentication into our applications.</p>
+
+<h1 id="questions-for-hand-in">Questions for Hand-in:</h1>
+
+<p>Use the Google Form provided by your instructors for the following questions:</p>
+
+<ol>
+  <li>Please submit your repo for the work above.</li>
+  <li>What are the primary use cases for authentication and authorization within an application?</li>
+  <li>What are some ways you could implement different authorization patterns if you wanted some users to have read/write access to different resources? (ie, you can see an index or show page but not allowed to create/edit/delete)</li>
+</ol>
+:ET

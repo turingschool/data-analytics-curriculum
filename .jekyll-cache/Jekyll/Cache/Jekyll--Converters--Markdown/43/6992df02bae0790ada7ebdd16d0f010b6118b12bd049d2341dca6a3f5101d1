@@ -1,0 +1,53 @@
+I"3<h2 id="discussion">Discussion</h2>
+
+<ul>
+  <li>Why do we care about algorithmic complexity?</li>
+  <li>Best-case, worst-case, average case</li>
+  <li>Varied inputs result in varied performance</li>
+  <li>Building for 100 pieces of data is easy</li>
+  <li>Complexities: constant, log n, linear, n^2</li>
+  <li>Analysis vs measurement</li>
+</ul>
+
+<h3 id="bubble-sort">Bubble Sort</h3>
+
+<p>Bubble Sort is a classic fundamental algorithm.</p>
+
+<ul>
+  <li>the concept</li>
+  <li>the basic algorithm</li>
+  <li>the best-case input</li>
+  <li>the worst-case input</li>
+  <li>analyzing the complexity</li>
+  <li>implementing the algorithm</li>
+  <li>measuring the complexity</li>
+</ul>
+
+<h2 id="exercise">Exercise</h2>
+
+<p>Implement Bubble Sort as described here: https://github.com/turingschool/challenges/blob/master/bubble_sort.markdown</p>
+
+<h2 id="measure">Measure</h2>
+
+<p>You can get some very quick feedback on how long a chunk of code takes to execute using the <code class="highlighter-rouge">Benchmark</code> library built
+into Ruby. It works like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; require 'benchmark'
+&gt; Benchmark.realtime do
+&gt;   1_000_000.times{ rand(1000)^2 }
+&gt; end
+ =&gt; 0.181666276010219
+</code></pre></div></div>
+
+<p>Measure the performance of your binary sort using a “worst case” style input of a thousand, a hundred thousand, and
+ten million numbers. What complexity do you observe?</p>
+
+<p>Here’s a hint about (a) how to generate a large data set and (b) how to avoid printing it to your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; vals = (0..10_000_000).to_a.shuffle ; nil
+ =&gt; nil
+&gt; puts Benchmark.realtime{ vals.sort } ; nil
+0.38994793203892186
+ =&gt; nil
+</code></pre></div></div>
+:ET

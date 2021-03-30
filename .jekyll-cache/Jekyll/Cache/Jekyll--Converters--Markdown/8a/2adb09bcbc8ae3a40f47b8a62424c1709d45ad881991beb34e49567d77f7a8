@@ -1,0 +1,385 @@
+I"~p<h3 id="setting-expectations">Setting Expectations</h3>
+
+<p>Use <a href="https://gist.github.com/rwarbelow/0fed3529495a814eabb1">this question guide</a> to establish group norms if you’re working with someone else.</p>
+
+<h3 id="code-review">Code Review</h3>
+
+<p>This is a non-assessed project. In order to get feedback on your code, consider tagging the following in PRs:</p>
+
+<ul>
+  <li>Peers</li>
+  <li>Mentors</li>
+  <li>Instructors</li>
+</ul>
+
+<p>If you tag someone in a PR. Make sure to point them to a specific part of a specific file. Have a question in mind beyond “Will you take a look at this.” General questions can also be asked by tagging others in GitHub issues.</p>
+
+<h3 id="project-options">Project Options</h3>
+
+<ul>
+  <li>IdeaBox</li>
+  <li>GifGenerator</li>
+  <li>PointBox</li>
+  <li>Original Idea</li>
+</ul>
+
+<h3 id="project-option-1-ideabox">Project Option 1: IdeaBox</h3>
+
+<p>Let’s create an app to record your ideas. Host your app live on Heroku.</p>
+
+<h4 id="ideas">Ideas</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />An idea can be created by a user.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />An idea can be edited/updated only by the user that created it.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />An idea can be destroyed only by the user that created it.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />When a user types a new idea into the form, there is a <a href="http://guides.rubyonrails.org/form_helpers.html#option-tags-from-a-collection-of-arbitrary-objects">selection dropdown</a> for choosing the correct category. See Categories below for more information.</li>
+</ul>
+
+<h4 id="categories">Categories</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Ideas belong to a category.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Categories can be created and destroyed by a logged-in admin user (regular logged in users cannot create categories).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Categories can be destroyed by a logged-in admin user (regular logged in users cannot destroy categories).</li>
+</ul>
+
+<h4 id="images">Images</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users can add an image to their own idea.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />An image can have many ideas and an idea can have many images.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Images can only be created by an admin user.
+    <ul>
+      <li>The most simplistic way to implement images is to store a url to an online image. If you’re feeling fancy and want to upload your own images, check out <a href="https://github.com/carrierwaveuploader/carrierwave">Carrierwave</a> or <a href="https://github.com/thoughtbot/paperclip">Paperclip</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="authentication-and-authorization">Authentication and Authorization</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users need to log in to see their ideas.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users can only see their own ideas – they should not be able to visit another user’s page.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create ideas for other users.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create new categories – only the admin can do that.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create images – only the admin can do that; however, a user can assign an image to their idea.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Visitors can create user accounts.</li>
+</ul>
+
+<h3 id="user-experience">User Experience</h3>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application has been styled.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application uses a balanced, considered color scheme.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application implements a font (that is not the default font).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application utilizes a nav bar.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The style shows evidence of intentional layout.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Space and text is balanced. White space is used to visually separate content.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application is easily usable. The user can intuitvely navigate between different portions of the application without manually entering the URL into the nav-bar or using the back button on their browser.</li>
+</ul>
+
+<h3 id="database">Database</h3>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a one-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a many-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Utilizes primary and foreign keys appropriately</li>
+</ul>
+
+<h3 id="code-quality">Code Quality</h3>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logic lives in the appropriate files</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Methods are refactored and follow SRP</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Naming follows convention</li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Project has a running test suite</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes robust feature tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for validations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for methods that they have created on the models</li>
+</ul>
+
+<h4 id="optional-extensions">Optional Extensions</h4>
+
+<ul>
+  <li>Implement Twitter, Github, or Facebook OAuth login</li>
+  <li>Use HAML for your views</li>
+  <li>TDD using RSpec instead of Test::Unit</li>
+</ul>
+
+<h3 id="project-option-2-gifgenerator">Project Option 2: GifGenerator</h3>
+
+<p>Create an app where users can “favorite” gifs. Host your app live on Heroku.</p>
+
+<h4 id="gifs">Gifs</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Admins can generate gifs by entering a one-word search term in field and then clicking “generate gif”. This should create a new gif in the database. This feature is not available to regular users.
+    <ul>
+      <li>Gifs should have an image_path. See above “Images” in project #1 for more info on implementing images.</li>
+      <li>Use the <a href="https://github.com/giphy/GiphyAPI">GiphyApi</a> to generate gifs.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="favoriting">Favoriting</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regular users can mark a gif as “favorite”.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regular users can see a list of all of the gifs they’ve marked as favorites.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regular users cannot delete a gif; they can only “unfavorite” it for themselves.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regular users should be able to see all gifs sorted by category.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Regular users should be able to see favorited gifs sorted by category.</li>
+</ul>
+
+<h4 id="categories-1">Categories</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Gifs belong to a category (category is the original word that was searched for by the admin).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />categories can be created by a logged-in admin user (regular logged in users cannot create categories).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />categories can be destroyed by a logged-in admin user (regular logged in users cannot destroy categories).</li>
+</ul>
+
+<h4 id="authentication-and-authorization-1">Authentication and Authorization</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users need to log in to see their favorited gifs.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users can only see their own favorited gifs – they should not be able to visit another user’s page.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create favorites for other users.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create new categories – only the admin can do that.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create gifs – only the admin can do that.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Visitors (non-registered users) can create user accounts.</li>
+</ul>
+
+<h4 id="user-experience-1">User Experience</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application has been styled.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application uses a balanced, considered color scheme.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application implements a font (that is not the default font).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application utilizes a nav bar.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The style shows evidence of intentional layout.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Space and text is balanced. White space is used to visually separate content.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application is easily usable. The user can intuitvely navigate between different portions of the application without manually entering the URL into the nav-bar or using the back button on their browser.</li>
+</ul>
+
+<h4 id="database-1">Database</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a one-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a many-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Utilizes primary and foreign keys appropriately</li>
+</ul>
+
+<h3 id="code-quality-1">Code Quality</h3>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logic lives in the appropriate files</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Methods are refactored and follow SRP</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Naming follows convention</li>
+</ul>
+
+<h4 id="testing-1">Testing</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Project has a running test suite</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes robust feature tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for validations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for methods that they have created on the models</li>
+</ul>
+
+<h4 id="optional-extensions-1">Optional Extensions</h4>
+
+<ul>
+  <li>Implement Twitter, Github, or Facebook OAuth login</li>
+  <li>Use HAML for your views</li>
+  <li>TDD using RSpec instead of Test::Unit</li>
+</ul>
+
+<h3 id="project-option-3-pointbox">Project Option 3: PointBox</h3>
+
+<p>Create an app where an admin (let’s say for example, Richard) can assign points to users and users can redeem those points for rewards. Host your app live on Heroku.</p>
+
+<h4 id="points">Points</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Points can be created (“assigned to a user”) and destroyed only by the admin.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Points can be destroyed only by the admin.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users can see their total number of points on their dashboard</li>
+</ul>
+
+<h4 id="rewards">Rewards</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rewards can be created only by the admin.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rewards can be edited only by the admin.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rewards can be updated only by the admin.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rewards can be destroyed only by the admin.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The list of possible rewards can be seen by regular users.</li>
+</ul>
+
+<h4 id="redeeming-points">Redeeming Points</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users can redeem their points for a reward.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />When users redeem their points, the points are NOT destroyed; instead, they are marked as “redeemed”.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />when a user redeems points for a reward, the user can see that reward on their dashboard.</li>
+</ul>
+
+<h4 id="authentication-and-authorization-2">Authentication and Authorization</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users need to log in to see their points and rewards.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users can only see their own points and rewards – they should not be able to visit another user’s page.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot add points to their account.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Users cannot create new rewards to add to the list.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />A user cannot redeem another user’s points.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Admin can create a user.</li>
+</ul>
+
+<h4 id="user-experience-2">User Experience</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application has been styled.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />TThe application uses a balanced, considered color scheme.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application implements a font (that is not the default font).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application utilizes a nav bar.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The style shows evidence of intentional layout.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Space and text is balanced. White space is used to visually separate content.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application is easily usable. The user can intuitvely navigate between different portions of the application without manually entering the URL into the nav-bar or using the back button on their browser.</li>
+</ul>
+
+<h4 id="database-2">Database</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a one-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a many-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Utilizes primary and foreign keys appropriately</li>
+</ul>
+
+<h4 id="code-quality-2">Code Quality</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logic lives in the appropriate files</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Methods are refactored and follow SRP</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Naming follows convention</li>
+</ul>
+
+<h4 id="testing-2">Testing</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Project has a running test suite</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes robust feature tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for validations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for methods that they have created on the models</li>
+</ul>
+
+<h4 id="optional-extensions-2">Optional Extensions</h4>
+
+<ul>
+  <li>Implement Twitter, Github, or Facebook OAuth login</li>
+  <li>Use HAML for your views</li>
+  <li>TDD using RSpec instead of Test::Unit</li>
+</ul>
+
+<h3 id="option-4-original-idea">Option 4: Original Idea</h3>
+
+<p>That’s right. You are creative and I believe in you. Feel free to pitch an original idea for the mini-project. Pitch your project through the form your instructor will link in your channel.</p>
+
+<h4 id="must-haves">Must-Haves:</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Deploy to Heroku</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Authentication/Authorization</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />One-to-many and Many-to-many relationships</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Styling</li>
+</ul>
+
+<h4 id="approval">Approval</h4>
+
+<p>In order to have your project approved, submit your pitch through the form your instructor will link in your channel. Approval is contingent upon:</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />What will a visitor be able to do?</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />What will a logged in user be able to do?</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />What will an admin be able to do?</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />What is a one-to-many relationship you will be using?</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />What is a many-to-many relationship you will be using?</li>
+</ul>
+
+<h4 id="things-to-consider">Things to Consider</h4>
+
+<p>If you choose to do this option make sure you try to implement all the concepts we’ve touched over the last week. For example:</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />TDD - model and feature tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />CRUD</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />1-1 and 1-many relationships</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />ReST-ful routes</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Well structured relational database design</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails helpers</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Sessions, flashes and maybe cookies if you have a good use case for them.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Authentication</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Authorization</li>
+</ul>
+
+<h4 id="rubric-for-general-parts">Rubric for General Parts:</h4>
+<h4 id="user-experience-3">User Experience</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application has been styled.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />TThe application uses a balanced, considered color scheme.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application implements a font (that is not the default font).</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application utilizes a nav bar.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The style shows evidence of intentional layout.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Space and text is balanced. White space is used to visually separate content.</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />The application is easily usable. The user can intuitvely navigate between different portions of the application without manually entering the URL into the nav-bar or using the back button on their browser.</li>
+</ul>
+
+<h4 id="database-3">Database</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a one-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Properly implements a many-to-many relationship</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Utilizes primary and foreign keys appropriately</li>
+</ul>
+
+<h4 id="code-quality-3">Code Quality</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Logic lives in the appropriate files</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Methods are refactored and follow SRP</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Naming follows convention</li>
+</ul>
+
+<h4 id="testing-3">Testing</h4>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Project has a running test suite</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes robust feature tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for validations</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Test suite includes tests for methods that they have created on the models</li>
+</ul>
+
+<h4 id="optional-extensions-3">Optional Extensions</h4>
+
+<ul>
+  <li>Implement Twitter, Github, or Facebook OAuth login</li>
+  <li>Use HAML for your views</li>
+  <li>TDD using Test::Unit instead of RSpec</li>
+</ul>
+
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li><a href="http://guides.rubyonrails.org/routing.html#nested-resources">Nested Routes</a></li>
+  <li><a href="https://github.com/carrierwaveuploader/carrierwave">Carrierwave</a></li>
+  <li><a href="https://github.com/thoughtbot/paperclip">Paperclip</a></li>
+  <li><a href="http://guides.rubyonrails.org/form_helpers.html">Form Helpers in Rails</a></li>
+</ul>
+:ET

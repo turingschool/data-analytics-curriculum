@@ -1,0 +1,55 @@
+I"‡<h1 id="understanding-rest">Understanding REST</h1>
+
+<h2 id="standards">Standards</h2>
+
+<ul>
+  <li>define REST</li>
+  <li>explain purpose of REST</li>
+  <li>implement RESTful routing in Rails</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<h2 id="lesson">Lesson</h2>
+
+<h4 id="what-is-rest">What is REST?</h4>
+
+<ul>
+  <li>Representational State Transfer is a web architecture style</li>
+  <li>Coined by Roy Fielding in doctoral dissertation (2000)</li>
+  <li>Aims to give a URI (uniform resource identifier) to everything that can be manipulated and let the software determine what to do from there</li>
+</ul>
+
+<h4 id="why-rest">Why REST?</h4>
+
+<ul>
+  <li>Uniform URLs</li>
+  <li>Structured</li>
+  <li>Patterned</li>
+</ul>
+
+<h4 id="what-is-a-resource">What is a Resource?</h4>
+
+<p>Any information that can be named, such as:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* a document
+* a page
+* a search result
+* a session
+</code></pre></div></div>
+
+<h3 id="rest-in-rails">REST in Rails</h3>
+
+<h4 id="rails-routes">Rails Routes</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">routes.rb</code></li>
+  <li><code class="highlighter-rouge">resources :articles</code> generates eight URLS</li>
+</ul>
+
+<h2 id="wrapup">Wrapup</h2>
+
+<h2 id="corrections--improvements-for-next-time">Corrections &amp; Improvements for Next Time</h2>
+
+<h3 id="taught-by-rachel">Taught by Rachel</h3>
+:ET

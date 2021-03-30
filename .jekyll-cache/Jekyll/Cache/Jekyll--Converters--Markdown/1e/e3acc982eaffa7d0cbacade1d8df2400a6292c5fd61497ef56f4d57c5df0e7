@@ -1,0 +1,59 @@
+I"û<h3 id="mvc--rails">MVC &amp; Rails</h3>
+<ul>
+  <li>Diagram and explain the MVC model</li>
+  <li>What is the role of the model?</li>
+  <li>When would you want to use a class method rather than an instance method?</li>
+  <li>What is the role of a view? What language(s) would you use in a view?</li>
+  <li>What is the role of the controller?</li>
+  <li>What are the 7 RESTful CRUD actions?</li>
+  <li>Create a chart for Users with columns for path_helpers, HTTP Verb, URI, ActiveRecord, Redirect/Render, View</li>
+</ul>
+
+<h3 id="http">HTTP</h3>
+<ul>
+  <li>What are the 5 HTTP Verbs?</li>
+  <li>Diagram and explain the HTTP request/response cycle</li>
+</ul>
+
+<h3 id="htmlcss">HTML/CSS</h3>
+<ul>
+  <li>What HTML tags would you use for the following?
+    <ul>
+      <li>section header</li>
+      <li>general content</li>
+      <li>bullet points</li>
+      <li>numbered list</li>
+      <li>image</li>
+      <li>link</li>
+      <li>form &amp; its pieces</li>
+    </ul>
+  </li>
+  <li>How do you target the following in CSS?
+    <ul>
+      <li>a class</li>
+      <li>an id</li>
+      <li>an element</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+<ul>
+  <li>How would you set up a test to check that a User has an email address and that only one user can have that email address?</li>
+  <li>How would you set up a test to check that a specific User is listed on a page?</li>
+</ul>
+
+<h3 id="databases">Databases</h3>
+<ul>
+  <li>What is the SQL to pull the record for every User?</li>
+  <li>What is the SQL to pull the record for how many Users are in the database?</li>
+  <li>Diagram the tables of a database where a User has_many Assignments, an Assignment belongs_to a User, a Course has_many Assignments, and an Assignment belongs_to a Course.</li>
+</ul>
+
+<h3 id="activerecord">ActiveRecord</h3>
+<ul>
+  <li>When would I use a find, vs a find_by, vs a where</li>
+  <li>What ActiveRecord methods would I use in each of the 7 CRUD actions?</li>
+  <li>How do I make it so I can call user.assignments? What about assignment.users?</li>
+</ul>
+:ET

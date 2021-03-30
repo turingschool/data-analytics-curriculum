@@ -1,0 +1,75 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the common roles of a team in a professional setting</li>
+  <li>Discuss possible arrangements for working in groups at Turing</li>
+</ul>
+
+<h2 id="warmup-5-minutes">Warmup (5 minutes)</h2>
+
+<ul>
+  <li>What has made your previous teams successful? What has made them difficult?</li>
+  <li>When working together for the first time, what can you do/have you done to make sure your team is productive?</li>
+</ul>
+
+<h2 id="tuckmans-group-lifecycle">Tuckman’s Group Lifecycle</h2>
+
+<h3 id="stages-of-the-group-lifecycle-5-min-">Stages of the Group Lifecycle( ~5 min )</h3>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=OhSI6oBQmQA&amp;list=PLbu6naAjG_K93h0wjyn1b1EHQl1Q2pH_y">VIDEO: Stages of Team Development</a></li>
+  <li><a href="http://salvos.org.au/scribe/sites/2020/files/Resources/Transitions/HANDOUT_-_Tuckmans_Team_Development_Model.pdf">PDF reference from Video</a></li>
+</ul>
+
+<h3 id="discussion-20-min-">Discussion( ~20 min )</h3>
+
+<p>Think of those successful teams from your warmup questions. What did you do to get you through the early stages to become successful?</p>
+
+<p>Share - be sure to highlight:</p>
+
+<ul>
+  <li>Honesty</li>
+  <li>Treating team members as more than just the work they do</li>
+  <li>Goal Setting</li>
+  <li>Accountability</li>
+  <li>Retrospective and review</li>
+</ul>
+
+<h2 id="tools-and-workflow-30-min">Tools and Workflow (30 min)</h2>
+
+<h3 id="waterfall-vs-agile">Waterfall vs Agile</h3>
+
+<p><a href="http://www.agilenutshell.com/assets/how-is-agile-different/continuous-activities.png">GRAPHIC: Waterfall vs. Agile</a></p>
+
+<ul>
+  <li>Discuss differences between these approaches.</li>
+  <li>How would this apply to a project you’ve completed here at Turing?</li>
+  <li>How might this apply to a Sinatra project?</li>
+</ul>
+
+<h3 id="waffle"><a href="http://waffle.io">Waffle</a></h3>
+
+<ul>
+  <li>Show how to convert the requirements of the project to stories/issues on Waffle (e.g. Average GPA - <code class="highlighter-rouge">average_gpa</code> returns the average GPA for all students)</li>
+  <li>Let the stories drive development, even copy and paste the story into the tests</li>
+  <li>Use Waffle to track tasks to be completed</li>
+  <li>Use Waffle to keep you focused (i.e. avoid rabbit holes)</li>
+</ul>
+
+<h3 id="git-workflow">Git Workflow</h3>
+
+<p>Discuss <a href="git_workflow_for_teams">Git Workflow for Teams</a></p>
+
+<h3 id="additional-resources">Additional Resources</h3>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Tuckman%27s_stages_of_group_development">Wikipedia Entry for Tuckman’s Group Lifecycle</a></li>
+  <li><a href="https://www.mindtools.com/pages/article/newLDR_86.htm">Video and article about Tuckman’s stages</a></li>
+  <li><a href="https://www.youtube.com/watch?v=KRFWPCYsgfA">Group Development Video</a></li>
+  <li><a href="https://www.scrumalliance.org/why-scrum">Why Scrum?</a></li>
+  <li><a href="http://scrummethodology.com/">Scrum</a></li>
+  <li><a href="https://gist.github.com/erinnachen/1f802734671d9db5c452">Awesome Git/GitHub Workflow Checklist</a></li>
+  <li><a href="http://www.agilemanifesto.org/">The Agile Manifesto</a></li>
+  <li><a href="http://www.agilemanifesto.org/principles.html">The Principles of Agile Software</a></li>
+</ul>
+:ET

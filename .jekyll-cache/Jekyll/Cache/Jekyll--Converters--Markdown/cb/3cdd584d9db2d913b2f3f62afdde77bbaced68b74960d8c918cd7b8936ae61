@@ -1,0 +1,195 @@
+I"�<p>We will be using an Agile process during the development of this project. This will include:</p>
+
+<ul>
+  <li>Working in short 3 or 4 day “Sprints”</li>
+  <li>Using GitHub</li>
+  <li>Setting up Continuous Integration and Continuous Deployment</li>
+  <li>Using a project management tool such as Github Projects</li>
+  <li>Conducting Story Grooming meetings</li>
+  <li>Doing daily Stand Ups</li>
+  <li>Demoing your project to your Project Manager</li>
+  <li>Holding Team Retros</li>
+</ul>
+
+<h2 id="sprints">Sprints</h2>
+
+<p>In Agile processes, a sprint is a single cycle of development. The most common length of a sprint is two weeks. During this cycle, teams will assign features, develop those features, demo their work, get feedback, and retro.</p>
+
+<h2 id="pairing-schedules">Pairing Schedules</h2>
+
+<p>Your PM will present a pairing schedule every other day, and rotate you to different areas of the project. If you are mid-way through a story, you must figure out how to hand off that work to another pair.</p>
+
+<h4 id="sprint-1-user-interface-and-microservice-spike">Sprint 1: User Interface and Microservice Spike</h4>
+
+<ul>
+  <li>Begin: Monday of Week 4</li>
+  <li>End: Thursday morning of Week 4</li>
+</ul>
+
+<p>Day 1:</p>
+<ul>
+  <li>Your PM will split your team up to focus on each area of the project.
+    <ul>
+      <li>Front-end team</li>
+      <li>Back-end team</li>
+      <li>Microservice(s)</li>
+    </ul>
+  </li>
+  <li>Each team will use a Miro board to brainstorm ideas</li>
+  <li>Each team member will set up <a href="">GitHub co-author commits</a> for each member on the team (minus their project manager)</li>
+  <li>
+    <p>Your PM may delegate people to set up a GitHub organization, add other members, and set up the initial repos in a way that each team member gets co-author contribution on all repo setups</p>
+  </li>
+  <li>Deliverables:
+    <ul>
+      <li>Wireframes of the User Interface</li>
+      <li>Rough implementation and testing of the front-end, mocking out responses from back-end; no authentication expected yet</li>
+      <li>Rough implementation and testing of back-end API, mocking requests from front-end</li>
+      <li>Initial structure of each microservice in Sinatra (not necessarily working API calls)</li>
+      <li>Travis-CI and Deployment to Heroku for both Rails repositories</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="sprint-2-primary-development">Sprint 2: Primary Development</h4>
+
+<ul>
+  <li>Begin: Thursday afternoon of Week 4</li>
+  <li>
+    <p>End: Monday morning of Week 5</p>
+  </li>
+  <li>Deliverables:
+    <ul>
+      <li>Rails front-end has Bootstrap in place, each wireframe is implemented in some amount, implements OAuth, can CRUD data with back-end</li>
+      <li>Rails back-end can CRUD resources based on front-end requests</li>
+      <li>Microservices successfully implement their respective API calls</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="sprint-3-final-product">Sprint 3: Final Product</h4>
+
+<ul>
+  <li>Begin: Monday Afternoon Week 5</li>
+  <li>End: Friday Week 5</li>
+  <li>Deliverables:
+    <ul>
+      <li>Professional-looking front-end</li>
+      <li>MVP for each component is met</li>
+      <li>Fully working application stack is presentable</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="project-check-ins">Project Check Ins</h2>
+
+<p>In addition to the End of Sprint Demos, you will also have some project check ins</p>
+
+<ul>
+  <li>Check In 1
+    <ul>
+      <li>Wednesday or Thursday of Week 4</li>
+      <li>During this meeting, you should be prepared to review the artifacts from your inception: MVP, wireframes, story board.</li>
+      <li>During this meeting, your team will draw out the architecture of your application</li>
+    </ul>
+  </li>
+  <li>Check In 2
+    <ul>
+      <li>Monday Week 5</li>
+      <li>During this check in, you will discuss with your project manager what the expectations are for your final demo on Friday</li>
+      <li>You can also use this check in as an opportunity to ask any questions and get help for the final few days of the project.</li>
+    </ul>
+  </li>
+  <li>Check In 3
+    <ul>
+      <li>Review of near-final work, check for MVP</li>
+      <li>Discuss presentation details</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="github">GitHub</h2>
+
+<ul>
+  <li>Commit Frequently</li>
+  <li>Make branches and submit Pull Requests for each new feature.
+    <ul>
+      <li>DO NOT commit directly to main</li>
+      <li>Keep your PRs as small as possible (one feature / user story per PR)</li>
+      <li>Your PR should be reviewed by at least one team member before it is merged.</li>
+      <li>Tag your Project Manager if you have questions. DM your Project Manager letting them know you have tagged them.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="co-author-commits">Co-Author Commits</h4>
+
+<p>Teams are expected to utilize <a href="https://gist.github.com/iandouglas/6ff9428ca9e349118095ce7ed4a655bf">co-authored commits</a> to give each other contribution for driver/navigator work.</p>
+
+<p>Your instructors will provide a full co-author commit message to each team. When you implement it, be sure to remove your own name from the list (your commit message should not include yourself).</p>
+
+<h2 id="continuous-integration">Continuous Integration</h2>
+
+<ul>
+  <li>Set up a <a href="http://backend.turing.io/module3/lessons/environments_and_ci">CI Server</a></li>
+</ul>
+
+<h2 id="continuous-deployment">Continuous Deployment</h2>
+
+<ul>
+  <li>Set up Travis-CI in such a way that it automatically deploys its code to Heroku when ‘main’ branch code is passing</li>
+  <li>Recommend setting up ENV variables for all service-layer hostnames to allow faster/easier deployment of services</li>
+</ul>
+
+<h2 id="story-grooming">Story Grooming</h2>
+
+<ul>
+  <li>You should be using a project management tool to keep track of your stories.</li>
+  <li>When doing a “Story Grooming” you should:
+    <ul>
+      <li>Make sure that the project board is up to date</li>
+      <li>Look over the current backlog of stories and decide if you want to make any changes
+        <ul>
+          <li>Are there any stories that need to be updated?</li>
+          <li>Are there any stories that need to be added?</li>
+        </ul>
+      </li>
+      <li>Assign stories to individual team members or pairs
+        <ul>
+          <li>Be clear on what it is that everyone should be doing</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>You should be Story Grooming every 1-2 days.</li>
+</ul>
+
+<h2 id="daily-stand-ups">Daily Stand Ups</h2>
+
+<ul>
+  <li>A Stand Up is a very brief (hence, physically standing up) meeting for the development team to keep in touch about what everyone is doing.</li>
+  <li>During the stand up, each member of the team will take 1 - 2 minutes to answer these questions:
+    <ul>
+      <li>What have you been working on?</li>
+      <li>What are you going to be working on?</li>
+      <li>Is anything blocking you?</li>
+    </ul>
+  </li>
+  <li>Every weekday you should send your PM a summary of the day’s stand up.</li>
+</ul>
+
+<h2 id="retros">Retros</h2>
+
+<ul>
+  <li><strong>End of Week 1</strong>
+    <ul>
+      <li>Students should discuss what went well, what didn’t go well, and what they would like to change for the second half of the project. Students should use their DTR as a guideline for this discussion and be willing to reaffirm or change any expectations that weren’t met in the first week.</li>
+    </ul>
+  </li>
+  <li><strong>End of Project</strong>
+    <ul>
+      <li>Students should discuss what went well, what didn’t go well, and what feedback they have for their team members using <a href="https://docs.google.com/spreadsheets/d/1MDybiSiZLVdbpbwEU-x_VPakyhhX0lD4HhcCjwuxtc4/edit#gid=0">this template</a>. Each group should make a copy of the template and submit to their instructors.</li>
+    </ul>
+  </li>
+</ul>
+:ET

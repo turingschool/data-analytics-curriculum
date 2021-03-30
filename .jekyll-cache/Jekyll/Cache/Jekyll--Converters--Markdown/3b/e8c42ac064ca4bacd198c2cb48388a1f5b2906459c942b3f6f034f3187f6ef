@@ -1,0 +1,24 @@
+I"x<h2 id="flow-control-exercises">Flow Control Exercises</h2>
+
+<p>Let’s practice manipulating some of Ruby’s Flow Control mechanisms while working on a basic algorithm exercise.</p>
+
+<p><a href="https://github.com/turingschool/challenges/blob/master/simple_searches.markdown">Exercise</a></p>
+
+<p><a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_01-object_oriented_programming_with_ruby/flow_control.markdown">Flow Control Recap</a></p>
+
+<p><a href="http://zetcode.com/lang/rubytutorial/flowcontrol/">More Info on Flow Control</a></p>
+
+<h3 id="assignment">Assignment</h3>
+
+<p>Spend 20 minutes working on the first challenge in the exercise. Implement the solution twice, using 2 of the following looping tools:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">each</code></li>
+  <li><code class="highlighter-rouge">for</code> loop</li>
+  <li><code class="highlighter-rouge">while</code> loop</li>
+</ul>
+
+<p>Then spend 5 - 10 minutes recapping and sharing solutions for that exercise</p>
+
+<p>Next spend 30 minutes working on the second challenge. Again, implement it twice using 2 of the available looping techniques.</p>
+:ET

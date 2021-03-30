@@ -1,0 +1,81 @@
+I"�<h2 id="outline">Outline</h2>
+
+<p>This lesson is divided into 5 sections:</p>
+
+<ol>
+  <li>Short warm-up discussion (~20 minutes)</li>
+  <li>Lecture</li>
+  <li>Student exercise</li>
+  <li>Share out</li>
+  <li>Review potential refactor</li>
+</ol>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/programming_with_values">here</a></p>
+
+<h2 id="lesson">Lesson</h2>
+
+<h3 id="warmup">Warmup</h3>
+
+<ul>
+  <li>What does ‘single responsibility’ mean in a programming context?</li>
+  <li>How does programming with an eye towards the single responsibility principle help us as programmers?</li>
+  <li>In past projects, what have you decided to test? What have you decided not to test?</li>
+  <li>Why?</li>
+</ul>
+
+<h3 id="lecture">Lecture</h3>
+
+<h3 id="data-pains---limiting-our-interface-to-our-objects">Data Pains - limiting our interface to our objects</h3>
+
+<ul>
+  <li>Common pain point when dealing with external interfaces: we make
+the external data dump the <em>only</em> interface for sending information
+into the object</li>
+  <li>The action of bringing outside data in is contained within the object,
+so our only way to provide it is to put the data in the right place (often a file)
+and let the object slurp it in</li>
+  <li>Programming with files/HTTP sources/Network data drives us to program with Locations rather
+than values</li>
+  <li>Rather than telling you the value of something I’ll tell you it’s on the whiteboard in the other classroom. Then you have to go look it up.</li>
+  <li>What does this mean for our tests?</li>
+  <li>What would an alternative look like?</li>
+  <li>Can we preserve the simple data interface (i.e. provide data in the form of ruby
+objects) <em>as well as</em> the “slurp it up from a file” interface?</li>
+  <li>Best of both worlds: Testability and flexibility when you want to provide standard basic
+objects; Ease of use / “Do it all” when you need to pull in a bunch of external data</li>
+  <li>Additional win: If the importing task becomes more complex, we can easily extract
+it into a separate entity</li>
+  <li>The interface between our objects is simple data, rather than external infrastructure</li>
+</ul>
+
+<h3 id="exercise---tdd-pizza-parlor">Exercise - TDD Pizza Parlor</h3>
+
+<p>Keep these principles in mind as you complete this short
+<a href="https://github.com/turingschool-examples/pizza_parlor">Pizza Parlor Exercise</a></p>
+
+<h3 id="share">Share</h3>
+
+<ul>
+  <li>What did you test?</li>
+  <li>What didn’t you test?</li>
+  <li>Can you test more if you refactored your code?</li>
+</ul>
+
+<h3 id="review-potential-refactors">Review Potential Refactors</h3>
+
+<ul>
+  <li>Can we isolate the file I/O?</li>
+  <li>Can we extract it to a class?</li>
+</ul>
+
+<h2 id="further-reading--watching">Further Reading / Watching</h2>
+
+<ul>
+  <li><a href="https://vimeo.com/157333800">Programming with Values (earlier version of this lecture)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=-6BsiVyC1kM">The Value of Values by Rich Hickey</a></li>
+  <li><a href="http://alistair.cockburn.us/Hexagonal+architecture">Hexagonal Architecture by Alistair Cockburn</a></li>
+  <li><a href="https://www.youtube.com/watch?v=CGN4RFkhH2M">Hexagonal Rails by Matt Wynne</a></li>
+</ul>
+:ET

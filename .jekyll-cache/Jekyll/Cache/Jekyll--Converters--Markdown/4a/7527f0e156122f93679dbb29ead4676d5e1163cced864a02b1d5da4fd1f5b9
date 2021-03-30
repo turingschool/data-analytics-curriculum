@@ -1,0 +1,338 @@
+I",P<h2 id="but-first-the-word-of-the-day">But First, The Word Of The Day</h2>
+
+<p><strong>equifinality (n):</strong> <code class="highlighter-rouge">the property of allowing or having the same effect or result from different events</code></p>
+
+<p>I think of this as multiple paths that end up at the same point or place or result.</p>
+
+<p>The result we are aiming for today is a functioning piece of software that forks or branches based on one or more conditions, and this lesson will show you a few of the logical tools that can help us arrive there.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>explain the flow of execution through a chunk of code</li>
+  <li>use <code class="highlighter-rouge">if</code> statements to control execution</li>
+  <li>use an <code class="highlighter-rouge">else</code> statement to create an alternative path</li>
+  <li>combine <code class="highlighter-rouge">if</code>, <code class="highlighter-rouge">elsif</code>, and <code class="highlighter-rouge">else</code> to create multiple branches</li>
+  <li>use <code class="highlighter-rouge">while</code> and <code class="highlighter-rouge">until</code> to repeat instructions</li>
+  <li>apply the <code class="highlighter-rouge">times</code> method to repeat instructions</li>
+  <li>use <code class="highlighter-rouge">loop</code> and <code class="highlighter-rouge">break</code> to repeat instructions</li>
+  <li>break out of an infinite loop in both IRB and regular Ruby</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>condition</li>
+  <li>boolean</li>
+  <li>conditional branching</li>
+  <li>flow control</li>
+  <li>if/elsif/else</li>
+  <li>loop</li>
+  <li>while</li>
+  <li>until</li>
+  <li>times</li>
+  <li>infinite loop</li>
+</ul>
+
+<h3 id="note">Note</h3>
+
+<p>You’re going to learn different ways to accomplish the same thing in this lesson. Remember that these are tools, and as you learn to be a software developer, you’ll get a better idea of which tool to use for which job. For now, just try to understand how the tool works, and at least one use for that tool.</p>
+
+<h1 id="conditions">Conditions</h1>
+
+<p>In programming, we refer to something that is either <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code> as a <strong>Boolean</strong>.</p>
+
+<p>A condition is something that evaluates to a Boolean. This can be as simple as a variable that holds a Boolean value:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">play_again</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">play_again</span>
+<span class="c1">#=&gt; false</span>
+</code></pre></div></div>
+
+<p>We can also use comparison operators to create a condition by comparing two values. The important comparison operators are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">==</code> equal to
+    <ul>
+      <li>Be careful not to mix this up with <code class="highlighter-rouge">=</code> which is used for <strong>variable assignment</strong></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">&gt;</code> greater than</li>
+  <li><code class="highlighter-rouge">&gt;=</code> greater than or equal to</li>
+  <li><code class="highlighter-rouge">&lt;</code> less than</li>
+  <li><code class="highlighter-rouge">&lt;=</code> less than or equal to</li>
+  <li><code class="highlighter-rouge">!=</code> not equal</li>
+</ul>
+
+<p>We can use them like so:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mood</span> <span class="o">=</span> <span class="s2">"hungry"</span>
+<span class="n">mood</span> <span class="o">==</span> <span class="s2">"hungry"</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">mood</span> <span class="o">==</span> <span class="s2">"sleepy"</span>
+<span class="c1">#=&gt; false</span>
+<span class="n">mood</span><span class="p">.</span><span class="nf">length</span> <span class="o">&gt;</span> <span class="mi">5</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">mood</span> <span class="o">!=</span> <span class="s2">"grumpy"</span>
+<span class="c1">#=&gt; true</span>
+</code></pre></div></div>
+
+<p>You can also use the negation operator <code class="highlighter-rouge">!</code> (also known as a “bang”) to reverse something from true to false. The “bang” will always return the opposite boolean of the boolean that is returned from a method or variable. I use the word <code class="highlighter-rouge">not</code> in my head in conjunction with the negation operator.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">!</span><span class="kp">false</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">play_again</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="o">!</span><span class="n">play_again</span>
+<span class="c1">#=&gt; false</span>
+<span class="k">def</span> <span class="nf">hungry?</span>
+  <span class="kp">true</span>
+<span class="k">end</span>
+<span class="o">!</span><span class="n">hungry?</span>
+<span class="c1">#=&gt; false</span>
+</code></pre></div></div>
+<p><strong>not</strong> <code class="highlighter-rouge">play_again</code> translates to <strong>not</strong> <code class="highlighter-rouge">true</code> which translates to <code class="highlighter-rouge">false</code></p>
+
+<p><strong>not</strong> <code class="highlighter-rouge">hungry?</code> translates to <strong>not</strong> <code class="highlighter-rouge">true</code> which translates to <code class="highlighter-rouge">false</code></p>
+
+<p>There are also built-in ruby methods that can be used as conditions. Although it’s not a rule, Rubyists typically end these methods with a <code class="highlighter-rouge">?</code> to imply that a boolean will be returned:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1</span><span class="p">.</span><span class="nf">even?</span>
+<span class="c1">#=&gt; false</span>
+<span class="s2">"hello"</span><span class="p">.</span><span class="nf">include?</span> <span class="s2">"h"</span>
+<span class="c1">#=&gt; true</span>
+<span class="s2">"hello"</span><span class="p">.</span><span class="nf">end_with?</span> <span class="s1">'o'</span>
+<span class="c1">#=&gt; true</span>
+</code></pre></div></div>
+
+<h2 id="-and-"><code class="highlighter-rouge">||</code> and <code class="highlighter-rouge">&amp;&amp;</code></h2>
+
+<p>We can use the “or” operator <code class="highlighter-rouge">||</code> and the “and” operator <code class="highlighter-rouge">&amp;&amp;</code> to combine two conditions into a single condition. <code class="highlighter-rouge">||</code> evaluates to true if one of the conditions is true. <code class="highlighter-rouge">&amp;&amp;</code> evaluates to true if both are true:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">breed</span> <span class="o">=</span> <span class="s2">"Corgi"</span>
+<span class="n">age</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">breed</span> <span class="o">==</span> <span class="s2">"Corgi"</span> <span class="o">||</span> <span class="n">age</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">breed</span> <span class="o">==</span> <span class="s2">"Corgi"</span> <span class="o">&amp;&amp;</span> <span class="n">age</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="c1">#=&gt; false</span>
+</code></pre></div></div>
+
+<p>Be careful… a common mistake is to try to use <code class="highlighter-rouge">||</code> with two possible values. If we want to say “the length is either equal to 0 or 10”, you may try something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">length</span> <span class="o">=</span> <span class="s2">"letters"</span><span class="p">.</span><span class="nf">length</span>
+<span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="mi">10</span>
+</code></pre></div></div>
+
+<p>This won’t give us an error, but it isn’t working like we expect. This condition will always evaluate to true, which probably isn’t what we expect, and thus is not a very useful condition. If we read this as “length is equal to zero or ten”, it makes sense to us, but that’s not how Ruby reads it. Ruby evaluates each condition on the left and right independently and then combines them. So Ruby reads it as “Length is equal to zero; or ten.”. The important point here is that both sides of an <code class="highlighter-rouge">||</code> or <code class="highlighter-rouge">&amp;&amp;</code> are valid conditions. This statement would be correctly written as:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">length</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">length</span> <span class="o">==</span> <span class="mi">10</span>
+<span class="c1">#=&gt; false</span>
+</code></pre></div></div>
+
+<p>Bonus:
+What is the return value of:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">length</span> <span class="o">=</span> <span class="s2">"letters"</span><span class="p">.</span><span class="nf">length</span>
+<span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="mi">10</span>
+</code></pre></div></div>
+
+<p>Why?</p>
+
+<h1 id="conditional-branching">Conditional Branching</h1>
+
+<p>In programming, branching refers to a choice that is made depending on whether or not a condition is true or false. Think of branching as “choose your own adventure”.</p>
+
+<p>Examples:</p>
+
+<ul>
+  <li>If a student earns a 3.8 GPA or higher, then they are invited to the honor roll ceremony. (One branch)</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">gpa</span> <span class="o">&gt;=</span> <span class="mf">3.8</span>
+  <span class="n">invite_to_honor_roll</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><img src="./assets/if_condition.jpg" alt="inline" /></p>
+
+<ul>
+  <li>If you want to spend a lot of money for dinner, go to a fancy restaurant. Otherwise, cook at home. (Two branches)</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">spend_that_money</span> <span class="o">==</span> <span class="kp">true</span>
+  <span class="n">fancy_dinner</span>
+<span class="k">else</span>
+  <span class="n">cook_at_home</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><img src="./assets/if_else_condition.jpg" alt="inline" /></p>
+
+<h2 id="if"><code class="highlighter-rouge">if</code></h2>
+
+<p>All of our conditional branches will begin with an <code class="highlighter-rouge">if</code>. The code following the <code class="highlighter-rouge">if</code> will run if the condition is true.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">condition</span>
+  <span class="c1"># code to execute if condition is true</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="elsif"><code class="highlighter-rouge">elsif</code></h2>
+
+<p>Use an <code class="highlighter-rouge">elsif</code> to create more branches.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">condition1</span>
+  <span class="c1"># code to execute if above condition1 evaluates to true</span>
+<span class="k">elsif</span> <span class="n">condition2</span>
+  <span class="c1"># code to execute if above condition2 evaluates to true</span>
+<span class="k">elsif</span> <span class="n">condition3</span>
+  <span class="c1"># code to execute if above condition3 evaluates to true</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="else"><code class="highlighter-rouge">else</code></h2>
+
+<p>Code inside an <code class="highlighter-rouge">else</code> will run when none of the previous conditions are true.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">condition1</span>
+  <span class="c1"># code to execute if above condition1 evaluates to true</span>
+<span class="k">elsif</span> <span class="n">condition2</span>
+  <span class="c1"># code to execute if above condition2 evaluates to true</span>
+<span class="k">elsif</span> <span class="n">condition3</span>
+  <span class="c1"># code to execute if above condition3 evaluates to true</span>
+<span class="k">else</span>
+  <span class="c1"># code to execute if all previous conditions evaluate to false</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="other-rules">Other rules</h2>
+
+<ul>
+  <li>Conditional branches have exactly one <code class="highlighter-rouge">if</code></li>
+  <li>The <code class="highlighter-rouge">if</code> can be following by any number of <code class="highlighter-rouge">elsif</code>s</li>
+  <li>A conditional branch will have either zero or one <code class="highlighter-rouge">else</code></li>
+  <li>The <code class="highlighter-rouge">else</code> comes after the <code class="highlighter-rouge">if</code>/<code class="highlighter-rouge">elsif</code>s</li>
+  <li>The conditional branch always ends with an <code class="highlighter-rouge">end</code></li>
+  <li>Only one branch can be taken.</li>
+  <li>Conditions are evaluated in order.</li>
+</ul>
+
+<h2 id="check-for-understanding">Check for Understanding</h2>
+
+<p>What will the following code print to the screen?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">play_again</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="n">lives</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">if</span> <span class="n">lives</span> <span class="o">==</span> <span class="mi">0</span>
+  <span class="nb">puts</span> <span class="s2">"You Lose!"</span>
+<span class="k">elsif</span> <span class="o">!</span><span class="n">play_again</span>
+  <span class="nb">puts</span> <span class="s2">"Game Over!"</span>
+<span class="k">elsif</span> <span class="n">play_again</span> <span class="o">&amp;&amp;</span> <span class="n">lives</span> <span class="o">&gt;</span> <span class="mi">0</span>
+  <span class="nb">puts</span> <span class="s2">"Welcome back!"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"invalid input"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What values would <code class="highlighter-rouge">play_again</code> and <code class="highlighter-rouge">lives</code> need to be assigned to in order to print each of the following to your terminal:</p>
+<ul>
+  <li>“You Lose!”</li>
+  <li>“Game Over!”</li>
+  <li>“Welcome back!”</li>
+  <li>“Invalid input</li>
+</ul>
+
+<h2 id="looping">Looping</h2>
+
+<p>A loop is a set of instructions that is executed repeatedly until some condition is met. This condition may be a certain number of times that the loop is executed, for example:</p>
+
+<ul>
+  <li>After baking cookies, you pull the cookie sheet out of the oven which holds 24 cookies. One by one, you remove each of the cookies from the sheet and place them on a cooling rack. (24.times do…)
+(Set of instructions that executes 24 times)</li>
+</ul>
+
+<p>or it may be a question that returns a true/false (boolean) answer. For example:</p>
+
+<ul>
+  <li>While looking for a parking spot at a crowded sporting event, a car continues to drive up and down the rows until an empty spot is found (full == false). <br />
+(Loop that executes until a question returns true or false)</li>
+</ul>
+
+<h2 id="times"><code class="highlighter-rouge">times</code></h2>
+
+<p>A <code class="highlighter-rouge">times</code> loop executes code an exact number of times.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span>
+  <span class="c1"># code to execute a given number of times. This code block will run 5 times before exiting</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can also include a <strong>Block Variable</strong> that tells us which iteration of the loop is running.</p>
+
+<p>This code</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">5</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+ <span class="nb">puts</span> <span class="n">number</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>will print out</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0
+1
+2
+3
+4
+</code></pre></div></div>
+
+<h2 id="while"><code class="highlighter-rouge">while</code></h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="n">condition</span>
+ <span class="c1"># code to execute as long as condition evaluates to true</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="n">parking_spot</span><span class="p">.</span><span class="nf">full?</span>
+  <span class="n">keep_driving</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The above code does not run. Why is this?</p>
+
+<h2 id="until"><code class="highlighter-rouge">until</code></h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">until</span> <span class="n">condition</span>
+  <span class="c1"># code to execute if above condition evaluates to false, stop when condition evaluates to true  </span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">until</span> <span class="n">parking_spot</span><span class="p">.</span><span class="nf">empty?</span>  
+ <span class="n">keep_driving</span>  
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="loop-do">loop do</h2>
+
+<p><code class="highlighter-rouge">loop do</code> allows you to run code in an infinite loop.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">loop</span> <span class="k">do</span>
+  <span class="c1"># code will run forever</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>You can use the <code class="highlighter-rouge">break</code> keyword to end a <code class="highlighter-rouge">loop do</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">break</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If you accidentally get stuck in an infinite loop, use <code class="highlighter-rouge">control + c</code> to stop it.</p>
+
+<h3 id="check-for-understanding-1">Check for Understanding</h3>
+
+<p>Using <code class="highlighter-rouge">times</code>, <code class="highlighter-rouge">while</code>, <code class="highlighter-rouge">until</code> and <code class="highlighter-rouge">loop</code>, print “Beetlejuice” to the terminal 3 times. 🐝</p>
+:ET

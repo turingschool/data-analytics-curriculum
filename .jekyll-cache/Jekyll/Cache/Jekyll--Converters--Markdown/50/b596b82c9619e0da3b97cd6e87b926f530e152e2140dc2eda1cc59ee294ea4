@@ -1,0 +1,61 @@
+I".<h3 id="feature-delivery">Feature Delivery</h3>
+
+<ul>
+  <li><strong>4:</strong> Team well exceeded project manager’s expectations.</li>
+  <li><strong>3:</strong> Team completed all the user stories and requirements set by the project manager.</li>
+  <li><strong>2:</strong> Team completed most user stories set out but fell short of project manager’s expectations.</li>
+  <li><strong>1:</strong> Team fell well short of project manager’s expectations.</li>
+</ul>
+
+<h3 id="technical-quality">Technical Quality</h3>
+
+<ul>
+  <li><strong>4:</strong>  Project demonstrates extractions that are above and beyond and might include SOA (Service Oriented Architecture) or takes on a new technology that outside the scope of the curriculum and includes all below expectations.</li>
+  <li><strong>3:</strong>  Project uses abstraction in ways that make it easy to change (example: if an API changes, Propublica to Google Civic, we make changes in as few places as possible). Project shows a solid understanding of MVC principles (this may include but is not limited to: no logic in views, clean controllers, serializers and presenters to handle formatting rather than models etc.) and includes all below expectations.</li>
+  <li><strong>2:</strong>  MVC is overall good but might have logic or hashes in views, formatting in models, or controllers with complex logic and includes all below expectations.</li>
+  <li><strong>1:</strong>  Project has significant gaps in understanding of MVC and with several examples of logic or hashes in view, controllers remain un-refactored, and models are used for formatting.</li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+<ul>
+  <li><strong>4:</strong> Project achieves 100% test coverage and includes below expectations.</li>
+  <li><strong>3:</strong> Project achieves 90% or greater test coverage. In addition to “happy path”, project also includes “sad path”/edge case testing.</li>
+  <li><strong>2:</strong> Project achieves 80-90% test coverage. Project may not include “sad path” or edge case testing.</li>
+  <li><strong>1:</strong> Project does not achieve 80% test coverage.</li>
+</ul>
+
+<h2 id="peer-evaluation">Peer Evaluation</h2>
+
+<p>In addition to your instructor’s scores, you will receive a peer evaluation from each group member with the following rubric:</p>
+
+<h3 id="communication">Communication</h3>
+
+<ul>
+  <li><strong>4:</strong> Group member did all the things mentioned in the bullet point below, but also was a catalyst for communication with the whole group.</li>
+  <li><strong>3:</strong>  Group member communicated clearly when they would and wouldn’t be available well ahead of time. It was clear what they were working on and what the status was.</li>
+  <li><strong>2:</strong> Group member would communicate when they would or wouldn’t be available, but not until the last minute, or they would miss deadlines and not notify the group until the last minute.</li>
+  <li><strong>1:</strong> It was unclear what the group member was working on, or they would fail to notify the team when they weren’t going to meet a commitment.</li>
+</ul>
+
+<h3 id="contribution">Contribution</h3>
+
+<p>Group member contributed code (quantity and quality):</p>
+
+<ul>
+  <li><strong>4:</strong> Above expectations</li>
+  <li><strong>3:</strong> As expected</li>
+  <li><strong>2:</strong> Below expectations</li>
+  <li><strong>1:</strong> Well below expectations</li>
+</ul>
+
+<h3 id="professionalism">Professionalism</h3>
+
+<p>Would you like to work with this group member professionally?</p>
+
+<ul>
+  <li><strong>4:</strong> Absolutely. I will likely seek them out in the future with the hopes of working with them again.</li>
+  <li><strong>3:</strong> Yes, I would enjoy working with them.</li>
+  <li><strong>2:</strong> I would prefer not to.</li>
+  <li><strong>1:</strong> I would actively avoid working with them again.</li>
+</ul>
+:ET

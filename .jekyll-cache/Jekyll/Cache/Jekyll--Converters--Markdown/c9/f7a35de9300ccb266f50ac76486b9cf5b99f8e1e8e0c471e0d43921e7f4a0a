@@ -1,0 +1,358 @@
+I"�U<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>define “string”</li>
+  <li>define “integer”</li>
+  <li>define “float”</li>
+  <li>assign values to variables using proper naming conventions</li>
+  <li>use string concatenation with literal strings and variables</li>
+  <li>use string interpolation with variables</li>
+  <li>call key methods on strings</li>
+  <li>call key methods on integers and floats</li>
+  <li>read Ruby documentation</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>objects</li>
+  <li>strings</li>
+  <li>integers</li>
+  <li>floats</li>
+  <li>variables</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+<p>5min  - WarmUp<br />
+15min - Variables<br />
+15min - Strings<br />
+15min - Integers<br />
+5min  - WrapUp</p>
+
+<h2 id="warm-up">Warm Up</h2>
+<p>Create a T-Chart on the white board for string, integer &amp; float</p>
+
+<ul>
+  <li>Students add to T-Chart one thing they know about each data type</li>
+</ul>
+
+<h2 id="intro">Intro</h2>
+
+<p>There are several different data types in Ruby. Today, we’ll focus on Strings and Integers. We’ll also talk about variables (structures used to store references to data, not data types themselves).</p>
+
+<h2 id="variables">Variables</h2>
+
+<p>Programming is all about creating abstractions; in order to create an abstraction, we must be able to assign names to things. Variables are a way of creating a name for a piece of data.</p>
+
+<p>Some languages are Statically Typed, meaning you need to specify what type of data (like a number, word, etc) can go in a certain variable. Ruby is Dynamically Typed, meaning you do not need to declare the data type of a variable, any variable can hold any type of data and any variable <em>can</em> be reassigned to a different data type (constant variables shouldn’t be changed). Some languages also require you to “declare” a variable before you assign a value to it, however, Ruby variables are automatically created when you assign a value to them. Let’s try an example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">number</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">number</span>
+</code></pre></div></div>
+
+<p>The line <code class="highlighter-rouge">num = 10</code> creates the variable named <code class="highlighter-rouge">number</code> and stores the value 10 into it.</p>
+
+<p>In English we read left-to-right, so it’s natural to read code left to right. But when evaluating an assignment using the single equals sign (=), Ruby actually evaluates the right side first. Take the following example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sum</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">5</span>
+</code></pre></div></div>
+
+<p>The 10 + 5 is evaluated first, and the result is given the name sum.</p>
+
+<p><em>Try it</em>: What is c at the end of this? Why?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">irb</span>
+<span class="err">$</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="err">$</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">"hello"</span>
+<span class="err">$</span> <span class="n">c</span>
+</code></pre></div></div>
+
+<h3 id="naming-variables">Naming Variables</h3>
+
+<p>Ruby variables have a few <strong>requirements</strong>. Local variables …</p>
+
+<ul>
+  <li>have no spaces</li>
+  <li>do not contain most special characters like $, @, and &amp;</li>
+  <li>can contain underscores &amp; numbers, but CANNOT start with a number</li>
+</ul>
+
+<p>A few examples of invalid Ruby variable names include:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">student names</code> - variables cannot include a space</li>
+  <li><code class="highlighter-rouge">account_$</code> - variables cannot include most special characters</li>
+  <li><code class="highlighter-rouge">1st_lesson</code> – variables can’t start with a number, should just be first_lesson</li>
+</ul>
+
+<p>In addition to those requirements, Rubyists have a few common style <strong>conventions</strong> for variable names:</p>
+
+<ul>
+  <li>always start with a lowercase letter (underscore is permitted, though uncommon)</li>
+  <li>use snake case where each word in the name is lowercase and connected by underscores ( _ )</li>
+  <li>are named after the meaning of their contents, not the type of their contents</li>
+  <li>are NEVER abbreviated, especially <strong>NO SINGLE LETTER VARIABLES</strong></li>
+</ul>
+
+<p>Good variable names might be count, students_in_class, or first_lesson.</p>
+
+<p>A few examples of Ruby variable names with poor convention include:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">studentsInClass</code> – uses camel-case rather than snake-case, should be students_in_class</li>
+  <li><code class="highlighter-rouge">student_name_string</code> – includes the type of the data in the name, should just be students</li>
+  <li><code class="highlighter-rouge">msg</code> or <code class="highlighter-rouge">v</code> – abbreviates rather than just using message</li>
+</ul>
+
+<p><em>Try it:</em> Use IRB to store values with each of the following variable names. Which names are good, which are actually invalid Ruby, and which are valid but go against Ruby style?</p>
+
+<ul>
+  <li><code class="highlighter-rouge">time_machine</code></li>
+  <li><code class="highlighter-rouge">student_count_integer</code></li>
+  <li><code class="highlighter-rouge">homeworkAssignment</code></li>
+  <li><code class="highlighter-rouge">Team</code></li>
+  <li><code class="highlighter-rouge">3_sections</code></li>
+  <li><code class="highlighter-rouge">top_ppl</code></li>
+</ul>
+
+<h2 id="strings">Strings</h2>
+
+<p>In Ruby, strings are objects.</p>
+
+<p>Programming strings are used to store collections of letters and numbers. That could be a single letter like “a”, a word like “hi”, or a sentence like “Hello my friends.”</p>
+
+<p>A Ruby string is defined as a quote (“) followed by zero or more letters, numbers, or symbols and followed by a closing quote of the same type (“). Quotes can either be single (‘) or double (“).</p>
+
+<p>The shortest possible string is called the empty string: “”. It’s not uncommon for a single string to contain paragraphs or even pages of text.</p>
+
+<h3 id="practice">Practice</h3>
+<p><strong>Turn &amp; Talk</strong><br />
+Which of the following are valid strings? Why/why not?</p>
+
+<ol>
+  <li><code class="highlighter-rouge">''</code></li>
+  <li><code class="highlighter-rouge">"123"</code></li>
+  <li><code class="highlighter-rouge">123</code></li>
+  <li><code class="highlighter-rouge">"@\*#%&amp;"</code></li>
+  <li><code class="highlighter-rouge">hello, world!</code></li>
+  <li><code class="highlighter-rouge">'welcome to Turing'</code></li>
+  <li><code class="highlighter-rouge">'987654321."</code></li>
+  <li><code class="highlighter-rouge">"hot chocolate is the best"</code></li>
+</ol>
+
+<h3 id="substrings">Substrings</h3>
+
+<p><em>Try it</em>: Type the following examples in IRB and determine what they do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">irb</span>
+<span class="err">$</span> <span class="s2">"hello, world"</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"Turing"</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"ruby"</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"lunch"</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"hello, world"</span><span class="p">[</span><span class="mi">0</span><span class="o">..</span><span class="mi">4</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"Turing"</span><span class="p">[</span><span class="mi">0</span><span class="o">..</span><span class="mi">1</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"ruby"</span><span class="p">[</span><span class="mi">1</span><span class="o">..-</span><span class="mi">1</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"lunch"</span><span class="p">[</span><span class="mi">0</span><span class="o">..-</span><span class="mi">2</span><span class="p">]</span>
+<span class="err">$</span> <span class="s2">"lunch"</span><span class="p">[</span><span class="mi">0</span><span class="o">...-</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>We can pull out specific parts of a string. For example, I may want to know only the first letter of a string. In programming, we start with the position 0 and count up from there.</p>
+
+<p>I can access the first letter of a string using this notation:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ "hello, world"[0]
+=&gt; "h"
+</code></pre></div></div>
+
+<p>If we type this into IRB, we’ll get back the letter “h”.</p>
+
+<p>We use [0..2] notation to pull out substrings. For example, I may want to get back the substring “hello” from “hello, world”. To do that, I can use this notation:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"hello, world"</span><span class="p">[</span><span class="mi">0</span><span class="o">..</span><span class="mi">4</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>In Ruby, <code class="highlighter-rouge">..</code> indicates an inclusive range. The above example means give me back all of the characters at positions 0, 1, 2, 3, and 4. An exclusive range is defined by <code class="highlighter-rouge">...</code> and excludes the last element; <code class="highlighter-rouge">"hello, world"[0..4]</code> would return <code class="highlighter-rouge">"hell"</code>.</p>
+
+<p>Ruby interprets negative positions to count back from the end of the string. So in “Hi”, the “i” is in position -1 and the “H” is in position -2.</p>
+
+<p>So if a letter has both a positive and negative position number, which should you use? If you can use the positive numbers do it, they’re easier to reason about. But, if you’re looking for something based on it being at the end of the string (like “What’s the last character of this string?”), then use the negative positions.</p>
+
+<h3 id="introduction-to-string-methods">Introduction to String Methods</h3>
+
+<p>A Ruby <code class="highlighter-rouge">method</code> can be thought of as a message or command that’s being sent to an object. The message is received, and something is returned where it was called. Here’s a simple example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"hello, world"</span><span class="p">.</span><span class="nf">upcase</span>
+</code></pre></div></div>
+
+<p>The method is <code class="highlighter-rouge">.upcase</code>  <br />
+The object it’s being called on is “hello, world”<br />
+The return value is “HELLO, WORLD”.<br />
+Like the above example, most methods you’ll see use what we call “dot notation” where there is a dot between the object and the method.</p>
+
+<p>Let’s open up some Ruby documentation: <a href="http://ruby-doc.org/core-2.4.1/String.html">String</a>. Take a look on the left-hand side underneath “Methods”.</p>
+
+<p>You can also look at all of the possible string methods by calling the method <code class="highlighter-rouge">methods</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"here is a string"</span><span class="p">.</span><span class="nf">methods</span>  
+</code></pre></div></div>
+
+<p>Another helpful method is <code class="highlighter-rouge">.class</code>, which tells you what kind of data (object) type you’re working with:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"here is a string"</span><span class="p">.</span><span class="nf">class</span>  
+<span class="o">=&gt;</span> <span class="no">String</span>
+</code></pre></div></div>
+
+<p>We’ll walk through the two below to start:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>capitalize
+center
+</code></pre></div></div>
+
+<p><em>Try it</em>: Find the following methods and their documentation, then experiment with them in IRB and jot down your own definition of what the method does. <em>You may need/want to Google other definitions or examples for some</em>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>delete
+downcase
+empty?
+gsub
+include?
+index
+length
+reverse
+split
+start_with?
+upcase
+==
+</code></pre></div></div>
+
+<h3 id="string-concatenation">String Concatenation</h3>
+
+<p>First, we’ll assign the string “Tyrese” to the variable <code class="highlighter-rouge">student</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">irb</span>  
+<span class="err">$</span> <span class="n">student</span> <span class="o">=</span> <span class="s2">"Tyrese"</span>
+<span class="o">=&gt;</span> <span class="s2">"Tyrese  
+</span></code></pre></div></div>
+
+<p>Let’s say that we want to create a string that says “Welcome to class, Mary.” There are two ways to do this. We’ll start with concatenation first, which joins strings together with the plus sign:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"Welcome to class, "</span> <span class="o">+</span> <span class="n">student</span> <span class="o">+</span> <span class="s2">"."</span>
+<span class="o">=&gt;</span> <span class="s2">"Welcome to class, Tyrese."</span>
+</code></pre></div></div>
+
+<p>Try it out in IRB.</p>
+
+<p><em>Try it</em>: Create two more of your own examples of string concatenation using a variable.</p>
+
+<p>Note that the <code class="highlighter-rouge">+</code> is also a string method. It does not use dot notation.</p>
+
+<h3 id="string-interpolation">String Interpolation</h3>
+
+<p>The second approach is to use string interpolation where we stick data into the middle of a string.</p>
+
+<p>String interpolation only works on a double-quoted string. Within the string we use the interpolation marker #{}. Inside those brackets we can put any variables or Ruby code which will be evaluated, converted to a string, and output in that spot of the outer string. Our previous example could be rewritten like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"Welcome to class, </span><span class="si">#{</span><span class="n">student</span><span class="si">}</span><span class="s2">."</span>  
+<span class="o">=&gt;</span>  <span class="s2">"Welcome to class, Tyrese."</span>
+</code></pre></div></div>
+
+<p>If you compare the output you’ll see that they give the exact same results. The interpolation style tends to be fewer characters to type and fewer open/close quotes and plus signs to forget. String interpolation is preferred and more common. You should take note of the fact that string interpolation <strong>will only work inside of double-quoted strings</strong>. This would not work: <code class="highlighter-rouge">'Welcome to class, #{student}.'</code></p>
+
+<p><em>Try it</em>: Create two more examples of your own using string interpolation and a variable.</p>
+
+<h2 id="integers">Integers</h2>
+
+<p>Numeric data comes in two types: Integers and Floats. Integers are whole numbers (no decimals) and in older versions of Ruby are either of the class Fixnum or Bignum. Floats are numbers that have decimal places.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">irb</span>
+<span class="err">$</span> <span class="mi">123456789</span><span class="p">.</span><span class="nf">class</span>
+<span class="err">$</span> <span class="mi">1_000_000_000_000_000_000_000</span><span class="p">.</span><span class="nf">class</span>
+<span class="err">$</span> <span class="mf">5.6</span><span class="p">.</span><span class="nf">class</span>
+<span class="err">$</span> <span class="mf">1.239</span><span class="p">.</span><span class="nf">class</span>
+<span class="err">$</span> <span class="mf">43e+3</span><span class="p">.</span><span class="nf">class</span>
+</code></pre></div></div>
+
+<p><em>Try it</em>: Predict the return value before trying these in IRB. Which of these work? Which of these do something you didn’t expect?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span>
+<span class="err">$</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">4</span>
+<span class="err">$</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">5</span>
+<span class="err">$</span> <span class="mi">6</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="err">$</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="err">$</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="err">$</span> <span class="mf">3.0</span> <span class="o">/</span> <span class="mf">4.0</span>
+<span class="err">$</span> <span class="mi">3</span> <span class="o">/</span> <span class="mf">4.0</span>
+<span class="err">$</span> <span class="mf">3.0</span> <span class="o">/</span> <span class="mi">4</span>
+<span class="err">$</span> <span class="mf">1.5</span><span class="p">.</span><span class="nf">to_s</span>
+<span class="err">$</span> <span class="mf">5.5</span><span class="p">.</span><span class="nf">to_i</span>
+<span class="err">$</span> <span class="mi">1</span> <span class="o">+</span> <span class="s2">"2"</span>
+<span class="err">$</span> <span class="mi">1</span> <span class="o">+</span> <span class="s2">"2"</span><span class="p">.</span><span class="nf">to_i</span>
+<span class="err">$</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="err">$</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can also (somewhat) combine strings and integers. Try these:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="s2">"hi"</span> <span class="o">*</span> <span class="mi">5</span>
+<span class="err">$</span> <span class="mi">5</span> <span class="o">*</span> <span class="s2">"hi"</span>
+</code></pre></div></div>
+
+<h3 id="introducing-number-methods">Introducing Number Methods</h3>
+
+<p>All of the arithmetic operations that you tried above are actually methods. Let’s look at the documentation for <a href="https://ruby-doc.org/core-2.4.0/Integer.html">Integer</a> and <a href="https://ruby-doc.org/core-2.4.0/Float.html">Float</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>round
+to_f
+to_i
+to_s
+floor
+ceil
+abs
+%
+==
+&gt;
+&gt;=
+even?
+odd?
+next
+</code></pre></div></div>
+
+<p>Spicier methods:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>upto
+times
+</code></pre></div></div>
+
+<h2 id="recap">Recap</h2>
+
+<p>Today, you accomplished the following:</p>
+<ul>
+  <li>What are the naming requirements for Ruby local variables? What are the conventions?</li>
+  <li>How do you assign a value to a variable?</li>
+  <li>Define “string”</li>
+  <li>What is the syntax for string concatenation (aka How do you concatenate strings?)</li>
+  <li>What is the syntax for interpolation? (aka How do you interpolate variables into strings?)</li>
+  <li>Name a String method</li>
+  <li>Define “integer”</li>
+  <li>Define “float”</li>
+  <li>Name an Integer method</li>
+  <li>Name a Float method</li>
+  <li>How do you get to the Ruby Docs?</li>
+</ul>
+
+<h2 id="homework">Homework</h2>
+<ul>
+  <li>Work through Core-Types for String and Ints_and_Floats</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd </span>1module  
+<span class="nv">$ </span>git clone https://github.com/turingschool/ruby-exercises.git  
+<span class="nv">$ </span><span class="nb">cd </span>ruby-exercises/core-types  
+<span class="nv">$ </span>gem <span class="nb">install </span>bundler  
+<span class="nv">$ </span>bundle  
+<span class="nv">$ </span>ruby string_test.rb  
+</code></pre></div></div>
+<p>Make the tests pass, exploring a variety of ways to interact with strings and fixnums. Jot down your own definition of what each method does.</p>
+
+<ul>
+  <li>Complete the <a href="https://github.com/turingschool/challenges/blob/master/working_with_strings_and_integers.markdown">Working with Strings and Integers</a> challenge.</li>
+</ul>
+:ET

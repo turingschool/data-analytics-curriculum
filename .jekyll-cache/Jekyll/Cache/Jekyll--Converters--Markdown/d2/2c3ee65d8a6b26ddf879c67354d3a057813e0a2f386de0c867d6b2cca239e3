@@ -1,0 +1,52 @@
+I"¦<h2 id="testing">Testing</h2>
+
+<p>Each Repo meets the following:</p>
+
+<ul>
+  <li>50% or more test coverage of happy path expectations
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Front End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Back End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Microservice 1</li>
+    </ul>
+  </li>
+  <li>75% or more test coverage of happy path expectations
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Front End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Back End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Microservice 1</li>
+    </ul>
+  </li>
+  <li>90% or more test coverage, includes happy path and sad path expectations
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Front End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Back End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Microservice 1</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<p><strong>When the above criteria is met, here are additional points to achieve a 4</strong></p>
+
+<p>Rails Front End</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />API calls to backend, and OAuth, are tested using mocks/stubs</li>
+  <li class="task-list-item">
+    <p><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />95% or more test coverage, every application feature has at least one sad path test</p>
+  </li>
+  <li class="task-list-item">95% or more test coverage, every exposed API endpoint and microservice call has at least one sad path test
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Back End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Microservice 1</li>
+    </ul>
+  </li>
+  <li class="task-list-item">API calls to micro-services or external services are tested using mocks/stubs
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Back End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Microservice 1</li>
+    </ul>
+  </li>
+</ul>
+:ET

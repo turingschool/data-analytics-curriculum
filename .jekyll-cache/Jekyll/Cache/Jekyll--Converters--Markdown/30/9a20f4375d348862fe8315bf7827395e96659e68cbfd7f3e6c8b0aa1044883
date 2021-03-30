@@ -1,0 +1,166 @@
+I"m#<h2 id="learning-goals">Learning Goals</h2>
+
+<p><img src="https://s-media-cache-ak0.pinimg.com/originals/32/7b/89/327b89ed22ccd2f75dfb9dd1241d830a.jpg" alt="SAD JSON" /></p>
+
+<ul>
+  <li>Understand what makes a valid JSON data structure</li>
+  <li>Learn how to parse and create JSON in Ruby and JavaScript</li>
+  <li>Compare JSON to XML and discuss its advantages and disadvantages</li>
+</ul>
+
+<h2 id="lecture">Lecture</h2>
+
+<h3 id="warmup">Warmup</h3>
+
+<p>Assign pairs or triplets - each group should have a destination.</p>
+
+<ul>
+  <li>Step 1 - Write on a slip of paper directions on how to get from where you are sitting and get to your assigned destination.</li>
+  <li>Step 2 - Exchange directions and see if it makes sense.</li>
+  <li>
+    <p>Step 3 - Write a new set of instructions and see just how efficient you can get. What is the fastest way you can communicate the information the person needs to get to their destination. You can use abbreviations, symbols, WHATEVER.</p>
+  </li>
+  <li>Who or what is HTML/CSS designed for?</li>
+  <li>What are some cases where you might not want to render an entire HTML page and only send the data to a client?</li>
+</ul>
+
+<p><strong>Basic Narrative</strong>: When designing a service or an API, you need a machine-readable way to transmit data. Typically, machine-readable formats have been just that—machine-readable (Think zeros and ones). JSON strikes a balance between being machine-readable, but also human-readable. Because it’s also more lightweight than XML (read: less characters) it’s typically faster because it requires less bandwidth to transmit.</p>
+
+<p>Before diving deep into what JSON is, let’s take a look at it <a href="https://developer.github.com/v3/git/commits">here</a> or <a href="https://birdeck-api.herokuapp.com/api/v1/posts/2">here</a>. What do you notice?</p>
+
+<h3 id="what-is-json">What is JSON?</h3>
+
+<ul>
+  <li>JSON stands for “JavaScript Object Notation”</li>
+  <li>It is a string</li>
+  <li>It maps easily onto the data structures used by most programming languages (numbers, strings, booleans, nulls, arrays and hashes/dictionaries)</li>
+  <li>It looks and acts similarly like Ruby’s hash syntax</li>
+  <li>It’s lightweight and easy for humans to read and write</li>
+  <li>Most programming languages have a library for reading and writing JSON structures</li>
+  <li>It’s a subset of the object syntax in JavaScript. All JSON is valid JavaScript, but not all JavaScript objects are valid JSON (functions, non-string keys, etc.)</li>
+</ul>
+
+<p><strong>tl;dr</strong>: JSON strikes a balance between being human readable and machine readable.</p>
+
+<p>JSON is commonly used by APIs to send data back and forth when you don’t need/want to render a full web page.</p>
+
+<h3 id="analyzing-json">Analyzing JSON</h3>
+
+<p>JSON data structures are typically either an object (similar to a hash) or an array of objects or other values.</p>
+
+<p>JSON objects follow some rules:</p>
+
+<ul>
+  <li>Objects are made up of name/value pairs</li>
+  <li>Keys must be double-quoted and followed by a colon</li>
+</ul>
+
+<p>You also have a few types of values available in a JSON structure:</p>
+
+<ul>
+  <li>Numbers</li>
+  <li>Strings (in double quotes only)</li>
+  <li>Booleans (<code class="highlighter-rouge">true</code> and <code class="highlighter-rouge">false</code>)</li>
+  <li>Arrays</li>
+  <li>Objects (again, objects in JavaScript are similar to hashes in Ruby)</li>
+  <li><code class="highlighter-rouge">null</code></li>
+</ul>
+
+<h4 id="example">Example</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>person = '{
+  "name":"Jennifer Johnson",
+  "street":"641 Pine St.",
+  "phone":true,
+  "age":50,
+  "pets":["cat","dog","fish"]
+}'
+</code></pre></div></div>
+
+<p>This is valid JSON in a Ruby context.</p>
+
+<h4 id="some-common-mistakes">Some Common Mistakes</h4>
+
+<ul>
+  <li>Using single quotes instead of double quotes</li>
+  <li>Not using quotes at all (e.g. JavaScript doesn’t require quotes on keys nor does Ruby’s symbol shorthand)</li>
+  <li>Including a trailing comma in an array</li>
+  <li>Trying to break a string over multiple lines (<code class="highlighter-rouge">\n</code> is fine)</li>
+</ul>
+
+<h3 id="where-youll-find-json">Where you’ll find JSON</h3>
+
+<ul>
+  <li>APIs (e.g. Github, Twitter).</li>
+  <li>Node’s <code class="highlighter-rouge">package.json</code> .</li>
+  <li>Sending data back and forth to your app through AJAX requests; building DOM (Document Object Model) on the client with data from the server.</li>
+</ul>
+
+<h3 id="json-and-ruby">JSON and Ruby</h3>
+
+<p>Requiring the <code class="highlighter-rouge">json</code> library gives you <code class="highlighter-rouge">JSON.parse</code> and  <code class="highlighter-rouge">JSON.generate</code>. It also adds a <code class="highlighter-rouge">.to_json</code> method to most objects.</p>
+
+<p>The <code class="highlighter-rouge">json</code> library is part of the standard library these days, so there is no need to require it in your <code class="highlighter-rouge">Gemfile</code>.</p>
+
+<p>Let’s play around with it in our <code class="highlighter-rouge">pry</code> consoles.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'json'</span>
+
+<span class="n">my_hash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">hello: </span><span class="s2">"goodbye"</span> <span class="p">}</span>
+<span class="nb">puts</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="n">my_hash</span><span class="p">)</span> <span class="c1">#=&gt; "{"hello":"goodbye"}"</span>
+<span class="nb">puts</span>  <span class="n">my_hash</span><span class="p">.</span><span class="nf">to_json</span> <span class="c1">#=&gt; "{"hello":"goodbye"}"</span>
+</code></pre></div></div>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'json'</span>
+
+<span class="n">person</span> <span class="o">=</span> <span class="s1">'{"name":"Jennifer Johnson","street":"641 Pine St.","phone":true,"age":50,"pets":["cat","dog","fish"]}'</span>
+<span class="n">parsed_person</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">person</span><span class="p">)</span> <span class="c1">#=&gt; {"name"=&gt;"Jennifer Johnson", "street"=&gt;"641 Pine St.", "phone"=&gt;true, "age"=&gt;50, "pets"=&gt;["cat", "dog", "fish"]}</span>
+<span class="nb">puts</span> <span class="n">parsed_person</span>
+<span class="nb">puts</span> <span class="n">parsed_person</span><span class="p">[</span><span class="s1">'pets'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="json-versus-xml">JSON versus XML</h3>
+
+<p>Let’s look at some data in <a href="../misc/xml_vs_json">JSON and XML</a>.</p>
+
+<p>Any differences you notice?</p>
+
+<ul>
+  <li>XML slightly resembles HTML (both are markup languages)</li>
+  <li>JSON has less overhead, therefore making it faster in many cases</li>
+</ul>
+
+<h3 id="wrap-up">Wrap Up</h3>
+
+<ul>
+  <li>What are some reasons you’d want to use JSON in your application?</li>
+  <li>At its core, what is JSON?</li>
+  <li>What are some places you’ve seen JSON?</li>
+  <li>What are some of the gotchas working with JSON?</li>
+</ul>
+
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="json-and-javascript">JSON and JavaScript</h3>
+
+<p>Even if all JavaScript objects are not JSON objects, all JSON objects are JavaScript objects.</p>
+
+<p>So, it’s tempting to think that when you pull some JSON in on the client side, that you’re good to go.</p>
+
+<p><em>Not so fast.</em></p>
+
+<p>JSON, in all, is a string at its core. To work with JSON as a JavaScript object, it must be parsed as one.</p>
+
+<p>The JSON library gives you two handy methods for working with JSON in JavaScript.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">JSON.parse</code> This method accepts a string of JSON and turns it into a JavaScript object.</li>
+  <li><code class="highlighter-rouge">JSON.stringify</code> This method accepts a JavaScript object and turns it into a JSON string.</li>
+</ul>
+
+<p>These methods are relatively straight-forward.</p>
+
+<p><code class="highlighter-rouge">parse</code> will take a string of JSON and turn it into a JavaScript object.
+<code class="highlighter-rouge">stringify</code> will take a JavaScript object and—umm—<em>stringify</em> it.</p>
+
+<p><code class="highlighter-rouge">JSON.parse</code> is fairly strict. If there is an error in your JSON, it will throw an error (usually not a particularly helpful one). If you’re getting some cryptic errors, toss your JSON into <a href="http://jsonlint.com/">JSONLint</a> and make sure your JSON is malformed in some way before you spend too much time scratching your head trying to figure out what’s wrong.</p>
+:ET

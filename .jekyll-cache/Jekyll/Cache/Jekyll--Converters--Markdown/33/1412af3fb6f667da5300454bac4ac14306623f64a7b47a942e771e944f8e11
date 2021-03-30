@@ -1,0 +1,144 @@
+I"<p>During our last sprint we’d like to solidify your place as contributors to the world of open source.</p>
+
+<h2 id="big-picture">Big Picture</h2>
+
+<ul>
+  <li>Goals of Open Source</li>
+  <li>What Open Source won’t do for you</li>
+  <li>Protocols</li>
+  <li>Your Goals</li>
+  <li>Picking the Right Project</li>
+</ul>
+
+<h2 id="expectations">Expectations</h2>
+
+<ul>
+  <li>Work solo or in pairs (not with a person in your primary project)</li>
+  <li>Reproduce and confirm or contradict one bug report</li>
+  <li>Submit one sizable/difficult or two smaller/moderate code-centric pull requests that are worth merging</li>
+  <li>Submit one documentation patch (README, CONTRIBUTING, code documentation, etc)</li>
+  <li>Write a single blog post that explains the whole process</li>
+  <li>Have the blog post in your M4 portfolio (Individual Work)</li>
+</ul>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<h3 id="your-goal-setting">Your Goal Setting</h3>
+
+<p>What’s your goal in the work? Some ideas:</p>
+
+<ul>
+  <li>I want to practice high-performance Ruby</li>
+  <li>I want to help a non-profit that I believe in</li>
+  <li>I want a potential employer/fancy person to notice me</li>
+  <li>I would like to experiment with a new language/framework</li>
+</ul>
+
+<h3 id="pair-or-solo">Pair or Solo?</h3>
+
+<p>Make a decision / find a pair.</p>
+
+<h3 id="pitch-projects--with-an-s">Pitch Projects – WITH AN “S”</h3>
+
+<p>Your first idea will probably be a bad one. This afternoon, put together three pitches and we’ll help you pick the best one.</p>
+
+<p>Each pitch should be like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## Contributing to VCR
+
+* Why: I use VCR regularly in projects, am interested in HTTP details, and would like to dig in deeper.
+* What: I found a feature request at http://github.com/vcr/vcr/issues/1 that sounds approachable. It asks for VCR requests to add support for the X-AUTH header.
+* I Need: to dig into VCR and get the dev setup running locally. I need to read about X-AUTH to understand more about how it's used and the format.
+* When I'm Done: In the original GitHub issue it sounds like the developers are in favor of the feature, so I think I can get this accepted for the next version of the library.
+</code></pre></div></div>
+
+<p><strong>Post your three pitches in a Gist and put the link in your cohort channel by 8AM tomorrow.</strong></p>
+
+<p>You’re encouraged to look at each other’s for ideas, inspiration, and collaboration opportunities.</p>
+
+<h3 id="finding-projects">Finding Projects</h3>
+
+<p>How do you find a good project to work on?</p>
+
+<ul>
+  <li>Small (fewer than 50 contributors)</li>
+  <li>Active Development (last merge to master within 30 days)</li>
+  <li>Responsive/Maintained (issues/PRs aren’t piling up “stale”, show conversation)</li>
+  <li>Approachable (small libraries are better than big frameworks)</li>
+</ul>
+
+<p>You can brainstorm your own list, but here are places to find ideas:</p>
+
+<ul>
+  <li><a href="https://www.codetriage.com/">CodeTriage</a></li>
+  <li><a href="http://issuehub.io/?label%5B%5D=help+wanted&amp;language=ruby">Issue Hub</a></li>
+</ul>
+
+<p>And here are a few concrete ideas:</p>
+
+<ul>
+  <li><a href="https://github.com/stympy/faker">Faker Gem</a></li>
+  <li><a href="https://github.com/vcr/vcr">VCR Gem</a></li>
+  <li><a href="https://github.com/laserlemon/figaro">Figaro</a></li>
+  <li><a href="https://github.com/slack-ruby/slack-ruby-client">Slack-Ruby-Client</a></li>
+  <li><a href="https://github.com/lostisland/faraday">Faraday</a></li>
+  <li><a href="https://github.com/copiousfreetime/launchy">Launchy</a></li>
+  <li><a href="https://github.com/JoshCheek/mrspec">MrSpec</a></li>
+  <li><a href="http://documenting-ruby.org/">Adding to / Improving Ruby’s Documentation</a> (harder than you think)</li>
+</ul>
+
+<h3 id="finding-an-issueidea">Finding an Issue/Idea</h3>
+
+<ul>
+  <li>You’re <em>not</em> expected to be dreaming up new features</li>
+  <li>Fixing and refactoring are generally better than adding new functionality when you first start contributing to a repo</li>
+  <li>Read through the posted Issues and you’ll likely find feature requests/ideas. Take note of any tags used by the repo maintainers</li>
+  <li>Non-Code contributions are always appreciated - documentation is hard. Update the README with any set up instructions that you went through that weren’t in it already, make spelling and grammar fixes.</li>
+</ul>
+
+<h3 id="protocol-notes">Protocol Notes</h3>
+
+<ul>
+  <li>Consider reaching out to individual contributors via email or twitter</li>
+  <li>Read the <code class="highlighter-rouge">README.md</code> and the <code class="highlighter-rouge">CONTRIBUTING.md</code> if there is one</li>
+  <li>Keep track of your steps (anything need updating in the README?)</li>
+  <li>Read at least five issue threads</li>
+  <li><em>Start by trying to reproduce a reported bug</em></li>
+  <li>Join the conversation first – you don’t want your first post to be “here’s a pile of code!”</li>
+  <li>Avoid introducing new dependencies to a project (i.e. gems, node modules, etc)</li>
+  <li>Work on a branch that is well named, off of a fork of the repo</li>
+  <li>Be conscious and clean with your git commits and squash any commit that says ‘WIP’</li>
+  <li>Look for tools they use (CI, code style review with Code Climate, etc) and use them yourself to highlight any issues</li>
+</ul>
+
+<h3 id="submitting-the-pr">Submitting the PR</h3>
+
+<ul>
+  <li>Once work is done, make sure to get the latest master from the repo and merge it into your branch and rerun tests and manual QA</li>
+  <li>Ask a peer or mentor to review your work</li>
+  <li>Submit a pull request with your changes.
+    <ul>
+      <li>Reference the issue if there is one related.</li>
+      <li>Make sure your pull request comment includes what the change is, why you made it. Give the repo owner any information they need to merge the pull request up front.</li>
+      <li>Consider @-tagging the mentor you had review your work in the PR so they can leave feedback</li>
+    </ul>
+  </li>
+  <li>Brace yourself to receive PR comments and suggestions</li>
+  <li>Make changes as they are requested
+    <ul>
+      <li>make sure newest master is merged into your local branch, rerun tests, manual QA</li>
+      <li>push the changes to your remote branch</li>
+      <li>tag the person who requested the changes to review them.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="reminders">Reminders</h2>
+
+<ul>
+  <li>Don’t be afraid</li>
+  <li>No one should make fun of your code. If they do, they are jerks</li>
+  <li>You will likely get feedback and suggestions - or polite rejections if the code doesn’t fit with the repo owner’s style or goals</li>
+  <li>Be ready to try several issues/ideas and maybe even more than one project before you find one you can fix and feel confident in PRing</li>
+</ul>
+:ET

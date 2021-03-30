@@ -1,0 +1,410 @@
+I"tU<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>understand that modules fill various roles in Ruby.</li>
+  <li>understand what a namespace is and how to create one with a module.</li>
+  <li>use a module to create a mixin to be DRY (Don’t Repeat Yourself)</li>
+</ul>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>We’re going to learn about Modules, a simple tool that will teach us to do two completely different things in Ruby - namespacing and mixins. They are pretty awesome.</p>
+
+<h3 id="warm-up">Warm Up</h3>
+
+<p>Spend the first five minutes writing answers to the following questions:</p>
+
+<ol>
+  <li>What do you know about modules already? If little, what would you guess modules are all about?</li>
+  <li>Golf and basketball both use a ball. But if you’re on a basketball court and ask for “the ball”, no one is going to
+  throw you a golf ball. Why? If you were as dumb as a computer, why would a golf ball be an acceptable response? If you asked   what color is the ball? How do you know what the answer is vs the computer?</li>
+</ol>
+
+<h3 id="namespacing">Namespacing</h3>
+
+<p>Namespacing works for both classes and modules. We’ll be implementing it with modules today.</p>
+
+<p>Let’s look at some code.<br />
+Student Type 1<br />
+<code class="highlighter-rouge">touch student_1.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span>
+  <span class="k">def</span> <span class="nf">cast_spell</span>
+    <span class="nb">puts</span> <span class="s2">"Exepelliarmus!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">speak</span>
+    <span class="nb">puts</span> <span class="s2">"I'm a Slytherin! I'm ambitious and awesome!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Student Type 2<br />
+<code class="highlighter-rouge">touch student_2.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span>
+  <span class="k">def</span> <span class="nf">cast_spell</span>
+    <span class="nb">puts</span> <span class="s2">"Expelliarmus!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">speak</span>
+    <span class="nb">puts</span> <span class="s2">"I'm a Hufflepuff! Potato."</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Hop into <code class="highlighter-rouge">pry</code> and play around a bit.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./student_1.rb"</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="nb">require</span> <span class="s2">"./student_2.rb"</span>  
+<span class="o">=&gt;</span> <span class="kp">true</span>  
+<span class="n">slyth</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">huff</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>  
+</code></pre></div></div>
+<p>Turn &amp; Talk:<br />
+What is the same/different about these two students?  We have 2 Student classes.</p>
+
+<p>Agree/Disagree:<br />
+If I make them speak, what will I get? Why?</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">slyth</span><span class="p">.</span><span class="nf">speak</span>
+<span class="sc">??</span>  
+<span class="n">huff</span><span class="p">.</span><span class="nf">speak</span>  
+<span class="sc">??</span>  
+</code></pre></div></div>
+
+<p>We can use namespacing, where we wrap each Student in a module like so:<br />
+A Slytherin Student:  <br />
+<code class="highlighter-rouge">student_1.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">Student</span>
+  <span class="k">class</span> <span class="nc">Slytherin</span>
+    <span class="k">def</span> <span class="nf">cast_spell</span>
+      <span class="nb">puts</span> <span class="s2">"Expelliarmus!"</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">speak</span>
+      <span class="nb">puts</span> <span class="s2">"I'm a Slytherin, and am AWESOME."</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span> 
+</code></pre></div></div>
+<p>A Hufflepuff student:<br />
+<code class="highlighter-rouge">student_2.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">Student</span>
+  <span class="k">class</span> <span class="nc">Hufflepuff</span>
+    <span class="k">def</span> <span class="nf">cast_spell</span>
+      <span class="nb">puts</span> <span class="s2">"Expelliarmus!"</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">speak</span>
+      <span class="nb">puts</span> <span class="s2">"Potato."</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This is how we would instantiate with modules and then call the appropriate
+method:<br />
+<code class="highlighter-rouge">pry</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./student_1.rb"</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="nb">require</span> <span class="s2">"./student_2.rb"</span>  
+<span class="o">=&gt;</span> <span class="kp">true</span>  
+<span class="n">slyth</span> <span class="o">=</span> <span class="no">Student</span><span class="o">::</span><span class="no">Slytherin</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">huff</span> <span class="o">=</span> <span class="no">Student</span><span class="o">::</span><span class="no">Hufflepuff</span><span class="p">.</span><span class="nf">new</span>  
+</code></pre></div></div>
+<p>Agree/Disagree:<br />
+When I call slyth.speak what will I get vs huff.speak? Why?</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">slyth</span><span class="p">.</span><span class="nf">speak</span>  
+<span class="sc">??</span>  
+<span class="n">huff</span><span class="p">.</span><span class="nf">speak</span>  
+<span class="sc">??</span>  
+</code></pre></div></div>
+
+<p>Turn &amp; Talk:<br />
+Have we seen a double colon like that before? What have you seen it do?</p>
+
+<p>The double colon is a scope resolution operator. It allows you to access items
+in modules, or class level items in classes.</p>
+
+<h3 id="exercise-namespacing">Exercise: Namespacing</h3>
+
+<p>So now you try.<br />
+Make a Car Class: <br />
+<code class="highlighter-rouge">touch car_1.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Car</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"All wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Make a second Car Class:  <br />
+<code class="highlighter-rouge">touch car_2.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Car</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"Rear wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Start with the code above</li>
+  <li>Wrap the first <code class="highlighter-rouge">Car</code> with a module to create a <code class="highlighter-rouge">Car::AWD</code></li>
+  <li>Wrap the second <code class="highlighter-rouge">Car</code> with a module to create a <code class="highlighter-rouge">Car::RWD</code></li>
+  <li>Create an instance of <code class="highlighter-rouge">Car::RWD</code> and prove that you can access both
+the expected methods</li>
+  <li>Create an instance of <code class="highlighter-rouge">Car::AWD</code> and prove that you can access both
+the expected methods</li>
+</ul>
+
+<h3 id="functional-programming">Functional Programming</h3>
+
+<p>Next we are going to talk about Functional Programming(FP). So what’s the
+difference between that and Object Oriented Programming(OOP)? It’s a
+complicated answer.</p>
+
+<p>If we’re trying to keep things simple, and we are, what we’ve been doing
+so far has been object oriented programming. Here, what we do is we
+model various concepts and apply them.</p>
+
+<p>We create objects, that can also contain objects, and there are methods
+which we create that do things, and of course, each object can hold
+information.</p>
+
+<p>This is stuff we know.</p>
+
+<p>So the mystery lies in Functional Programming. The good thing about OOP
+is that it lets us make these concrete mental models in our head. Let’s go
+back to Mythical Creatures. In that exercise we had a Centaur Class.
+That centaur had a name and a breed, and it had methods like run and
+shoot.</p>
+
+<p>Functional Programming is different. It looks at things as a chain of
+equations or functions, and you hook them together like Voltron, and this
+leads you to a solution. It’s very mathematical in nature.</p>
+
+<p>The main difference is that in both paradigms, infomration is being sent
+back and forth. OOP sends it in variables and objects. Functional
+Programming passes functions back and forth and lets the recipient add to
+it.</p>
+
+<p>Turn &amp; Talk:<br />
+How might you use a Functional Approach to programming? Have you come across/written any methods that work this way?</p>
+
+<!-- That's enough theory, let's look at some code.
+
+```ruby
+module Pythagorean
+  def self.find_c(a, b)
+    Math.sqrt((a ** 2) + (b ** 2))
+  end
+end
+```
+
+* How do we use this?
+
+Start with the snippet above and add `find_a` and `find_b` methods. As you might remember from geometry:
+
+`c^2 = a^2 + b^2`
+
+An easy triangle to use for testing purposes is `a = 3`, `b = 4`, `c = 5`.
+
+If you find this approach to programming interesting, you might check out [Gary Bernhart's "Boundaries" Talk](https://www.destroyallsoftware.com/talks/boundaries).
+
+What are some other possible uses for this? How might you have used this in a previous project?
+ -->
+
+<h3 id="mixins">Mixins</h3>
+
+<p>A little bit about mixins.</p>
+
+<ul>
+  <li>
+    <p>Ruby, like other OOP languages, uses inheritance.<br />
+Agree/Disagree:<br />
+What do you think inheritance is in Ruby?</p>
+  </li>
+  <li>Module mixins are inheritance by a different name.</li>
+  <li>How it works is that they(modules) are added to the lookup chain.<br />
+Agree/Disagree:<br />
+What is “the lookup” chain? What happens?</li>
+  <li>You can share them across classes.<br />
+Agree/Disagree:<br />
+Why might this be helpful? When would you use it?</li>
+  <li>Or you can use them with a single class to organize better.
+    <ul>
+      <li>Doing that may be a terrible idea.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Let’s look at an example.<br />
+<code class="highlighter-rouge">touch grubhub_order.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">GrubhubOrder</span>
+  <span class="k">def</span> <span class="nf">confirmation</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
+    <span class="nb">puts</span> <span class="s2">"You got </span><span class="si">#{</span><span class="n">thing</span><span class="si">}</span><span class="s2">."</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">review</span>
+    <span class="nb">puts</span> <span class="s2">"Please rate your order within 30 days."</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">delivery</span>
+    <span class="nb">puts</span> <span class="s2">"Your food will arrive in 45-60 minutes."</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">touch amazon_order.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AmazonOrder</span>
+  <span class="k">def</span> <span class="nf">confirmation</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
+    <span class="nb">puts</span> <span class="s2">"You got </span><span class="si">#{</span><span class="n">thing</span><span class="si">}</span><span class="s2">."</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">review</span>
+    <span class="nb">puts</span> <span class="s2">"Please rate your order within 30 days."</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">delivery</span>
+    <span class="nb">puts</span> <span class="s2">"Your order will arrive in 2 business days."</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">pry</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./amazon_order.rb"</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>  
+<span class="nb">require</span> <span class="s2">"./grubhub_order.rb"</span>  
+<span class="o">=&gt;</span> <span class="kp">true</span>  
+<span class="n">amazon</span> <span class="o">=</span> <span class="no">AmazonOrder</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">grub</span>   <span class="o">=</span> <span class="no">GrubHubOrder</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">amazon</span><span class="p">.</span><span class="nf">delivery</span>  
+<span class="n">grub</span><span class="p">.</span><span class="nf">delivery</span>  
+<span class="n">amazon</span><span class="p">.</span><span class="nf">review</span>  
+<span class="n">grub</span><span class="p">.</span><span class="nf">review</span>  
+</code></pre></div></div>
+<p>Turn &amp; Talk: <br />
+How can we use modules to make this code better?</p>
+
+<p>Well there’s repetition in there, and one of the hallmarks of
+good programming is DRY, which stands for <strong>don’t repeat yourself</strong>.</p>
+
+<p>Let’s extract the duplication.<br />
+<code class="highlighter-rouge">touch online_order.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">OnlineOrder</span>
+  <span class="k">def</span> <span class="nf">confirmation</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
+    <span class="nb">puts</span> <span class="s2">"You got </span><span class="si">#{</span><span class="n">thing</span><span class="si">}</span><span class="s2">."</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">review</span>
+    <span class="nb">puts</span> <span class="s2">"Please rate your order within 30 days."</span>
+  <span class="k">end</span>
+<span class="k">end</span>  
+</code></pre></div></div>
+<p>In <code class="highlighter-rouge">amazon_order.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./online_order"</span>
+<span class="k">class</span> <span class="nc">Amazon</span>
+  <span class="kp">include</span> <span class="no">OnlineOrder</span>
+
+  <span class="k">def</span> <span class="nf">delivery</span>
+    <span class="nb">puts</span> <span class="s2">"Your order will arrive in 2 business days."</span>
+  <span class="k">end</span>
+<span class="k">end</span> 
+</code></pre></div></div>
+<p>In <code class="highlighter-rouge">grubhub_order.rb</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./online_order"</span>
+<span class="k">class</span> <span class="nc">Grubhub</span>
+  <span class="kp">include</span> <span class="no">OnlineOrder</span>
+
+  <span class="k">def</span> <span class="nf">delivery</span>
+    <span class="nb">puts</span> <span class="s2">"Your food will arrive in 45-60 minutes."</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Agree/Disagree:<br />
+What will happen when we hop into Pry?<br />
+<code class="highlighter-rouge">pry</code></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"./amazon_order.rb"</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>  
+<span class="nb">require</span> <span class="s2">"./grubhub_order.rb"</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>  
+<span class="n">amazon</span> <span class="o">=</span> <span class="no">AmazonOrder</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">grub</span> <span class="o">=</span> <span class="no">GrubhubOrder</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">amazon</span><span class="p">.</span><span class="nf">delivery</span>
+<span class="n">grub</span><span class="p">.</span><span class="nf">delivery</span>  
+<span class="n">amazon</span><span class="p">.</span><span class="nf">review</span>  
+<span class="n">amazon</span><span class="p">.</span><span class="nf">review</span>  
+</code></pre></div></div>
+<p>Turn &amp; Talk:<br />
+What just happend there?</p>
+
+<p>And now we just treat it as if the <code class="highlighter-rouge">confirmation</code> and <code class="highlighter-rouge">review</code> methods were included in our other classes.</p>
+
+<h4 id="exercise-module-mixins">Exercise: Module Mixins</h4>
+
+<p>Now it’s your turn.</p>
+
+<p>Consider the following code:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Camry</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">stop</span>
+    <span class="nb">puts</span> <span class="s2">"Engine off!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"Back wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Jeep</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">stop</span>
+    <span class="nb">puts</span> <span class="s2">"Engine off!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"All wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Together with a partner create an <code class="highlighter-rouge">Engine</code> module to extract the <code class="highlighter-rouge">start</code> and <code class="highlighter-rouge">stop</code> methods.</p>
+
+<h3 id="further-practice">Further Practice</h3>
+
+<p>Take the code from the discussion and implement a <code class="highlighter-rouge">AirConditioning</code> module that is mixed into both classes.</p>
+
+<p>Instances of either class should be able to turn the AC on (<code class="highlighter-rouge">Chilly air coming your way!</code>) or off (<code class="highlighter-rouge">Temp is fine in here.</code>).</p>
+
+<h3 id="wrapup">WrapUp</h3>
+<ul>
+  <li>What are two types of Ruby Modules?</li>
+  <li>For each type, what are some use cases?</li>
+  <li>What would be pros/cons of each type?</li>
+</ul>
+
+<h3 id="additional-reading">Additional Reading</h3>
+<p>Module Resources:</p>
+<ul>
+  <li><a href="http://www.railstips.org/blog/archives/2009/05/15/include-vs-extend-in-ruby/">Include vs Extend in Ruby</a> from John Nunemaker</li>
+  <li><a href="http://ruby-doc.com/docs/ProgrammingRuby/html/tut_modules.html">Modules</a> in Programming Ruby / RubyDoc</li>
+  <li><a href="http://matt.aimonetti.net/posts/2012/07/30/ruby-class-module-mixins/">Ruby Class, Module, and Mixin</a> by Matt Aimonetti</li>
+</ul>
+
+<p>Intro to Functional Programming(FP) Resources:</p>
+<ul>
+  <li><a href="http://www.braveclojure.com/">Clojure for the Brave and True</a></li>
+  <li><a href="https://medium.com/javascript-scene/the-rise-and-fall-and-rise-of-functional-   programming-composable-software-c2d91b424c8c">The Rise and Fall of Functional Programming</a></li>
+  <li>Deep Dive into Functional Programming (FP):</li>
+  <li><a href="https://github.com/sarabander/sicp-pdf">SICP</a></li>
+</ul>
+:ET

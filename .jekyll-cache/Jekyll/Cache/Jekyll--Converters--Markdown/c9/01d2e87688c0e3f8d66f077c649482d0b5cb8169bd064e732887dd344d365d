@@ -1,0 +1,103 @@
+I"�<h3 id="what-is-an-api">What is an API?</h3>
+
+<p>Read through these articles to get a sense of what an api is:</p>
+
+<ul>
+  <li><a href="https://www.freecodecamp.org/news/what-is-an-api-in-english-please-b880a3214a82">What is an API in Plain English? (freecodecamp)</a></li>
+  <li><a href="https://medium.com/@perrysetgo/what-exactly-is-an-api-69f36968a41f">What exactly is an API? (Medium article)</a></li>
+</ul>
+
+<p>Then, watch <a href="https://www.youtube.com/watch?v=s7wmiS2mSXY">this video</a></p>
+
+<h3 id="apis">APIs</h3>
+
+<p>At a <em>very</em> high level, APIs are rules that applications use to communicate with each other.</p>
+
+<p>We are focused on building Web applications, so we are mostly concerned with <strong>Web Based APIs</strong>. These types of APIs are so common that this is what most people are talking about when referring to an “API”.</p>
+
+<p>Since web apps communicate in HTTP, an API can be more specifically thought of as the format of HTTP requests an application accepts, and the format of data it returns.</p>
+
+<h3 id="json">JSON</h3>
+
+<p>So far, you have built applications for humans to view, so you’ve been outputting css and html that a web browser can render in a readable way.</p>
+
+<p>When designing an API, you are building it for other applications to read, so you need a machine-readable way to transmit data. Typically, machine-readable formats have been just that: machine-readable (Think zeros and ones).</p>
+
+<p>JSON is that format. At its core, JSON is an agreed upon format to represent data. It strikes a balance between being machine-readable, but also human-readable. It is frequently used as a language-neutral means to transmit data on the web.</p>
+
+<p>Take a look at some examples. What do you notice?</p>
+
+<ul>
+  <li><a href="https://developer.github.com/v3/git/commits">Example 1</a></li>
+  <li><a href="https://api.github.com/orgs/turingschool">Example 2</a>.</li>
+</ul>
+
+<p>That’s right! It looks just like a hash!</p>
+
+<p><strong>Tip:</strong> Installing the chrome extension <a href="https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa">JSON Formatter</a> is very helpful when viewing JSON in Google Chrome. It will format the JSON in a much more readable way.</p>
+
+<h3 id="apis-in-action">APIs in Action</h3>
+
+<p>“I want to see some code!” - you, right now</p>
+
+<p>Here you go! Make a new ruby file and paste this code in, replacing <code class="highlighter-rouge">&lt;your github username&gt;</code> with your github username.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'faraday'</span>
+<span class="nb">require</span> <span class="s1">'pry'</span>
+<span class="nb">require</span> <span class="s1">'json'</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">get</span> <span class="s1">'https://api.github.com/users/&lt;your github username&gt;'</span>
+
+<span class="n">body</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="nf">body</span>
+
+<span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>Run the code. If you get an error that the faraday gem is missing, run <code class="highlighter-rouge">gem install faraday</code>. If you get a Bad URI error, double check your github username spelling. It has to be an actual github user.</p>
+
+<p>The Faraday gem allows us to send HTTP requests from our code. We will use it a lot in Mod 3.</p>
+
+<p>When you hit the pry, check out what the <code class="highlighter-rouge">response</code> and <code class="highlighter-rouge">body</code> variables are holding. Notice that the body contains that JSON format we talked about. What type of object is it?</p>
+
+<p>That’s right, it’s a string! Wait, didn’t we read about JSON being super flexible and easy to work with? A giant string doesn’t seem that flexible or easy to work with :(</p>
+
+<p>You’re right again. Luckily, Ruby comes with a super handy library called <code class="highlighter-rouge">JSON</code> that we can use to parse this data.</p>
+
+<p>Run this code in your pry session:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>BOOM! A hash! Huzzah! We know how to work with hashes! Right? Right.</p>
+
+<p>Give it a try. Using this data:</p>
+
+<ul>
+  <li>find your number of followers</li>
+  <li>find the date you joined GitHub</li>
+  <li>find some data of your choice!</li>
+</ul>
+
+<p>Congratulations! You just consumed an API.</p>
+
+<h3 id="checks-for-understanding">Checks for Understanding</h3>
+
+<ol>
+  <li>
+    <p>How could you incorporate the GitHub API into a Rails Application? Where should this functionality live?</p>
+  </li>
+  <li>
+    <p>Think about how the HTTP request/response cycle works when building a “normal” Rails web application, an application that is meant to be viewed by a human user.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>Who is the client?</li>
+  <li>Who is the server?</li>
+  <li>Who is the “user”?</li>
+  <li>What do the HTTP requests look like?</li>
+  <li>What do the HTTP responses look like?</li>
+</ul>
+
+<p>Now think about how your answers would change if you were building an API.</p>
+:ET

@@ -1,0 +1,54 @@
+I"ž<h1 id="what-is-a-csv">What is a CSV?</h1>
+
+<ul>
+  <li>comma-separated value file</li>
+  <li>allows data to be saved in a simple, structured format</li>
+  <li>spreadsheets generally are csv files</li>
+</ul>
+
+<h1 id="what-can-you-do-with-csvs-in-ruby">What can you do with CSVs in Ruby?</h1>
+
+<p>Clone <a href="https://gist.github.com/rwarbelow/78c486f1be0967f0cb5d">this</a> gist with the following command:</p>
+
+<p><code class="highlighter-rouge">git clone https://gist.github.com/rwarbelow/78c486f1be0967f0cb5d csv-practice</code></p>
+
+<ul>
+  <li>in pry:</li>
+  <li><code class="highlighter-rouge">require 'csv'</code></li>
+  <li><code class="highlighter-rouge">CSV.read('filename.csv')</code></li>
+  <li>Ruby stores each table row as an array</li>
+  <li>every value that is read in by Ruby comes in as a string</li>
+</ul>
+
+<h2 id="reading-the-file-line-by-line">Reading the file line-by-line</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s1">'csv-practice.csv'</span><span class="p">)</span>
+<span class="n">csv</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span>
+	<span class="nb">puts</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">csv</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s1">'csv-practice.csv'</span><span class="p">,</span> <span class="ss">headers: </span><span class="kp">true</span><span class="p">)</span>
+<span class="n">csv</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span>
+	<span class="nb">puts</span> <span class="n">row</span><span class="p">[</span><span class="s2">"last_name"</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">CSV</span><span class="p">.</span><span class="nf">foreach</span><span class="p">(</span><span class="s1">'csv-practice.csv'</span><span class="p">,</span> <span class="ss">headers: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">header_converters: :symbol</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">row</span><span class="p">[</span><span class="ss">:last_name</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="writing-to-a-csv">Writing to a CSV</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">CSV</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s1">'newfile.csv'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">csv</span><span class="o">|</span>
+	<span class="n">csv</span> <span class="o">&lt;&lt;</span> <span class="p">[</span><span class="s2">"a string"</span><span class="p">,</span> <span class="s2">"another string"</span><span class="p">]</span>  
+<span class="k">end</span>  
+</code></pre></div></div>
+
+<h2 id="in-pairs">In Pairs</h2>
+
+<p>Follow <a href="http://www.sitepoint.com/guide-ruby-csv-library-part/">this</a> tutorial.</p>
+
+<h3 id="taught-by-rachel">Taught by Rachel</h3>
+:ET

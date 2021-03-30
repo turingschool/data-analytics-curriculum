@@ -1,0 +1,337 @@
+I"6~<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Use Ember Data in place of making AJAX calls using jQuery</li>
+  <li>Swap out the mock server with a Rails server</li>
+  <li>Use Handlebars helpers to format data</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>25 - Lecture</li>
+  <li>5 - Break</li>
+  <li>45 - Code Along</li>
+  <li>60 - Independent/Pair Work Time</li>
+  <li>15 - Code Review</li>
+  <li>20 - Extensions</li>
+  <li>10 - Wrap Up</li>
+</ul>
+
+<h2 id="lecture">Lecture</h2>
+
+<h3 id="when-to-use-ember-data">When to Use Ember Data</h3>
+
+<p>From the Ember.js documentation:</p>
+
+<blockquote>
+  <p>For simple applications, you can get by using jQuery to load JSON data from a server, then use those JSON objects as models.</p>
+
+  <p>However, using a model library that manages finding models, making changes, and saving them back to the server can dramatically simplify your code while improving the robustness and performance of your application.</p>
+</blockquote>
+
+<p>That’s a pretty good synopsis. I agree.</p>
+
+<h3 id="core-concepts">Core Concepts</h3>
+
+<h4 id="store">Store</h4>
+
+<p>The store is a central repository of all of your model records. The store is a shared resource that all of the objects in your application have access to.</p>
+
+<p>The store caches objects. If you request an object that the store has fetched, it just returns that record instead of duplicating the request.</p>
+
+<p>Because the store is globally available, you don’t have to worry about keeping your data in sync throughout multiple layers of your application.</p>
+
+<h4 id="model">Model</h4>
+
+<p>In our previous applications, we’ve just used plain old JavaScript objects to represent our data. Using models allows you to create representations of the models in your Rails application and bring them over to Ember.</p>
+
+<p>A person model might look something like this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="k">default</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">firstName</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">lastName</span><span class="p">:</span>  <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">birthday</span><span class="p">:</span>  <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">date</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We can also set up relationships. The syntax is a big difference, but the general concept should be familiar to you as a Rails developer.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// models/post.js</span>
+<span class="k">export</span> <span class="k">default</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">title</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">body</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">comments</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">hasMany</span><span class="p">(</span><span class="dl">'</span><span class="s1">comments</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+
+<span class="c1">// models/comment.js</span>
+<span class="k">export</span> <span class="k">default</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">comment</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">post</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">belongsTo</span><span class="p">(</span><span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>The model in Ember is—surprisingly—a lot like the model in Rails. It’s adding structure and behavior to data that—at the end of the day—ultimately comes from your database.</p>
+
+<h4 id="record">Record</h4>
+
+<p>A record is an instance of your model backed by data from the server. (Or a new record that will be imminently saved to your server.) The easiest way to think about a record is as an instance of your model.</p>
+
+<h4 id="adapter">Adapter</h4>
+
+<p>The adapter is the interface is the translation layer between Ember and Rails. Let’s say we want Ember to find the <code class="highlighter-rouge">person</code> with the <code class="highlighter-rouge">id</code> of 1. How does Ember know what endpoint to hit? Is it <code class="highlighter-rouge">/people/1</code>? <code class="highlighter-rouge">/api/v1/people/</code>? The adapter handles that translation for you so that you’re not hardcoding it in multiple places in your application.</p>
+
+<p>Your application asks the store for a record. If the store doesn’t have it, then it asks the adapter, which asks your server.</p>
+
+<h4 id="serializer">Serializer</h4>
+
+<p>Once you’ve fetched some data from the server, you need to rehydrate it into an object. Your serializer knows the rules.</p>
+
+<h2 id="code-along">Code Along</h2>
+
+<h3 id="setting-up-ember-data">Setting Up Ember Data</h3>
+
+<p>Let’s update Bartleby to use Ember Data and a real (albeit super simple) Rails server.</p>
+
+<p>Let’s start by generating a model with <code class="highlighter-rouge">ember g model note</code>.</p>
+
+<p>This will create a new file in our <code class="highlighter-rouge">app/models</code> directory called <code class="highlighter-rouge">note.js</code>.</p>
+
+<p>Let’s update <code class="highlighter-rouge">app/models/notes</code> with the following content:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">DS</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ember-data</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">title</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">body</span><span class="p">:</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Let’s also go ahead and create an adapter and a serializer so Ember and Rails can talk to one another.</p>
+
+<p>Generate the adapter with <code class="highlighter-rouge">ember g adapter note</code>. The result will be a new file located at <code class="highlighter-rouge">app/adapters/note.js</code>.</p>
+
+<p>Generate the serializer with <code class="highlighter-rouge">ember g serializer note</code> and we’ll get a new file located at <code class="highlighter-rouge">app/serializers/note.js</code>.</p>
+
+<p>We’ll stick with the default implementations now and then worry about adjusting them as the need comes up.</p>
+
+<h3 id="putting-ember-data-into-action">Putting Ember Data into Action</h3>
+
+<p>Okay great, we’ve set up Ember data. Let’s switch over from our AJAX calls to Ember data.</p>
+
+<p>In <code class="highlighter-rouge">app/routes/notes.js</code>, let’s swap out <code class="highlighter-rouge">return $.getJSON('/api/notes')</code> with the following:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Ember</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ember</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">Route</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="dl">'</span><span class="s1">note</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Let’s fire up our app and—uh oh. It doesn’t work. It almost works. It’s so close to working. But it doesn’t work.</p>
+
+<p>Ember Data is looking at <code class="highlighter-rouge">/notes</code> for our notes. But we’re actually storing them at <code class="highlighter-rouge">/api/notes</code>. So, that’s not going to work. We could just change our server endpoints, but that would rob us of a learning opportunity.</p>
+
+<p><strong>An aside</strong>: We did make some changes to the server. Ember Data’s <code class="highlighter-rouge">RESTAdapter</code> expects that everything is nested under a key named after the model. So, when we hit <code class="highlighter-rouge">/api/notes</code>, we’re going to respond with <code class="highlighter-rouge">{ note: […] }</code> instead of just the array at the top level.</p>
+
+<p>Instead, let’s adjust the endpoint that Ember Data is looking for. In <code class="highlighter-rouge">app/adapters/note.js</code>, add the following to the inside of the function:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">DS</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ember-data</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">RESTAdapter</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">namespace</span><span class="p">:</span> <span class="dl">'</span><span class="s1">api</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>This will tell Ember Data to look at <code class="highlighter-rouge">/api/notes</code> for out notes instead of <code class="highlighter-rouge">/notes</code>. This allows Ember Data to be flexible around how you’re versioning your API on the Rails side.</p>
+
+<p>Let’s do a quick but of housekeeping. You’ll see that our note count doesn’t work. Things are getting stored a little differently now, so let’s adjust our controller slightly. In <code class="highlighter-rouge">app/controllers/notes</code>, adjust our computed property:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">DS</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ember-data</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">DS</span><span class="p">.</span><span class="nx">RESTAdapter</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">namespace</span><span class="p">:</span> <span class="dl">'</span><span class="s1">api</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="removing-a-code-smell">Removing a Code Smell</h3>
+
+<p>Switching out our JSON request with Ember Data in <code class="highlighter-rouge">NotesRoute</code> wasn’t really a big win. That code was pretty clean. But what about <code class="highlighter-rouge">NoteController</code>? If you remember, we actually were referencing another route and grabbing it’s model and then filtering it.</p>
+
+<p>As a horrifying reminder, this is what we have currently:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Ember</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ember</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">Route</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">modelFor</span><span class="p">(</span><span class="dl">'</span><span class="s1">notes</span><span class="dl">'</span><span class="p">).</span><span class="nx">filterBy</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">,</span> <span class="nx">params</span><span class="p">.</span><span class="nx">note_id</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Yuck. Let’s swap this functionality our for Ember Data. The nice part about this old approach is that we didn’t have to hit our server up twice because we already loaded the model when we built the side bar. Luckily, Ember Data is going to do something similar. When we access the store, it checks to see if it’s already fetched that record—which it has—and just uses that instead of hitting up the server again.</p>
+
+<p>We can replace that ugly code with this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Ember</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">ember</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">Ember</span><span class="p">.</span><span class="nx">Route</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="dl">'</span><span class="s1">note</span><span class="dl">'</span><span class="p">,</span> <span class="nx">params</span><span class="p">.</span><span class="nx">note_id</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>It’s not exactly the same as ActiveRecord, but it’s pretty close—and it’s definitely in the same spirit. Click around in our application and everything should still work.</p>
+
+<p>Alright, we still have a few more places where we can use Ember Data to clean up our code.</p>
+
+<h3 id="creating-a-new-record-in-ember-data">Creating a New Record in Ember Data</h3>
+
+<p>Remember that functionality we added yesterday for creating a new note? Let’s give it the Ember Data treatment.</p>
+
+<p>Let’s look at what we have in the <code class="highlighter-rouge">saveNote</code> action in <code class="highlighter-rouge">app/controllers/notes/new</code> currently:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">actions</span><span class="p">:</span> <span class="p">{</span>
+
+  <span class="nl">saveNote</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">title</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">body</span><span class="dl">'</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">note</span> <span class="o">=</span> <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span> <span class="na">body</span><span class="p">:</span> <span class="nx">body</span> <span class="p">};</span>
+    <span class="nx">Ember</span><span class="p">.</span><span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/notes</span><span class="dl">'</span><span class="p">,</span> <span class="nx">note</span><span class="p">).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">controllers.notes</span><span class="dl">'</span><span class="p">).</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">content</span><span class="dl">'</span><span class="p">).</span><span class="nx">pushObject</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">transitionToRoute</span><span class="p">(</span><span class="dl">'</span><span class="s1">note</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Not bad, but we’re still doing a lot of the work ourselves. We’re sending the data over to the server, waiting for the request and then pushing the response onto the array of notes. There are a few ugly things going on here:</p>
+
+<ol>
+  <li>We’re doing way too much in the controller. Just like in Rails, we want to push as much of this kind of business logic down the stack as possible. This kind of stuff is definitely the job of the model.</li>
+  <li>We’re creating an object from the form then we’re sending it off to the server. What we’re getting back is actually a completely different object. It’s working fine now, but I’m sure you can imagine how this will probably blow up in our faces as our application gets more complicated. We’re much better off with a model that syncs itself with the server.</li>
+</ol>
+
+<p>Our store has a <code class="highlighter-rouge">createRecord</code> method. We’ll create a note using this method.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">store</span><span class="p">.</span><span class="nx">createRecord</span><span class="p">(</span><span class="dl">'</span><span class="s1">post</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">title</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">title</span><span class="dl">'</span><span class="p">),</span>
+  <span class="na">body</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">body</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We still need to transition to the new note. <code class="highlighter-rouge">createRecord</code> returns a promise. The promise is fulfilled once we hear back from the server.</p>
+
+<p>Here is our new implementation:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">saveNote</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">title</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">title</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">body</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nx">createRecord</span><span class="p">(</span><span class="dl">'</span><span class="s1">note</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">title</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+    <span class="na">body</span><span class="p">:</span> <span class="nx">body</span>
+  <span class="p">}).</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">note</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">transitionToRoute</span><span class="p">(</span><span class="dl">'</span><span class="s1">note</span><span class="dl">'</span><span class="p">,</span> <span class="nx">note</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s talk through this quickly. When the <code class="highlighter-rouge">saveNote</code> action is fired, we grab the <code class="highlighter-rouge">title</code> and <code class="highlighter-rouge">body</code> from the controller’s state and pass it along to <code class="highlighter-rouge">this.store.createRecord</code>.</p>
+
+<p>This is kind of similar to <code class="highlighter-rouge">Note.new(params)</code> in ActiveRecord. Then we call <code class="highlighter-rouge">save()</code>, which returns a promise. Once the promise is successfully filled (i.e. we get a successful response from the server), we then transition to that note.</p>
+
+<h3 id="a-word-on-the-ember-inspector">A Word on the Ember Inspector</h3>
+
+<p>Let’s switch over to the Ember Inspector. On the left, you’ll notice we have a tab for Data. If you click on it, you’ll see all of the models/records that Ember Data is aware of. Click on one of them. Now on the right, you’ll see a bunch of sections. One of them is <em>Flags</em>. Let’s take a look at that one.</p>
+
+<p>You should see seven properties:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">isLoaded</code></li>
+  <li><code class="highlighter-rouge">isDirty</code></li>
+  <li><code class="highlighter-rouge">isSaving</code></li>
+  <li><code class="highlighter-rouge">isDeleted</code></li>
+  <li><code class="highlighter-rouge">isError</code></li>
+  <li><code class="highlighter-rouge">isNew</code></li>
+  <li><code class="highlighter-rouge">isValid</code></li>
+</ul>
+
+<p>These are computed properties on our record that we can inspect at any time. <code class="highlighter-rouge">isDirty</code> means we have modified a record on the model, but we have not yet saved it to the server.</p>
+
+<h3 id="implementing-note-updating">Implementing Note Updating</h3>
+
+<p>This will again be similar to what we did before with adding a new note. First, let’s take a look at our current implementation:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">stopEditing</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/notes/</span><span class="dl">'</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">),</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">content</span><span class="dl">'</span><span class="p">)).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Your note has been saved to the server.</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">editing</span><span class="dl">'</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>There problems here are roughly the same as they were with creating a new note. So, the solution will be pretty easy to implement.</p>
+
+<p>Let’s try this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">stopEditing</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">note</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">model</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">note</span><span class="p">.</span><span class="nx">save</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">editing</span><span class="dl">'</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">Your note has been saved to the server.</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">},</span>
+</code></pre></div></div>
+
+<p>This is a lot cleaner. We’re grabbing our model. We’re saving the changes and when our promise is fulfilled, we adjust the state on our controller to turn off editing.</p>
+
+<h3 id="connecting-this-up-to-rails">Connecting This Up to Rails</h3>
+
+<p>So, we’re Rails developers. We’ll probably want to connect this to Rails, right?</p>
+
+<p>Let’s clone down <a href="http://github.com/turingschool-examples/bartleby-rails">turingschool-examples/bartleby-rails</a> to serve as our Rails backend.</p>
+
+<p><code class="highlighter-rouge">ember-cli</code> allows us to proxy in development to another server. The command is as follows:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ember server <span class="nt">--proxy</span> http://localhost:3000
+</code></pre></div></div>
+
+<p>If you fire this up, you’ll notice that it might not work as expected. Our dummy data is still there.</p>
+
+<p>Why is this?</p>
+
+<p>Well, the proxy only happens if Ember can’t respond to the route. As it stands, we actually have our mock server still in place. So, let’s blow that away by deleting the folder.</p>
+
+<p>Now, you’ll notice that—if all went right—we’re actually proxying to our Rails server. It’s serving an API that Ember is consuming.</p>
+
+<h2 id="independent-practice">Independent Practice</h2>
+
+<p>Extending the note functionality:</p>
+
+<ul>
+  <li>So, we have some pretty robust note taking functionality. When we switched over to Rails, we got <code class="highlighter-rouge">created_at</code> and <code class="highlighter-rouge">updated_at</code> for free. Can you add them to your Ember Data model?</li>
+  <li>Can you use this data in your template? (JavaScript date formatting is rough. I included the <a href="http://momentjs.com/">moment.js</a>) library in your Brocfile. So, you have access to that.</li>
+</ul>
+
+<p>Building a second layer:</p>
+
+<p>On top of taking notes in Bartleby, we also want to be able to keep track of links—like Pinboard, Delicious, or Diigo. Can you add a second set of routes—a lot like the notes implementation—to keep track of links.</p>
+
+<p>Can you implement a links functionality on both the Rails and Ember side using some of the techniques we’ve covered over the last few days?</p>
+
+<p><strong>Challenge</strong>: Create a relationship between notes and links.</p>
+
+<h2 id="group-discussion">Group Discussion</h2>
+
+<p>If we have time, let’s talk about:</p>
+
+<ul>
+  <li>adding Markdown processing to our application.</li>
+  <li>creating relations between notes and links</li>
+</ul>
+:ET

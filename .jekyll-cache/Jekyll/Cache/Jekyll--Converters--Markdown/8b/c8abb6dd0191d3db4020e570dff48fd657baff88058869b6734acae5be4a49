@@ -1,0 +1,75 @@
+I"E
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the purposes of pairing</li>
+  <li>Be able to apply simple pairing patterns like Driver/Navigator</li>
+  <li>Be able to setup a productive physical/virtual pairing arrangement</li>
+</ul>
+
+<h2 id="introduction-to-pairing-lecture">Introduction to Pairing (lecture)</h2>
+
+<h3 id="what-is-it">What is it?</h3>
+
+<ul>
+  <li>What have you heard about pair programming?</li>
+  <li>Defining pair programming</li>
+  <li>Who uses pairing?</li>
+  <li>Why do they do it?</li>
+  <li>Patterns for skill differentials</li>
+</ul>
+
+<h3 id="skill-differential-pairs">Skill Differential Pairs</h3>
+
+<ul>
+  <li>Expert / Novice - Novice gets raised, Expert questions preconceptions.</li>
+  <li>Intermediate / Novice - Novice learns to ask good questions, Intermediate digs deeper.</li>
+  <li>Novice / Novice - Safe space, great chance for experimentation.</li>
+</ul>
+
+<h3 id="patterns">Patterns</h3>
+
+<ul>
+  <li>Driver/Navigator</li>
+  <li>Popcorn</li>
+  <li>Tag</li>
+</ul>
+
+<h3 id="feedback">Feedback</h3>
+
+<p>Giving and asking for feedback:</p>
+
+<ul>
+  <li>investing in each other</li>
+  <li>short and difficult &gt; long and painful</li>
+  <li>good feedback is contextual, actionable, relevant, encouraging, specific</li>
+</ul>
+
+<h3 id="the-work-environment">The Work Environment</h3>
+
+<ul>
+  <li>Physical space: one monitor, two keyboards, one computer</li>
+  <li>Virtual space (or physical, too): ScreenHero, etc</li>
+</ul>
+
+<h2 id="practice-pairing-away-from-code">Practice Pairing Away from Code</h2>
+
+<p>Let’s try <a href="http://cl.ly/2g0S0F070m0h">this LSAT game</a> and apply the <em>Driver/Navigator</em> pattern.</p>
+
+<ul>
+  <li>Pair for 12 minutes to solve problem(s)</li>
+  <li>Three minutes for feedback</li>
+  <li>Gather back together as group to recap</li>
+</ul>
+
+<h2 id="pairing-with-code">Pairing with Code</h2>
+
+<p>Let’s implement some fake enumerables and practice pairing with these short challenges:</p>
+
+<ul>
+  <li>Without using <code class="highlighter-rouge">select</code>, <code class="highlighter-rouge">find_all</code>, or <code class="highlighter-rouge">detect</code>, write code that finds seven-letter words in a collection of words</li>
+  <li>Without using <code class="highlighter-rouge">any?</code>, write code to find whether or not there are any instances of <code class="highlighter-rouge">"hello"</code> in a collection of words</li>
+  <li>Without using <code class="highlighter-rouge">group_by</code>, write code to group a collection of words by their length (with the length as the key and
+the words in an array as the value)</li>
+</ul>
+:ET

@@ -1,0 +1,73 @@
+I"K<p>Good to knows about this practice assessment:</p>
+
+<ul>
+  <li>Integrate 3rd Party APIs</li>
+  <li>Write tests for the added features</li>
+  <li>Expose API endpoints</li>
+</ul>
+
+<p><strong>Optional</strong></p>
+<ul>
+  <li>Create JSON responses that follow <a href="https://jsonapi.org/format/#document-compound-documents">JSON:API Specs</a></li>
+  <li>Use <a href="https://github.com/Netflix/fast_jsonapi">fast_jsonapi gem</a> to format responses</li>
+</ul>
+
+<h2 id="preparation">Preparation</h2>
+
+<p>We’ll be working off of <a href="https://github.com/turingschool-examples/destination-planner"><code class="highlighter-rouge">Destination Planner</code></a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git@github.com:turingschool-examples/destination-planner.git
+cd destination-planner
+bundle install
+bundle exec rake db:{create,migrate,seed}
+bundle exec rails server
+</code></pre></div></div>
+
+<h2 id="practice-challenges">Practice Challenges</h2>
+
+<h3 id="1-current-weather">1. Current Weather</h3>
+
+<p>For this story, we will be using the <a href="https://openweathermap.org/api">OpenWeatherMap API</a>. Sign up for an api key and familiarize yourself with the documentation. Please note that it may take a while for your api key to be activated.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a user
+When I visit "/"
+And I click on a destination
+Then I should be on page "/destinations/:id"
+Then I should see the destination's name, zipcode, description, and current weather
+The weather forecast is specific to the destination whose page I'm on
+The forecast should include date (weekday, month and day), current, high and low temps in Fahrenheit, and a summary (for example "light rain", "clear sky", etc.)
+</code></pre></div></div>
+
+<h3 id="2-weather-image">2. Weather Image</h3>
+
+<p>For this story, we will using the <a href="https://developers.giphy.com/">Giphy API</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a user
+When I visit "/"
+And I click on a destination
+Then I should be on page "/destinations/:id"
+Then I should see an image related to the current weather at the destination
+</code></pre></div></div>
+
+<p><strong>Note</strong>: you have some flexibility here to determine what a “related” image might be.</p>
+
+<h3 id="3-create-an-external-api-for-the-destination-resource">3. Create an External API for the <code class="highlighter-rouge">Destination</code> resource</h3>
+
+<ul>
+  <li>RESTful routes should be created to <code class="highlighter-rouge">index</code>, <code class="highlighter-rouge">show</code>, <code class="highlighter-rouge">create</code>, <code class="highlighter-rouge">update</code>, and <code class="highlighter-rouge">destroy</code> destinations.</li>
+  <li>Routes should render JSON or an HTTP status code depending on their purpose.</li>
+  <li>These routes should be namespaced under <code class="highlighter-rouge">/api/v1/</code>.</li>
+  <li>Request specs should be driving the creation of these routes.</li>
+  <li>Make sure <code class="highlighter-rouge">create</code>, <code class="highlighter-rouge">update</code>, and <code class="highlighter-rouge">destroy</code> work through Postman</li>
+</ul>
+
+<h3 id="4-create-external-api-endpoints-for-destination-weather">4. Create External API endpoints for Destination Weather</h3>
+
+<ul>
+  <li>Expose the information from challenges 1 and 2 in an api endpoint, including destination weather and a related image</li>
+  <li>Routes should render JSON or an HTTP status code depending on their purpose.</li>
+  <li>You have some freedom to determine what the JSON response looks like.</li>
+  <li>These routes should be namespaced under <code class="highlighter-rouge">/api/v1/</code>.</li>
+  <li>Request specs should be driving the creation of these routes.</li>
+</ul>
+:ET

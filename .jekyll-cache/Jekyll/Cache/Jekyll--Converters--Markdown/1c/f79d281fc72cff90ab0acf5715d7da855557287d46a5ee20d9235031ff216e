@@ -1,0 +1,272 @@
+I"Ek<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://youtu.be/Okck4Fc557o">Video</a></li>
+</ul>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<p>After this class, a student should be able to:</p>
+
+<ul>
+  <li>Explain why we don’t want our tests to make real API calls</li>
+  <li>Understand how to stub network requests using WebMock and VCR</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/testing_api_consumption">here</a></p>
+
+<h2 id="mocking-network-requests">Mocking Network Requests</h2>
+
+<p><a href="./consuming_an_api">When last we met</a>, we got our code working, but our test is making a real API call which is not good. There are many reasons we wouldn’t want to do this:</p>
+
+<ol>
+  <li>We could hit API rate limits much faster.</li>
+  <li>Our test suite will be slower.</li>
+  <li>If someone working on our team doesn’t have an API key set up, we make it that much harder for them to jump into our code base.</li>
+  <li>If we ever need to work without WiFi, or if the WiFi is down, or if the API we’re using goes down (for maintenance, for example), we make it impossible to keep working on the app.</li>
+</ol>
+
+<p>Rather than making real HTTP requests, we want to make Mock HTTP Requests.</p>
+
+<h2 id="webmock">WebMock</h2>
+
+<p>We will be using <a href="https://github.com/bblimke/webmock">WebMock</a> to mock our HTTP requests. As always, you should open up the docs to get an idea of how it works.</p>
+
+<h3 id="install-the-gem">Install the Gem</h3>
+
+<p>Looking at the “Installation” section of the docs, we can see we need to <code class="highlighter-rouge">gem install webmock</code>, but since we’re using Bundler we can add it to our Gemfile which handles our gem installation. Add <code class="highlighter-rouge">gem 'webmock'</code> to the <code class="highlighter-rouge">:test</code> block of your Gemfile. DO NOT add it to the <code class="highlighter-rouge">:development, :test</code> block (more on that in a second). Run <code class="highlighter-rouge">bundle install</code>.</p>
+
+<p>Finally, we can see a section for “RSpec” in the Installation instructions. This tells us to add <code class="highlighter-rouge">require 'webmock/rspec'</code> to our <code class="highlighter-rouge">spec/spec_helper</code>. Do that now.</p>
+
+<p>Now, when we run our tests we can see a big error message:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WebMock::NetConnectNotAllowedError:
+      Real HTTP connections are disabled. Unregistered request: GET https://api.propublica.org/congress/v1/members/house/CO/current.json with headers <span class="o">{</span><span class="s1">'Accept'</span><span class="o">=&gt;</span><span class="s1">'*/*'</span>, <span class="s1">'Accept-Encoding'</span><span class="o">=&gt;</span><span class="s1">'gzip;q=1.0,deflate;q=0.6,identity;q=0.3'</span>, <span class="s1">'User-Agent'</span><span class="o">=&gt;</span><span class="s1">'Faraday v0.15.4'</span>, <span class="s1">'X-Api-Key'</span><span class="o">=&gt;</span><span class="s1">'opyjcKdEUKllG8P5V15kv3yKKbx1KwkGQwXbfCF3'</span><span class="o">}</span>
+
+      You can stub this request with the following snippet:
+
+      stub_request<span class="o">(</span>:get, <span class="s2">"https://api.propublica.org/congress/v1/members/house/CO/current.json"</span><span class="o">)</span><span class="nb">.</span>
+        with<span class="o">(</span>
+          headers: <span class="o">{</span>
+         <span class="s1">'Accept'</span><span class="o">=&gt;</span><span class="s1">'*/*'</span>,
+         <span class="s1">'Accept-Encoding'</span><span class="o">=&gt;</span><span class="s1">'gzip;q=1.0,deflate;q=0.6,identity;q=0.3'</span>,
+         <span class="s1">'User-Agent'</span><span class="o">=&gt;</span><span class="s1">'Faraday v0.15.4'</span>,
+         <span class="s1">'X-Api-Key'</span><span class="o">=&gt;</span><span class="s1">'opyjcKdEUKllG8P5V15kv3yKKbx1KwkGQwXbfCF3'</span>
+          <span class="o">})</span><span class="nb">.</span>
+        to_return<span class="o">(</span>status: 200, body: <span class="s2">""</span>, headers: <span class="o">{})</span>
+
+      <span class="o">============================================================</span>
+</code></pre></div></div>
+
+<p>This means it’s working! WebMock not only allows us to mock real HTTP requests, but also <strong>prevents</strong> us from making real HTTP requests. While this is good for our test suite (which we run very frequently), we do want to see the real requests being made at some point, so we want to allow HTTP requests in development. This is why we only added the gem to the <code class="highlighter-rouge">:test</code> block of our Gemfile and not <code class="highlighter-rouge">:development, :test</code>.</p>
+
+<h3 id="stubbing-the-request">Stubbing the Request</h3>
+
+<p>Looking at the docs, we can see some examples of how to stub requests. Let’s add one to our test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scenario</span> <span class="s2">"user submits valid state name"</span> <span class="k">do</span>
+    <span class="n">stub_request</span><span class="p">(</span><span class="ss">:get</span><span class="p">,</span> <span class="s2">"https://api.propublica.org/congress/v1/members/house/CO/current.json"</span><span class="p">).</span>
+        <span class="nf">to_return</span><span class="p">(</span><span class="ss">status: </span><span class="mi">200</span><span class="p">,</span> <span class="ss">body: </span><span class="s2">""</span><span class="p">)</span>
+    <span class="c1"># As a user</span>
+    <span class="c1"># When I visit "/"</span>
+    <span class="n">visit</span> <span class="s1">'/'</span>
+</code></pre></div></div>
+
+<p>Now when we run the tests, we get <code class="highlighter-rouge">JSON::ParserError: 743: unexpected token at ''</code>. The stack trace points us to the <code class="highlighter-rouge">SearchController</code> on the line where we do <code class="highlighter-rouge">json = JSON.parse(response.body, symbolize_names: true)</code>. If we look at the stub we just put in the test, we are returning an empty body, so it makes sense that we’re getting an error when trying to parse the response body as JSON.</p>
+
+<p>We need to replace the empty body with an actual JSON response. We <em>could</em> copy and paste a body right into this test, but then our test file would get quite messy. What we’ll do instead is make a <code class="highlighter-rouge">spec/fixtures</code> directory with a file that we can read:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>spec/fixtures
+<span class="nb">touch </span>spec/fixtures/members_of_the_house.json
+</code></pre></div></div>
+
+<p>And update our test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">json_response</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'spec/fixtures/members_of_the_house.json'</span><span class="p">)</span>
+<span class="n">stub_request</span><span class="p">(</span><span class="ss">:get</span><span class="p">,</span> <span class="s2">"https://api.propublica.org/congress/v1/members/house/CO/current.json"</span><span class="p">).</span>
+  <span class="nf">to_return</span><span class="p">(</span><span class="ss">status: </span><span class="mi">200</span><span class="p">,</span> <span class="ss">body: </span><span class="n">json_response</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We’re still returning an empty body because our file is empty, so let’s add some actual JSON data to that file. Use Postman to hit the ProPublica API to get a JSON response and copy and paste it in. Your test should be passing once again.</p>
+
+<p>If this is <em>really</em> working, we should be able to turn off our WiFi and see the test is still working.</p>
+
+<h2 id="vcr">VCR</h2>
+
+<p>Another handy tool for mocking these requests is <a href="https://github.com/vcr/vcr">VCR</a>. You can think of it as an extension of WebMock. We will still be stubbing requests, but now rather than manually creating the mock JSON response, VCR will allow us to make one real HTTP request the first time, record its response, and use that response as the stub for future requests. VCR refers to these recorded responses as <code class="highlighter-rouge">cassettes</code>.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>First, add <code class="highlighter-rouge">gem 'vcr'</code> to the <code class="highlighter-rouge">:test</code> block of your Gemfile and <code class="highlighter-rouge">bundle install</code>.</p>
+
+<p>Then, add this at the bottom of your <code class="highlighter-rouge">rails_helper</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">VCR</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">cassette_library_dir</span> <span class="o">=</span> <span class="s2">"spec/fixtures/vcr_cassettes"</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">hook_into</span> <span class="ss">:webmock</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In the first line of the block, we tell VCR where we want to store the the <code class="highlighter-rouge">cassettes</code>. We are making use of the <code class="highlighter-rouge">spec/fixtures</code> folder we already created.</p>
+
+<p>The second line tells VCR what library it should use for intercepting these requests, which will be WebMock. So we are still using WebMock, but VCR is adding additional functionality for recording responses.</p>
+
+<p>Go back into the test and comment out the lines where we stubbed the request with WebMock:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scenario</span> <span class="s2">"user submits valid state name"</span> <span class="k">do</span>
+    <span class="c1"># json_response = File.read('spec/fixtures/members_of_the_house.json')</span>
+    <span class="c1"># stub_request(:get, "https://api.propublica.org/congress/v1/members/house/CO/current.json").</span>
+    <span class="c1">#   to_return(status: 200, body: json_response)</span>
+    <span class="c1"># As a user</span>
+    <span class="c1"># When I visit "/"</span>
+    <span class="n">visit</span> <span class="s1">'/'</span>
+</code></pre></div></div>
+
+<p>Run the tests and you should see <code class="highlighter-rouge">VCR::Errors::UnhandledHTTPRequestError:</code>. That means it’s working!</p>
+
+<h3 id="stubbing-the-request-1">Stubbing the Request</h3>
+
+<p>In order to use VCR, we wrap our test in a <code class="highlighter-rouge">VCR.use_cassette</code> block:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scenario</span> <span class="s2">"user submits valid state name"</span> <span class="k">do</span>
+  <span class="c1"># json_response = File.read('spec/fixtures/members_of_the_house.json')</span>
+  <span class="c1"># stub_request(:get, "https://api.propublica.org/congress/v1/members/house/CO/current.json").</span>
+  <span class="c1">#   to_return(status: 200, body: json_response)</span>
+  <span class="c1"># As a user</span>
+  <span class="c1"># When I visit "/"</span>
+
+  <span class="no">VCR</span><span class="p">.</span><span class="nf">use_cassette</span><span class="p">(</span><span class="s1">'propublica_members_of_the_house_for_co'</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="s1">'/'</span>
+
+    <span class="nb">select</span> <span class="s2">"Colorado"</span><span class="p">,</span> <span class="ss">from: :state</span>
+    <span class="c1"># And I select "Colorado" from the dropdown</span>
+    <span class="n">click_on</span> <span class="s2">"Locate Members of the House"</span>
+    <span class="c1"># And I click on "Locate Members from the House"</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">current_path</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="n">search_path</span><span class="p">)</span>
+    <span class="c1"># Then my path should be "/search" with "state=CO" in the parameters</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"7 Results"</span><span class="p">)</span>
+    <span class="c1"># And I should see a message "7 Results"</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".member"</span><span class="p">,</span> <span class="ss">count: </span><span class="mi">7</span><span class="p">)</span>
+    <span class="c1"># And I should see a list of 7 the members of the house for Colorado</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="n">first</span><span class="p">(</span><span class="s2">".member"</span><span class="p">))</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".name"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".role"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".party"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".district"</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="c1"># And they should be ordered by seniority from most to least</span>
+    <span class="c1"># And I should see a name, role, party, and district for each member</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The string we passed to <code class="highlighter-rouge">use_cassette</code> is an identifier for the cassette, so it doesn’t really matter what you pass it.</p>
+
+<p>Run your tests and they should be passing. If you look under <code class="highlighter-rouge">spec/fixtures/vcr_cassettes</code> you should see a <code class="highlighter-rouge">.yml</code> file that contains your recorded response.</p>
+
+<h3 id="filtering-sensitive-data">Filtering Sensitive Data</h3>
+
+<p>If you look closely in that <code class="highlighter-rouge">.yml</code> file you can see our API key in there. We will be pushing these cassettes to GitHub, so we don’t want the actual API key to be recorded for the same reasons we don’t want our <code class="highlighter-rouge">application.yml</code> file pushed and we don’t want to hardcode the API key in our code. We will use a VCR option to replace the actual API key with a placeholder. Open up your <code class="highlighter-rouge">rails_helper.rb</code> and add another line to the VCR configuration:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">VCR</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">cassette_library_dir</span> <span class="o">=</span> <span class="s2">"spec/fixtures/vcr_cassettes"</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">hook_into</span> <span class="ss">:webmock</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">filter_sensitive_data</span><span class="p">(</span><span class="s1">'&lt;PROPUBLICA_API_KEY&gt;'</span><span class="p">)</span> <span class="p">{</span> <span class="no">ENV</span><span class="p">[</span><span class="s1">'PROPUBLICA_API_KEY'</span><span class="p">]</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Then, delete your VCR cassettes directory:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm</span> <span class="nt">-rf</span> spec/fixtures/vcr_cassettes
+</code></pre></div></div>
+
+<p>Run your test suite again, and you should see a new VCR cassette in the <code class="highlighter-rouge">vcr_cassettes</code> directory. Open it up and confirm that your api key is now being replaced with <code class="highlighter-rouge">&lt;PROPUBLICA_API_KEY&gt;</code>.</p>
+
+<p><strong>You will need to add a <code class="highlighter-rouge">filter_sensitive_data</code> block for EACH thing you want to filter. If you’re building an app using several API keys, make sure you add a filter for each thing in your <code class="highlighter-rouge">config/application.yml</code> that you want to have hidden!</strong></p>
+
+<h3 id="using-rspec-metadata">Using RSpec Metadata</h3>
+
+<p>VCR has a handy feature that allows us to use the names of our tests to name cassettes rather than having to manually wrap each test in a <code class="highlighter-rouge">VCR.use_cassette</code> block and give the cassette a name. Add one more line to your VCR config block:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">VCR</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">cassette_library_dir</span> <span class="o">=</span> <span class="s2">"spec/fixtures/vcr_cassettes"</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">hook_into</span> <span class="ss">:webmock</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">filter_sensitive_data</span><span class="p">(</span><span class="s1">'&lt;PROPUBLICA_API_KEY&gt;'</span><span class="p">)</span> <span class="p">{</span> <span class="no">ENV</span><span class="p">[</span><span class="s1">'PROPUBLICA_API_KEY'</span><span class="p">]</span> <span class="p">}</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">configure_rspec_metadata!</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now in our tests, we can delete the <code class="highlighter-rouge">VCR.use_cassette</code> block and tell the test to use VCR by passing it <code class="highlighter-rouge">:vcr</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scenario</span> <span class="s2">"user submits valid state name"</span><span class="p">,</span> <span class="ss">:vcr</span> <span class="k">do</span>
+    <span class="c1"># json_response = File.read('spec/fixtures/members_of_the_house.json')</span>
+    <span class="c1"># stub_request(:get, "https://api.propublica.org/congress/v1/members/house/CO/current.json").</span>
+    <span class="c1">#   to_return(status: 200, body: json_response)</span>
+    <span class="c1"># As a user</span>
+    <span class="c1"># When I visit "/"</span>
+
+    <span class="n">visit</span> <span class="s1">'/'</span>
+
+    <span class="nb">select</span> <span class="s2">"Colorado"</span><span class="p">,</span> <span class="ss">from: :state</span>
+    <span class="c1"># And I select "Colorado" from the dropdown</span>
+    <span class="n">click_on</span> <span class="s2">"Locate Members of the House"</span>
+    <span class="c1"># And I click on "Locate Members from the House"</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">current_path</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="n">search_path</span><span class="p">)</span>
+    <span class="c1"># Then my path should be "/search" with "state=CO" in the parameters</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"7 Results"</span><span class="p">)</span>
+    <span class="c1"># And I should see a message "7 Results"</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".member"</span><span class="p">,</span> <span class="ss">count: </span><span class="mi">7</span><span class="p">)</span>
+    <span class="c1"># And I should see a list of 7 the members of the house for Colorado</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="n">first</span><span class="p">(</span><span class="s2">".member"</span><span class="p">))</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".name"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".role"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".party"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_css</span><span class="p">(</span><span class="s2">".district"</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="c1"># And they should be ordered by seniority from most to least</span>
+    <span class="c1"># And I should see a name, role, party, and district for each member</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run your tests again and you’ll notice a new directory and file in your <code class="highlighter-rouge">vcr_cassettes</code> directory that matches the names of the blocks in the test. Now when we want a test to use VCR, we just have to pass it <code class="highlighter-rouge">:vcr</code> and we’re good to go. Much easier!</p>
+
+<h2 id="but--manually-deleting-vcr-cassettes-is-a-pain">But … manually deleting VCR cassettes is a pain!!!</h2>
+
+<p>Thankfully the VCR team have come up with a way to set an expiration on our VCR cassettes, and we can do it one of two ways (or both)</p>
+
+<p>On a per-cassette level, we can set it up like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">VCR</span><span class="p">.</span><span class="nf">use_cassette</span><span class="p">(</span><span class="s1">'name_of_cassette'</span><span class="p">,</span> <span class="ss">re_record_interval: </span><span class="mi">7</span><span class="p">.</span><span class="nf">days</span><span class="p">)</span> <span class="k">do</span>
+  <span class="c1"># test code goes here</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>There’s no easy way to configure this on tests which use the <code class="highlighter-rouge">:vcr</code> flag, though. One way would be for one test to use the <code class="highlighter-rouge">:vcr</code> flag, and another test which makes the same API call to use the <code class="highlighter-rouge">VCR.use_cassette()</code> setting above. When the test executes which has the <code class="highlighter-rouge">re_record_interval</code> option set to a value, it may ‘expire’ cassette and re-record it if the cassette passes that threshold.</p>
+
+<p>We can also set a global configuration which will apply to all VCR-enabled tests, including those using the <code class="highlighter-rouge">:vcr</code> flag, but changing our <code class="highlighter-rouge">spec/rails_helper.rb</code> configuration slightly:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">VCR</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">cassette_library_dir</span> <span class="o">=</span> <span class="s1">'spec/fixtures/vcr_cassettes'</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">hook_into</span> <span class="ss">:webmock</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">filter_sensitive_data</span><span class="p">(</span><span class="s1">'DONT_SHARE_MY_PROPUBLIC_SECRET_KEY'</span><span class="p">)</span> <span class="p">{</span> <span class="no">ENV</span><span class="p">[</span><span class="s1">'PROPUBLICA_KEY'</span><span class="p">]</span> <span class="p">}</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">default_cassette_options</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">re_record_interval: </span><span class="mi">7</span><span class="p">.</span><span class="nf">days</span> <span class="p">}</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">configure_rspec_metadata!</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This example uses a “default cassette options” flag, setting a re-record interval of 7 days for all cassettes. You can still override this on individual tests which use <code class="highlighter-rouge">VCR.use_cassette()</code>, so you could set a general flag of, say, <code class="highlighter-rouge">30.days</code> but a particular test could be set to <code class="highlighter-rouge">7.days</code> instead to expire earlier.</p>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>What are some reasons we don’t want our tests to make real API calls?</li>
+  <li>What does WebMock do?</li>
+  <li>What does VCR do?</li>
+  <li>Why don’t we want VCR to record our API key?</li>
+  <li>How are WebMock and VCR similar? different?</li>
+</ul>
+:ET

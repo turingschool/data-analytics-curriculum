@@ -1,0 +1,61 @@
+I"�<h2 id="intermission-work">Intermission Work</h2>
+
+<p>To prepare for Module 4, please complete &amp; submit the following before <strong>11:59pm Saturday</strong>, the Saturday day before the inning begins. This will ensure that you have a full day off before starting the mod. The pre-work should take a <strong>maximum</strong> of 20 hours. This pre-work is meant to be an introduction to the topics we will begin covering in week 1. <strong>It is perfectly okay if these topics still feel a bit fuzzy at the end of the week.</strong></p>
+
+<p>Submit all links <a href="https://forms.gle/Mtp2Mr4TFyqhTP9o6">here</a>.</p>
+
+<h2 id="high-level-concepts-to-keep-in-mind">High Level Concepts to Keep in Mind</h2>
+<ul>
+  <li>If you are <em>googling</em> for answers in JavaScript, keep in mind if you are using ES5 vs. ES6 syntax (Classes are part of ES6 syntax)</li>
+  <li>Methods are called Functions</li>
+  <li>You should know the difference between <code class="highlighter-rouge">undefined</code> and <code class="highlighter-rouge">null</code>; JS does not have a <code class="highlighter-rouge">nil</code> like Ruby does</li>
+  <li><code class="highlighter-rouge">require</code>ing a file you’ve written does nothing if you didn’t export from that file</li>
+  <li>All <code class="highlighter-rouge">return</code>s are explicit in Javascript. If you don’t use the word <code class="highlighter-rouge">return</code>, your return value will be <code class="highlighter-rouge">undefined</code></li>
+</ul>
+
+<p>Google is your friend and it is completely reasonable to type things like “.each in javascript” or “what is const in javascript”.</p>
+
+<h2 id="1-mythical-critters">1. Mythical Critters</h2>
+
+<p>To get some practice writing JavaScript we are asking you to complete 8 <a href="https://github.com/turingschool-examples/be-mythical-critters">mythical critters</a>. The mythical critters we are asking you to complete are outlined in the Readme. The first one is Unicorn and is very simple to help you get started. The next seven are more complex so it may feel like a bit of leap from the first to the second one. Use the tests to help drive your development.
+<em>Note: These exercises are written using ES6 syntax which may be helpful to include if you are <code class="highlighter-rouge">googling</code>.</em></p>
+
+<p><strong>Submit: Link to your mythical critters repo.</strong></p>
+
+<h2 id="2-server-side-javascript">2. Server-Side JavaScript</h2>
+
+<p>While JavaScript was originally intended to be a client-side scripting language, it has since made its way server-side thanks to Node.js. We’re now able to use the same language for browser-based interactions as well as server-side scripts.</p>
+
+<p>Let’s get introduced to JavaScript without a browser. Work through <a href="../lessons/express_knex">this lesson</a>. It will introduce you to Node.js, Express, and Knex.</p>
+
+<p><strong>Submit: Link to your server_side_javascript repo.</strong></p>
+
+<h2 id="3-gear-up-lightning-talk">3. Gear Up Lightning Talk</h2>
+
+<p>For your Gear Up Lightning Talk you will need to submit the following by <strong>9:00 am Monday of week 1</strong>:</p>
+<ul>
+  <li>Topic title (Be specific) <em>Good Example: Bias in Facial Recognition Software</em></li>
+  <li>Detailed outline of the points you are going to make (Should translate to 5-8 slides)</li>
+  <li>3 Resources you plan to use in preparation for your talk</li>
+  <li>3 Discussion questions you will ask your audience</li>
+</ul>
+
+<p><em>Duplicate topics will not be accepted, so submit early in order to secure your choice!</em>
+<strong>Submit your answers <a href="https://docs.google.com/forms/d/e/1FAIpQLSe99VAwsW74PsUNPxdzspvXD_wmHb7lZdeRkPZNoZuUUhag5Q/viewform">here</a></strong></p>
+
+<h2 id="4-cover-letter">4. Cover Letter</h2>
+
+<p>Complete a cover letter for a real position (no, you cannot make one up), tailored accordingly. The letter should be formatted professionally and look just as a good as one you would submit for a dream job. Please use <a href="https://github.com/turingschool/career-development-curriculum/blob/master/module_four/cover_letter_checklist.md">this</a> as a guide</p>
+
+<p><strong>No Submission: Will review during PD</strong></p>
+
+<h2 id="5-cross-pollination-project-idea">5. Cross Pollination Project Idea</h2>
+
+<p>During Mod 4 you have the opportunity to collaborate with Frontend students to build out applications. If you have a great idea you want to work on, create a gist with details about your project idea. Please be as detailed as possible and include the tech stack you are considering. Take the time now to think through your proposal and your future self will thank you. As you are thinking about projects, remember it doesn’t have to be a completely new idea. It could mimic something a company that you are are interested in does, or reach out to a company that you are considering for access to their API if they have one. These little things can help you really stand out as a candidate and show that you are really interested in their company.</p>
+
+<p><strong>No Submission: Hold onto for submissions during week 3</strong></p>
+
+<h3 id="looking-for-more">Looking for more?</h3>
+
+<p>Check out <a href="./additional_resources.md">these</a> additional resources to be even more prepared.</p>
+:ET

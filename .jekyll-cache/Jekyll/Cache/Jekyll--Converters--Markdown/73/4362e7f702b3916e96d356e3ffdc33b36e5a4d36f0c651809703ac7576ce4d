@@ -1,0 +1,399 @@
+I"ѐ<h2 id="learning-goals">Learning Goals</h2>
+
+<p>By the end of this lesson, you will:</p>
+
+<ul>
+  <li>Understand how to execute raw SQL in Node</li>
+  <li>Understand how to use promises to retrieve data from Postgres in Node</li>
+</ul>
+
+<p>You wouldn’t want to immediately jump to writing raw SQL in any production application, but being able to write SQL is a must on the job. Whether it’s for queries that are too complex for whatever ORM or library you’re using, or it’s using SQL to interact with the database directly.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>Clone this repo, which represents the completed “Intro to Express” lesson:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone -b intro-to-express git@github.com:turingschool-examples/building-app-with-express.git
+</code></pre></div></div>
+
+<p>Install <a href="https://nodemon.io/"><code class="highlighter-rouge">nodemon</code></a> as a development dependency. It’ll automatically reload our server for us as we make changes to our Express application.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install nodemon --save-dev
+</code></pre></div></div>
+
+<p>Install <code class="highlighter-rouge">knex</code> and <code class="highlighter-rouge">pg</code> (postgres):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install knex pg --save
+</code></pre></div></div>
+
+<p>Also install <code class="highlighter-rouge">knex</code> globally so we can use it on the command line:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install knex -g
+</code></pre></div></div>
+
+<h2 id="what-is-knex">What is <a href="http://knexjs.org/">Knex</a>?</h2>
+
+<p><a href="http://knexjs.org/">Knex</a> is a great library for working with many kinds of databases. It isn’t a full ORM like ActiveRecord, but it includes features like data migrations and seeds, which is great for us. The documentation isn’t excellent, but that’s fine, because today we’re only going to be using one command: <code class="highlighter-rouge">.raw()</code></p>
+
+<h2 id="setting-up-the-database">Setting Up the Database</h2>
+
+<p>Make sure Postgres is installed and running. We will prep our app by creating two databases in Postgres. Don’t forget the semicolons in the the CREATE DATABASE command!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>psql
+CREATE DATABASE secrets<span class="p">;</span>
+CREATE DATABASE secrets_test<span class="p">;</span>
+</code></pre></div></div>
+
+<p>We will use a <code class="highlighter-rouge">knexfile</code> to configure our database for all of our environments. Create that file for your project using the below command. It’ll set you up with some default values - we’ll want to overwrite those in a bit.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ knex init
+Created ./knexfile.js
+</code></pre></div></div>
+
+<h3 id="database-configuration">Database Configuration</h3>
+
+<p>This generated a really nice configuration file that we need to tweak for Postgres (vs sqlite default).</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">development</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">client</span><span class="p">:</span> <span class="dl">'</span><span class="s1">pg</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">connection</span><span class="p">:</span><span class="dl">'</span><span class="s1">postgres://localhost/secrets</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">migrations</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directory</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./db/migrations</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">seeds</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directory</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./db/seeds/dev</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">useNullAsDefault</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+
+  <span class="na">test</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">client</span><span class="p">:</span> <span class="dl">'</span><span class="s1">pg</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">connection</span><span class="p">:</span><span class="dl">'</span><span class="s1">postgres://localhost/secrets_test</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">migrations</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directory</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./db/migrations</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">seeds</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directory</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./db/seeds/test</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">useNullAsDefault</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">},</span>
+
+  <span class="na">production</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">client</span><span class="p">:</span> <span class="dl">'</span><span class="s1">pg</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">connection</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DATABASE_URL</span><span class="p">,</span>
+    <span class="na">migrations</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directory</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./db/migrations</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">seeds</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">directory</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./db/seeds/production</span><span class="dl">'</span>
+    <span class="p">},</span>
+    <span class="na">useNullAsDefault</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="migrations">Migrations</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>knex migrate:make create-secrets-table
+</code></pre></div></div>
+
+<p>This created a <code class="highlighter-rouge">migrations</code> directory and added a time stamped file with the name of the migration at the end. The new file should contain this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">exports</span><span class="p">.</span><span class="nx">up</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">knex</span><span class="p">,</span> <span class="nb">Promise</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">down</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">knex</span><span class="p">,</span> <span class="nb">Promise</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>For every <code class="highlighter-rouge">up</code> there must be an equal and opposite <code class="highlighter-rouge">down</code> that will allow us to rollback those changes. <code class="highlighter-rouge">up</code> defines what should happen when we do the migration. <code class="highlighter-rouge">down</code> is the reverse. If we want to roll back to a previous version, then <code class="highlighter-rouge">down</code> undoes whatever <code class="highlighter-rouge">up</code> did.</p>
+
+<p>You may be used to migrations with a <code class="highlighter-rouge">change</code> method. <code class="highlighter-rouge">change</code> has an implied <code class="highlighter-rouge">down</code> for every <code class="highlighter-rouge">up</code>, but we’re using the more explicit methods here.</p>
+
+<p>Using SQL, we can define our <code class="highlighter-rouge">secrets</code> table. We’ve been using strings as IDs, which you can do in Postgres, but let’s go ahead and bring integer IDs back.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">exports</span><span class="p">.</span><span class="nx">up</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">knex</span><span class="p">,</span> <span class="nb">Promise</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">createQuery</span> <span class="o">=</span> <span class="s2">`CREATE TABLE secrets(
+    id SERIAL PRIMARY KEY NOT NULL,
+    message TEXT,
+    created_at TIMESTAMP
+  )`</span>
+  <span class="k">return</span> <span class="nx">knex</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span><span class="nx">createQuery</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">down</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">knex</span><span class="p">,</span> <span class="nb">Promise</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">dropQuery</span> <span class="o">=</span> <span class="s2">`DROP TABLE secrets`</span>
+  <span class="k">return</span> <span class="nx">knex</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span><span class="nx">dropQuery</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>But, why is <code class="highlighter-rouge">Promise</code> passed in as a second argument? Knex is expecting that these methods return a promise of some sort. All Knex methods return a promise, so we fulfilled our end of the bargain in the example above. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"><code class="highlighter-rouge">Promise.all</code></a> allows you to do multiple things and return one promise. Knex passes us a reference to <code class="highlighter-rouge">Promise</code>, because it’s not natively supported in some previous versions of Node. We’re not using it at this moment, but we will in a second.</p>
+
+<h3 id="seeds">Seeds</h3>
+
+<p>Seeded data will be useful when we start developing our application. To create seed files, type the following in your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>knex seed:make secrets
+</code></pre></div></div>
+
+<p>This will create a <code class="highlighter-rouge">secrets.js</code> in the <code class="highlighter-rouge">seeds/dev</code> folder. They’ll contain the default seed template:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">exports</span><span class="p">.</span><span class="nx">seed</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">knex</span><span class="p">,</span> <span class="nb">Promise</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Deletes ALL existing entries</span>
+  <span class="k">return</span> <span class="nx">knex</span><span class="p">(</span><span class="dl">'</span><span class="s1">table_name</span><span class="dl">'</span><span class="p">).</span><span class="nx">del</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Inserts seed entries</span>
+      <span class="k">return</span> <span class="nx">knex</span><span class="p">(</span><span class="dl">'</span><span class="s1">table_name</span><span class="dl">'</span><span class="p">).</span><span class="nx">insert</span><span class="p">([</span>
+        <span class="p">{</span><span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">colName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rowValue1</span><span class="dl">'</span><span class="p">},</span>
+        <span class="p">{</span><span class="na">id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">colName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rowValue2</span><span class="dl">'</span><span class="p">},</span>
+        <span class="p">{</span><span class="na">id</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="na">colName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rowValue3</span><span class="dl">'</span><span class="p">}</span>
+      <span class="p">])</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We’re going to need to modify this a bit.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">exports</span><span class="p">.</span><span class="nx">seed</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">knex</span><span class="p">,</span> <span class="nb">Promise</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">knex</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span><span class="dl">'</span><span class="s1">TRUNCATE secrets RESTART IDENTITY</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">([</span>
+      <span class="nx">knex</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span>
+        <span class="dl">'</span><span class="s1">INSERT INTO secrets (message, created_at) VALUES (?, ?)</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">I hate mashed potatoes</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">]</span>
+      <span class="p">),</span>
+      <span class="nx">knex</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span>
+        <span class="dl">'</span><span class="s1">INSERT INTO secrets (message, created_at) VALUES (?, ?)</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">I love rap music</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">]</span>
+      <span class="p">),</span>
+      <span class="nx">knex</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span>
+        <span class="dl">'</span><span class="s1">INSERT INTO secrets (message, created_at) VALUES (?, ?)</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">I hate game shows</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">]</span>
+      <span class="p">)</span>
+    <span class="p">])</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You’ll notice that I used <code class="highlighter-rouge">Promise.all</code> this time. It’s because I wanted to do three things (i.e. insert each of my fake secrets). <code class="highlighter-rouge">Promise.all</code> will resolve when all three of my inserts resolve.</p>
+
+<p>Also notice that <code class="highlighter-rouge">.raw()</code> is taking two parameters. Whenever you are passing dynamic values (data) to a query, you want to add them as a second parameter. They will replace any <code class="highlighter-rouge">?</code> you have in your query in order. These values aren’t technically dynamic, but it’s good to just keep the same pattern that we’ll be using later.</p>
+
+<h3 id="running-the-migrations-and-seeding-the-database">Running the Migrations and Seeding the Database</h3>
+
+<p>We configured everything. Now, we just need to run our migration and seed the database.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>knex migrate:latest
+knex seed:run
+</code></pre></div></div>
+
+<p>This will run all of the migrations up to and including the most recent one. (We only have one, so this is pretty straightforward for us.) Next, we will run all the seed files under the dev directory to insert our two owners and three secrets that belong to those owners so that we have something to work with in the next step.</p>
+
+<h2 id="fetching-from-the-database">Fetching From the Database</h2>
+
+<p>Let’s create a file to get our heads around <code class="highlighter-rouge">knex</code> with Postgres.</p>
+
+<p><code class="highlighter-rouge">touch database-spike.js</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">environment</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span>
+<span class="kd">const</span> <span class="nx">configuration</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./knexfile</span><span class="dl">'</span><span class="p">)[</span><span class="nx">environment</span><span class="p">]</span>
+<span class="kd">const</span> <span class="nx">database</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">knex</span><span class="dl">'</span><span class="p">)(</span><span class="nx">configuration</span><span class="p">)</span>
+
+<span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>This is just enough code to get connected to Postgres. A couple notes:</p>
+
+<ol>
+  <li>It’s important to know whether we’re in a development, testing, or production environment. If we don’t know, we’ll assume we’re in development.</li>
+  <li>Based on that environment, we’ll fetch the database configuration from <code class="highlighter-rouge">knexfile.js</code> for whatever environment we’re in.</li>
+  <li><code class="highlighter-rouge">process.exit()</code> just tells Node that we’re done.</li>
+</ol>
+
+<p>Go ahead and run this just to make sure your configuration is good, and you don’t get any errors.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node database-spike.js
+</code></pre></div></div>
+
+<p>Good! Let’s try to pull some data from our database. Add the following in place of the <code class="highlighter-rouge">process.exit()</code></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">database</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span><span class="dl">'</span><span class="s1">SELECT * FROM secrets</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">()</span>
+  <span class="p">})</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node database-spike.js
+</code></pre></div></div>
+
+<p>Check out that info!</p>
+
+<p>If we dig around a little, we see that the data we want is in a property called <code class="highlighter-rouge">rows</code>. Very useful. Let’s modify our console.log to output <code class="highlighter-rouge">data.rows</code>. Then run the spike again. If you want to learn more about the <code class="highlighter-rouge">anonymous</code> printed, you can read more <a href="https://github.com/brianc/node-postgres/issues/1062">here</a>.</p>
+
+<p>Next, try throwing a <code class="highlighter-rouge">debugger</code> in and then run <code class="highlighter-rouge">node debug database-spike.js</code>. (Here’s a quick <a href="https://spin.atomicobject.com/2015/09/25/debug-node-js/">intro to debugging in node</a>.)</p>
+
+<p>Let’s also try creating a new record. Add another query before your existing one:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">allSecrets</span> <span class="o">=</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">rows</span><span class="p">)</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nx">database</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span>
+  <span class="dl">'</span><span class="s1">INSERT INTO secrets (message, created_at) VALUES (?, ?)</span><span class="dl">'</span><span class="p">,</span>
+  <span class="p">[</span><span class="dl">"</span><span class="s2">I open bananas from the wrong side</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">database</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span><span class="dl">'</span><span class="s1">SELECT * FROM secrets</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">allSecrets</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We’ve chained our promises above to ensure that the new record gets created before we query for all of our records.</p>
+
+<h2 id="new-get-test">New GET Test</h2>
+
+<p>Let’s rewrite our test for <code class="highlighter-rouge">/api/secrets/:id</code></p>
+
+<ul>
+  <li>We need to add our database require statements to the top.</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">environment</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">configuration</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../knexfile</span><span class="dl">'</span><span class="p">)[</span><span class="nx">environment</span><span class="p">];</span>
+<span class="kd">const</span> <span class="nx">database</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">knex</span><span class="dl">'</span><span class="p">)(</span><span class="nx">configuration</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>We need to modify our <code class="highlighter-rouge">beforeEach</code> to manipulate the database instead of <code class="highlighter-rouge">app.locals</code>.</li>
+  <li>Let’s clear out the database when we’re done.</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">beforeEach</span><span class="p">((</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">database</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span>
+    <span class="dl">'</span><span class="s1">INSERT INTO secrets (message, created_at) VALUES (?, ?)</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">[</span><span class="dl">"</span><span class="s2">I open bananas from the wrong side</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">]</span>
+  <span class="p">).</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">done</span><span class="p">())</span>
+<span class="p">})</span>
+
+<span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">database</span><span class="p">.</span><span class="nx">raw</span><span class="p">(</span><span class="dl">'</span><span class="s1">TRUNCATE secrets RESTART IDENTITY</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">done</span><span class="p">())</span>
+  <span class="p">})</span>
+</code></pre></div></div>
+
+<p>And for the test itself - let’s make our assertions more explicit. We’re building a JSON API after all.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return 404 if resource is not found</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/secrets/10000</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="nx">done</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">}</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
+    <span class="nx">done</span><span class="p">()</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+
+<span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return the id and message from the resource found</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/secrets/1</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="nx">done</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">}</span>
+
+    <span class="kd">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">I open bananas from the wrong side</span><span class="dl">"</span>
+
+    <span class="kd">let</span> <span class="nx">parsedSecret</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span>
+
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">parsedSecret</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">parsedSecret</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">parsedSecret</span><span class="p">.</span><span class="nx">created_at</span><span class="p">)</span>
+    <span class="nx">done</span><span class="p">()</span>
+  <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>Don’t forget to migrate your test database. Run <code class="highlighter-rouge">knex -h</code> to find out how to set the environment in <code class="highlighter-rouge">knex</code> commands (like <code class="highlighter-rouge">migrate</code>).</p>
+
+<h3 id="quick-review-and-cfu">Quick Review and CFU</h3>
+
+<ul>
+  <li>What is <a href="https://mochajs.org/#asynchronous-code"><code class="highlighter-rouge">.done()</code></a> doing?</li>
+</ul>
+
+<h3 id="your-turn">Your Turn</h3>
+
+<p>On your own, rewrite the current <code class="highlighter-rouge">/api/secrets/:id</code> route.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Here’s a concise collection of the steps needed to set up your Express app with Knex.</p>
+
+<p><a href="https://gist.github.com/laurenfazah/e0b0033cdc40a313d4710cc04e654556">Setting up Express with Postgres via Knex</a></p>
+
+<h2 id="pushing-to-heroku">Pushing to Heroku</h2>
+
+<p>Now that we are all wired up with <code class="highlighter-rouge">knex</code> in our local dev environment, it’s time to look towards big and better things… the wonderful world of production. Because it doesn’t matter how awesome your endpoints are if you can’t show the world.</p>
+
+<p>We’ve already done a lot of prep without even knowing it, but there are a few gotchyas left to conquer. Before we can config production fully, we need to create our production app with Heroku:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku create app-name
+git push heroku master
+heroku open
+</code></pre></div></div>
+
+<p>This usually gives you an error screen. Let’s take a quick look at the logs to see what the current version of Heroku is thinking:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku logs
+heroku logs --tail // Continue to watch new logs come in
+</code></pre></div></div>
+
+<p>The important thing in the logs states that we’re trying to run <code class="highlighter-rouge">nodemon</code> in production, because Heroku is just trying to <code class="highlighter-rouge">npm start</code>. nodemon is really a tool for development. Since there’s not really a way to define different <code class="highlighter-rouge">npm start</code> commands, we’re going to use a Heroku feature: the <code class="highlighter-rouge">Procfile</code>. This lets Heroku know how what command to run when it starts up in production.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch </span>Procfile
+
+<span class="c"># In the Procfile</span>
+web: node server.js
+</code></pre></div></div>
+
+<p>Cool. The server is up. No errors, at least not until we try to use the API.</p>
+
+<p>Heroku applications don’t come with databases by default. We’ll have to <a href="https://devcenter.heroku.com/articles/heroku-postgresql#provisioning-the-add-on">manually add it to our application</a>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku addons:create heroku-postgresql:hobby-dev
+</code></pre></div></div>
+
+<p>In our <code class="highlighter-rouge">knexfile.js</code>, we set our production database to <code class="highlighter-rouge">process.env.DATABASE_URL</code>. You can see that we now have this environment variable set by running <code class="highlighter-rouge">heroku config</code></p>
+
+<p>The last step is adding some seed data, which I’ll just copy from seeds/dev to seeds/production. Commit all those changes and push it up to Heroku. To migrate and seed with Heroku:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">heroku</span> <span class="nx">run</span> <span class="dl">'</span><span class="s1">knex migrate:latest</span><span class="dl">'</span>
+<span class="nx">heroku</span> <span class="nx">run</span> <span class="dl">'</span><span class="s1">knex seed:run</span><span class="dl">'</span>
+</code></pre></div></div>
+
+<p>It should give you some feedback that it worked. Now do <code class="highlighter-rouge">heroku open</code> and magic! You have data.</p>
+
+<p>I’ve walked you through deployment here to get you going. This is not necessarily something I expect you can just figure out on your own, but Heroku does have good documentation whenever you run into problems. Just don’t forget about your <code class="highlighter-rouge">heroku logs</code> and you should be fine.</p>
+
+<h2 id="more-your-turn">More Your Turn</h2>
+
+<p>So now we can get data from the database, but how do we create? Modify the test and implementation for <code class="highlighter-rouge">POST /api/secrets</code>.</p>
+
+<p>Check this <a href="https://stackoverflow.com/questions/2944297/postgresql-function-for-last-inserted-id">StackOverflow question</a> for a good way to get the <code class="highlighter-rouge">id</code> for a newly created record</p>
+
+<p>Then we’ll go over a working implementation.</p>
+
+<h2 id="milestone">Milestone</h2>
+
+<p>Hey! You built:</p>
+
+<ul>
+  <li>a RESTful API in Node</li>
+  <li>that uses Postgresql</li>
+  <li>and works in your 3 main environments</li>
+</ul>
+
+<p>Not too shabby! And you’ve got the knowledge to add all the routes and tables you like. But, things may start getting out of control soon. How big should your <code class="highlighter-rouge">server.js</code> really be anyway?</p>
+
+<p>Tomorrow, we’ll go over how to <a href="./organize-an-express-app">Organize an Express App</a></p>
+:ET

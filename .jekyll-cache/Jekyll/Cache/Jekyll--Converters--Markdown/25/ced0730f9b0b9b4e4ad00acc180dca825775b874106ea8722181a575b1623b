@@ -1,0 +1,39 @@
+I"�
+<h2 id="intro-to-action-cable">Intro to Action Cable</h2>
+
+<ul>
+  <li>How messaging works</li>
+  <li>Asynchronous Messaging</li>
+  <li>WebSockets</li>
+  <li>Differences between the Request-Response and PubSub Messaging patterns</li>
+  <li>How to use the PubSub Messaging pattern in Rails</li>
+</ul>
+
+<h3 id="how-messaging-works">How Messaging Works</h3>
+
+<p>A message pattern is a network-oriented architecture that describes how two different parts of a system connect and communicate with each other.</p>
+
+<h3 id="request-response-pattern">Request-Response Pattern</h3>
+
+<p>When you are browsing the Internet, the most common messaging pattern is the request-response pattern.</p>
+
+<p>When you visit a website, for example, your browser sends a request to a server, and the server responds with the data that your browser will render on your screen. Since this happens at the moment the user sends the request, this is a synchronous request.</p>
+
+<h3 id="asynchronous-messaging">Asynchronous Messaging</h3>
+
+<p>This works well when the user is the one who starts the request, but what if something happened in the server, like receiving an email, and you don’t know anything about it? Using the request-reply pattern synchronously will mean that unless the user sends a new request, like hitting a “refresh” button, she won’t be able the get her email.</p>
+
+<p>The asynchronous request-reply messaging pattern provides a potential solution. This type of pattern lets us to put the request in a queue allowing us to say how often we would like to send a request to the server. Therefore, we can check the server every once in a while to see whether there is new data, like a new email, and get it from the server.</p>
+
+<h3 id="pubsub-messaging-pattern">PubSub Messaging Pattern</h3>
+
+<p>But what if you have are in a chatroom and several users are talking to each other at the same time? If you use the asynchronous request-response pattern, your users will only get the new messages once in a while, derailing the entire conversation.</p>
+
+<p>The PubSub messaging pattern solves this by having one publisher (i.e. the chat service) and many subscribers (i.e. the chatroom participants). This pattern allows the publisher to send one message to one or more clients that are subscribed to that publisher.</p>
+
+<p>This means that every time something changes in the chat service, the server will send a message to all the participants at once allowing real-time conversations.</p>
+
+<p>As you probably have guessed, this isn’t easily supported by HTTP. Enter WebSockets. WebSockets are connections that have state, unlike HTTP which is stateless. It accomplishes this by maintaining a constant connection.</p>
+
+<h3 id="pubsub-in-rails">PubSub in Rails</h3>
+:ET

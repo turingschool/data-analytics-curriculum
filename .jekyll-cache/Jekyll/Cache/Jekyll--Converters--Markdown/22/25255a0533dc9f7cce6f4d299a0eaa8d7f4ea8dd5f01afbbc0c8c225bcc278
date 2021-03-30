@@ -1,0 +1,96 @@
+I"x<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Explain how refactoring fits into the RED-GREEN-REFACTOR cycle</li>
+  <li>Identify the difference between refactoring and “changing stuff”</li>
+  <li>Define and apply the Move Method refactoring pattern</li>
+  <li>Define and apply the Extract Class refactoring pattern</li>
+  <li>Define and apply the Hide Delegate refactoring pattern</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/refactoring_patterns">here</a></p>
+
+<h2 id="warmup">Warmup</h2>
+
+<ol>
+  <li>Why do we refactor?</li>
+  <li>What’s the difference between “refactoring” and “changing stuff”?</li>
+  <li>Does refactoring always make code better?</li>
+</ol>
+
+<h2 id="key-points">Key Points</h2>
+
+<p>“What if we move it over here… will that fix it?”</p>
+
+<p>Let’s start by discussing Refactoring at a high level:</p>
+
+<ul>
+  <li>
+    <p>The “Red-Green-Refactor” loop</p>
+
+    <ol>
+      <li>Red - Create a unit test that fails.</li>
+      <li>Green - Write code to make the unit test pass.</li>
+      <li>Refactor - Clean up the messiness.</li>
+    </ol>
+  </li>
+  <li>Changing the internals of code without changing the external behavior</li>
+  <li>The concept of technical debt and awkward analogies to personal debt</li>
+  <li>Software patterns are common solutions to common problems</li>
+  <li>Refactoring patterns are common <em>transformations</em>, not <em>improvements</em> .</li>
+  <li>
+    <p>Three common refactoring patterns</p>
+
+    <ol>
+      <li><a href="refactoring_patterns_station_1">Move Method</a>
+        <ul>
+          <li>Where should it live?</li>
+          <li>What is the role of the class, does this functionality belong?</li>
+          <li>Which class/object does this method reference?</li>
+        </ul>
+      </li>
+      <li><a href="refactoring_patterns_station_2">Extract Class</a>
+        <ul>
+          <li>Can you make chunks of methods?</li>
+          <li>Can they be grouped to feel like an object?</li>
+          <li>Would they have attributes?</li>
+          <li>Sandi Metz rules: Class should be less than 100 lines</li>
+        </ul>
+      </li>
+      <li><a href="refactoring_patterns_station_3">Hide Delegate</a>
+        <ul>
+          <li>What does the interface look like? Can we simplify it?</li>
+          <li>Law of Demeter</li>
+          <li>Protect from change</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="live-refactoring">Live Refactoring</h3>
+
+<p>For the next two hours you will apply the three refactoring patterns outlined above to <a href="https://github.com/turingschool-examples/refactoring_patterns">this</a> repository. Spend forty minutes on each.</p>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>What was challenging about refactoring the above exercises?</li>
+  <li>Which refactoring pattern might you reach for first?</li>
+  <li>Explain each refactoring pattern and the key motivation for using it.</li>
+</ul>
+
+<h2 id="homework">Homework</h2>
+
+<ul>
+  <li>Tonight you should watch <a href="http://confreaks.tv/videos/cascadiaruby2012-therapeutic-refactoring">Katrina’s Therapeutic Refactoring talk</a>.</li>
+</ul>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li>The readings we used today can be <a href="https://drive.google.com/file/d/0B4C6lfVKu-E7ZlFDTnhyTklXdm8/view?usp=sharing">found here</a>. Read through the refactoring patterns not covered in this lesson.</li>
+</ul>
+:ET

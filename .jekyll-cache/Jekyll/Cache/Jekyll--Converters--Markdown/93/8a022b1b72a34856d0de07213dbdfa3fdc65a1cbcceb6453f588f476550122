@@ -1,0 +1,170 @@
+I"D-<h2 id="learning-goals">Learning Goals</h2>
+
+<p>By the end of this lesson, you will:</p>
+
+<ul>
+  <li>Understand how to make code organization decisions in an un-opinionated framework.</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/organizing_an_express_app">here</a></p>
+
+<h2 id="pre-reqs">Pre-reqs</h2>
+
+<p>We’re going to start from the end of the <a href="http://backend.turing.io/module4/lessons/express_knex">Building an Express App</a></p>
+
+<p>If you need it, you can clone <a href="https://github.com/turingschool-examples/publications">this</a> repo.</p>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Given the code that you currently have in the <code class="highlighter-rouge">/index.js</code> file:</p>
+
+<ul>
+  <li>Walk through each line of code and describe what it’s doing.</li>
+  <li>How might you split the code in your routes into smaller functions?</li>
+  <li>How might you split it into separate files?</li>
+</ul>
+
+<h2 id="models-and-controllers">Models and Controllers</h2>
+
+<p>Let’s do some refactoring. Right now, <code class="highlighter-rouge">/index.js</code> is hard to read and its methods are doing too much.</p>
+
+<p>Think of the last Rails app you’ve built. You probably spent a very small amount of time making structural and design decisions (think routes, controllers, models). Just because the framework we’re currently using doesn’t prepackage our structure, doesn’t mean we shouldn’t implement something that’s still quite helpful. Therefore, we’ll be aiming to add some lightweight MVC structure to our Express apps.</p>
+
+<h2 id="models">Models</h2>
+
+<h3 id="discuss-where-can-we-refactor">Discuss: Where Can We Refactor?</h3>
+
+<p>Take 3 minutes to answer the following questions with a partner assuming you were going to create a new file to act as a Paper Model in your application:</p>
+
+<ul>
+  <li>What will this file be called?</li>
+  <li>Where will you put it?</li>
+  <li>What are its responsibilities?</li>
+  <li>Is there any code in this function that is specifically not the responsibility of a model?</li>
+  <li>Go ahead and see if you can move your code and ensure that everything still works.</li>
+</ul>
+
+<h3 id="with-a-partner-implement-models">With a Partner: Implement Models</h3>
+
+<p>First, some structure:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mkdir lib
+$ mkdir lib/models
+$ touch models/paper.js
+</code></pre></div></div>
+
+<p>Let’s start by extracting our SQL out of our handlers and into <code class="highlighter-rouge">paper.js</code></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// paper.js</span>
+
+<span class="kd">const</span> <span class="nx">environment</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">configuration</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../../knexfile</span><span class="dl">'</span><span class="p">)[</span><span class="nx">environment</span><span class="p">];</span>
+<span class="kd">const</span> <span class="nx">database</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">knex</span><span class="dl">'</span><span class="p">)(</span><span class="nx">configuration</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">all</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">database</span><span class="p">(</span><span class="dl">'</span><span class="s1">papers</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">select</span><span class="p">()</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">all</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We can now refactor our <code class="highlighter-rouge">index.js</code> GET handler as such:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// index.js</span>
+<span class="kd">const</span> <span class="nx">Paper</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./models/paper</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/v1/papers</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">Paper</span><span class="p">.</span><span class="nx">all</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">papers</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">papers</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="nx">error</span><span class="p">});</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="controllers">Controllers</h2>
+
+<p>Our <code class="highlighter-rouge">index.js</code> is still a little bulky. Something I’ve noticed is that each block of code in this file is mostly comprised of a function to handle the request.</p>
+
+<p>Could we create a controller to handle this functionality?</p>
+
+<p>Take 3 minutes and discuss with a partner:</p>
+
+<ul>
+  <li>What code from our <code class="highlighter-rouge">index.js</code> looks like it might belong in a controller?</li>
+  <li>How could you extract that code in to a function or functions?</li>
+  <li>If you had to extract this code to another file, what questions would you have?</li>
+</ul>
+
+<h3 id="your-turn">Your Turn</h3>
+
+<p>Given that the second parameter of your <code class="highlighter-rouge">.get()</code> and <code class="highlighter-rouge">.post()</code> methods are just functions, try to extract them to a module in <code class="highlighter-rouge">lib/controllers</code>.</p>
+
+<p>For example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// lib/controllers/papers_controller.js</span>
+<span class="kd">const</span> <span class="nx">Paper</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">../models/paper</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">index</span> <span class="o">=</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">Paper</span><span class="p">.</span><span class="nx">all</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">papers</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">json</span><span class="p">(</span><span class="nx">papers</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="nx">error</span><span class="p">});</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">index</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="routes">Routes</h2>
+
+<p>As our application accrues more routes, it might also be nice to move our routes out to separate files. Express will let us do that using Express Router. Create a new file to hold the code below:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/routes/api/v1/papers.js
+
+const express = require('express');
+const router  = express.Router();
+const papersController = require('../../../controllers/papers_controller')
+
+router.get('/', papersController.index);
+
+module.exports = router
+</code></pre></div></div>
+
+<p>And update <code class="highlighter-rouge">index.js</code> by taking out the papersController and the get route for papers. Replace with the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># index.js
+const papers = require('./lib/routes/api/v1/papers')
+
+app.use('/api/v1/papers', papers)
+</code></pre></div></div>
+
+<h3 id="check-your-refactor">Check Your Refactor</h3>
+
+<p>Start our application by spinning up our server <code class="highlighter-rouge">node index.js</code> &amp; visit <code class="highlighter-rouge">localhost:3000/api/v1/papers</code> in Postman.
+You should see all the papers in you database.</p>
+
+<h3 id="your-turn-1">Your Turn</h3>
+
+<p>Refactor to pull the remaining routes into the necessary files following the same pattern as above.
+Check to see if your routes are still working after you refactor by using Postman.</p>
+
+<h2 id="going-further">Going Further</h2>
+
+<h3 id="static-class-methods"><code class="highlighter-rouge">static</code> Class Methods</h3>
+
+<p>Ideally in OOP, our controllers and models would be class-based. Explore <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static"><code class="highlighter-rouge">static</code></a> methods to see how we can easily emulate Ruby’s class methods.</p>
+
+<h3 id="sessions">Sessions</h3>
+
+<p>Express doesn’t come packaged with simple session tooling, but <a href="https://github.com/expressjs/cookie-session">cookie-session</a> makes things just as easy. Check out their docs for getting quickly set up.</p>
+:ET

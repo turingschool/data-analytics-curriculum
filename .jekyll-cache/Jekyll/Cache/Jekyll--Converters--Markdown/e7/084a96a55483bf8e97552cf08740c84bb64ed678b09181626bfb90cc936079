@@ -1,0 +1,161 @@
+I"& <h2 id="project-description">Project Description</h2>
+
+<p>In this project, we’ll be focusing on consuming and working with data from public APIs.</p>
+
+<p>As a vehicle for learning these concepts, we’ll be selecting an API from a popular website and working to re-construct a simplified version of the website’s existing UI using their own API. For example, you might decide to use the Twitter API to build a basic version of the Twitter feed where users can view and post tweets.</p>
+
+<p>As we build these features, we’ll also be working with the OAuth protocol to authenticate our users with the third-party provider, and using various testing techniques to allow us to test against the third-party data.</p>
+
+<p>The project requirements are listed below:</p>
+
+<ul>
+  <li><a href="#learning-goals">Learning Goals</a></li>
+  <li><a href="#technical-expectations">Technical Expectations</a></li>
+  <li><a href="#available-apis">Available APIs</a></li>
+  <li><a href="#milestones">Milestones</a></li>
+  <li><a href="#what-to-expect">What to Expect</a></li>
+  <li><a href="#evaluation">Evaluation</a></li>
+</ul>
+
+<h2 id="-learning-goals"><a name="learning-goals"></a> Learning Goals</h2>
+
+<ul>
+  <li>Learn to consume data from third-party APIs</li>
+  <li>Continue to emphasize performance, UI, and overall user experience</li>
+  <li>Continue using TDD to drive all layers of development</li>
+  <li>Coordinate with project stakeholders to produce quality code and product</li>
+  <li>This project will be completed individually over a period of 4 days.</li>
+</ul>
+
+<h2 id="-technical-expectations"><a name="technical-expectations"></a> Technical Expectations</h2>
+
+<p>You’ll work with an instructor to define more explicitly the requirements for your specific application, but the basic requirements for this project include:</p>
+
+<ul>
+  <li>Use an Omniauth authentication library for authenticating users with the 3rd-party service.</li>
+  <li>Mimic the interface functionality of one online service from the list below.</li>
+  <li>Consume an external API to get real data and interact with a third-party service.</li>
+  <li>Do <em>NOT</em> use a gem to communicate with the external API (Omniauth is OK)</li>
+</ul>
+
+<h2 id="-available-apis"><a name="available-apis"></a> Available APIs</h2>
+
+<p>To start, you need to select an API to work with. We’ve selected the following list of applications for their well-documented public APIs, and relatively straightforward UI’s.</p>
+
+<p>For each project, we have included a rough summary list of features to include. As with any development project, you should focus on moving iteratively through the most basic features before starting on more complex ones. During the project, the instructors will meet with you to assess progress and determine what features to focus on next.</p>
+
+<h3 id="github">Github</h3>
+
+<p>Build a basic version of the Github profile / feed UI. As a user, I should be able to:</p>
+
+<ul>
+  <li>Authenticate with my github account</li>
+  <li>View basic information about my account (profile pic, number of starred repos, followers, following)</li>
+  <li>View a summary feed of my recent activity (recent commits)</li>
+  <li>View a summary feed of recent activity from users whom I follow</li>
+  <li>View a list of organizations I’m a member of</li>
+  <li>View a list of my repositories</li>
+</ul>
+
+<p><strong>Extensions:</strong></p>
+
+<ul>
+  <li>View a list of open pull requests that I have opened</li>
+  <li>View a list of “@mentions” that I was included in</li>
+  <li>Create a new repository</li>
+</ul>
+
+<h3 id="reddit">Reddit</h3>
+
+<p><em>Reddit can be a scary place. Tread lightly.</em></p>
+
+<p>Build a basic subreddit browser. As a user, I should be able to:</p>
+
+<ul>
+  <li>Authenticate with my Reddit account</li>
+  <li>View my basic info (username, karma)</li>
+  <li>View a list of my subreddit subscriptions</li>
+  <li>View a subreddit, with it’s rules and sidebar content</li>
+  <li>View the last 15 posts in a subreddit. Each post should be a link</li>
+  <li>View the score for each post</li>
+  <li>View the comments for each post. Comment replies should be visually nested.</li>
+</ul>
+
+<p><strong>Extensions:</strong></p>
+
+<ul>
+  <li>Add pagination for a subreddit</li>
+  <li>Add upvote and downvote links for each post</li>
+  <li>Add upvote and downvote links for each comment</li>
+  <li>Be able to view and send private messages</li>
+  <li>Create a new subreddit</li>
+</ul>
+
+<h2 id="-milestones"><a name="milestones"></a> Milestones</h2>
+
+<p>By <strong>Tuesday afternoon</strong> you should have oAuth implemented. Using the token you receive from authentication, you should be able to make requests to the API at least using Postman or curl. Ideally you will be able to make a request from your application and display <em>some information</em> on a page by Tuesday evening/Wednesday morning even if the code has not yet been refactored into a service. This will leave you with Wednesday and Thursday to refactor and implement the required functionality.</p>
+
+<h2 id="-what-to-expect-from-instructors"><a name="what-to-expect"></a> What to expect from instructors</h2>
+
+<p>Instructors will work to review pull requests for code quality and limited debugging. As we start to move forward in Mod 3, we continue to encourage you to rely upon available documentation to implement functionality, even if you are uncomfortable with how the code is working. If you do run into a problem where you are unable to implement some functionality after exhausting your resources, please submit a [WIP] pull request <em>with an explicit question</em> so that instructors can view the code in context.</p>
+
+<h2 id="-evaluation"><a name="evaluation"></a> Evaluation</h2>
+
+<p>This project is not graded but the following rubric can help determine if you are moving at the correct pace:</p>
+
+<p>(1) well below expectations
+(2) below expectations
+(3) as expected
+(4) better than expected</p>
+
+<h3 id="feature-delivery">Feature Delivery</h3>
+
+<p><strong>1. Completion</strong></p>
+
+<ul>
+  <li>4: Developer delivered all planned features plus 2 extensions.</li>
+  <li>3: Developer delivered all planned features.</li>
+  <li>2: Developer reduced functionality to meet the deadline.</li>
+  <li>1: Developer missed major features and/or the application is not deployed to production.</li>
+</ul>
+
+<p><strong>2. Organization</strong></p>
+
+<ul>
+  <li>4: Developer used a project management tool and updated their progress in real-time.</li>
+  <li>3: Developer used a project management tool to keep their project organized.</li>
+  <li>2: Developer used a project management tool but didn’t update the progress frequently.</li>
+  <li>1: Developer failed to use a project management tool to track its progress.</li>
+</ul>
+
+<h3 id="technical-quality">Technical Quality</h3>
+
+<p><strong>1. Test-Driven Development</strong></p>
+
+<ul>
+  <li>4: Project demonstrates high test coverage (&gt;90%), tests at the feature and unit levels, and does not rely on external * services.</li>
+  <li>3: Project demonstrates high test coverage (&gt;80%), tests at feature and unit levels, but relies on external services</li>
+  <li>2: Project demonstrates high test coverage (&gt;70%), but does not adequately balance feature and unit tests</li>
+  <li>1: Project does not have 70% test coverage</li>
+</ul>
+
+<p><strong>2. Code Quality</strong></p>
+
+<ul>
+  <li>4: Project demonstrates exceptionally well factored code.</li>
+  <li>3: Project demonstrates solid code quality and MVC principles.</li>
+  <li>2: Project demonstrates some gaps in code quality and/or application of MVC principles.</li>
+  <li>1: Project demonstrates poor factoring and/or understanding of MVC.</li>
+</ul>
+
+<h3 id="product-experience">Product Experience</h3>
+
+<p><strong>1. User Experience</strong></p>
+
+<ul>
+  <li>4: The application is a logical and easy to use implementation of the target application</li>
+  <li>3: The application covers many interactions of the target application, but has a few holes in lesser-used functionality</li>
+  <li>2: The application shows effort in the interface, but the result is not effective</li>
+  <li>1: The application is confusing or difficult to use</li>
+</ul>
+:ET

@@ -1,0 +1,163 @@
+I"2<p><em><a href="./index">Back to Enigma Home</a></em></p>
+
+<h2 id="class-requirements">Class Requirements</h2>
+
+<p>You are required to build an <code class="highlighter-rouge">Enigma</code> class with the methods described below; you may find it useful to create additional classes and/or modules. All classes, modules and methods should have a single responsibility, and should be well organized and readable.</p>
+
+<h2 id="enigma-class">Enigma Class</h2>
+
+<p>Create an <code class="highlighter-rouge">Enigma</code> class with the following methods:</p>
+
+<h4 id="enigmaencryptmessage-key-date"><code class="highlighter-rouge">Enigma#encrypt(message, key, date)</code></h4>
+
+<p>The <code class="highlighter-rouge">encrypt</code> method takes a message String as an argument. It can optionally take a Key and Date as arguments to use for encryption. If the key is not included, generate a random key. If the date is not included, use today’s date.</p>
+
+<p>The <code class="highlighter-rouge">encrypt</code> method returns a hash with three keys:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">:encryption</code> =&gt; the encrypted String</li>
+  <li><code class="highlighter-rouge">:key</code> =&gt; the key used for encryption as a String</li>
+  <li><code class="highlighter-rouge">:date</code> =&gt; the date used for encryption as a String in the form DDMMYY</li>
+</ol>
+
+<h4 id="enigmadecryptciphertext-key-date"><code class="highlighter-rouge">Enigma#decrypt(ciphertext, key, date)</code></h4>
+
+<p>The <code class="highlighter-rouge">decrypt</code> method takes a ciphertext String and the Key used for encryption as arguments. The <code class="highlighter-rouge">decrypt</code> method can optionally take a date as the third argument. If no date is given, this method should use today’s date for decryption.</p>
+
+<p>The <code class="highlighter-rouge">decrypt</code> method returns a hash with three keys:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">:decryption</code> =&gt; the decrypted String</li>
+  <li><code class="highlighter-rouge">:key</code> =&gt; the key used for decryption as a String</li>
+  <li><code class="highlighter-rouge">:date</code> =&gt; the date used for decryption as a String in the form DDMMYY</li>
+</ol>
+
+<h3 id="interaction-pattern">Interaction Pattern</h3>
+
+<p>The <code class="highlighter-rouge">Enigma</code> class should respond to the following interaction pattern:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'date'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/enigma'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span> <span class="o">=</span> <span class="no">Enigma</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1">#=&gt; #&lt;Enigma:0x00007ff90f24cb78...&gt;</span>
+
+<span class="c1"># encrypt a message with a key and date</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">encrypt</span><span class="p">(</span><span class="s2">"hello world"</span><span class="p">,</span> <span class="s2">"02715"</span><span class="p">,</span> <span class="s2">"040895"</span><span class="p">)</span>
+<span class="c1">#=&gt;</span>
+<span class="c1">#   {</span>
+<span class="c1">#     encryption: "keder ohulw",</span>
+<span class="c1">#     key: "02715",</span>
+<span class="c1">#     date: "040895"</span>
+<span class="c1">#   }</span>
+
+<span class="c1"># decrypt a message with a key and date</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">decrypt</span><span class="p">(</span><span class="s2">"keder ohulw"</span><span class="p">,</span> <span class="s2">"02715"</span><span class="p">,</span> <span class="s2">"040895"</span><span class="p">)</span>
+<span class="c1">#=&gt;</span>
+<span class="c1">#   {</span>
+<span class="c1">#     decryption: "hello world",</span>
+<span class="c1">#     key: "02715",</span>
+<span class="c1">#     date: "040895"</span>
+<span class="c1">#   }</span>
+
+<span class="c1"># encrypt a message with a key (uses today's date)</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">encrypted</span> <span class="o">=</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">encrypt</span><span class="p">(</span><span class="s2">"hello world"</span><span class="p">,</span> <span class="s2">"02715"</span><span class="p">)</span>
+<span class="c1">#=&gt; # encryption hash here</span>
+
+<span class="c1">#decrypt a message with a key (uses today's date)</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">decrypt</span><span class="p">(</span><span class="n">encrypted</span><span class="p">[</span><span class="ss">:encryption</span><span class="p">],</span> <span class="s2">"02715"</span><span class="p">)</span>
+<span class="c1">#=&gt; # decryption hash here</span>
+
+<span class="c1"># encrypt a message (generates random key and uses today's date)</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">encrypt</span><span class="p">(</span><span class="s2">"hello world"</span><span class="p">)</span>
+<span class="c1">#=&gt; # encryption hash here</span>
+</code></pre></div></div>
+
+<h2 id="command-line-interface">Command Line Interface</h2>
+
+<p>Add a command line interface for encryption and decryption. You should create a Runner file called <code class="highlighter-rouge">encrypt.rb</code> that takes two command line arguments. The first is an existing file that contains a message to encrypt. The second is a file where your program should write the encrypted message. In addition to writing the encrypted message to the file, your program should output to the screen the file it wrote to, the key and the date.</p>
+
+<p>Additionally, you should create a Runner file called <code class="highlighter-rouge">decrypt.rb</code> that takes four command line arguments. The first is an existing file that contains an encrypted message. The second is a file where your program should write the decrypted message. The third is the key to be used for decryption. The fourth is the date to be used for decryption. In addition to writing the decrypted message to the file, your program should output to the screen the file it wrote to, the key used for decryption, and the date used for decryption.</p>
+
+<p>You should be able to use your CLI like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ruby ./lib/encrypt.rb message.txt encrypted.txt
+Created 'encrypted.txt' with the key 82648 and date 240818
+$ ruby ./lib/decrypt.rb encrypted.txt decrypted.txt 82648 240818
+Created 'decrypted.txt' with the key 82648 and date 240818
+</code></pre></div></div>
+
+<p>See <a href="../../lessons/working_with_files">this Lesson Plan</a> for more info about working with files.</p>
+
+<p><strong>You do not have to test your command line interface</strong></p>
+
+<h4 id="useful-methods">Useful Methods</h4>
+
+<ul>
+  <li>Array#rotate</li>
+  <li>Date#strftime</li>
+  <li>Date::today</li>
+  <li>Enumerator#with_index</li>
+</ul>
+
+<h2 id="cracking">Cracking</h2>
+
+<p><strong>The following is only required for scoring a 4 on functionality</strong></p>
+
+<h4 id="enigmacrackciphertext-date"><code class="highlighter-rouge">Enigma#crack(ciphertext, date)</code></h4>
+
+<p>The <code class="highlighter-rouge">crack</code> method decrypts a message without being given the key. This method can optionally take a date to use for cracking as a second argument. If no date is given, it should use today’s date for cracking. It should output a hash containing the decrypted message, the date used for encryption in the form of DDMMYY, and the Key used for encryption.</p>
+
+<p>We believe that each enemy message ends with the characters <code class="highlighter-rouge">" end"</code>. Use this to crack the encryption.</p>
+
+<p>The <code class="highlighter-rouge">Enigma</code> class should now respond to the following interaction pattern:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'date'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/enigma'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span> <span class="o">=</span> <span class="no">Enigma</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1">#=&gt; #&lt;Enigma:0x00007ff90f24cb78...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">encrypt</span><span class="p">(</span><span class="s2">"hello world end"</span><span class="p">,</span> <span class="s2">"08304"</span><span class="p">,</span> <span class="s2">"291018"</span><span class="p">)</span>
+<span class="c1">#=&gt;</span>
+<span class="c1">#   {</span>
+<span class="c1">#     encryption: "vjqtbeaweqihssi",</span>
+<span class="c1">#     key: "08304",</span>
+<span class="c1">#     date: "291018"</span>
+<span class="c1">#   }</span>
+
+<span class="c1"># crack an encryption with a date</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">crack</span><span class="p">(</span><span class="s2">"vjqtbeaweqihssi"</span><span class="p">,</span> <span class="s2">"291018"</span><span class="p">)</span>
+<span class="c1">#=&gt;</span>
+<span class="c1">#   {</span>
+<span class="c1">#     decryption: "hello world end",</span>
+<span class="c1">#     date: "291018",</span>
+<span class="c1">#     key: "08304"</span>
+<span class="c1">#   }</span>
+
+<span class="c1"># crack an encryption (uses today's date)</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">enigma</span><span class="p">.</span><span class="nf">crack</span><span class="p">(</span><span class="s2">"vjqtbeaweqihssi"</span><span class="p">)</span>
+<span class="c1">#=&gt;</span>
+<span class="c1">#   {</span>
+<span class="c1">#     decryption: "hello world end",</span>
+<span class="c1">#     date: # todays date in the format DDMMYY,</span>
+<span class="c1">#     key: # key used for encryption</span>
+<span class="c1">#   }</span>
+</code></pre></div></div>
+
+<h4 id="cracking-interface">Cracking Interface</h4>
+
+<p>Additionally, create a Runner file called crack.rb that takes three command line arguments. The first is an existing file that contains an encrypted message. The second is a file where your program should write the cracked message. The third is the date to be used for cracking. In addition to writing the cracked message to the file, your program should output to the screen the file it wrote to, the key used for cracking, and the date used for cracking:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ruby ./lib/encrypt.rb message.txt encrypted.txt
+Created 'encrypted.txt' with the key 82648 and date 240818
+$ ruby ./lib/crack.rb encrypted.txt cracked.txt 240818
+Created 'cracked.txt' with the cracked key 82648 and date 240818
+</code></pre></div></div>
+:ET

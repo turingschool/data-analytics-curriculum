@@ -1,0 +1,471 @@
+I"��<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>apply a Class to a chunk of functionality</li>
+  <li>untilize code written within a Class</li>
+  <li>break apart a chunk of functionality in to individual methods</li>
+  <li>analyze code snippet for opportunities to make DRY</li>
+</ul>
+
+<h2 id="warm-up">Warm-up</h2>
+
+<p><strong>Turn-and-Talk:</strong> Let’s talk about newspapers (yes, they still exist). Newspapers and other print media are forms of communication. When it comes to good communication for a newspaper, it’s not good enough to simply print the news. Imagine a newspaper where all of the text is the same size and there are no pictures. The information contained is roughly the same but most people wouldn’t be drawn to reading it. With a partner sitting next to you discuss the following questions:</p>
+
+<ul>
+  <li>Assuming you don’t read every word of a newspaper, how do you decide what to read?</li>
+  <li>Our code is also a form of communication. It’s communication with future developers and future you (at some point you will get frustrated about some code and ask “who wrote this?” only to find it was you). How can we apply the techniques of newspapers to make our code better?</li>
+</ul>
+
+<h2 id="superfizz">SuperFizz</h2>
+
+<ul>
+  <li>
+    <p>Lets create a new file in our <code class="highlighter-rouge">classroom_exercises</code> folder, called <code class="highlighter-rouge">translating_code_to_classes.rb</code></p>
+  </li>
+  <li>
+    <p>Last week we worked with <code class="highlighter-rouge">superfizz.rb</code>. Now we are going to take that code and turn it into a class with methods.</p>
+  </li>
+  <li>
+    <p>Tying into our warm-up, which of these implementations would you rather work with? (they do the same thing)</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1000</span><span class="p">.</span><span class="nf">times</span><span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">7</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"SuperFizzBuzz"</span><span class="p">;</span><span class="k">elsif</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">7</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"SuperFizz"</span><span class="p">;</span><span class="k">elsif</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">7</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"SuperBuzz"</span><span class="p">;</span><span class="k">elsif</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"FizzBuzz"</span><span class="p">;</span><span class="k">elsif</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"Fizz"</span><span class="p">;</span><span class="k">elsif</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"Buzz"</span><span class="p">;</span><span class="k">elsif</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">7</span><span class="o">==</span><span class="mi">0</span><span class="p">);</span><span class="nb">puts</span><span class="s2">"Super"</span><span class="p">;</span><span class="k">else</span><span class="p">;</span><span class="nb">puts</span><span class="p">(</span><span class="n">n</span><span class="p">);</span><span class="k">end</span><span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+  <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"SuperFizzBuzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span>  <span class="s2">"SuperFizz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"SuperBuzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"FizzBuzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"Fizz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"Buzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"Super"</span>
+  <span class="k">else</span>
+    <span class="nb">puts</span> <span class="n">num</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We’ll use the second implementation.</p>
+
+<h2 id="creating-a-class">Creating a class</h2>
+
+<ul>
+  <li>The first thing that we can do is create a class called <code class="highlighter-rouge">SuperFizz</code></li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="mi">1000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"SuperFizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span>  <span class="s2">"SuperFizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"SuperBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"FizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Fizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Buzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Super"</span>
+    <span class="k">else</span>
+      <span class="nb">puts</span> <span class="n">num</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Now when we run this file, it still outputs what we want but it is encompassed in a class that we can now create multiple instances of.</p>
+  </li>
+  <li>
+    <p>In our example, we ran through numbers 0-1000. When we create a class, we give ourselves the ability to create an instance for each number we pass through.</p>
+  </li>
+  <li>
+    <p>Let’s remove the <code class="highlighter-rouge">1000.times do</code> so we can control our number.</p>
+  </li>
+  <li>
+    <p>Before looking at the solution below, how would you make it dynamic?</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"SuperFizzBuzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span>  <span class="s2">"SuperFizz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"SuperBuzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"FizzBuzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"Fizz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"Buzz"</span>
+  <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="nb">puts</span> <span class="s2">"Super"</span>
+  <span class="k">else</span>
+    <span class="nb">puts</span> <span class="n">num</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>If we run our file now, it doesn’t like that. Why? Because now it is expecting SuperFizz to define a variable named <code class="highlighter-rouge">num</code> but we have not defined one. We are now passing in <code class="highlighter-rouge">num</code> so how do we deal with that?</p>
+  </li>
+  <li>
+    <p>By initializing our class, we have created a place that is looked to first for default information.</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"SuperFizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span>  <span class="s2">"SuperFizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"SuperBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"FizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Fizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Buzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Super"</span>
+    <span class="k">else</span>
+      <span class="nb">puts</span> <span class="n">num</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">87687687</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Now we can pass in any number and get back the result.</p>
+  </li>
+  <li>
+    <p>Maybe there are other things that will eventually happen in the <code class="highlighter-rouge">class SuperFizz</code> so we should only check the digits when we specifically want to.</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="nb">attr_reader</span> <span class="ss">:num</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="vi">@num</span> <span class="o">=</span> <span class="n">num</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"SuperFizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span>  <span class="s2">"SuperFizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"SuperBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"FizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Fizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Buzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">puts</span> <span class="s2">"Super"</span>
+    <span class="k">else</span>
+      <span class="nb">puts</span> <span class="n">num</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">super_fizz_buzz</span> <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">105</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">super_fizz</span>      <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">21</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">super_buzz</span>      <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">35</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">fizz_buzz</span>       <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">15</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">fizz</span>            <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">buzz</span>            <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">supper</span>          <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">7</span><span class="p">).</span><span class="nf">run</span> <span class="c1"># bad variable name but super is taken in Ruby ;)</span>
+<span class="n">flat</span>            <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">8</span><span class="p">).</span><span class="nf">run</span>
+</code></pre></div></div>
+
+<p>(<strong>Note:</strong> We added several checks at the end of the file above so we can make sure that our changes don’t break functionality.)</p>
+
+<ul>
+  <li>By creating an <code class="highlighter-rouge">attr_reader</code>, we have allowed ourselves access to a method named <code class="highlighter-rouge">num</code> that holds the number we passed in when we created a new instance of <code class="highlighter-rouge">SuperFizz.new</code></li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">num</span>
+  <span class="vi">@num</span> <span class="c1">#=&gt; 87687687</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>Food for thought:</strong> What is the return value of the <code class="highlighter-rouge">run</code> method above? Another way to ask the same question: If we assigned the run method to a local variable (<code class="highlighter-rouge">return_value = superfizz.run</code>) what would <code class="highlighter-rouge">return_value</code> return?</p>
+
+<p>We should change the method so it returns an actual value. If we want to see output, we will need to move the <code class="highlighter-rouge">puts</code> statement to the bottom of the file.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="nb">attr_reader</span> <span class="ss">:num</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="vi">@num</span> <span class="o">=</span> <span class="n">num</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="s2">"SuperFizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+       <span class="s2">"SuperFizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="s2">"SuperBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="s2">"FizzBuzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="s2">"Fizz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="s2">"Buzz"</span>
+    <span class="k">elsif</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="s2">"Super"</span>
+    <span class="k">else</span>
+      <span class="n">num</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">super_fizz_buzz</span> <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">105</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">super_fizz</span>      <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">21</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">super_buzz</span>      <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">35</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">fizz_buzz</span>       <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">15</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">fizz</span>            <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">buzz</span>            <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">supper</span>          <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">7</span><span class="p">).</span><span class="nf">run</span>
+<span class="n">flat</span>            <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">8</span><span class="p">).</span><span class="nf">run</span>
+
+<span class="nb">puts</span> <span class="n">super_fizz_buzz</span>
+<span class="nb">puts</span> <span class="n">super_fizz</span>
+<span class="nb">puts</span> <span class="n">super_buzz</span>
+<span class="nb">puts</span> <span class="n">fizz_buzz</span>
+<span class="nb">puts</span> <span class="n">fizz</span>
+<span class="nb">puts</span> <span class="n">buzz</span>
+<span class="nb">puts</span> <span class="n">supper</span>
+<span class="nb">puts</span> <span class="n">flat</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>There is quite a bit of repetition in here, let’s clean some of that up. Maybe we can check each number to see if it is divisible by 3, 5, or 7 and then create a string based on the results.</p>
+  </li>
+  <li>
+    <p>Let’s start our class with an empty string named <code class="highlighter-rouge">result</code> to store our generated word.</p>
+  </li>
+  <li>
+    <p>Because the longest word that we would like to make is “SuperFizzBuzz”, it seems we should first start by checking if our number is divisible by 7. This would allow “Super” to be the first word in our string.</p>
+  </li>
+  <li>
+    <p>We can use the same logic for determining which number to check against next… since numbers evenly divisible by 3 should return “Fizz”, we should do that second.</p>
+  </li>
+  <li>
+    <p>Now we can check against the number 5 and return “Buzz” if <code class="highlighter-rouge">num</code> is evenly divisible.</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="nb">attr_reader</span> <span class="ss">:num</span><span class="p">,</span> <span class="ss">:result</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="vi">@num</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="vi">@result</span> <span class="o">=</span> <span class="s2">""</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Super"</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Fizz"</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Buzz"</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">empty?</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">num</span><span class="p">.</span><span class="nf">to_s</span>
+    <span class="k">end</span>
+
+    <span class="n">result</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># (Additional code omitted)</span>
+</code></pre></div></div>
+
+<p>Great. Things are moving in the right direction but there’s still room for improvement. Do you see the pattern emerging in our conditionals (<code class="highlighter-rouge">if</code> statements)?</p>
+
+<p>Try this out:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="nb">attr_reader</span> <span class="ss">:num</span><span class="p">,</span> <span class="ss">:result</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="vi">@num</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="vi">@result</span> <span class="o">=</span> <span class="s2">""</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Super"</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Fizz"</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Buzz"</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">empty?</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">num</span><span class="p">.</span><span class="nf">to_s</span>
+    <span class="k">end</span>
+
+    <span class="n">result</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divisible_by?</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">%</span> <span class="n">amount</span> <span class="o">==</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This makes our code more clear and removes repetition. A guideline set out by Sandy Metz in Practical Object Oriented Design in Ruby is to try to limit methods to 5 lines. Let’s see if we can do that.</p>
+
+<p><strong>Rabbit Hole (not essential):</strong> We could also use <code class="highlighter-rouge">+=</code> to add to our strings to the variable. What’s the difference between <code class="highlighter-rouge">+=</code> and <code class="highlighter-rouge">&lt;&lt;</code> for strings in Ruby?</p>
+
+<p>Let’s break out the checks against each number into separate methods.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="nb">attr_reader</span> <span class="ss">:num</span><span class="p">,</span> <span class="ss">:result</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="vi">@num</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="vi">@result</span> <span class="o">=</span> <span class="s2">""</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="n">divide_by_7</span>
+    <span class="n">divide_by_3</span>
+    <span class="n">divide_by_5</span>
+    <span class="n">validate_result</span>
+    <span class="n">result</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divide_by_7</span>
+    <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Super"</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divide_by_3</span>
+    <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Fizz"</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divide_by_5</span>
+    <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Buzz"</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">validate_result</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">empty?</span>
+      <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">num</span><span class="p">.</span><span class="nf">to_s</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divisible_by?</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">%</span> <span class="n">amount</span> <span class="o">==</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>Rabbit Hole (not essential):</strong> This <a href="https://github.com/bbatsov/ruby-style-guide#visibility">styleguide on Github</a> says not to leave all methods public. Which of these methods should be <code class="highlighter-rouge">private</code>?</p>
+
+<p>One last change… The <code class="highlighter-rouge">if</code> statements here are now quite simple. We can write these to be one line like so:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SuperFizz</span>
+  <span class="nb">attr_reader</span> <span class="ss">:num</span><span class="p">,</span> <span class="ss">:result</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+    <span class="vi">@num</span> <span class="o">=</span> <span class="n">num</span>
+    <span class="vi">@result</span> <span class="o">=</span> <span class="s2">""</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="n">divide_by_7</span>
+    <span class="n">divide_by_3</span>
+    <span class="n">divide_by_5</span>
+    <span class="n">validate_result</span>
+    <span class="n">result</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divide_by_7</span>
+    <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Super"</span> <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divide_by_3</span>
+    <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Fizz"</span> <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divide_by_5</span>
+    <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="s2">"Buzz"</span> <span class="k">if</span> <span class="n">divisible_by?</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">validate_result</span>
+    <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">num</span><span class="p">.</span><span class="nf">to_s</span> <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">empty?</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">divisible_by?</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">%</span> <span class="n">amount</span> <span class="o">==</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>We have now created a dynamic object that can do more than one thing. If we wanted to create more methods for SuperFizz, that is also possible and we could likely reuse some of the existing logic.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+  <span class="n">superfizz</span> <span class="o">=</span> <span class="no">SuperFizz</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">superfizz</span><span class="p">.</span><span class="nf">run</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="wrapup">WrapUP</h3>
+<ul>
+  <li>How do you define a class?</li>
+  <li>How do you run code that lives within a Class?</li>
+  <li>Why might you want to wrap your code in a Class?</li>
+  <li>Why might you want to break functionality into multiple methods?</li>
+  <li>How do you call a method from within another method?</li>
+</ul>
+:ET

@@ -1,0 +1,161 @@
+I"�<h1 id="intro-to-flexbox">Intro To Flexbox</h1>
+
+<h2 id="vocab">Vocab</h2>
+
+<ul>
+  <li>Flexbox</li>
+  <li>Bootstrap</li>
+  <li><code class="highlighter-rouge">display: flex;</code></li>
+  <li><code class="highlighter-rouge">justify-content</code></li>
+  <li><code class="highlighter-rouge">flex-wrap</code></li>
+  <li><code class="highlighter-rouge">flex-direction</code></li>
+  <li><code class="highlighter-rouge">flex-flow</code></li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>What strategies have you used so far to position elements on the page?</li>
+  <li>How do you feel about positioning in CSS?</li>
+  <li>Rate your abilities to position elements on the page</li>
+</ul>
+
+<h2 id="flexbox">Flexbox</h2>
+
+<ul>
+  <li>Introduced as syntax in 2015.</li>
+  <li>Flexbox allows us to manipulate the position of tags without all the knowledge of a larger grid system.</li>
+  <li>We can use a grid system (<a href="https://v4-alpha.getbootstrap.com/">Bootstrap</a>, <a href="https://css-tricks.com/snippets/css/complete-guide-grid/">CSS Grid</a>, etc), which works fine but requires more digging into docs and base knowledge about how it works.</li>
+</ul>
+
+<h3 id="using-flexbox">Using Flexbox</h3>
+
+<h3 id="setup">Setup</h3>
+
+<ul>
+  <li>Clone down <a href="https://github.com/turingschool-examples/flexbox_be2">this repo</a>. Open the <code class="highlighter-rouge">index.html</code> file from your command line (For atom, <code class="highlighter-rouge">atom open index.html</code>).</li>
+  <li>Check out the CSS and HTML files to see what is going on.</li>
+</ul>
+
+<h3 id="lets-play">Let’s play</h3>
+
+<ul>
+  <li>Check out the <code class="highlighter-rouge">index.html</code> and <code class="highlighter-rouge">custom.css</code></li>
+  <li>Right now, we have two sections, each with 6 boxes (each 100px in width).</li>
+  <li>We have not set the width on the <code class="highlighter-rouge">.boxes</code> sections so they are taking up the entire width of the page.</li>
+</ul>
+
+<p><img src="../misc/images/flexbox_1.png" alt="Slide 1" /></p>
+
+<h4 id="display-flex">Display: flex;</h4>
+
+<ul>
+  <li>First things first, we want all of those boxes in the <code class="highlighter-rouge">section class="boxes-1</code> to be in a row, not a column but because of the default properties of a <code class="highlighter-rouge">div</code> being block, each one of these boxes is stacked on top of each other.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.boxes-1</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Each child of a flex container becomes a flex item. Text directly contained in a flex container is wrapped in an anonymous flex item.</p>
+  </li>
+  <li>This tells our <code class="highlighter-rouge">boxes-1</code> to turn into a flex container that we can now play with</li>
+  <li>By default, this property aligns elements inline within that container</li>
+</ul>
+
+<p><img src="../misc/images/flexbox_2.png" alt="Slide 2" /></p>
+
+<ul>
+  <li>What happened?</li>
+  <li>Our boxes are set to their width of 100px and now in a row.</li>
+  <li>We can also adjust the width and height of the section that is containing the boxes and the boxes themselves.</li>
+</ul>
+
+<h4 id="flex-wrap">Flex-wrap</h4>
+
+<ul>
+  <li>Let’s change the size of our boxes to 500px and see what happens</li>
+  <li>No matter how big the original boxes were, they will all fit into that section unless we change that option!</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.boxes</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">flex-wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="justify-content">Justify-Content</h4>
+
+<ul>
+  <li>We can play with where the contents sits within this section!</li>
+  <li>We want to center the boxes in this section.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.boxes-1</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+  <span class="nl">justify-content</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Other options: <code class="highlighter-rouge">space-around</code>, <code class="highlighter-rouge">space-between</code>, <code class="highlighter-rouge">flex-start</code>(default), <code class="highlighter-rouge">flex-end</code></li>
+</ul>
+
+<h4 id="flex-direction">Flex-direction</h4>
+
+<ul>
+  <li>By default, the direction is <code class="highlighter-rouge">row</code> but we can use other options such as <code class="highlighter-rouge">column</code> and both in reverse, <code class="highlighter-rouge">column-reverse</code> and <code class="highlighter-rouge">row-reverse</code></li>
+  <li>
+    <p>Let’s reverse our row in <code class="highlighter-rouge">boxes-1</code></p>
+
+    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">.boxes-1</span> <span class="p">{</span>
+    <span class="nl">flex-direction</span><span class="p">:</span> <span class="n">row-reverse</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><img src="../misc/images/flexbox_3.png" alt="Slide 3" /></p>
+
+<ul>
+  <li>A shorthand for both <code class="highlighter-rouge">flex-wrap</code> and <code class="highlighter-rouge">flex-direction</code> is <code class="highlighter-rouge">flex-flow</code></li>
+</ul>
+
+<h4 id="all-boxes-flex">All Boxes Flex</h4>
+
+<ul>
+  <li>What about the other section of boxes?</li>
+  <li>Let’s flex <code class="highlighter-rouge">.all-boxes</code> and apply the some flexbox rules to it.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">.all-boxes</span> <span class="p">{</span>
+  <span class="nl">display</span><span class="p">:</span> <span class="n">flex</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="back-to-dog-party">Back to Dog Party</h3>
+
+<ul>
+  <li>With the time left, take another look at <a href="https://github.com/icorson3/dog-party">Dog Party</a> and see if you can apply Flexbox to your layout.</li>
+</ul>
+
+<h2 id="wrap-up">Wrap Up</h2>
+<ul>
+  <li>What are the 5 main properties to use with Flexbox which we learned today? (There are many more, check out the resources below)
+    <ul>
+      <li>What does each do?</li>
+      <li>What are the possible arguments you can pass each propery?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">A Guide to Flexbox</a></li>
+  <li><a href="https://github.com/tmikeschu/flexendar">Another challenge: flex calendar</a></li>
+  <li><a href="http://flexboxfroggy.com/">A game to learn Flexbox</a></li>
+</ul>
+:ET

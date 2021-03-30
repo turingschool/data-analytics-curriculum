@@ -1,0 +1,407 @@
+I"�y<h3 id="iterations">Iterations:</h3>
+
+<ul>
+  <li><a href="1_getting_started.markdown">1 Getting Started</a></li>
+  <li><a href="2_implementing_artists.markdown">2 Implementing artists</a></li>
+  <li><a href="3_implementing_songs.markdown">3 Implementing songs</a></li>
+  <li><a href="3_optional_additional_song_features.markdown">3.1 Optional Additional Song Features</a></li>
+  <li><a href="4_implementing_playlists.markdown">4 Implementing Playlists</a></li>
+  <li><a href="5_refactoring.markdown">5 Refactoring</a></li>
+  <li><a href="6_controller_tests.markdown">6 Controller Tests</a></li>
+  <li><a href="7_implementing_users.markdown">7 Implementing users</a></li>
+  <li><a href="wip-image-upload.markdown">7.1 Extensions</a></li>
+</ul>
+
+<p>Artists are all set. Now let’s implement <code class="highlighter-rouge">songs</code>. First, check out a new branch:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git checkout -b 3_implement-songs
+</code></pre></div></div>
+
+<p>And like before, we’ll base our implementation off of a feature test. Here’s our user story:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a user
+Given that artists exist in the database
+When I visit the artist songs index
+And I click "New song"
+And I fill in the title
+And I click "Create Song"
+Then I should see the song name
+And I should see a link to the song artist's individual page
+</code></pre></div></div>
+
+<p>So let’s make a spec file: <code class="highlighter-rouge">$ touch spec/features/user_creates_a_song_spec.rb</code>. Try writing your own version of the spec before looking at mine below.</p>
+
+<p><strong>If you want more of a challenge, stop right here and create this test on your own.</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">feature</span> <span class="s2">"User submits a new song"</span> <span class="k">do</span>
+  <span class="n">scenario</span> <span class="s2">"they see the page for the individual song"</span> <span class="k">do</span>
+    <span class="n">artist</span> <span class="o">=</span> <span class="n">create</span><span class="p">(</span><span class="ss">:artist</span><span class="p">)</span>
+
+    <span class="n">song_title</span> <span class="o">=</span> <span class="s2">"One Love"</span>
+
+    <span class="n">visit</span> <span class="n">artist_path</span><span class="p">(</span><span class="n">artist</span><span class="p">)</span>
+    <span class="n">click_on</span> <span class="s2">"New song"</span>
+    <span class="n">fill_in</span> <span class="s2">"song_title"</span><span class="p">,</span> <span class="ss">with: </span><span class="n">song_title</span>
+    <span class="n">click_on</span> <span class="s2">"Create Song"</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span> <span class="n">song_title</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_link</span> <span class="n">artist</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="ss">href: </span><span class="n">artist_path</span><span class="p">(</span><span class="n">artist</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What’s that line <code class="highlighter-rouge">artist = create(:artist)</code>? This is syntax for using a test factory in order to have one place where we specify generic objects we use in our tests. If we now decide that a Song or Artist had some other required attribute, we’d have to update several spec files to create the objects properly.</p>
+
+<p>This duplication makes our tests more fragile than they should be. We need to introduce a factory.</p>
+
+<p>The most common libraries for test factories are <a href="https://github.com/thoughtbot/factory_girl">FactoryGirl</a> and <a href="https://github.com/paulelliott/fabrication">Fabrication</a>.</p>
+
+<p>For this exercise, let’s use FactoryGirl. Open up your Gemfile and add a dependency <code class="highlighter-rouge">gem "factory_girl_rails"</code> and <code class="highlighter-rouge">gem "database_cleaner"</code> in the test/development environment. Run bundle to install the gem.</p>
+
+<p>Now for some configuration. Make a <code class="highlighter-rouge">spec/support</code> directory, and inside of that create a file <code class="highlighter-rouge">spec/support/factory_girl.rb</code>. Add this configuration to get RSpec and FactoryGirl to play nicely:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">RSpec</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">include</span> <span class="no">FactoryGirl</span><span class="o">::</span><span class="no">Syntax</span><span class="o">::</span><span class="no">Methods</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">begin</span>
+      <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">start</span>
+      <span class="no">FactoryGirl</span><span class="p">.</span><span class="nf">lint</span>
+    <span class="k">ensure</span>
+      <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The following line should currently be commented out in <code class="highlighter-rouge">rails_helper.rb</code>. Find it and uncomment it. This line will allow us to require all ruby files that we put inside of the <code class="highlighter-rouge">spec/support</code> directory.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Dir</span><span class="p">[</span><span class="no">Rails</span><span class="p">.</span><span class="nf">root</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'spec/support/**/*.rb'</span><span class="p">)].</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="nb">require</span> <span class="n">f</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Finally, we’ll need to make our factories. Make a file <code class="highlighter-rouge">spec/support/factories.rb</code> and inside of it, we’ll define the Artist factory:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">FactoryGirl</span><span class="p">.</span><span class="nf">define</span> <span class="k">do</span>
+  <span class="n">factory</span> <span class="ss">:artist</span> <span class="k">do</span>
+    <span class="nb">name</span>       <span class="s2">"Bob Marley"</span>
+    <span class="n">image_path</span> <span class="s2">"http://cps-static.rovicorp.com/3/JPG_400/MI0003/146/MI0003146038.jpg"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Take a look back at your spec. Where do you think the first problem will arise? Here’s the error I got:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: click_on "New song"
+
+     Capybara::ElementNotFound:
+       Unable to find link or button "New song"
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/capybara-2.5.0/lib/capybara/node/finders.rb:43:in `block in find'
+     ...
+</code></pre></div></div>
+
+<p>We have the view (this is the individual artist show view), but we don’t have this link. Let’s add it:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@artist</span><span class="p">.</span><span class="nf">name</span> <span class="cp">%&gt;</span><span class="nt">&lt;/h1&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">image_tag</span> <span class="vi">@artist</span><span class="p">.</span><span class="nf">image_path</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"Edit"</span><span class="p">,</span> <span class="n">edit_artist_path</span><span class="p">(</span><span class="vi">@artist</span><span class="p">)</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"Delete"</span><span class="p">,</span> <span class="n">artist_path</span><span class="p">(</span><span class="vi">@artist</span><span class="p">),</span> <span class="ss">method: :delete</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"New song"</span><span class="p">,</span> <span class="n">new_artist_song_path</span><span class="p">(</span><span class="vi">@artist</span><span class="p">)</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">rspec</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: &lt;%= link_to "New song", new_artist_song_path(@artist) %&gt;
+
+     ActionView::Template::Error:
+       undefined method `new_artist_song_path' for #&lt;#&lt;Class:0x007ff0b91eaaf8&gt;:0x007ff0b91f3810&gt;
+     # ./app/views/artists/show.html.erb:4:in `_app_views_artists_show_html_erb__838814999508935524_70335907719360'
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+     ...
+</code></pre></div></div>
+
+<p>We haven’t defined <code class="highlighter-rouge">artist_songs_path</code>. This may seem like a strange name for a path. This is an example of nesting resources. Read the <a href="http://guides.rubyonrails.org/routing.html#nested-resources">RailsGuide Nested Resource Documentation</a> before continuing.</p>
+
+<p>Nested resources will allow us to have urls like <code class="highlighter-rouge">/artists/1/songs/new</code> which will allow us to create a song for that specific artist (artist with <code class="highlighter-rouge">id: 1</code> from the path).</p>
+
+<p>To get this path, we’ll need to add a route:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">draw</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:artists</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:new</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Running <code class="highlighter-rouge">rake routes</code> will output this new path:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         Prefix Verb    URI Pattern                             Controller#Action
+new_artist_song GET     /artists/:artist_id/songs/new(.:format) songs#new
+        artists GET     /artists(.:format)                      artists#index
+                POST    /artists(.:format)                      artists#create
+     new_artist GET     /artists/new(.:format)                  artists#new
+    edit_artist GET     /artists/:id/edit(.:format)             artists#edit
+         artist GET     /artists/:id(.:format)                  artists#show
+                PATCH   /artists/:id(.:format)                  artists#update
+                PUT     /artists/:id(.:format)                  artists#update
+                DELETE  /artists/:id(.:format)                  artists#destroy
+</code></pre></div></div>
+
+<p>Take a look at that first line. <code class="highlighter-rouge">'/artists/:artist_id/songs/new'</code> is the path we want. The prefix is <code class="highlighter-rouge">new_artist_song</code> which is what we specified in our view.</p>
+
+<p>Run <code class="highlighter-rouge">rspec</code> again:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F.....
+
+Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: visit new_artist_song_path(artist)
+
+     ActionController::RoutingError:
+       uninitialized constant SongsController
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+     ...
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">ActionController::RoutingError: uninitialized constant SongsController</code> tells us that we need another controller – this time for Songs. Let’s make that: <code class="highlighter-rouge">$ touch app/controllers/songs_controller.rb</code>. Inside of it, define the controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SongsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">rspec</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F.....
+
+Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: visit new_artist_song_path(artist)
+
+     AbstractController::ActionNotFound:
+       The action 'new' could not be found for SongsController
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+     ...
+</code></pre></div></div>
+
+<p>Our new action should find the artist referred to in the path (<code class="highlighter-rouge">/artists/1/songs/new</code>), then instantiate a new song of that artist.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SongsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">new</span>
+    <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:artist_id</span><span class="p">])</span>
+    <span class="vi">@song</span> <span class="o">=</span> <span class="vi">@artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The problem is that we don’t have the relationship set up to be able to call <code class="highlighter-rouge">@artist.songs</code>, so RSpec will complain about this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F.....*
+
+Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: @song = @artist.songs.new
+
+     NoMethodError:
+       undefined method `songs' for #&lt;Artist:0x007fb2fea26eb8&gt;
+     # ./app/controllers/songs_controller.rb:4:in `new'
+     ...
+</code></pre></div></div>
+
+<p>How do we solve this? Well, we know we’ll need a model, but let’s fix the actual error first. It wants a method <code class="highlighter-rouge">songs</code> to be defined for artist. We know this will be a <code class="highlighter-rouge">has_many</code> relationship. In the Artist model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">validates</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">uniqueness: </span><span class="kp">true</span>
+  <span class="n">validates</span> <span class="ss">:image_path</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span>
+
+  <span class="n">has_many</span> <span class="ss">:songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now run <code class="highlighter-rouge">rspec</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: @song = @artist.songs.new
+
+     NameError:
+       uninitialized constant Artist::Song
+     # ./app/controllers/songs_controller.rb:4:in `new'
+     ...
+</code></pre></div></div>
+
+<p>We don’t have a <code class="highlighter-rouge">Song</code> constant. Let’s make a model: <code class="highlighter-rouge">$ rails g model Song title artist:references</code>. This command will use a string value for title and create an <code class="highlighter-rouge">artist_id</code> integer field, along with an index and a foreign key constraint to maintain referential integrity. (Google this if it doesn’t make sense).</p>
+
+<p>Next, we’ll want to migrate: <code class="highlighter-rouge">$ rake db:migrate</code></p>
+
+<p>Now we can run <code class="highlighter-rouge">rspec</code> again (skipping the pending song model specs output):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F.....
+
+Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: visit new_artist_song_path(artist)
+
+     ActionView::MissingTemplate:
+       Missing template songs/new, application/new with {:locale=&gt;[:en], :formats=&gt;[:html], :variants=&gt;[], :handlers=&gt;[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}. Searched in:
+         * "/Users/rwarbelow/Desktop/Coding/Turing/mix_master/app/views"
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+     ...
+</code></pre></div></div>
+
+<p>Try to create the view on your own. Then check out my view below (<code class="highlighter-rouge">/app/views/songs/new.html.erb</code>):</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>New Song<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>Add a new song for <span class="cp">&lt;%=</span> <span class="vi">@artist</span><span class="p">.</span><span class="nf">name</span> <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">([</span><span class="vi">@artist</span><span class="p">,</span> <span class="vi">@song</span><span class="p">])</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">label</span> <span class="ss">:title</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">text_field</span> <span class="ss">:title</span> <span class="cp">%&gt;</span>
+
+  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="p">.</span><span class="nf">submit</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>In the form’s argument, we’re passing in an array of the <code class="highlighter-rouge">@artist</code> and the <code class="highlighter-rouge">@song</code>. The <code class="highlighter-rouge">@song</code> variable is acting how we would normally expect, while the <code class="highlighter-rouge">@artist</code> variable is there to create the route. Remember, we’re nesting all of this under artists in the path, so when we post, it should submit a post request to <code class="highlighter-rouge">'/artists/1/songs'</code>, and the <code class="highlighter-rouge">@artists</code> variable will allow the route to be constructed using the correct id.</p>
+
+<p>Run the spec again:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>F.....
+
+Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: &lt;%= form_for([@artist, @song]) do |f| %&gt;
+
+     ActionView::Template::Error:
+       undefined method 'artist_songs_path' for #&lt;#&lt;Class:0x007fdcfde29de8&gt;:0x007fdcfde335a0&gt;
+     # ./app/views/songs/new.html.erb:1:in `_app_views_songs_new_html_erb__3381179736744756855_70293564557660'
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+    ...
+</code></pre></div></div>
+
+<p>This is kind of weird. We’re getting <code class="highlighter-rouge">undefined method 'artist_songs_path'</code>, but we haven’t used <code class="highlighter-rouge">artist_songs_path</code> in the file and line that it’s referring to: <code class="highlighter-rouge">/app/views/songs/new.html.erb:1</code>.</p>
+
+<p>What’s happening here? We’ll, because we’ve passed in a new object (<code class="highlighter-rouge">@song</code>) to the form (<code class="highlighter-rouge">form_for([@artist, @song])</code>), Rails understands that we’ll want to post to the <code class="highlighter-rouge">artist_songs_path</code> when we submit the form. That’s where it’s blowing up. We don’t have a <code class="highlighter-rouge">post</code> route for the <code class="highlighter-rouge">songs</code> path. Let’s define that by adding <code class="highlighter-rouge">create</code> for our songs resources:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">draw</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:artists</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now run your specs:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: click_on "Create Song"
+
+     AbstractController::ActionNotFound:
+       The action 'create' could not be found for SongsController
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+     ...
+</code></pre></div></div>
+
+<p>Can you implement the <code class="highlighter-rouge">create</code> action in the <code class="highlighter-rouge">SongsController</code>? Try it, then check mine:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SongsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">new</span>
+    <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:artist_id</span><span class="p">])</span>
+    <span class="vi">@song</span> <span class="o">=</span> <span class="vi">@artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:artist_id</span><span class="p">])</span>
+    <span class="vi">@song</span> <span class="o">=</span> <span class="vi">@artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">song_params</span><span class="p">)</span>
+
+    <span class="n">redirect_to</span> <span class="n">song_path</span><span class="p">(</span><span class="vi">@song</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">song_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:song</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>First we need to find the artist using the <code class="highlighter-rouge">artist_id</code> from the url, then we will build a new song off of that artist.</p>
+
+<p>Predict what will happen in the last line of the create action. What will the spec complain about?</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: redirect_to song_path(@song)
+
+     NoMethodError:
+       undefined method `song_path' for #&lt;SongsController:0x007f92800a2958&gt;
+     # ./app/controllers/songs_controller.rb:11:in `create'
+     ...
+</code></pre></div></div>
+
+<p>Ok, we have an <code class="highlighter-rouge">undefined method 'song_path'</code>. We’re trying to <code class="highlighter-rouge">redirect_to song_path(@song)</code>, but we haven’t defined a path for the song show. Let’s do that:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">draw</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:artists</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">]</span>
+  <span class="k">end</span>
+
+  <span class="n">resources</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:show</span><span class="p">]</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>Notice that we’re creating the route <em>outside</em> of the nested resources. This is so we don’t end up having a super long route for the show, since the show doesn’t rely on who the artist is. Read more about <a href="http://guides.rubyonrails.org/routing.html#limits-to-nesting">potential problems with nesting and how to avoid them</a>.</p>
+
+<p>What’s going to happen when you run the specs?</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User submits a new song they see the page for the individual song
+     Failure/Error: click_on "Create Song"
+
+     AbstractController::ActionNotFound:
+       The action 'show' could not be found for SongsController
+     # /usr/local/rvm/gems/ruby-2.2.2/gems/rack-1.6.4/lib/rack/etag.rb:24:in `call'
+     ...
+</code></pre></div></div>
+
+<p><strong>Your turn</strong>: Make this spec pass. Take a look at the view below if you’re stuck.</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@song</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span><span class="nt">&lt;/h1&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="vi">@song</span><span class="p">.</span><span class="nf">artist</span><span class="p">.</span><span class="nf">name</span><span class="p">,</span> <span class="n">artist_path</span><span class="p">(</span><span class="vi">@song</span><span class="p">.</span><span class="nf">artist</span><span class="p">)</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>At this point, your repo probably looks like <a href="https://github.com/rwarbelow/mix_master/tree/3_implement-songs">the 3_song-functionality branch of MixMaster</a>. Make sure to commit your work! Use proper commit message manners.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git add .
+$ git commit
+$ git checkout master
+$ git merge 3_implement-songs
+$ git push heroku master
+$ heroku run rake db:migrate
+</code></pre></div></div>
+
+<p>Then open your Heroku site and check out the functionality! Whoa so cool.</p>
+
+<p><em>If you choose to move on to the “Optional Additional Song Features” section, check out a new branch to work on in case you end up messing up everything and needing to go back to a functional state. Trust me. I speak from experience.</em></p>
+
+<h3 id="choose-your-own-adventure">Choose Your Own Adventure!</h3>
+
+<h4 id="click-here-for-mix-master-optional-song-features-recommended-but-not-necessary">Click here for <a href="3_optional_additional_song_features.markdown">Mix Master Optional Song Features</a> (recommended, but not necessary)</h4>
+
+<h4 id="click-here-for-mix-master-part-4-implementing-playlists">Click here for <a href="4_implementing_playlists.markdown">Mix Master Part 4: Implementing Playlists</a></h4>
+:ET

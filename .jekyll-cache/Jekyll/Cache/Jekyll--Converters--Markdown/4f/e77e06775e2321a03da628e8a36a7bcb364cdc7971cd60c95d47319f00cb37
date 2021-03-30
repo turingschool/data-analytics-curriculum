@@ -1,0 +1,59 @@
+I"<h1 id="iteration-5-customer-analytics">Iteration 5: Customer Analytics</h1>
+
+<p>Our marketing team is asking for better data about of our customer base to launch a new project and have the following requirements:</p>
+
+<p>Assuming we have a <code class="highlighter-rouge">sales_engine</code> that’s an instance of <code class="highlighter-rouge">SalesEngine</code> let’s initialize a <code class="highlighter-rouge">SalesAnalyst</code> like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span> <span class="o">=</span> <span class="n">sales_engine</span><span class="p">.</span><span class="nf">analyst</span>
+</code></pre></div></div>
+
+<p>Find the x customers that spent the most $:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">top_buyers</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#=&gt; [customer, customer, customer, customer, customer]</span>
+</code></pre></div></div>
+
+<p>If no number is given for <code class="highlighter-rouge">top_buyers</code>, it takes the top 20 customers by default</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">top_buyers</span> <span class="c1">#=&gt; [customer * 20]</span>
+</code></pre></div></div>
+
+<p>Be able to find which merchant the customers bought the most items from:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">top_merchant_for_customer</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span> <span class="c1">#=&gt; merchant</span>
+</code></pre></div></div>
+
+<p>Find which customers only have only one invoice:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">one_time_buyers</span> <span class="c1">#=&gt; [customer, customer, customer]</span>
+</code></pre></div></div>
+
+<p>Find which item most <code class="highlighter-rouge">one_time_buyers</code> bought:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">one_time_buyers_item</span> <span class="c1">#=&gt; [item]</span>
+</code></pre></div></div>
+
+<p>Find which items a given customer bought in given year (by the <code class="highlighter-rouge">created_at</code> on the related invoice):</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">items_bought_in_year</span><span class="p">(</span><span class="n">customer_id</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span> <span class="c1">#=&gt; [item]</span>
+</code></pre></div></div>
+
+<p>Return item(s) that customer bought in largest cumulative quantity. If there are several items with the same highest quantity, return all items:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">highest_volume_items</span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span> <span class="c1">#=&gt; [item] or [item, item, item]</span>
+</code></pre></div></div>
+
+<p>Find customers with unpaid invoices:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">customers_with_unpaid_invoices</span> <span class="c1">#=&gt; [customer, customer, customer]</span>
+</code></pre></div></div>
+
+<p><strong>Note:</strong> invoices are unpaid if one or more of the invoices are not paid in full (see method <code class="highlighter-rouge">invoice#is_paid_in_full?</code>).</p>
+
+<p>Find the best invoice, the invoice with the highest dollar amount:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">best_invoice_by_revenue</span> <span class="c1">#=&gt; invoice</span>
+</code></pre></div></div>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">best_invoice_by_quantity</span> <span class="c1">#=&gt; invoice</span>
+</code></pre></div></div>
+:ET

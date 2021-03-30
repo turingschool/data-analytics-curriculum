@@ -1,0 +1,51 @@
+I"�<h1 id="refactoring-pattern-2-extract-class">Refactoring Pattern 2: Extract Class</h1>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Explain Extract Class &amp; how it promotes abstraction &amp; single responsibility principle</li>
+  <li>Identify scenarios for which Extract Class is the appropriate refactoring pattern to use</li>
+  <li>Implement Extract Class</li>
+</ul>
+
+<h2 id="supplies">Supplies</h2>
+
+<ul>
+  <li>You should have a copy of
+<a href="https://drive.google.com/file/d/0B4C6lfVKu-E7ZlFDTnhyTklXdm8/view?usp=sharing">this extraction of Chapter 7</a>.</li>
+</ul>
+
+<h2 id="first-12-minutes-individually">First 12 minutes individually:</h2>
+
+<ul>
+  <li>Briefly read the Extract Class section from 175 to 179</li>
+  <li><em>Carefully</em> re-read the code sections on 177 and 178</li>
+  <li>Reflect on these <strong>key ideas</strong> of Extract Class:
+    <ul>
+      <li>One object is doing the work of two (or more)
+        <ul>
+          <li>This is one of the most common weaknesses in object-oriented systems</li>
+        </ul>
+      </li>
+      <li>Really is a “Step 1” before applying Move Method</li>
+      <li>Allows for easier testing, reuse, and abstraction</li>
+    </ul>
+  </li>
+  <li>Try refactoring <a href="https://github.com/turingschool-examples/refactoring_patterns/blob/master/test/station_2_extract_class_test.rb">this</a> example scenario (you should already have this cloned) using Extract Class. As you create new classes and move things around, make sure the linked test still passes</li>
+  <li>If you finish early, apply this refactoring pattern to the Enigma examples found under <code class="highlighter-rouge">Additional Resources</code> in the main lesson for today</li>
+  <li>If you still have more time, apply this refactoring pattern to your current project</li>
+</ul>
+
+<h2 id="final-3-minutes-in-your-small-group">Final 3 minutes in your small group:</h2>
+
+<ul>
+  <li>Answer the following questions:
+    <ul>
+      <li>When would you decide to extract a class?</li>
+      <li>What benefits does extracting a class provide you as a programmer?</li>
+      <li>Should you move methods first or extract classes first?</li>
+    </ul>
+  </li>
+  <li>Compare solutions</li>
+</ul>
+:ET

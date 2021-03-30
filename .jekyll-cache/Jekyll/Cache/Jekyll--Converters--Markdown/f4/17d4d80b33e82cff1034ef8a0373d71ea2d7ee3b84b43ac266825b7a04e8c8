@@ -1,0 +1,173 @@
+I"�%<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the basic idea of a collection type</li>
+  <li>Develop a mental model to understand arrays</li>
+  <li>Gain some familiarity with common array methods</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/introducing_arrays">here</a></p>
+
+<h2 id="warmup">Warmup</h2>
+
+<p><a href="https://ruby-doc.org/core-2.4.2/Array.html">Ruby Doc</a> defines an array as “ordered, integer-indexed collections of any object.”</p>
+
+<ul>
+  <li>What information can you pull out of that definition?</li>
+  <li>Looking at the other information on that page, what can you tell about arrays?</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Data Structure</li>
+  <li>Array</li>
+  <li>Iterate</li>
+</ul>
+
+<h3 id="what-is-a-data-structure">What is a data structure?</h3>
+
+<ul>
+  <li>A data structure is a particular way of organizing information so that it can be used efficiently</li>
+</ul>
+
+<h3 id="what-is-an-array">What is an array?</h3>
+
+<ul>
+  <li>Arrays are the most fundamental collection type in programming. Just about every language has them. Arrays are collections of data where each element is addressed by an arbitrary number called the <em>index</em> or <em>position</em>.</li>
+</ul>
+
+<p>We’ll step through using some of the fundamental Array methods, including:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">[]</code></li>
+  <li><code class="highlighter-rouge">count</code></li>
+  <li><code class="highlighter-rouge">&lt;&lt;</code> / <code class="highlighter-rouge">push</code></li>
+  <li><code class="highlighter-rouge">unshift</code></li>
+  <li><code class="highlighter-rouge">insert</code></li>
+  <li><code class="highlighter-rouge">pop</code></li>
+  <li><code class="highlighter-rouge">shift</code></li>
+  <li><code class="highlighter-rouge">shuffle</code></li>
+</ul>
+
+<p>As we go, we’ll work with an IRB session.</p>
+
+<ul>
+  <li>Create a new file in your module 1 folder called <code class="highlighter-rouge">intro_to_arrays.rb</code>. In this file, you can take notes and recreate what we have used in our pry session to refer to.</li>
+  <li>
+    <p>In our irb session let’s create some names:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">name_1</span> <span class="o">=</span> <span class="s2">"Josh"</span>
+<span class="n">name_2</span> <span class="o">=</span> <span class="s2">"Mike"</span>
+<span class="n">name_3</span> <span class="o">=</span> <span class="s2">"Lauren"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Now that we have more than one name, we need a way to collect this data or create a collection. Let’s set a variable named “names” to an empty array.</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">name_1</span> <span class="o">=</span> <span class="s2">"Josh"</span>
+  <span class="n">name_2</span> <span class="o">=</span> <span class="s2">"Mike"</span>
+  <span class="n">name_3</span> <span class="o">=</span> <span class="s2">"Lauren"</span>
+
+  <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>    </div>
+
+    <p><em>This is how we represent an empty array in ruby</em></p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">.count</code> is a built-in ruby method. If our names array is empty, what would be expected to be returned from <code class="highlighter-rouge">names.count</code>?</p>
+  </li>
+  <li>
+    <p>How do we get information into the empty array?</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">names</span> <span class="o">&lt;&lt;</span> <span class="n">name_1</span>
+</code></pre></div>    </div>
+
+    <p>“shovel” or push</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">names</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="n">name_1</span><span class="p">)</span>
+</code></pre></div>    </div>
+
+    <p>This will always add to the end of the array.</p>
+
+    <blockquote>
+      <p>What are the differences between <code class="highlighter-rouge">&lt;&lt;</code> and <code class="highlighter-rouge">.push</code>, if any? Let’s check the Ruby docs to find an answer.</p>
+    </blockquote>
+
+    <p>If we call <code class="highlighter-rouge">names.count</code> now, what do we expect to get?</p>
+
+    <p><em>Try it:</em> Let’s shovel all our names into our names array.</p>
+  </li>
+  <li>
+    <p>Just like a string, we can access each item by index/position.</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>We can also explicitly set the index of an item:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Jeff"</span>
+</code></pre></div>    </div>
+
+    <p>What will this do to our original <code class="highlighter-rouge">names</code>?</p>
+  </li>
+  <li>
+    <p>We also have other ways to access positions within the array:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">names</span><span class="p">.</span><span class="nf">first</span>
+  <span class="n">names</span><span class="p">.</span><span class="nf">last</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>What if we want to add an item to the <strong>beginning</strong> of the array?</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">name_4</span> <span class="o">=</span> <span class="s2">"Louisa"</span>
+  <span class="n">names</span><span class="p">.</span><span class="nf">unshift</span><span class="p">(</span><span class="n">name_4</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>We can also pick a specific position to insert the item into:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">names</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">"Sally"</span><span class="p">)</span>
+</code></pre></div>    </div>
+    <p>Now what does our names array show?</p>
+  </li>
+  <li>
+    <p><em>Try It:</em> Using ruby docs, what method might we use to remove the last element of the array? What about the first element?</p>
+  </li>
+  <li>
+    <p>There are also a lot of other methods that we can call on an array. What do we think <code class="highlighter-rouge">names.shuffle</code> will do?</p>
+  </li>
+  <li>
+    <p>At this point, it is reasonable to wonder how we could only get certain information from the array. Let’s say that we only want to retrieve the first letter of each name. Now we have to go one by one through the array (what else is this called?) and return only the first letter of the name. How do we do that?</p>
+
+    <p>Our names array already has names in it. Let’s continue to use that. We need to make a new array that will hold our new collection of first letters.</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">first_initial</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">names</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+    <span class="n">first_initial</span> <span class="o">&lt;&lt;</span> <span class="nb">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">end</span>
+</code></pre></div>    </div>
+
+    <p>What happens when we call <code class="highlighter-rouge">first_initial</code>? What about <code class="highlighter-rouge">names</code>?</p>
+  </li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>Got it? Here are the important concepts you’ve seen:</p>
+
+<ul>
+  <li>You can directly assign a value to a location in an array using <code class="highlighter-rouge">[]</code></li>
+  <li>You can access the value stored at a position by using <code class="highlighter-rouge">[]</code></li>
+  <li>You can add an element to the end of an array with <code class="highlighter-rouge">&lt;&lt;</code> or <code class="highlighter-rouge">.push</code></li>
+  <li>You can remove an element from the end of an array with <code class="highlighter-rouge">.pop</code></li>
+  <li>You can add an element to the front of an array with <code class="highlighter-rouge">.unshift</code>.</li>
+  <li>The <code class="highlighter-rouge">insert</code> method takes two arguments: first is the position where you want to insert the names, the second is the names to be inserted</li>
+  <li><code class="highlighter-rouge">shuffle</code> returns a copy of your array with the elements randomly jumbled up</li>
+  <li><code class="highlighter-rouge">each</code> is an <em>enumerable</em> method which takes a block parameter and runs that block once for <em>each</em> element in the collection.</li>
+</ul>
+:ET

@@ -1,0 +1,74 @@
+I"l<p>Clone this repo: git@github.com:turingschool-examples/making_music.git</p>
+
+<h2 id="iteration-1-tests-provided">Iteration 1 (tests provided)</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">instrument</span> <span class="o">=</span> <span class="no">Instrument</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Piano"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:34876342857&gt;</span>
+<span class="n">instrument</span><span class="p">.</span><span class="nf">type</span>
+<span class="c1"># =&gt; "Piano"</span>
+<span class="n">instrument</span><span class="p">.</span><span class="nf">broken?</span>
+<span class="c1"># =&gt; False</span>
+</code></pre></div></div>
+
+<h2 id="iteration-2">Iteration 2</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">instrument</span> <span class="o">=</span> <span class="no">Instrument</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Piano"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:34876342857&gt;</span>
+<span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Anna"</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:2348712342134&gt;</span>
+<span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1"># =&gt; "Anna"</span>
+<span class="n">student</span><span class="p">.</span><span class="nf">age</span>
+<span class="c1"># =&gt; 12</span>
+<span class="n">student</span><span class="p">.</span><span class="nf">enrolled?</span>
+<span class="c1"># =&gt; true</span>
+<span class="n">student</span><span class="p">.</span><span class="nf">instrument</span>
+<span class="c1"># =&gt; nil</span>
+<span class="n">student</span><span class="p">.</span><span class="nf">assign_instrument</span><span class="p">(</span><span class="n">instrument</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:34876342857&gt;</span>
+<span class="n">student</span><span class="p">.</span><span class="nf">instrument</span>
+<span class="c1"># =&gt; &lt;#Instrument:34876342857&gt;</span>
+</code></pre></div></div>
+
+<h2 id="iteration-3">Iteration 3</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">instrument_1</span> <span class="o">=</span> <span class="no">Instrument</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Piano"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:34876342857&gt;</span>
+<span class="n">instrument_2</span> <span class="o">=</span> <span class="no">Instrument</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Trumpet"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:42131231231&gt;</span>
+<span class="n">instrument_3</span> <span class="o">=</span> <span class="no">Instrument</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Tambourine"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:29873422857&gt;</span>
+<span class="n">student_1</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Anna"</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:2348712342134&gt;</span>
+<span class="n">student_2</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Charlie"</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:6578712342134&gt;</span>
+<span class="n">student_3</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Jeff"</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:9878712342134&gt;</span>
+<span class="n">student_1</span><span class="p">.</span><span class="nf">assign_instrument</span><span class="p">(</span><span class="n">instrument_1</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:34876342857&gt;</span>
+<span class="n">student_2</span><span class="p">.</span><span class="nf">assign_instrument</span><span class="p">(</span><span class="n">instrument_2</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:42131231231&gt;</span>
+<span class="n">student_3</span><span class="p">.</span><span class="nf">assign_instrument</span><span class="p">(</span><span class="n">instrument_3</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Instrument:29873422857&gt;</span>
+<span class="n">music_class</span> <span class="o">=</span> <span class="no">MusicClass</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; &lt;#MusicClass:9878712342134&gt;</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">student_count</span>
+<span class="c1"># =&gt; 0</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">add_student</span><span class="p">(</span><span class="n">student_1</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:2348712342134&gt;</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">add_student</span><span class="p">(</span><span class="n">student_2</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:6578712342134&gt;</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">add_student</span><span class="p">(</span><span class="n">student_3</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;#Student:9878712342134&gt;</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">student_count</span>
+<span class="c1"># =&gt; 3</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">student_list</span>
+<span class="c1"># =&gt; "Anna, Charlie, Jeff"</span>
+<span class="n">music_class</span><span class="p">.</span><span class="nf">average_age</span>
+<span class="c1"># =&gt; 13</span>
+</code></pre></div></div>
+
+<h2 id="iteration-4">Iteration 4</h2>
+
+<p>Create a method for <code class="highlighter-rouge">MusicClass</code> called export students, which will create a text file named <code class="highlighter-rouge">export.txt</code> and contains a listing of the class’ students, ages and instrument types.</p>
+:ET

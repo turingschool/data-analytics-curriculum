@@ -1,0 +1,343 @@
+I"�h<!-- Old Mod 2 lesson on authorization -->
+
+<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Authorize users based on roles</li>
+  <li>Write a feature test that fakes a user being logged in</li>
+  <li>Implement namespacing for routes</li>
+  <li>Use a <code class="highlighter-rouge">before_action</code> to protect admin controllers</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="https://docs.google.com/presentation/d/1HZcEWWeME-4IAKZZ-0fKJOqlSJz40dNCTg20PQwlzTM/edit?usp=sharing">here</a></p>
+
+<h2 id="warmup">Warmup</h2>
+<ul>
+  <li>What does it mean to authorize something?</li>
+  <li>What do you think the difference between authentication and authorization is?</li>
+  <li>Any thoughts on how we might use namespacing to help us organize our authorization strategy?</li>
+</ul>
+
+<h2 id="repo">Repo</h2>
+
+<p>We will continue working in Set List, so pull down the most recent version of that <a href="https://github.com/turingschool-examples/set_list_1909">here</a>.</p>
+
+<h2 id="code-along">Code Along</h2>
+
+<h3 id="adding-authorization-to-our-app">Adding Authorization to our App</h3>
+
+<p>Let’s create a test for the admin functionality we want to create.</p>
+
+<p>Our client has asked for admin of the app to have the ability to email users. Only admin should be able to access this functionality.</p>
+
+<p>Let’s write our test.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/features/admin/email_spec.rb</span>
+<span class="nb">require</span> <span class="s2">"rails_helper"</span>
+
+<span class="n">describe</span> <span class="s2">"Admin can email users"</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">"As an admin"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">"I can see a link on my dashboard to email a user"</span> <span class="k">do</span>
+	    <span class="n">admin</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">username: </span><span class="s2">"penelope"</span><span class="p">,</span>
+                        <span class="ss">password: </span><span class="s2">"boom"</span><span class="p">,</span>
+                        <span class="ss">role: </span><span class="mi">1</span><span class="p">)</span>
+
+      <span class="n">allow_any_instance_of</span><span class="p">(</span><span class="no">ApplicationController</span><span class="p">).</span><span class="nf">to</span> <span class="n">receive</span><span class="p">(</span><span class="ss">:current_user</span><span class="p">).</span><span class="nf">and_return</span><span class="p">(</span><span class="n">admin</span><span class="p">)</span>
+
+      <span class="n">visit</span> <span class="s2">"/admin/dashboard"</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_link</span><span class="p">(</span><span class="s2">"Email a User"</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>Wait, what’s going on with that <code class="highlighter-rouge">role</code> field?</strong></p>
+
+<p>Basically, we’ll need that in order to determine what level of authorization a user has within the scope of our application. This is a distinction that we’re going to want to be able to make in our application.</p>
+
+<p>Let’s drop down into a model test to see if we can develop this behavior.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/user_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">"roles"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">"can be created as an admin"</span> <span class="k">do</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">username: </span><span class="s2">"penelope"</span><span class="p">,</span>
+                         <span class="ss">password: </span><span class="s2">"boom"</span><span class="p">,</span>
+                         <span class="ss">role: </span><span class="mi">1</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">role</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"admin"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">admin?</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_truthy</span>
+    <span class="k">end</span>
+
+    <span class="n">it</span> <span class="s2">"can be created as a default user"</span> <span class="k">do</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">username: </span><span class="s2">"sammy"</span><span class="p">,</span>
+                         <span class="ss">password: </span><span class="s2">"pass"</span><span class="p">,</span>
+                         <span class="ss">role: </span><span class="mi">0</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">role</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"default"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">default?</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_truthy</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Our error should read something like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>An error occurred while loading ./spec/features/admin/email_spec.rb.
+Failure/Error: admin = User.create(username: "penelope", password: "boom", role: 1)
+
+ActiveModel::UnknownAttributeError:
+  unknown attribute 'role' for User.
+</code></pre></div></div>
+
+<p>This might seem a little bit crazy at first. The tests only have two lines, and those two lines don’t even seem to go together very well. We create a <code class="highlighter-rouge">User</code> with a <code class="highlighter-rouge">role</code> of 1 and then proceed to assert that the user’s role is <code class="highlighter-rouge">"admin"</code>. And that last line feels a little redundant? What’s happening?</p>
+
+<p>The behavior that we’re describing is going to be achieved using an <code class="highlighter-rouge">enum</code>. For more information <a href="http://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html">check out the docs</a>. To start, let’s add a migration that will create <code class="highlighter-rouge">role</code> on our <code class="highlighter-rouge">User</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rails g migration AddRoleToUsers role:integer
+</code></pre></div></div>
+
+<p>That should give us a starting point. Edit the new migration to include a default value of 0.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AddRoleToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">5.1</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:role</span><span class="p">,</span> <span class="ss">:integer</span><span class="p">,</span> <span class="ss">default: </span><span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Don’t forget to run <code class="highlighter-rouge">rake db:migrate</code> to run this migration! Check your <code class="highlighter-rouge">db/schema.rb</code> to ensure that our schema reflects these changes.</p>
+
+<p>We’re halfway there! We’ve added a role, but we’ll still get a fairly useless error.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) User roles can be created as an admin
+     Failure/Error: expect(user.role).to eq("admin")
+
+       expected: "admin"
+            got: 1
+
+       (compared using ==)
+     # ./spec/models/user_spec.rb:25:in `block (3 levels) in &lt;top (required)&gt;'
+
+  2) User roles can be created as a default user
+     Failure/Error: expect(user.role).to eq("default")
+
+       expected: "default"
+            got: 0
+
+       (compared using ==)
+     # ./spec/models/user_spec.rb:34:in `block (3 levels) in &lt;top (required)&gt;'
+</code></pre></div></div>
+<p>At this point, let’s add our <code class="highlighter-rouge">enum</code> to our <code class="highlighter-rouge">User</code> model.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_secure_password</span>
+  <span class="n">validates</span> <span class="ss">:username</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span><span class="p">,</span>
+                    <span class="ss">uniqueness: </span><span class="kp">true</span>
+
+  <span class="n">enum</span> <span class="ss">role: </span><span class="sx">%w(default admin)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s check, and… a passing model test! With that out of the way, let’s go back and tackle our the error that our integration test is throwing our way.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">visit</span> <span class="s2">"/admin/dashboard"</span>
+
+     <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">:</span>
+       <span class="no">No</span> <span class="n">route</span> <span class="n">matches</span> <span class="p">[</span><span class="no">GET</span><span class="p">]</span> <span class="s2">"/admin/dashboard"</span>
+</code></pre></div></div>
+
+<p>We want admin functionality when it comes to <code class="highlighter-rouge">dashboard</code>. Only admins should be able to see the index view for the dashboard and anything that’s in the dashboard.</p>
+
+<p>Do you think we should we use nested resources here or namespace?</p>
+
+<p>Since <code class="highlighter-rouge">admin</code> is never going to be its own entity (resource) within our application, we can use <code class="highlighter-rouge">namespace</code>.</p>
+
+<p>Add this <code class="highlighter-rouge">namespace</code> and the route for only the <code class="highlighter-rouge">index</code> to your routes (we may need to add other actions later, but for now, let’s only create what we need).</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">namespace</span> <span class="ss">:admin</span> <span class="k">do</span>
+    <span class="c1">#only admin users will be able to reach this resource</span>
+    <span class="n">get</span> <span class="s1">'/dashboard'</span><span class="p">,</span> <span class="ss">to: </span><span class="s2">"dashboard#index"</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Whenever we add something to our <code class="highlighter-rouge">routes.rb</code>, verify that your output via <code class="highlighter-rouge">rails routes</code> is what you expect.</p>
+
+<p>Whoa, our routes are getting long and hard to read!</p>
+
+<p>Let’s run <code class="highlighter-rouge">rails routes -c admin</code> to see just our admin routes.</p>
+
+<p>Routes are looking good. What about our specs?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">:</span> <span class="n">uninitialized</span> <span class="n">constant</span> <span class="no">Admin</span>
+</code></pre></div></div>
+
+<p>Remember when we want to use namespace, its controllers need to be places within a folder that shares a name with the namespace.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mkdir app/controllers/admin
+</code></pre></div></div>
+
+<p>Run our test, and we’ll see that we’re getting closer, but still not quite there.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">visit</span> <span class="s2">"/admin/dashboard"</span>
+
+     <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">:</span> <span class="n">uninitialized</span> <span class="n">constant</span> <span class="no">Admin</span><span class="o">::</span><span class="no">DashboardController</span>
+</code></pre></div></div>
+
+<p>The big piece of news in this error is that we don’t have an <code class="highlighter-rouge">Admin::DashboardController</code>. Let’s go ahead and build that now.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">touch</span> <span class="n">app</span><span class="o">/</span><span class="n">controllers</span><span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="n">dashboard_controller</span><span class="p">.</span><span class="nf">rb</span>
+</code></pre></div></div>
+
+<p>And run our test suite to see what error we’re getting now:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">visit</span> <span class="s2">"/admin/dashboard"</span>
+
+     <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">:</span> <span class="n">uninitialized</span> <span class="n">constant</span> <span class="no">Admin</span><span class="o">::</span><span class="no">DashboardController</span>
+</code></pre></div></div>
+
+<p>Errors like this are great. They reiterate to me that I’ve created the file that I wanted to, Rails is looking in that file, and it’s just not finding what it expects. Let’s populate that file now and help it out.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::DashboardController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And our new error:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">AbstractController</span><span class="o">::</span><span class="no">ActionNotFound</span><span class="p">:</span>
+ <span class="no">The</span> <span class="n">action</span> <span class="s1">'index'</span> <span class="n">could</span> <span class="n">not</span> <span class="n">be</span> <span class="n">found</span> <span class="k">for</span> <span class="no">Admin</span><span class="o">::</span><span class="no">DashboardController</span>
+</code></pre></div></div>
+
+<p>So, let’s add an <code class="highlighter-rouge">index</code> method to our controller.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::DashboardController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Running the test gives us the <code class="highlighter-rouge">Missing template</code> error that we’d expect. Let’s add that view.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>app/views/admin
+<span class="nv">$ </span><span class="nb">mkdir </span>app/views/admin/dashboard
+<span class="nv">$ </span><span class="nb">touch </span>app/views/admin/dashboard/index.html.erb
+</code></pre></div></div>
+
+<p>If we look back at our test we can start to figure out what might be happening. We need to add a link to our new page in order to make it pass.</p>
+
+<p>In <code class="highlighter-rouge">app/views/admin/dashboard/index.html.erb</code>:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;</span><span class="err">%=</span> <span class="na">link_to</span> <span class="err">"</span><span class="na">Email</span> <span class="na">a</span> <span class="na">User</span><span class="err">"</span> <span class="err">%</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>Let’s run our test… And it passes! Great! We’re done here, right? I mean, passing test!</p>
+
+<p>Question: have we done anything up to this point that’s really new? Anything that would give us any confidence that we’ve actually authorized a user? We’ve gone through the trouble of creating a place to put some of our admin functionality, but I don’t see anywhere that we’re actually limiting access to that space. Let’s create a test to make sure a default user can’t get to all this sweet admin goodness. If we can make that pass I’ll start to feel a little bit better about our authentication.</p>
+
+<p>In our <code class="highlighter-rouge">email_spec.rb</code> file let’s add the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">describe</span> <span class="s2">"as default user"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'does not allow default user to see admin dashboard index'</span> <span class="k">do</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">username: </span><span class="s2">"fern@gully.com"</span><span class="p">,</span>
+                         <span class="ss">password: </span><span class="s2">"password"</span><span class="p">,</span>
+                         <span class="ss">role: </span><span class="mi">0</span><span class="p">)</span>
+
+      <span class="n">allow_any_instance_of</span><span class="p">(</span><span class="no">ApplicationController</span><span class="p">).</span><span class="nf">to</span> <span class="n">receive</span><span class="p">(</span><span class="ss">:current_user</span><span class="p">).</span><span class="nf">and_return</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+      <span class="n">visit</span> <span class="s2">"/admin/dashboard"</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to_not</span> <span class="n">have_link</span><span class="p">(</span><span class="s2">"Email a User"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"The page you were looking for doesn't exist."</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run that, and sure enough we have a failing test. Our regular old users can get to everything that our admin can. Let’s change that.</p>
+
+<p>Inside of our <code class="highlighter-rouge">Admin::DashboardController</code>, let’s add a <code class="highlighter-rouge">before_action</code> to check to see if a user is an admin before they access any of the <code class="highlighter-rouge">Dashboard</code> functionality.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::DashboardController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="n">before_action</span> <span class="ss">:require_admin</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+    <span class="k">def</span> <span class="nf">require_admin</span>
+      <span class="n">render</span> <span class="ss">file: </span><span class="s2">"/public/404"</span> <span class="k">unless</span> <span class="n">current_admin?</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>So, at a high level this makes sense: we’ve created a <code class="highlighter-rouge">before_action</code> to check to see if a user is a current admin, but if we run the test we now have two errors. (The second is the same as the first)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) Failure/Error: render file: "/public/404" unless current_admin?
+
+     NoMethodError:
+       undefined method `current_admin?' for #&lt;Admin::DashboardController:0x007fabfb9dfc70&gt;
+       Did you mean?  current_user
+</code></pre></div></div>
+
+<p>We haven’t defined <code class="highlighter-rouge">current_admin?</code>. Let’s define that the same place that we define <code class="highlighter-rouge">current_user</code> in our <code class="highlighter-rouge">ApplicationController</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># application_controller.rb</span>
+
+<span class="k">def</span> <span class="nf">current_admin?</span>
+  <span class="n">current_user</span> <span class="o">&amp;&amp;</span> <span class="n">current_user</span><span class="p">.</span><span class="nf">admin?</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What gives us access to <code class="highlighter-rouge">current_user.admin?</code>? Our enum!</p>
+
+<p>Our test should be passing at this point. And we’re happy. We have some confidence that our regular old user can’t access the dashboard functionality that we’ve namespaced to <code class="highlighter-rouge">admin</code>. How can we make this better?</p>
+
+<p>Let’s refactor so that we’re not limiting this functionality to just our <code class="highlighter-rouge">dashboard</code> controller. Then we should be able to stuff some more controllers into our namespace and give them the same level of protection.</p>
+
+<p>Create a new <code class="highlighter-rouge">BaseController</code> in our admin folder.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">touch </span>app/controllers/admin/base_controller.rb
+</code></pre></div></div>
+
+<p>Inside of <code class="highlighter-rouge">base_controller.rb</code>, copy in the <code class="highlighter-rouge">before_action</code> that we had previously put directly on our <code class="highlighter-rouge">Admin::DashboardController</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::BaseController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="n">before_action</span> <span class="ss">:require_admin</span>
+
+  <span class="k">def</span> <span class="nf">require_admin</span>
+    <span class="n">render</span> <span class="ss">file: </span><span class="s2">"/public/404"</span> <span class="k">unless</span> <span class="n">current_admin?</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Now, delete that from our <code class="highlighter-rouge">Admin::DashboardController</code>, and instead have it inherit from our newly created <code class="highlighter-rouge">Admin::BaseController</code>. When you’re finished, your dashboard controller should look like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::DashboardController</span> <span class="o">&lt;</span> <span class="no">Admin</span><span class="o">::</span><span class="no">BaseController</span>
+  <span class="k">def</span> <span class="nf">index</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>What’s the difference between Authentication and Authorization?</li>
+  <li>Why are both necessary for securing our applications?</li>
+  <li>What’s a <code class="highlighter-rouge">before_action</code> filter in Rails?</li>
+  <li>What’s an <code class="highlighter-rouge">enum</code> attribute in ActiveRecord? Why would we ever want to use this?</li>
+  <li>When thinking about Authorization, why might we want to namespace a resource?</li>
+  <li>What does <code class="highlighter-rouge">allow_any_instance_of</code> in RSpec do?</li>
+</ul>
+
+<h2 id="work-time">Work Time</h2>
+
+<p>Add admin functionality to your current group project and be sure to authorize an admin correctly.</p>
+:ET

@@ -1,0 +1,36 @@
+I"�<h2 id="using-figaro">Using Figaro</h2>
+
+<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Explain why we need tools like Figaro</li>
+  <li>Other strategies that could be used to accomplish the same Goals</li>
+  <li>Implement and understand how to use Figaro</li>
+</ul>
+
+<h3 id="warmup">Warmup</h3>
+
+<ul>
+  <li>What might be some of the downsides to including our secret keys directly in our code?</li>
+  <li>Where else could we keep them?</li>
+</ul>
+
+<h3 id="introducing-figaro">Introducing Figaro</h3>
+
+<p>Start with the repository that you created during <a href="http://backend.turing.io/module3/lessons/getting_started_with_oauth">yesterday’s lesson</a>.</p>
+
+<p>Review the <a href="https://github.com/laserlemon/figaro">Figaro documentation</a>, and see if you can answer the following questions:</p>
+
+<ol>
+  <li>What does Figaro do?</li>
+  <li>What steps can you take to install Figaro?</li>
+  <li>What files are created during this installation?</li>
+  <li>What steps do you need to take to configure Figaro?</li>
+  <li>How do you access your keys in your application once you’ve configured Figaro?</li>
+  <li>What steps do you need to take if you’re pushing to Heroku?</li>
+</ol>
+
+<h3 id="discusss">Discusss</h3>
+
+<h3 id="implement">Implement</h3>
+:ET

@@ -1,0 +1,128 @@
+I"D<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Apply CSS pseudo-classes to an existing layout</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+<ul>
+  <li>Pseudo-class</li>
+  <li>Pseudo-element</li>
+  <li>Element</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+<ul>
+  <li>What strategies have you used to style specific elements?</li>
+  <li>What tools do we have to change a style relative to user interaction?</li>
+</ul>
+
+<h3 id="pseudo-classes---what-are-they">Pseudo-classes - What are they?</h3>
+
+<ul>
+  <li>Specific characteristics of an element that can be targeted with CSS.</li>
+  <li>Creates a special state for that element.</li>
+</ul>
+
+<h3 id="common-pseudo-classes">Common Pseudo-classes</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">hover</code></li>
+  <li><code class="highlighter-rouge">disabled</code></li>
+  <li><code class="highlighter-rouge">focus</code></li>
+  <li><code class="highlighter-rouge">nth-of-type</code></li>
+</ul>
+
+<p>Pseudo-class <a href="https://www.w3schools.com/css/css_pseudo_classes.asp">documentaion</a>
+  Pseudo-element <a href="https://www.w3schools.com/css/css_pseudo_elements.asp">documentaion</a></p>
+
+<h3 id="lets-jump-back-into-our-playground-to-explore">Let’s jump back into our playground to explore</h3>
+
+<ul>
+  <li>Create and switch to a branch <code class="highlighter-rouge">your_name_advanced_css</code></li>
+  <li>In our <a href="https://github.com/turingschool-examples/html_css_playground">HTML CSS Playground</a> that we were working on yesterday, open the file “advanced_css.html” and the css associated with it.</li>
+  <li>We have 3 blue boxes:</li>
+</ul>
+
+<h4 id="task-1---hover">Task 1 - Hover</h4>
+
+<ul>
+  <li>The goal is that when we hover over any of our boxes, they will turn from blue to silver.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">.box</span><span class="nd">:hover</span> <span class="p">{</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="no">silver</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>On your own, see if you can get the box to rotate 45 degrees on hover as well.</li>
+</ul>
+
+<h4 id="task-2---disabled">Task 2 - Disabled</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">disabled</code> is a common pseudo-class that might be used to indicate that a text input field (or checkbox/radio buttons/etc) cannot be selected.</li>
+  <li>In our playground example, we can give each of our boxes a name. (This is just an example so it’s not so real world ::winking::).</li>
+  <li>Let’s disable the last boxes input and make sure our users know it is disabled by making it red.</li>
+</ul>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">value=</span><span class="s">"Name This Box!"</span> <span class="na">disabled</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>In our CSS, let’s tell our disabled input what to do.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">input</span><span class="nd">:disabled</span> <span class="p">{</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="task-3---focus">Task 3 - Focus</h4>
+
+<ul>
+  <li>Differences of hover and focus (From StackOverflow): Hover is ‘true’ when the mouse pointer is over an element. Focus is true if the cursor is in that element. It’s possible for hover to be false and focus true (e.g click in a text field then move the mouse away)</li>
+  <li>Let’s experiment.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">input</span><span class="nd">:focus</span> <span class="p">{</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="no">pink</span><span class="p">;</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="no">teal</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>If we change our <code class="highlighter-rouge">focus</code> to <code class="highlighter-rouge">hover</code>, our <code class="highlighter-rouge">hover</code> does not behave as expected. <code class="highlighter-rouge">focus</code> provides a way to focus our cursor on something specific.</li>
+</ul>
+
+<h4 id="task-4---nth-of-type">Task 4 - Nth of Type</h4>
+
+<ul>
+  <li>So we have silver rotating boxes, GREAT! But now we just want the middle box to have special rules. We want it to be 150 x 150 and teal.</li>
+</ul>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nc">.box</span><span class="nd">:nth-of-type</span><span class="o">(</span><span class="err">2</span><span class="o">)</span> <span class="p">{</span>
+    <span class="nl">width</span><span class="p">:</span> <span class="m">150px</span><span class="p">;</span>
+    <span class="nl">height</span><span class="p">:</span> <span class="m">150px</span><span class="p">;</span>
+    <span class="nl">background-color</span><span class="p">:</span> <span class="no">teal</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>The nth-of-type allows us to select which number element (starting at 1) of that class we would want to modify!</li>
+</ul>
+
+<h4 id="other-challenges">Other Challenges</h4>
+
+<ul>
+  <li>Create a checkbox that has a label “I am a box!”, when you click on the checkbox, the label gets a purple 3px solid border.</li>
+  <li>Create another section of boxes. The middle box in any section of boxes should have a height and width of 150 and the color teal.</li>
+</ul>
+
+<h2 id="wrapup">WrapUp</h2>
+<ul>
+  <li>What are 4 pseudo-classes, what does each do?</li>
+  <li>Why do we want to make our layout and design reactive to a user?</li>
+</ul>
+:ET

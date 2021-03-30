@@ -1,0 +1,309 @@
+I"[<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>identify inheritance as an essential principle of OOP</li>
+  <li>explain what is inheritance and why we use it</li>
+  <li>identify that you can over-write a method locally</li>
+  <li>write code that demonstrates the single inheritance principle</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Inheritance</li>
+  <li>Parent/Superclass</li>
+  <li>Child/Subclass</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>In your notebook, jot down your thoughts for the following questions. Be ready to share.</p>
+
+<ul>
+  <li>What do you think of when you hear the word inheritance?</li>
+  <li>Where do you think we get the ability to call the method <code class="highlighter-rouge">attr_reader</code> or <code class="highlighter-rouge">assert_equal</code>, etc? Where are they defined?</li>
+</ul>
+
+<h2 id="inheritance">Inheritance</h2>
+
+<p>In Ruby, inheritance is one way that we can use code defined in one class in multiple classes. One of the benefits of inheritance is the reduction in duplication that comes from defining methods on a <strong>Parent</strong> class that can then be used across many child classes.</p>
+
+<p>From <a href="https://www.poodr.com/">Sandi Metz’s Practical Object Oriented Programming in Ruby</a>, here is a more techincal definition of inheritance:</p>
+
+<blockquote>
+  <p>Inheritance is, at its core, a mechanism for automatic message delegation. It defines a forwarding path for not-understood messages.</p>
+</blockquote>
+
+<p>You’ve already seen inheritance in your testing suite:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'minitest'</span>
+
+<span class="k">class</span> <span class="nc">NodeTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In the snippet above, <code class="highlighter-rouge">&lt; Minitest::Test</code> means <code class="highlighter-rouge">inherit characteristics and behavior from the Test class of the Minitest module</code>. (Sidenote: It is important to note that this is not the same as mixing in a Module. This is a completely different use of Modules called <strong>namespacing</strong>.)</p>
+
+<p>A couple rules of inheritance in Ruby:</p>
+
+<ul>
+  <li>The objects modeled using inheritance must demonstrate a “generalization–specialization” relationship</li>
+  <li>When a class inherits from another class, it receives access to all of the methods and instance variables from that other class</li>
+  <li>The inheriting class is called the <strong>child</strong> or <strong>subclass</strong></li>
+  <li>The class being inherited from is called the <strong>parent</strong> or <strong>superclass</strong></li>
+  <li>A class can only inherit from <strong>one</strong> parent</li>
+  <li>The chain of a parent’s parents (and parent’s parent’s parents, etc.) is called <strong>ancestors</strong></li>
+  <li>Any number of classes can inherit from a single superclass</li>
+</ul>
+
+<p>Since inheritance is one of a few ways we can share code across classes, it’s convention to use it when there is a <strong>is-a</strong> relationship between two things. For example, a dog <strong>is a</strong> mammal, a CEO <strong>is an</strong> employee.</p>
+
+<p>Again from Metz, here is a practical application of inheritance:</p>
+
+<blockquote>
+  <p>Some of [a] bicycle’s behavior applies to all bicycles, some only to road bikes, and some only to mountain bikes. This single class contains several different, but related, types. This is the exact problem that inheritance solves; that of highly related types that share common behavior but differ along some dimension.</p>
+</blockquote>
+
+<p>With a partner, brainstorm what Metz might be talking about when she refers to some behavior applying to all bikes, and some behavior only applying to certain types of bikes. Feel free to check out <a href="https://thebicycleescape.com/resources/types-of-bikes/">this site</a> for photos that might help you brainstorm.</p>
+
+<h2 id="creating-a-subclass">Creating a Subclass</h2>
+
+<h3 id="demo">Demo</h3>
+
+<p>Take notes while we discuss, diagram, and demonstrate these concepts:</p>
+
+<ul>
+  <li>the <code class="highlighter-rouge">superclass</code> method</li>
+  <li>the missing method lookup chain</li>
+  <li>difference between number of methods on instance and number of methods on instance’s parent</li>
+</ul>
+
+<h3 id="group-practice">Group Practice</h3>
+
+<p>In a new directory, let’s create a file <code class="highlighter-rouge">employee.rb</code> that contains this class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># employee.rb</span>
+<span class="k">class</span> <span class="nc">Employee</span>
+  <span class="k">def</span> <span class="nf">total_compensation</span>
+    <span class="n">base_salary</span> <span class="o">+</span> <span class="n">bonus</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can inherit from it using the <code class="highlighter-rouge">&lt;</code> character. Let’s try this in a file called <code class="highlighter-rouge">ceo.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ceo.rb</span>
+<span class="nb">require</span> <span class="s1">'./employee'</span>
+
+<span class="k">class</span> <span class="nc">Ceo</span> <span class="o">&lt;</span> <span class="no">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:base_salary</span><span class="p">,</span>
+              <span class="ss">:bonus</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">base_salary</span><span class="p">,</span> <span class="n">bonus</span><span class="p">)</span>
+    <span class="vi">@base_salary</span> <span class="o">=</span> <span class="n">base_salary</span>
+    <span class="vi">@bonus</span>       <span class="o">=</span> <span class="n">bonus</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>We’ll try this out in a separate file called <code class="highlighter-rouge">runner.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./ceo'</span>
+
+<span class="n">ali</span> <span class="o">=</span> <span class="no">Ceo</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="n">ali</span><span class="p">.</span><span class="nf">total_compensation</span>
+</code></pre></div></div>
+
+<p>You can see that even though we didn’t define <code class="highlighter-rouge">total_compensation</code> in our <code class="highlighter-rouge">Ceo</code> class, the <code class="highlighter-rouge">Ceo</code> object still responded to this methods because it inherited them from <code class="highlighter-rouge">Employee</code>. In this example, <code class="highlighter-rouge">Ceo</code> is the <strong>subclass</strong> or <strong>child</strong>, and <code class="highlighter-rouge">Employee</code> is the <strong>superclass</strong> or <strong>parent</strong>.</p>
+
+<p>We can still define methods in our <code class="highlighter-rouge">Ceo</code> class just like with any other class.</p>
+
+<p><strong>NOTE</strong>: It’s tempting to think of inheritance as methods getting “passed down” to a child (as you would when thinking about genetics in living creatures); however, technically, the method calls on the child object are “passed up” to the parent class. When a method is called on the child that only exists in the parent class, that message is automatically delegated to the parent class.</p>
+
+<h3 id="try-it">Try It!</h3>
+
+<p>With a partner:</p>
+
+<ul>
+  <li>Create a <code class="highlighter-rouge">SalesManager</code> class that inherits from <code class="highlighter-rouge">Employee</code>, and takes <code class="highlighter-rouge">base_salary</code>, and <code class="highlighter-rouge">estimated_annual_sales</code> as arguments when you initialize.</li>
+  <li>Create a <code class="highlighter-rouge">bonus</code> method on <code class="highlighter-rouge">SalesManager</code> that returns 10% of <code class="highlighter-rouge">estimated_annual_sales</code></li>
+  <li>Create a new <code class="highlighter-rouge">SalesManager</code> in your runner file and print their total compensation to the terminal</li>
+</ul>
+
+<h2 id="super">Super</h2>
+
+<h3 id="overview">Overview</h3>
+
+<p>When called inside a method, the keyword <code class="highlighter-rouge">super</code> calls the method from the superclass with the same name. For instance if you call super in the <code class="highlighter-rouge">initialize</code> method, it will call the superclass’s <code class="highlighter-rouge">initialize</code> method.</p>
+
+<p><code class="highlighter-rouge">super</code> is kind of a confusing word for this behavior. It might help to think of it as “call parent’s method”.</p>
+
+<p>Let’s say we want every <code class="highlighter-rouge">Employee</code> to have a name and an id.  First, we need to update our <code class="highlighter-rouge">Employee</code> superclass to take name and id on instantiation:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#employee.rb</span>
+<span class="k">class</span> <span class="nc">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:id</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@id</span> <span class="o">=</span> <span class="nb">id</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total_compensation</span>
+    <span class="n">base_salary</span> <span class="o">+</span> <span class="n">bonus</span>
+  <span class="k">end</span>
+<span class="k">end</span>  
+</code></pre></div></div>
+
+<p>Now, we can update our <code class="highlighter-rouge">Ceo</code> to take name and id as well. Rather than recreating the instance variable setup in the <code class="highlighter-rouge">Ceo</code>’s initialize, we can use <code class="highlighter-rouge">super</code> to fetch the additional setup we want from the <code class="highlighter-rouge">Employee</code> superclass:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#ceo.rb</span>
+<span class="nb">require</span> <span class="s1">'./employee'</span>
+
+<span class="k">class</span> <span class="nc">Ceo</span> <span class="o">&lt;</span> <span class="no">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:base_salary</span><span class="p">,</span>
+              <span class="ss">:bonus</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">base_salary</span><span class="p">,</span> <span class="n">bonus</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@base_salary</span> <span class="o">=</span> <span class="n">base_salary</span>
+    <span class="vi">@bonus</span>       <span class="o">=</span> <span class="n">bonus</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The call to <code class="highlighter-rouge">super</code> calls the <code class="highlighter-rouge">Employee</code> class’s initialize, which set the <code class="highlighter-rouge">name</code> and <code class="highlighter-rouge">id</code> instance variables.</p>
+
+<p>Here, we specified the arguments to <code class="highlighter-rouge">super</code>. There are actually three forms of the keyword <code class="highlighter-rouge">super</code>:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">super(argument1, argument2)</code> calls the superclass method with argument1 and argument2 specifically</li>
+  <li><code class="highlighter-rouge">super</code> calls the superclass method with all of the arguments in the current method</li>
+  <li><code class="highlighter-rouge">super()</code> calls the superclass method with no arguments</li>
+</ul>
+
+<h2 id="overriding">Overriding</h2>
+
+<p>In Ruby we can also override a method from our parent class by re-defining it in our child class. Doing this implies that there is some exception to a general rule. A <code class="highlighter-rouge">Mammal</code> class might have a method <code class="highlighter-rouge">lays_eggs?</code> that returns false that would work on most child classes, but we would then need to override that method on <code class="highlighter-rouge">Platypus</code> to return true.</p>
+
+<p>We’ll diagram this concept before moving on.</p>
+
+<p>Look at an Intern class below. Let’s assume that at this company interns are paid an hourly wage, but are not paid a bonus. Their compensation would no longer be calculated as <code class="highlighter-rouge">base_salary + bonus</code>. Instead, we can redefine that method on <code class="highlighter-rouge">Intern</code>, and override the method of the same name on <code class="highlighter-rouge">Employee</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'./employee'</span>
+
+<span class="k">class</span> <span class="nc">Intern</span> <span class="o">&lt;</span> <span class="no">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:hourly_rate</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">hourly_rate</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@hourly_rate</span> <span class="o">=</span> <span class="n">hourly_rate</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total_compensation</span>
+    <span class="n">hourly_rate</span> <span class="o">*</span> <span class="mi">2000</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can also combine <code class="highlighter-rouge">super</code> and overriding. Imagine that you wanted to use a method from the superclass, but you needed to modify something about the return value. Take a look at the <code class="highlighter-rouge">benefits</code> method in both this parent class and the child class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#employee.rb</span>
+<span class="k">class</span> <span class="nc">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:id</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@id</span> <span class="o">=</span> <span class="nb">id</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total_compensation</span>
+    <span class="n">base_salary</span> <span class="o">+</span> <span class="n">bonus</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">benefits</span>
+    <span class="p">[</span><span class="ss">:sick_leave</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>  
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#ceo.rb</span>
+<span class="nb">require</span> <span class="s1">'./employee'</span>
+
+<span class="k">class</span> <span class="nc">Ceo</span> <span class="o">&lt;</span> <span class="no">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:base_salary</span><span class="p">,</span>
+              <span class="ss">:bonus</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">base_salary</span><span class="p">,</span> <span class="n">bonus</span><span class="p">,</span> <span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@base_salary</span> <span class="o">=</span> <span class="n">base_salary</span>
+    <span class="vi">@bonus</span>       <span class="o">=</span> <span class="n">bonus</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">benefits</span>
+    <span class="k">super</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="ss">:health_insurance</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="try-it-1">Try It</h3>
+
+<p>Override a method and/or use <code class="highlighter-rouge">super</code> so that when you call <code class="highlighter-rouge">#total_compensation</code> on <code class="highlighter-rouge">Ceo</code> it adds a dollar to their <code class="highlighter-rouge">base_salary</code> before returning the total compensation.</p>
+
+<h2 id="words-of-caution">Words of Caution</h2>
+
+<p>In the examples we did today, we created just two subclasses for a <code class="highlighter-rouge">Employee</code> superclass.</p>
+
+<ul>
+  <li>
+    <p>While it may be tempting to immediately create a parent class for 1-2 subclasses (for example: <code class="highlighter-rouge">Animal</code> as the parent class and <code class="highlighter-rouge">Dog</code> and <code class="highlighter-rouge">Cat</code> as child classes), creating this hierarchy adds overhead. It <em>may</em> end up being less technically expensive to duplicate some functionality initially until you have a better sense of what the potential superclass of <em>many</em> subclasses (<code class="highlighter-rouge">Mouse</code>, <code class="highlighter-rouge">Lizard</code>, <code class="highlighter-rouge">Coral</code>, etc.) should do. Sometimes it is easier to promote the more abstract parts of the code UP to a superclass than it is to move concrete parts of a superclass down to a subclass.</p>
+  </li>
+  <li>
+    <p>While subclasses can and should rely on functionality from the parent class, a parent class should not use methods that are not defined within the parent class. For example, our <code class="highlighter-rouge">Employee</code> class relies on <code class="highlighter-rouge">base_salary</code> and <code class="highlighter-rouge">bonus</code>. In the event that later on, another child class <code class="highlighter-rouge">Manager</code> is created, the parent class imposes that <code class="highlighter-rouge">base_salary</code> and <code class="highlighter-rouge">bonus</code> <em>must</em> be defined within the subclass since the parent class uses those to calculate <code class="highlighter-rouge">total_compensation</code>. In order to provide documentation for future developers using your parent class template, you can follow this pattern, as recommended in Metz’s OOP book:</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#employee.rb</span>
+<span class="k">class</span> <span class="nc">Employee</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:id</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@id</span> <span class="o">=</span> <span class="nb">id</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total_compensation</span>
+    <span class="n">base_salary</span> <span class="o">+</span> <span class="n">bonus</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">base_salary</span>
+    <span class="k">raise</span> <span class="no">NotImplementedError</span><span class="p">,</span> <span class="s2">"This </span><span class="si">#{</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2"> cannot respond to:"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">bonus</span>
+    <span class="k">raise</span> <span class="no">NotImplementedError</span><span class="p">,</span> <span class="s2">"This </span><span class="si">#{</span><span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="si">}</span><span class="s2"> cannot respond to:"</span>
+  <span class="k">end</span>
+<span class="k">end</span>  
+</code></pre></div></div>
+
+<h2 id="discussion">Discussion</h2>
+
+<ul>
+  <li>Why might we decide to use inheritance?</li>
+  <li>Can you think of times that inheritance might not be the right choice?</li>
+  <li>What is the syntax for creating a class that inherits from another class? How many classes can you inherit from and how do you decide which should inherit from which?</li>
+  <li>What does <code class="highlighter-rouge">super</code> do, and what are the differences between the three different ways you can call it?</li>
+  <li>What does it mean to override a method in Ruby?</li>
+</ul>
+
+<h2 id="optional-next-steps">Optional Next Steps</h2>
+
+<ul>
+  <li>Check out Chapter 6 (pages 105 - 139) of <a href="http://www.r-5.org/files/books/computers/dev-teams/diagrams/Sandi_Metz-Practical_Object-Oriented_Design_in_Ruby-EN.pdf">Sandi Metz’s Practical Object Oriented Design in Ruby</a>. Toward the end of the chapter, Metz talks about an alternative design pattern to using <code class="highlighter-rouge">super</code> which is beyond the scope of today’s lesson but that you may find interesting.</li>
+  <li>Google “Composition vs. Inheritance in Ruby” for some more perspectives on when to use inheritance and when to include a module.</li>
+</ul>
+:ET

@@ -1,0 +1,35 @@
+I"ê<h2 id="project-description">Project Description</h2>
+
+<p>The goal of this project is to create a successful web application from a project idea. You will create an app that will authenticate with a third-party service, consume an api, and solve an actual problem.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Learning how to build a full Rails app from idea to delivery</li>
+  <li>Revisiting previous concepts such as APIs and OAuth</li>
+  <li>Finding the strengths and gaps in your knowledge of Ruby, Rails, and organizing
+a project.</li>
+  <li>Use an agile process as you develop features</li>
+  <li>Configure a continuous integration server</li>
+</ul>
+
+<h2 id="technical-expectations">Technical Expectations</h2>
+
+<ul>
+  <li>Use an external OAuth provider to authenticate users</li>
+  <li>Consume an external API</li>
+  <li>Utilize a service-oriented architecture with at least one Sinatra Microservice</li>
+  <li>Implement a production quality user interface</li>
+  <li>Optimize your application using at least one of the following: database indexing, eager loading, caching, background workers, or AJAX requests</li>
+</ul>
+
+<h2 id="phases">Phases</h2>
+
+<ul>
+  <li><a href="./ideation">Ideation</a></li>
+  <li><a href="./inception">Inception</a></li>
+  <li><a href="./development">Development</a></li>
+  <li><a href="../retro_guide">Retro</a></li>
+  <li><a href="./evaluation">Evaluation</a></li>
+</ul>
+:ET

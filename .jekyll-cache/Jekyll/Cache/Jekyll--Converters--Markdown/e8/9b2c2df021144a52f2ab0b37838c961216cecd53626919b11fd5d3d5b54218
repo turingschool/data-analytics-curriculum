@@ -1,0 +1,155 @@
+I"�<h1 id="refactor-tractor-workshop">Refactor Tractor Workshop</h1>
+
+<h2 id="structure">Structure</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>10</td>
+      <td>Warmup</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Presentations</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Pomodoro</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Smell Review</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Code-along / Workshop</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Pomodoro</td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>Paired practice</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Review</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Revisit and reinforce the general points and goals of refactoring.</li>
+  <li>Communicate a technical problem.</li>
+  <li>Recognize common mistakes and bad practices in JS.</li>
+  <li>Develop strategies to refactor those mistakes.</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>With your Quantified Self partner, take 10 minutes to identify a chunk of code (&lt;= 10 lines) that you <em>know</em> is smelly, but haven’t had time or don’t know how to refactor it.</p>
+
+<p>Develop talking points for a three minute presentation that address the following:</p>
+
+<ul>
+  <li>Why/how the code “smells”
+    <ul>
+      <li>What rules or conventions it violates (e.g., DRY)</li>
+    </ul>
+  </li>
+  <li>The headaches (if any) this code has introduced to your project</li>
+  <li>How you might refactor or deal with it</li>
+  <li>Why refactoring would be worth the time and effort</li>
+</ul>
+
+<p><strong>Split speaking time evenly between you and your partner</strong></p>
+
+<h2 id="presentations">Presentations</h2>
+
+<!---
+
+Presentation Break up
+
+To break up the groups (ex.):
+
+1.     | 2.   | 3.    | 4.      | 5.      | 6.
+Jordan | Sam  | Casey | Blake   | Taylor  | Peyton
+Alex   | Jess | Lee   | Charlie | Phoenix | Dakota
+
+Split them in 2 groups
+Group A : 1, 2, 3
+Group B : 4, 5, 6
+
+Paired Practice Break up
+
+To set the pairs needed later have each member of a team meet with a member of a different team who saw their presentation. I tend to match diagonal here them loop around. i.e
+
+Jordan & Jess
+Sam & Lee
+Casey & Alex
+
+Blake & Phoenix
+Taylor & Dakota
+Peyton & Charlie
+
+This ensures that when they refactor the other person code they have seen it before in the presentation and that members from 2 different team are helping review the originally teams code giving the original team different perspectives.
+
+-->
+
+<p>Each group present their “smellyscript” to the other groups to practice technical communication (3 minutes).</p>
+
+<h2 id="review-presented-topics">Review presented topics</h2>
+
+<h3 id="low-hanging-fruits">Low Hanging fruits</h3>
+<ul>
+  <li>Leftover <code class="highlighter-rouge">debugger</code> statements</li>
+  <li>Commented out code</li>
+  <li>Wonky whitespace</li>
+  <li>Mismatched or too many semicolons</li>
+  <li>Inconsistent use of function syntax</li>
+  <li>Inconsistent use of <code class="highlighter-rouge">var</code> vs <code class="highlighter-rouge">const</code> &amp; <code class="highlighter-rouge">let</code></li>
+  <li>Dead, unused code</li>
+</ul>
+
+<h3 id="other-code-smells">Other Code smells</h3>
+<ul>
+  <li>Comments - fine line between comments that illuminate and comments that obscure. why vs what</li>
+  <li>Long Methods - short methods are easier to read, understand and trouble shoot</li>
+  <li>Long Parameter List - the more parameters the more complex</li>
+  <li>Duplicated Code - DRY, DRY, DRY</li>
+  <li>Conditional Complexity - large conditional logic blocks</li>
+  <li>Uncommunicative Name - does the method name succinctly describe what it does</li>
+</ul>
+
+<h2 id="code-along-1-2-topics">Code-along 1-2 topics</h2>
+
+<!---
+  Pick 1 or 2 examples from the presentations to refactor in front of the class
+-->
+
+<h2 id="paired-practice">Paired Practice</h2>
+
+<p>In your assigned pair (given by instructor):</p>
+
+<ol>
+  <li>Checkout a refactoring branch for Person A’s project</li>
+  <li>Work on refactoring Person A’s code snippet from their presentation for 20 minutes.</li>
+  <li>Repeat steps 1 and 2 for Person B</li>
+</ol>
+
+<h2 id="review">Review</h2>
+
+<p>With your Quantified Self partner, discuss the following (15 minutes):</p>
+
+<ul>
+  <li>How your workshop pair approached refactoring</li>
+  <li>Your main takeaway from today’s workshop</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<p>Check out <a href="./js_refactor_tractor">this</a> compilation of refactoring techniques in JS.</p>
+:ET

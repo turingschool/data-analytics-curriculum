@@ -1,0 +1,88 @@
+I"¿ <h2 id="m1-backend-final-pairing-assessment">M1 Backend Final Pairing Assessment</h2>
+
+<h3 id="iteration-1">Iteration 1</h3>
+
+<p>Clone the following repository:</p>
+
+<p><code class="highlighter-rouge">git clone git@github.com:turingschool-examples/candy_shop.git </code></p>
+
+<p>Use the tests in <code class="highlighter-rouge">ingredient_test.rb</code> to drive the development of the functionality described below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ingredient</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Milk Chocolate"</span><span class="p">,</span> <span class="s2">"10"</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Ingredient...&gt;</span>
+<span class="n">ingredient</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1">#=&gt; Milk Chocolate</span>
+<span class="n">ingredient</span><span class="p">.</span><span class="nf">cost</span>
+<span class="c1">#=&gt; 10 (Integer)</span>
+</code></pre></div></div>
+
+<h3 id="iteration-2">Iteration 2</h3>
+
+<p>Write your own tests to drive development, create a <code class="highlighter-rouge">Chocolate</code> class with the functionality described below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ingredient_1</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Milk Chocolate"</span><span class="p">,</span> <span class="s2">"10"</span><span class="p">)</span>
+<span class="n">ingredient_2</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Macadamia Nuts"</span><span class="p">,</span> <span class="s2">"50"</span><span class="p">)</span>
+
+<span class="n">chocolate</span> <span class="o">=</span> <span class="no">Chocolate</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Chocolate Covered Macadamia Nuts"</span><span class="p">,</span> <span class="p">[</span><span class="n">ingredient_1</span><span class="p">,</span> <span class="n">ingredient_2</span><span class="p">])</span>
+<span class="c1">#=&gt;  &lt;Chocolate...&gt;</span>
+
+<span class="n">chocolate</span><span class="p">.</span><span class="nf">type</span>
+<span class="c1">#=&gt; "Chocolate Covered Macadamia Nuts"</span>
+
+<span class="n">chocolate</span><span class="p">.</span><span class="nf">ingredients</span>
+<span class="c1">#=&gt; {"Milk Chocolate" =&gt; 10, "Macadamia Nuts" =&gt; 50}</span>
+</code></pre></div></div>
+
+<h3 id="iteration-3">Iteration 3</h3>
+
+<p>Writing your own tests to drive development, create the functionality for the <code class="highlighter-rouge">Box</code> class described below.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ingredient_1</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Milk Chocolate"</span><span class="p">,</span> <span class="s2">"10"</span><span class="p">)</span>
+<span class="n">ingredient_2</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Macadamia Nuts"</span><span class="p">,</span> <span class="s2">"50"</span><span class="p">)</span>
+<span class="n">ingredient_3</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Peanut Butter"</span><span class="p">,</span> <span class="s2">"5"</span><span class="p">)</span>
+
+<span class="n">chocolate_1</span> <span class="o">=</span> <span class="no">Chocolate</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Chocolate Covered Macadamia Nuts"</span><span class="p">,</span> <span class="p">[</span><span class="n">ingredient_1</span><span class="p">,</span> <span class="n">ingredient_2</span><span class="p">])</span>
+
+<span class="n">chocolate_2</span> <span class="o">=</span> <span class="no">Chocolate</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Peanut Butter Cups"</span><span class="p">,</span> <span class="p">[</span><span class="n">ingredient_1</span><span class="p">,</span> <span class="n">ingredient_3</span><span class="p">])</span>
+
+<span class="n">box</span> <span class="o">=</span> <span class="no">Box</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1">#=&gt; &lt;Box...&gt;</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">add_chocolate</span><span class="p">(</span><span class="n">chocolate_1</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Chocolate...&gt;</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">add_chocolate</span><span class="p">(</span><span class="n">chocolate_2</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Chocolate...&gt;</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">chocolates</span>
+<span class="c1">#=&gt; [chocolate_1, chocolate_2]</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">ingredient_list</span>
+<span class="c1">#=&gt; "Milk Chocolate, Macadamia Nuts, Peanut Butter"</span>
+</code></pre></div></div>
+
+<h3 id="iteration-4">Iteration 4</h3>
+
+<p>Writing your own tests to drive development, add the following features to <code class="highlighter-rouge">Box</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ingredient_1</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Milk Chocolate"</span><span class="p">,</span> <span class="s2">"10"</span><span class="p">)</span>
+<span class="n">ingredient_2</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Macadamia Nuts"</span><span class="p">,</span> <span class="s2">"50"</span><span class="p">)</span>
+<span class="n">ingredient_3</span> <span class="o">=</span> <span class="no">Ingredient</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Peanut Butter"</span><span class="p">,</span> <span class="s2">"5"</span><span class="p">)</span>
+
+<span class="n">chocolate_1</span> <span class="o">=</span> <span class="no">Chocolate</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Chocolate Covered Macadamia Nuts"</span><span class="p">,</span> <span class="p">[</span><span class="n">ingredient_1</span><span class="p">,</span> <span class="n">ingredient_2</span><span class="p">])</span>
+
+<span class="n">chocolate_2</span> <span class="o">=</span> <span class="no">Chocolate</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Peanut Butter Cups"</span><span class="p">,</span> <span class="p">[</span><span class="n">ingredient_1</span><span class="p">,</span> <span class="n">ingredient_3</span><span class="p">])</span>
+
+<span class="n">box</span> <span class="o">=</span> <span class="no">Box</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1">#=&gt; &lt;Box...&gt;</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">add_chocolate</span><span class="p">(</span><span class="n">chocolate_1</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Chocolate...&gt;</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">add_chocolate</span><span class="p">(</span><span class="n">chocolate_2</span><span class="p">)</span>
+<span class="c1">#=&gt; &lt;Chocolate...&gt;</span>
+
+<span class="n">box</span><span class="p">.</span><span class="nf">cost</span>
+<span class="c1">#=&gt; 65</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,100 @@
+I"_<p>For this assessment you will be complete a 3 hour independent challenge.</p>
+
+<p>In this assessment you will:</p>
+
+<ul>
+  <li>Consume multiple third party APIs</li>
+  <li>Expose an API endpoint</li>
+  <li>Build well tested features</li>
+  <li>Demonstrate mastery of all parts of the Rails stack</li>
+  <li>Demonstrate mastery of Ruby</li>
+  <li>Commit every 15 minutes to track your progress (details below)</li>
+</ul>
+
+<h2 id="areas-of-knowledge">Areas of Knowledge</h2>
+
+<p>The intent of this assessment is to demonstrate a solid working understanding of the following:</p>
+
+<ul>
+  <li>Consuming an API</li>
+  <li>Exposing an API</li>
+  <li>Writing tests that adequately test business value</li>
+  <li>Core concepts covered in the previous two Modules</li>
+  <li>Demonstrate good code quality using encapsulation and abstraction</li>
+</ul>
+
+<p>In addition, we expect you to:</p>
+
+<ul>
+  <li>Be able to explain all lines of code in your project</li>
+  <li>Be able to interpret and implement user stories in a Rails project</li>
+  <li>Be able to use external resources in the problem solving process (ie: Google, Docs etc)</li>
+</ul>
+
+<h2 id="expectations">Expectations</h2>
+
+<ul>
+  <li>As you work, you <em>should</em>:
+    <ul>
+      <li>Commit your code every 15 minutes.</li>
+      <li>Reference external public resources (ie: Google, Ruby API, etc)</li>
+    </ul>
+  </li>
+  <li>As you work, you <em>should not</em>:
+    <ul>
+      <li>Push your code until the end of the assessment</li>
+      <li>Copy code snippets</li>
+      <li>Review old projects for code implementations</li>
+      <li>Seek live support from individuals other than facilitators</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="note-about-the-commit-expectation">Note about the commit expectation:</h4>
+
+<p>To better follow your progress over the 3 hours we expect that you commit every 15 minutes regardless of where you’re at. Be sure to commit anything you may want to talk about later. For example: You get the first implementation working but want to refactor. If you don’t commit the first implementation and don’t finish the refactor there is no record of your initial solution.</p>
+
+<h2 id="evaluation-criteria">Evaluation Criteria</h2>
+<p>Students will be evaluated on 3 main criteria: feature completion, testing, and code quality. The scale is as follows.</p>
+<ol>
+  <li>Below Expectations</li>
+  <li>Approaching Expectations</li>
+  <li>Meets Expectations</li>
+  <li>Above Expectations</li>
+</ol>
+
+<h3 id="feature-completion">Feature Completion</h3>
+
+<ol>
+  <li>Incomplete/Not Functional</li>
+  <li>Functional, but does not match the expected return exactly</li>
+  <li>Functions as expected</li>
+  <li>Any additional above-and-beyond work which includes other aspects of the project, such as user auth</li>
+</ol>
+
+<h3 id="testing">Testing</h3>
+
+<ol>
+  <li>No testing</li>
+  <li>Testing, but is not robust to cover expected functionality <strong>OR</strong> has failing tests</li>
+  <li>Robust testing to cover happy path functionality</li>
+  <li>Tests include sad path coverage</li>
+</ol>
+
+<h3 id="code-quality">Code Quality</h3>
+
+<ol>
+  <li>Completes less than 3 checkboxes outlined below</li>
+  <li>Completes 3-4 checkboxes outlined below</li>
+  <li>Completes all checkboxes outlined below</li>
+  <li>Completes all checkboxes outlined below and implements inheritance or polymorphism</li>
+</ol>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />API keys are not hardcoded</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Student demonstrates understanding of MVC principles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Student demonstrates understanding of SRP</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Student demonstrates understanding of encapsulation</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Student demonstrates understanding of abstraction</li>
+</ul>
+:ET

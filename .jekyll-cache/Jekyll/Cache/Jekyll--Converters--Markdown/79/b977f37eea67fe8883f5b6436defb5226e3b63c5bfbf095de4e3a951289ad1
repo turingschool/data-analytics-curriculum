@@ -1,0 +1,266 @@
+I"�A<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Understand the difference between synchronous and asynchronous operations</li>
+  <li>Access APIs from client side JavaScript using the Fetch API.</li>
+  <li>Explain the difference between client-side and server-side.</li>
+</ul>
+
+<h2 id="javascript-refresh">JavaScript Refresh</h2>
+<p>Talk with a partner about the following:</p>
+
+<ul>
+  <li>How do you declare and assign a variable?</li>
+  <li>What tools are available for debugging in JavaScript?</li>
+  <li>How are functions declared in JavaScript?</li>
+</ul>
+
+<h3 id="variables">Variables</h3>
+
+<p>Variables are declared with <code class="highlighter-rouge">var &lt;variableName&gt;</code> in <code class="highlighter-rouge">camelCase</code>. ES6 introduced the keywords <code class="highlighter-rouge">let</code> or <code class="highlighter-rouge">const</code> which behave slightly differently, but we won’t get into that today.</p>
+
+<h3 id="debugging-in-javascript">Debugging in Javascript</h3>
+
+<p>Debugging JavaScript is a different beast than debugging Ruby. Because JavaScript is run entirely in the browser, the technique for troubleshooting broken code is more complicated than <code class="highlighter-rouge">binding.pry</code>. Luckily, modern browsers are aware of this and give us a collection of options for digging into your code.</p>
+
+<h4 id="1-developer-tools">1. Developer Tools</h4>
+
+<p>One of the first things you should familiarize yourself with when working with JavaScript (or HTML…or CSS…) are the dev tools. You can find a cool tutorial to dive deeper with  <a href="http://discover-devtools.codeschool.com/">Code School’s Discover-DevTools Tutorial.</a> (Chapters 3 &amp; 4 are particularly helpful)</p>
+
+<p>To open developer tools in Chrome:</p>
+<ul>
+  <li>Mac: <code class="highlighter-rouge">Cmd</code> + <code class="highlighter-rouge">Opt</code> + <code class="highlighter-rouge">i</code> (or <code class="highlighter-rouge">Cmd</code> + <code class="highlighter-rouge">Opt</code> + <code class="highlighter-rouge">j</code>)</li>
+  <li>(or) Right click on the browser window and select <code class="highlighter-rouge">inspect</code></li>
+  <li>(or) Select <code class="highlighter-rouge">View</code> in the navbar, then <code class="highlighter-rouge">Developer</code>, then <code class="highlighter-rouge">Developer Tools</code></li>
+</ul>
+
+<p>When working with JavaScript, it is useful to keep your console open at all times to watch for errors and anything you’ve told your code to print out. Bringing us to…</p>
+
+<h4 id="2-consolelog">2. console.log()</h4>
+
+<p><code class="highlighter-rouge">console.log()</code> is to JS what <code class="highlighter-rouge">puts</code> is to Ruby. This line of code will print whatever is provided as an argument to the console.</p>
+
+<p>Given the following function called <code class="highlighter-rouge">printStuff()</code>, adding console.log() will print the value of <code class="highlighter-rouge">myVariable</code> to the console.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">printStuff</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="kd">var</span> <span class="nx">myVariable</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myVariable</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">printStuff</span><span class="p">();</span>
+<span class="o">=&gt;</span> <span class="mi">10</span>
+</code></pre></div></div>
+
+<p>If you’re confused about what a variable or function is returning, throw <code class="highlighter-rouge">console.log()</code> into your code or directly into the <code class="highlighter-rouge">console</code> in your browser to confirm/deny suspicions.</p>
+
+<h4 id="3-debugger">3. <code class="highlighter-rouge">debugger;</code></h4>
+
+<p>Debugger is the <code class="highlighter-rouge">pry</code> of JS. Stick <code class="highlighter-rouge">debugger;</code> within a function to pause the browser from running the script when it hits a particular part of your code.</p>
+
+<p>For more details and information about other ways to dig into your JavaScript, check out the <a href="https://developer.chrome.com/devtools/docs/javascript-debugging">Chrome Documentation</a>.</p>
+
+<h3 id="functions">Functions</h3>
+
+<p>There are multiple ways we will see functions in JavaScript.</p>
+
+<p><strong>function expression:</strong>
+(Where an anonymous function is saved to a variable, can only be called after it is set to a variable)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var myFunction = function(param) {
+  do a thing with the param;
+};
+</code></pre></div></div>
+
+<p><strong>function declaration:</strong><br />
+(A function with a name, can be called form anywhere)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function myFunction(param) {
+  do a thing with the param;
+};
+</code></pre></div></div>
+
+<p><strong>callback:</strong>
+(A function that is passed to another function as a parameter)</p>
+
+<p>You’re familiar with the array method <code class="highlighter-rouge">.map</code> in Ruby - JavaScript has an array prototype <code class="highlighter-rouge">.map()</code> that also iterates through an array and returns an array. Here’s an example:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">array</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
+
+<span class="nx">array</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>This would iterate through the array and <code class="highlighter-rouge">console.log</code> each element. The <strong>callback</strong> is the parameter of the <code class="highlighter-rouge">map()</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="asynchronous-javascipt-irl">Asynchronous JavaScipt IRL</h2>
+
+<p>Let’s say we’re getting ready for the day, and stop at Starbucks on the way to school:</p>
+
+<ul>
+  <li>
+    <p><strong>Synchronous:</strong> I go through the drive thru window, meaning each car will get it’s coffee in order. Even if that means I have to wait extra long because the car in front of me ordered pastries for their whole office 🙄</p>
+  </li>
+  <li>
+    <p><strong>Asynchronous:</strong> I go inside. The guy in front of me ordered a trenta soy caramel latte extra hot, then I ordered a tall Pike. I will get my coffee first, because it was quicker to make! ☕️</p>
+  </li>
+</ul>
+
+<h4 id="example-1-some-consolelogging">Example 1: Some <code class="highlighter-rouge">console.log</code>ging</h4>
+
+<p>In what order do we expect to see these three <code class="highlighter-rouge">console.log</code>s print?</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>console.log("I am first");
+console.log("I am second");
+console.log("I am last");
+</code></pre></div></div>
+
+<p>Check it out in the browser.</p>
+
+<p>We know <code class="highlighter-rouge">console.log</code>s are quick, but what if that second one was a function making a network request that was going to take a second or two? The third <code class="highlighter-rouge">console.log</code> would not run until the previous line of code was executed. This presents a problem on the front-end.</p>
+
+<!-- insert quote from jhun on need for speed -->
+
+<p>In what order do we expect to see these three <code class="highlighter-rouge">console.log</code>s print?</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>console.log("Legen...");
+
+setTimeout(() =&gt; {
+  console.log("DARY!");
+}, 2000);
+
+console.log("Wait for it...");
+</code></pre></div></div>
+
+<p>Copy and paste this entire snippet into your console in the browser - see what happens!</p>
+
+<p><code class="highlighter-rouge">setTimeout()</code> is actually an asynchronous function, which executes its’ callback after waiting for the allotted time to expire. We will dig into the details of how that works under the hood in Mod 4. For now, please just trust me.</p>
+
+<h4 id="example-2">Example 2:</h4>
+
+<ul>
+  <li><strong>Synchronous:</strong></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|&lt;----A----&gt;||&lt;-----B---------&gt;||&lt;----C--------------&gt;|
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Asynchronous:</strong>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|&lt;----A----&gt;|
+   |&lt;-----B---------&gt;|
+      |&lt;----C--------------&gt;|
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="questions">Questions:</h4>
+
+<ul>
+  <li>Why are async operations necessary?</li>
+  <li>How would you explain synchronous vs. asynchronous to a 5 year-old?</li>
+</ul>
+
+<h2 id="fetch"><code class="highlighter-rouge">fetch()</code></h2>
+
+<p>You may have come across <code class="highlighter-rouge">ajax</code>, which jQuery gives us. It has it’s benefits and is definitely still used, but another great tool to make network requests is the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch API</a>, which we will focus on implementing today.</p>
+
+<p>From the docs:</p>
+
+<p><em>The fetch() method takes one mandatory argument, the path to the resource you want to fetch. It returns a promise that resolves to the response to that request, whether it is successful or not.</em></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fetch('https://opentdb.com/api.php?amount=1&amp;category=27&amp;type=multiple')
+</code></pre></div></div>
+
+<p>The URL, our one mandatory argument, can be enclosed in quotes or back-ticks (you’ll see the advantage of the back-ticks later!)</p>
+
+<p>Next we see that fetch returns a promise that resolves to the response of of our request. We haven’t talked about promises yet, but all you need to know for now is that we can call <code class="highlighter-rouge">.then(callback)</code> which will execute our callback as soon as the response comes in… or in other words… it will wait until we have ALL of the data (or an error) back, <code class="highlighter-rouge">THEN</code> it will execute whatever we say to do next with that data.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fetch("https://opentdb.com/api.php?amount=1&amp;category=27&amp;type=multiple")
+  .then((response) =&gt; console.log(response))
+</code></pre></div></div>
+
+<p>If <code class="highlighter-rouge">then()</code> is waiting in line like a car in the drive-thru at Starbucks, what about this is A-synchronous? The entire <code class="highlighter-rouge">fetch()</code> is what’s asynchronous; other functions can run in the background while we are making this entire request. It’s necessary that the <code class="highlighter-rouge">then()</code> blocks behave synchronously and wait on resolution of the previous promise in order to do their jobs.</p>
+
+<p>If you plug the code above into your console, you should see the Response object come back. There’s one problem however, we can’t seem to get the data we want from the Response.body. There’s one more step to parse the response (much like you do when pulling things from localStorage). We’ll need to use the <strong><code class="highlighter-rouge">Body.json()</code></strong> method that comes with fetch to parse it and call another <code class="highlighter-rouge">.then()</code>.</p>
+
+<p>From the docs, the <code class="highlighter-rouge">.json()</code> method returns “A promise that resolves with the result of parsing the body text as JSON. This could be anything that can be represented by JSON — an object, an array, a string, a number…”</p>
+
+<p>In short, it gives us access to the response!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fetch("https://opentdb.com/api.php?amount=1&amp;category=27&amp;type=multiple")
+  .then((response) =&gt; response.json())
+  .then((response) =&gt; console.log(response))
+</code></pre></div></div>
+
+<p>Lastly, we can add in a <code class="highlighter-rouge">.catch()</code> to account for any errors we may run into.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fetch("https://opentdb.com/api.php?amount=1&amp;category=27&amp;type=multiple")
+  .then((response) =&gt; response.json())
+  .then((response) =&gt; console.log(response))
+  .catch((error) =&gt; console.error({ error }))
+</code></pre></div></div>
+
+<h2 id="promises"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises">Promises</a></h2>
+
+<p>“A Promise is an object representing the eventual completion or failure of an asynchronous operation”</p>
+
+<p>In our case, we can think of Promises as a placeholder that will do something once it receives a response back from the server.</p>
+
+<p>The great thing about promises is that since they are just objects we can move them around like an object and can return them from functions.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function getTrivia(number, categoryId) {
+	const root = 'https://opentdb.com/api.php';
+	const url = `${root}?amount=${number}&amp;category=${categoryId}&amp;type=multiple`;
+	const promise = fetch(url)
+	                .then((response) =&gt; response.json());
+
+	return promise;
+}
+
+getTrivia(10, 27)
+.then((response) =&gt; console.log(response))
+.catch((error) =&gt; console.error({ error }));
+</code></pre></div></div>
+
+<h2 id="practice-time">Practice Time!</h2>
+
+<p>Clone down <a href="https://github.com/turingschool-examples/b3-fetch-intro">this repo</a> and run <code class="highlighter-rouge">npm install</code> then <code class="highlighter-rouge">npm start</code>.</p>
+
+<p>We are going to make this color-picker application work! We will need to make two of each of the following requests: GET, POST, and DELETE. We will do one together, then you’ll complete the second with people at your table.</p>
+
+<h2 id="wrap-up">Wrap Up</h2>
+
+<ul>
+  <li>What is asynchronous JavaScript?</li>
+  <li>What is a callback in JavaScript?</li>
+  <li>What is the mandatory argument for <code class="highlighter-rouge">fetch()</code>? What else might you include in a request, and why?</li>
+  <li>What is a promise?</li>
+  <li>What considerations do we need to make when we have a front-end and a back-end?</li>
+</ul>
+
+<h3 id="additional-resources">Additional Resources</h3>
+
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">MDN Fetch API</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">MDN Promises</a></li>
+  <li><a href="http://www.i-programmer.info/programming/jquery/4788-jquery-promises-a-deferred.html">jQuery Promises and Deferred</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/AJAX">MDN AJAX</a></li>
+</ul>
+
+<h3 id="readings">Readings</h3>
+
+<ul>
+  <li><a href="https://davidwalsh.name/fetch">David Walsh Blog - Fetch</a></li>
+  <li><a href="http://www.phpasks.com/articles/historyajax.html">AJAX: History</a></li>
+  <li><a href="http://www.codeconquest.com/website/client-side-vs-server-side/">Client Side vs Server Side</a></li>
+  <li><a href="http://skillcrush.com/2012/07/30/client-side-vs-server-side/">More Client Side vs Server Side</a></li>
+</ul>
+
+<h3 id="video-on-ajax">Video on AJAX</h3>
+
+<ul>
+  <li><a href="https://vimeo.com/131025914">Video</a></li>
+</ul>
+:ET

@@ -1,0 +1,201 @@
+I"<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Install tools to help support our debugging process.</li>
+  <li>Understand how to use feedback, verify assumptions and read stack traces.</li>
+</ul>
+
+<h2 id="tools">Tools</h2>
+
+<p>To start, we need to make sure we have the appropriate tooling installed.</p>
+
+<ul>
+  <li><a href="https://github.com/pry/pry">pry</a> - <code class="highlighter-rouge">gem install pry</code></li>
+</ul>
+
+<h2 id="lesson">Lesson</h2>
+
+<h3 id="get-feedback">Get Feedback</h3>
+
+<p>What do you think are some of the methods or tools that we have that we can use
+in order to get feedback from our code?</p>
+
+<ul>
+  <li>Pry</li>
+  <li>Puts Driven Development</li>
+  <li>TDD</li>
+</ul>
+
+<p>We want to pace our progress with the feedback that we are getting from our
+code.  It is critically important that we let our feedback where we are going
+with our code. It is very easy to get into the mindset of, “let me just try
+this one more thing.” Don’t make blind stabs in the dark. That’s what we do with
+CSS. (Kidding.)</p>
+
+<p>The important thing here is that we need to use all of the tools at our
+disposal in order to get meaningful feedback to guide each change that we make.</p>
+
+<p>Let’s look at some code.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Mather
+  def initialize(num)
+    @num = num
+  end
+
+  def calculate
+    if @num == 0
+      "that's a negative ghost rider, the pattern is full"
+    else
+      doubled = doubler(@num)
+      squared = squarer(doubled)
+      return squared
+    end
+  end
+
+  def doubler(number)
+    puts "I'm a doublin!"
+    number * 2
+  end
+
+  def squarer(number)
+    puts "I'm a squarin!"
+    number * number
+  end
+end
+
+mather = Mather.new(4)
+puts mather.calculate
+</code></pre></div></div>
+
+<h3 id="verify-assumptions">Verify Assumptions</h3>
+
+<p>The most common errors that students encounter run into don’t come from doing
+something bad, but doing something right, to the wrong thing.</p>
+
+<p>This is what it means often to have a case of invalid assumptions. I thought
+that I had a String, but I actually had an Integer. I thought I had an Array of
+Hashes, but I actually had an Array of Arrays.</p>
+
+<p>To avoid this, we need to be extremely disciplined about verifying all of the
+implicit assumptions throughout our code.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Mather
+  def initialize(num)
+    @num = num
+  end
+
+  def calculate
+    if @num == 0
+      "that's a negative ghost rider, the pattern is full"
+    else
+      doubled = doubler(@num)
+      squared = squarer(doubled)
+      return squared
+    end
+  end
+
+  def doubler(number)
+    puts "I'm a doublin!"
+    [number * 2]
+  end
+
+  def squarer(number)
+    puts "I'm a squarin!"
+    number * number
+  end
+end
+
+mather = Mather.new(4)
+puts mather.calculate
+</code></pre></div></div>
+
+<h3 id="read-stack-traces">Read Stack Traces</h3>
+
+<p>A Stack Trace is a list of all the lines of code that were touched along the
+way to an error. It tells us what the error was and how we got there. It also
+gives us a file name and a line of code to look in.</p>
+
+<h4 id="how-to-use-a-stack-trace">How to use a Stack Trace</h4>
+
+<ol>
+  <li>Look for the top or end of the trace - the error will generally be one of
+the last things that happened because the last thing that happened will halt
+your code, so we want to look at the most recent lines of our code. This is
+where we will find the problem.</li>
+  <li>Look for the lines that refer to the code that we’ve written. Your stack
+trace will include lines that go through code that isn’t ours - things like
+the internals of Ruby, and gems, etc.  VERY rarely is the problem in code that
+you have written, namely Ruby itself or any Gems you may be using such as
+Minitest. It’s you, not the code. Focus on the code you’ve written.</li>
+  <li>Read the error message twice before doing anything.</li>
+  <li>Focus on two things, what did we try to do and to what did we try to do it?</li>
+</ol>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NoMethodError: undefined method `+' for nil:NilClass
+</code></pre></div></div>
+
+<p>A diligent reading of this error message will tell me 2 things
+off the bat:</p>
+
+<ol>
+  <li>we tried to add something to an object</li>
+  <li>that object was <code class="highlighter-rouge">nil</code>, which does not support adding to it</li>
+</ol>
+
+<p>This information, in combination with the line number where the error
+occurred, allows me to go directly to that place in the file
+and start looking for anywhere I’m adding 2 things. Likely one
+of them will turn out to be <code class="highlighter-rouge">nil</code>.</p>
+
+<p>Using the stack trace effectively allows me to go directly
+to the source of the problem, as opposed to reading random lines
+of code hoping that the problem will jump out at me.</p>
+
+<h3 id="4-tracing-values-through-code">4. Tracing Values Through Code</h3>
+
+<p>This is often the next step after we’ve “diagnosed” one
+of the problems above.</p>
+
+<p>For example, I had an <strong>assumption</strong> about one of my objects –
+that it would be an Array of hashes each containing a key of <code class="highlighter-rouge">:name</code>.</p>
+
+<p>Thanks to an error message and some pry-poking, I conclude that this
+assumption is incorrect – my object is actually an Array of strings,
+and thus doesn’t work correctly in the context I’m trying to use it.</p>
+
+<p>My next step is to figure out <strong>how</strong> did the object end up in
+this state. This requires a bit of mental exercise to trace the
+object through the path it followed before it reached the site of
+the error.</p>
+
+<p>I sometimes think of this as filling in a mental “checklist” –
+start from the location of your error and work backwards through
+each line that touched your object before it got there.</p>
+
+<p>At each line, ask yourself: “What is the type of the object at this
+point and what is its value?”</p>
+
+<p>More often than not this process will lead you to a point where
+the mistake is obvious – “Oh darn I accidentally turned each hash
+into a string at this line…”, etc.</p>
+
+<h2 id="exercise---erroneous-creatures">Exercise - Erroneous Creatures</h2>
+
+<p>Let’s get some practice using these techniques.
+Clone this <a href="https://github.com/turingschool-examples/erroneous_creatures">Erroneous Creatures</a>
+repository.</p>
+
+<p>It contains some implementations of the Mythical Creatures exercises
+that are riddled with small bugs.</p>
+
+<p>Use the debugging techniques discussed above to diagnose and fix the
+bugs, and get your creatures back to passing.</p>
+
+<h3 id="addenda--more-material">Addenda / More Material</h3>
+
+<ul>
+  <li><a href="http://tutorials.jumpstartlab.com/topics/debugging/debugging.html">JumpstartLab Lesson</a></li>
+</ul>
+:ET

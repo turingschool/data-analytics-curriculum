@@ -1,0 +1,39 @@
+I"S<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>Become familiar with the DSL within the <code class="highlighter-rouge">routes.rb</code> file</li>
+  <li>Become familiar with the common path helpers and where to use them</li>
+  <li>Review the 7 restful routes</li>
+</ul>
+
+<h2 id="lesson">Lesson</h2>
+
+<p>Use <a href="https://www.loom.com/share/604d8bb6a2dc41f6b97dd9a0dc01272f">this video</a> and the <a href="https://guides.rubyonrails.org/v5.2/routing.html#resource-routing-the-rails-default">Rails guides on routing</a> to answer some questions</p>
+
+<h2 id="to-do">To Do</h2>
+<ul>
+  <li>How can I create the 7 restful routes for a resource?</li>
+  <li>What are the 7 restful routes?</li>
+  <li>If my resource is authors, which controller will my routes map to?</li>
+  <li>If my request is <code class="highlighter-rouge">GET 'authors/4'</code>, which action in which controller will my route be mapped to? - How could I create a link to the above route using a path helper in my view?</li>
+</ul>
+
+<p>Suppose I have this setup:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Author</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:books</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Book</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">belongs_to</span> <span class="ss">:author</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>If my request is <code class="highlighter-rouge">GET 'authors/4/books/3'</code> (nested resource), which action in which controller will my route be mapped to?</li>
+  <li>How could I create a link to the above route using a path helper in my view?</li>
+  <li>How deep should I nest routes?</li>
+  <li>What are the advantages of using path helpers?</li>
+  <li>How can I view all available path helpers within an application?</li>
+  <li>How can I view all available routes for a specific controller?</li>
+</ul>
+:ET

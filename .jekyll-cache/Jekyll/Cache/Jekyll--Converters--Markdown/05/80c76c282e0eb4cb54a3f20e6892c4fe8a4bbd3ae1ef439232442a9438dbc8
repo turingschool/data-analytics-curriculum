@@ -1,0 +1,150 @@
+I"�;<h2 id="warm-up">Warm Up</h2>
+
+<p>We’ll start today from the <a href="https://github.com/turingschool-examples/set_list">Set List main branch</a></p>
+
+<ul>
+  <li>Thinking about our Set List application, what is the structure of the forms we use to create and update artists? (Share your screen and put them side by side)
+    <ul>
+      <li>How do we tell our forms the path and verb it should use when the form is submitted?</li>
+      <li>What connection exists between the form and the objects we are creating or updating?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="form_with">form_with</h2>
+
+<h3 id="form_with-syntax">form_with syntax</h3>
+
+<p><strong>form_with</strong> is a Rails form helper, similar to <code class="highlighter-rouge">form_tag</code> and <code class="highlighter-rouge">form_for</code> which have both been soft deprecated. It is a form helper that allows us to use ruby code to build an HTML form.  <code class="highlighter-rouge">form_with</code> can bind a form to a model object or it can create a simple form that does not require a model. It uses a number of helper options to make some educated guesses about how the HTML form should be built.</p>
+
+<p>If we were going to use <code class="highlighter-rouge">form_with</code> without a model (like you’ve done with <code class="highlighter-rouge">form_tag</code>) to create a simple search form then we could do it like so:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;</span><span class="err">%=</span> <span class="na">form_with</span><span class="err">(</span><span class="na">url:</span> <span class="err">"/</span><span class="na">search</span><span class="err">",</span> <span class="na">method:</span> <span class="err">"</span><span class="na">get</span><span class="err">")</span> <span class="na">do</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">label_tag</span><span class="err">(</span><span class="na">:q</span><span class="err">,</span> <span class="err">"</span><span class="na">Search</span> <span class="na">for:</span><span class="err">")</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">text_field_tag</span><span class="err">(</span><span class="na">:q</span><span class="err">)</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">submit_tag</span><span class="err">("</span><span class="na">Search</span><span class="err">")</span> <span class="err">%</span><span class="nt">&gt;</span>
+<span class="nt">&lt;</span><span class="err">%</span> <span class="na">end</span> <span class="err">%</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>The resulting html:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">accept-charset=</span><span class="s">"UTF-8"</span> <span class="na">action=</span><span class="s">"/search"</span> <span class="na">data-remote=</span><span class="s">"true"</span> <span class="na">method=</span><span class="s">"get"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">"q"</span><span class="nt">&gt;</span>Search for:<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"q"</span> <span class="na">name=</span><span class="s">"q"</span> <span class="na">type=</span><span class="s">"text"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">"commit"</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Search"</span> <span class="na">data-disable-with=</span><span class="s">"Search"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p>For every form <code class="highlighter-rouge">input</code>, an ID attribute is generated from its name (“q” in above example). These IDs can be very useful for CSS styling or manipulation of form controls with JavaScript.</p>
+
+<p>If we were going to use <code class="highlighter-rouge">form_with</code> to create a Dog object with name, breed, and age attributes, our form would look something like this:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/dogs/new.html.erb --&gt;</span>
+<span class="nt">&lt;</span><span class="err">%=</span> <span class="na">form_with</span> <span class="na">model:</span> <span class="na">Dog.new</span><span class="err">,</span> <span class="na">local:</span> <span class="na">true</span> <span class="na">do</span> <span class="err">|</span><span class="na">f</span><span class="err">|</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.label</span> <span class="na">:name</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.text_field</span> <span class="na">:name</span> <span class="err">%</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.label</span> <span class="na">:breed</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.text_field</span> <span class="na">:breed</span> <span class="err">%</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.label</span> <span class="na">:age</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.number_field</span> <span class="na">:age</span> <span class="err">%</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.submit</span> <span class="err">%</span><span class="nt">&gt;</span>
+<span class="nt">&lt;</span><span class="err">%</span> <span class="na">end</span> <span class="err">%</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>Notice the <strong><code class="highlighter-rouge">local: true</code></strong> option.
+<strong>You must include this option for your form to work properly with the <code class="highlighter-rouge">form_with</code> helper</strong></p>
+
+<p>This helper is set to false by default when using the <code class="highlighter-rouge">form_with</code> helper. This is because <code class="highlighter-rouge">form_with</code> was built with performance improvements in mind. Within professional rails applications, this helper defaults to taking advantage of AJAX (Asynchronous JavaScript And XML) to send requests. We won’t dive into the advantages and disadvantages of this just yet, but know that this option expects a JavaScript response as opposed to an HTML response. We aren’t implementing JavaScript in our applications, so we want our request to be sent expecting an HTML response.</p>
+
+<p>In the above example, we are binding our form to a new Dog object <code class="highlighter-rouge">Dog.new</code>.  While this works from a functionality standpoint, we don’t ever want to be reaching from our views into our database, so, we would want our controller to send this object to our views:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/controllers/dogs_controller.rb</span>
+
+<span class="k">class</span> <span class="nc">DogsController</span>
+  <span class="k">def</span> <span class="nf">new</span>
+    <span class="vi">@dog</span> <span class="o">=</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- app/views/dogs/new.html.erb --&gt;</span>
+<span class="nt">&lt;</span><span class="err">%=</span> <span class="na">form_with</span> <span class="na">model:</span> <span class="err">@</span><span class="na">dog</span><span class="err">,</span> <span class="na">class:</span> <span class="err">"</span><span class="na">doggos_form</span><span class="err">"</span> <span class="na">do</span> <span class="err">|</span><span class="na">f</span><span class="err">|</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.label</span> <span class="na">:name</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.text_field</span> <span class="na">:name</span> <span class="err">%</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.label</span> <span class="na">:breed</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.text_field</span> <span class="na">:breed</span> <span class="err">%</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.label</span> <span class="na">:age</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.number_field</span> <span class="na">:age</span> <span class="err">%</span><span class="nt">&gt;</span>
+
+  <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">f.submit</span> <span class="err">%</span><span class="nt">&gt;</span>
+<span class="nt">&lt;</span><span class="err">%</span> <span class="na">end</span> <span class="err">%</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">form_with</code> figures out where the browser should submit the form, and which HTTP verb to use, based on the object we pass:</p>
+
+<ul>
+  <li>if the object does not have an <code class="highlighter-rouge">id</code>:
+    <ul>
+      <li>form_with will use a POST verb and the action path will be <code class="highlighter-rouge">/resources</code></li>
+      <li>the form will start out empty</li>
+      <li>the submit button will say ‘Create (resource name)’</li>
+      <li>the action method we need to process the form data will be called <code class="highlighter-rouge">create</code></li>
+    </ul>
+  </li>
+  <li>if the object has an <code class="highlighter-rouge">id</code>:
+    <ul>
+      <li>form_with will use a PUT verb and the action path will be something like <code class="highlighter-rouge">/resources/:id</code></li>
+      <li>the form will pre-populate the fields with the data from the database</li>
+      <li>the submit button will say ‘Update (resource name)’</li>
+      <li>the action method we need to to process the form data will be called <code class="highlighter-rouge">update</code></li>
+    </ul>
+
+    <p>From the <a href="https://guides.rubyonrails.org/form_helpers.html">docs</a>:</p>
+    <ul>
+      <li>@dog is the actual object being edited or created</li>
+      <li>There is a single hash of options. HTML options (except id and class) are passed in the :html hash</li>
+      <li>The form_with method yields a form builder object (the f variable)</li>
+      <li>If you wish to direct your form request to a particular URL, you would use form_with url: my_nifty_url_path instead. To see more in depth options on what form_with accepts be sure to check out the <a href="https://api.rubyonrails.org/v6.0.3.4/classes/ActionView/Helpers/FormHelper.html#method-i-form_with">API documentation</a>.</li>
+      <li>Methods to create form controls are called on the form builder object <code class="highlighter-rouge">f</code>.</li>
+      <li><code class="highlighter-rouge">form_with</code> can be used to create forms that are not tied to a model</li>
+      <li>We need to pass the option <code class="highlighter-rouge">local: true</code> in order to avoid our form being submitted using AJAX</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="strong-params-with-form_with">Strong Params with form_with</h3>
+
+<p>Another difference between <code class="highlighter-rouge">form_tag</code> and <code class="highlighter-rouge">form_with</code> is how the params gets built when the form is submitted and handled through Rails. With <code class="highlighter-rouge">form_tag</code>,  all of the fields are inserted directly into the params hash - the params looks like an un-nested hash; in this format, we use <code class="highlighter-rouge">params.permit(:attribute1, :attribute2)</code> in our strong params method.</p>
+
+<p>With <code class="highlighter-rouge">form_with</code>, the form fields are inserted into the params in a nested hash - the key is the name of the resource, and it points to a collection of key/value pairs representing the field labels and user inputs.  With this nested hash, our strong params will need some additional instructions:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">dog_params</span>
+  <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:dog</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:breed</span><span class="p">,</span> <span class="ss">:age</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If we aren’t using strong params, then we can access our form data by calling:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span><span class="p">[</span><span class="ss">:dog</span><span class="p">][</span><span class="ss">:name</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>from the controller action that the form submits to.</p>
+
+<p>Again, notice the nesting.</p>
+
+<h3 id="practice">Practice</h3>
+
+<p>In our Set List app or in your project, update a few forms to use the <code class="highlighter-rouge">form_with</code> instead of <code class="highlighter-rouge">form_tag</code> - see if you can keep using partials! Can you create another partial using form_with?</p>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>How does <code class="highlighter-rouge">form_with</code> know which verb/path combination to submit to?</li>
+  <li>Could we use <code class="highlighter-rouge">form_with</code> for a log in form?</li>
+  <li>What is a benefit of using <code class="highlighter-rouge">form_with</code> over <code class="highlighter-rouge">form_tag</code>? Are there any drawbacks?</li>
+</ul>
+:ET

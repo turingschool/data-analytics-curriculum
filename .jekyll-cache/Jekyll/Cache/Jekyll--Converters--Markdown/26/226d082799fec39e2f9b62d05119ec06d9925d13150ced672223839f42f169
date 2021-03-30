@@ -1,0 +1,24 @@
+I"R<h2 id="iteration-2--generating-new-blog-files">Iteration 2 – Generating New Blog Files</h2>
+
+<p>For Hyde to become a viable blogging platform, we should add some commands to make common operations easy for our users. One of these is generating new posts for the blog. Add a hyde subcommand <code class="highlighter-rouge">post</code> which generates a new blog post file.</p>
+
+<p>The command will be used like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/hyde post /path/to/my/blog_directory Post Title
+</code></pre></div></div>
+
+<p>Where <code class="highlighter-rouge">"Hyde Project Directory"</code> gives the path to the root of the user’s Hyde project and <code class="highlighter-rouge">Post Title</code> takes any remaining text provided and uses it as the post’s title.</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/hyde post ~/my-sweet-blog Juicy Post
+Created a new post file at ~/my-sweet-blog/source/posts/2016-02-20-juicy-post.markdown
+</code></pre></div></div>
+
+<p>And inside of <code class="highlighter-rouge">~/my-sweet-blog/source/posts/2016-02-20-juicy-post.markdown</code>, Hyde should pre-populate some basic content:</p>
+
+<pre><code class="language-plain"># Juicy Post
+
+Your content here
+</code></pre>
+:ET

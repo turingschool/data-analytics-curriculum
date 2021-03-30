@@ -1,0 +1,180 @@
+I"/6<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Develop a mental model for how Ruby manages instances, classes, superclasses, and modules</li>
+  <li>Understand Ruby’s Lookup Chain for methods</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Inheritance</li>
+  <li>Superclass</li>
+  <li>Module</li>
+  <li>Object Model</li>
+  <li>Look Up Chain</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<ul>
+  <li>Available <a href="../slides/ruby_object_model">here</a></li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+
+<ul>
+  <li>What is class inheritance and how is it implemented?</li>
+  <li>What is a module and how is it implemented?</li>
+  <li>How do you know what variables, methods and classes you have available at any given time?</li>
+</ul>
+
+<h1 id="the-ruby-object-model">The Ruby Object Model</h1>
+
+<h2 id="investigative-methods">Investigative Methods</h2>
+
+<p>These three methods can help you investigate the relationships between classes and modules. All methods are run on the class (i.e. <code class="highlighter-rouge">String</code>, <code class="highlighter-rouge">Hash</code>)</p>
+
+<ul>
+  <li><code class="highlighter-rouge">.ancestors</code>: lists all classes along the inheritance chain, and any modules included by those classes. See <a href="https://ruby-doc.org/core-2.4.1/Module.html#method-i-ancestors">docs</a>.</li>
+  <li><code class="highlighter-rouge">.included_modules</code>: returns a list of all modules included by any class along the inheritance chain. See <a href="https://ruby-doc.org/core-2.4.1/Module.html#method-i-included_modules">docs</a>.</li>
+  <li><code class="highlighter-rouge">.superclass</code>: returns the superclass of the class. See <a href="https://ruby-doc.org/core-2.4.1/Class.html#method-i-superclass">docs</a>.</li>
+</ul>
+
+<h2 id="mapping-rubys-object-model">Mapping Ruby’s Object Model</h2>
+
+<h3 id="superclasses">Superclasses</h3>
+
+<p>We are going to create a <code class="highlighter-rouge">Dog</code> class. That <code class="highlighter-rouge">Dog</code> class is going to inherit from another class called <code class="highlighter-rouge">Animal</code>. That <code class="highlighter-rouge">Animal</code> class is going to include a module called <code class="highlighter-rouge">AnimalBehavior</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># dog.rb</span>
+<span class="nb">require</span> <span class="s1">'./animal'</span>
+
+<span class="k">class</span> <span class="nc">Dog</span> <span class="o">&lt;</span> <span class="no">Animal</span>
+<span class="k">end</span>
+
+<span class="n">dog</span> <span class="o">=</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">new</span>
+<span class="nb">require</span> <span class="s1">'pry'</span><span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># animal.rb</span>
+<span class="nb">require</span> <span class="s1">'./animal_behavior'</span>
+
+<span class="k">class</span> <span class="nc">Animal</span>
+  <span class="kp">include</span> <span class="no">AnimalBehavior</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># animal_behavior.rb</span>
+<span class="k">module</span> <span class="nn">AnimalBehavior</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice that we haven’t actually included any methods in these classes/modules. We don’t need them to map Ruby’s Object Model.</p>
+
+<p>When we run the <code class="highlighter-rouge">dog.rb</code> file, we create a new instance of <code class="highlighter-rouge">Dog</code> and then hit a pry. Using the investigative methods we defined above, we can learn about that dog instance’s ancestors:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">dog</span>
+<span class="c1"># =&gt; #&lt;Dog:0x007ff414932eb0&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">dog</span><span class="p">.</span><span class="nf">class</span>
+<span class="c1"># =&gt; Dog</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">ancestors</span>
+<span class="c1"># =&gt; [Dog, Animal, AnimalBehavior, Object, PP::ObjectMixin, Kernel, BasicObject]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">superclass</span>
+<span class="c1"># =&gt; Animal</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Animal</span><span class="p">.</span><span class="nf">superclass</span>
+<span class="c1"># =&gt; Object</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Object</span><span class="p">.</span><span class="nf">superclass</span>
+<span class="c1"># =&gt; BasicObject</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">BasicObject</span><span class="p">.</span><span class="nf">superclass</span>
+<span class="c1"># =&gt; nil</span>
+</code></pre></div></div>
+
+<p>Calling <code class="highlighter-rouge">.class</code> on the Dog object leads us to the <code class="highlighter-rouge">Dog</code> class. Calling <code class="highlighter-rouge">.superclass</code> on the <code class="highlighter-rouge">Dog</code> class leads us to <code class="highlighter-rouge">Object</code>, and calling <code class="highlighter-rouge">superclass</code> on <code class="highlighter-rouge">Object</code> leads us to <code class="highlighter-rouge">BasicObject</code>. <code class="highlighter-rouge">BasicObject</code> has no superclass, so the inheritance chain ends there. We can summarize this information in a diagram:</p>
+
+<p><img src="https://i.imgur.com/6IwoHvk.png" alt="Dog Inheritance" /></p>
+
+<p>Notice how we have included two instances of Dog in this diagram. This is to illustrate that there can be many instances of a class, and they all have a <code class="highlighter-rouge">.class</code> pointer to their Class. In this example, there can be many instances of Dog that all have the same <code class="highlighter-rouge">Dog</code> class.</p>
+
+<p>Also notice that we call <code class="highlighter-rouge">.superclass</code> on the <code class="highlighter-rouge">Dog</code> class, not the dog instance. What happens if we call <code class="highlighter-rouge">.superclass</code> on a dog instance? Try it to find out.</p>
+
+<p>Because our class inherits from <code class="highlighter-rouge">Object</code>, which inherits from <code class="highlighter-rouge">BasicObject</code>, we know that any class we create will have those two ancestors. This is where <code class="highlighter-rouge">:new</code> comes from. Look in the <a href="https://ruby-doc.org/core-2.4.1/BasicObject.html">Ruby Docs BasicObject Page</a> and you’ll see the <code class="highlighter-rouge">:new</code> defined there.</p>
+
+<h3 id="modules">Modules</h3>
+
+<p>We’ve mapped out the inheritance chain for our dog, but what about the modules? What happens if we call <code class="highlighter-rouge">included_modules</code> on our <code class="highlighter-rouge">Dog</code> class.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">included_modules</span>
+<span class="c1">#=&gt; [AnimalBehavior, PP::ObjectMixin, Kernel]</span>
+</code></pre></div></div>
+
+<p>We can see our <code class="highlighter-rouge">AnimalBehavior</code> module (along with some others), but we included that in <code class="highlighter-rouge">Animal</code>, not in <code class="highlighter-rouge">Dog</code>, so why is it showing up here? <code class="highlighter-rouge">included_modules</code> shows all modules that were included in <em>any</em> superclass, so it won’t tell us <strong>where</strong> that module was included. In this case, we get more information if we start at the top of the inheritance chain to figure out where modules first appear (you may get slightly different results depending on what Ruby version you are running):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">BasicObject</span><span class="p">.</span><span class="nf">included_modules</span>
+<span class="c1"># =&gt; []</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Object</span><span class="p">.</span><span class="nf">included_modules</span>
+<span class="c1"># =&gt; [PP::ObjectMixin, Kernel]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Animal</span><span class="p">.</span><span class="nf">included_modules</span>
+<span class="c1"># =&gt; [AnimalBehavior, PP::ObjectMixin, Kernel]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">included_modules</span>
+<span class="c1"># =&gt; [AnimalBehavior, PP::ObjectMixin, Kernel]</span>
+</code></pre></div></div>
+
+<p>From this information, we can deduce that <code class="highlighter-rouge">BasicObject</code> doesn’t include any modules, <code class="highlighter-rouge">Object</code> includes <code class="highlighter-rouge">PP:ObjectMixin</code> and <code class="highlighter-rouge">Kernel</code> (you don’t need to worry about what those are), and <code class="highlighter-rouge">Animal</code> includes <code class="highlighter-rouge">AnimalBehavior</code>.</p>
+
+<p>Our updated diagram:</p>
+
+<p><img src="https://i.imgur.com/f4pszOG.png" alt="Imgur" /></p>
+
+<h2 id="chart-paper-exercise">Chart Paper Exercise</h2>
+
+<p>Break into small groups. Grab a chart paper and markers.</p>
+
+<p>Using <code class="highlighter-rouge">.class</code>, <code class="highlighter-rouge">.ancestors</code>, <code class="highlighter-rouge">.included_modules</code>, and <code class="highlighter-rouge">.superclass</code>, diagram the Object Model of these several commonly-used Ruby classes: Hash, Array, String, Integer, and Float.</p>
+
+<h1 id="the-lookup-chain">The Lookup Chain</h1>
+
+<p>We now have a mental model for how Ruby manages classes, instances, superclasses, and modules, but why does it matter? The biggest implication of the Object Model is the <strong>Lookup Chain</strong>. We know that we can store methods in several places (class, superclass, module), but what is the exact order that Ruby looks for things? If a method is defined in several places, which one will Ruby use?</p>
+
+<h2 id="lookup-chain-exercise">Lookup Chain Exercise</h2>
+
+<p>Complete <a href="https://github.com/turingschool-examples/lookup_chain_exercise">this activity</a>. In the first part of the activity, you will map the Object Model for a <code class="highlighter-rouge">Chair</code> instance, just as we did above. Then you will alter the code to explore the order of the Lookup Chain.</p>
+
+<p>Once you have finished the activity, write out the order of the Lookup Chain as concisely as possible.</p>
+
+<h2 id="other-definitions-and-rules">Other Definitions and Rules</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">Classes</code>: store instance methods, have a superclass pointer</li>
+  <li><code class="highlighter-rouge">Instances</code>: store instance variables, have a class pointer</li>
+  <li><code class="highlighter-rouge">Classes</code> are also instances (of Class)</li>
+  <li><code class="highlighter-rouge">Classes</code> can only inherit from one other class (its ‘superclass’)</li>
+  <li><code class="highlighter-rouge">Classes</code> can include multiple Modules.</li>
+  <li><code class="highlighter-rouge">Modules</code> can be mixed-in to multiple classes (mixins)</li>
+</ul>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>How does Ruby’s look up chain work? What is the order it checks things?</li>
+  <li>What are three methods you can use to learn about where a built in Ruby method gets its components?</li>
+  <li>Draw a diagram of where Ruby would look for the method <code class="highlighter-rouge">::new</code></li>
+</ul>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li>Test your understanding of this material with this quiz: <a href="http://quiz-ruby-object-model.herokuapp.com/">http://quiz-ruby-object-model.herokuapp.com/</a>.</li>
+  <li>Read Camilo Reyes’ <a href="https://www.sitepoint.com/understanding-object-model/">“Understanding the Object Model.”</a></li>
+  <li><a href="https://vimeo.com/160952993">Ruby Object Model Video</a></li>
+</ul>
+:ET

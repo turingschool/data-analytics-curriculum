@@ -1,0 +1,35 @@
+I"�<h2 id="overview">Overview</h2>
+
+<p>Below are a number of resources organized by topic for you to review once you’ve finished <a href="http://mod0.turing.io/">Mod 0</a>. Feel free to explore these at your own pace and to focus on those resources where you believe you could use additional practice.</p>
+
+<h3 id="terminal">Terminal</h3>
+
+<ul>
+  <li><a href="https://github.com/turingschool/bootstrap_new_students/blob/master/cheetsheets/terminal.txt">Terminal/ Command Line Tips</a></li>
+  <li><a href="https://www.learnenough.com/command-line-tutorial">Michael Hartl’s command line book</a></li>
+</ul>
+
+<h3 id="atom">Atom</h3>
+
+<ul>
+  <li><a href="http://d2wy8f7a9ursnm.cloudfront.net/atom-editor-cheat-sheet.pdf">Atom Shortcuts Cheat Sheet</a></li>
+  <li><a href="https://github.com/turingschool/bootstrap_new_students/blob/master/cheetsheets/basic_shortcuts.txt">More Atom Shortcuts</a></li>
+  <li><a href="https://www.youtube.com/watch?v=U5POoGSrtGg">Video on Customizing Atom</a></li>
+  <li><a href="https://atom.io/docs/latest">Atom Flight Manual</a></li>
+</ul>
+
+<h3 id="ruby">Ruby</h3>
+
+<ul>
+  <li><a href="https://github.com/turingschool/ruby-exercises">Turing School Ruby Exercises</a> (<a href="https://gist.github.com/josh-works/ac68a974cb9e0d73d663ea6c8cf3e8d8">Tips on getting this set up</a>)</li>
+  <li><a href="http://curriculum.railsbridge.org/ruby/">Railsbridge Curriculum</a></li>
+  <li><a href="https://launchschool.com/books/ruby">Launch School’s Ruby Book</a></li>
+</ul>
+
+<h3 id="mod-1-preview-and-sample-projects">Mod 1 Preview and Sample Projects</h3>
+
+<ul>
+  <li><a href="../module1">Module 1 Home Page</a></li>
+  <li><a href="http://backend.turing.io/module1/projects/credit_check">Credit Check Project</a></li>
+</ul>
+:ET

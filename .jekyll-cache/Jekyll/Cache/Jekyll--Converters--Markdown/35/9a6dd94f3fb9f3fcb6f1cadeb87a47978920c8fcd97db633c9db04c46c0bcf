@@ -1,0 +1,218 @@
+I"�9<h1 id="finding-opportunities">Finding Opportunities</h1>
+
+<p><a href="https://docs.google.com/presentation/d/1cMJwVIn7QY4txtLLUfGrb-gF1A9PuWxyVfJuSqeKE4U/edit?usp=sharing">Slides for this session</a></p>
+
+<h3 id="objectives">Objectives</h3>
+
+<ul>
+  <li>Redefine how best to find job opportunities without limiting your search to job boards or job listings</li>
+  <li>Discuss more effective job-searching strategies such as Meetup, LinkedIn, cold outreach, boolean searches to produce more potential opportunities</li>
+  <li>Research companies and people to create a list of opportunities</li>
+</ul>
+
+<h3 id="deliverable">Deliverable</h3>
+<p>You’ll include a link to your Trello board with companies that you’re tracking in your <a href="https://github.com/turingschool/career-development-curriculum/tree/master/deliverable_submissions">PD deliverable submissions</a>. This submission is due Monday of Week 6 at 9am. Please reach out to Meg if you have any questions!</p>
+
+<h3 id="why">Why</h3>
+<p>Now is the point in your Turing education to start on your job search, and through this session, we’ll discuss tools of how to approach the job search in an intentional way that will also make the search less overwhelming.</p>
+
+<h3 id="overview-of-session">Overview of Session</h3>
+<ul>
+  <li>Hook (5 mins)</li>
+  <li>Opening (3 mins)</li>
+  <li>Set up Trello (7 mins)</li>
+  <li>Explore tools (35 mins)</li>
+  <li>Research time (37 mins)</li>
+  <li>Closing (3 mins)</li>
+</ul>
+
+<h3 id="warm-up">Warm Up</h3>
+<p>Think about your last job search. What strategies did you use? Which proved to be successful? Which were not successful? Turn and talk to the person next to you to share your experience. What trends came up?</p>
+
+<h3 id="opening">Opening</h3>
+<p>The traditional way to look for jobs isn’t necessarily the best route.</p>
+
+<p>Looking for jobs on sites like monster.com, Indeed, and other career listing sites can be discouraging and ineffective. As little as <a href="http://www.npr.org/2011/02/08/133474431/a-successful-job-search-its-all-about-networking">20-30% of job listings</a> are being posted online. That means that when you’re only looking at company job postings, you are decreasing your chances of finding a job significantly.</p>
+
+<p>In contrast, <a href="http://www.careerxroads.com/news/SourcesOfHire2013.pdf">referral candidates</a> are 3-4 times more likely to be hired than non-referral candidates. To add yourself to those numbers, today we’ll talk about how to find a job without relying on your resume or job postings.</p>
+
+<p><strong>Switch your Line of Thinking:</strong>
+Focus on finding people and companies you’d like to work with or for, and don’t get sidetracked with whether or not they have job listings posted that match your skillset. Ask yourself: <em>Who is doing work that interests me? How can I learn more?</em> The goal is to think longterm. Some of these opportunities may turn into future opportunities, rather than your first job. Be open-minded because you never know what will come of these conversations you’ll start having.</p>
+
+<p>Let’s start with these tools instead:</p>
+
+<ul>
+  <li><a href="http://www.meetup.com/">Meetup</a></li>
+  <li><a href="http://www.linkedin.com/">LinkedIn</a></li>
+  <li><a href="http://www.google.com/">Google</a></li>
+  <li><a href="http://builtin.com/">BuiltIn</a></li>
+  <li><a href="https://www.linkedin.com/training">Training on LinkedIn from Skillful</a></li>
+</ul>
+
+<p>There are more tools listed at the bottom of this markdown for you to consider, and we’ll also discuss how you can create a system to keep yourself organized through Trello.</p>
+
+<h3 id="set-up-trello">Set Up Trello</h3>
+<p>First, start with a place to track all of your job search research and to-dos. Trello is an easy-to-use project management tool that is perfect for tracking your leads. Make sure to add Meg as a collaborator (mstewart@turing.io).</p>
+
+<p>Check out <a href="http://blog.trello.com/using-trello-for-a-job-search-less-stress-more-process">this post</a> for more on why Trello is a helpful tool for staying on top of your job search and to see an example of a job search board.</p>
+
+<h4 id="your-turn">Your Turn</h4>
+<p>Create a “Job Tracker” Trello board. Set up your lists, starting with “Icebox,” which will serve as your initial ideas to explore.</p>
+
+<p>Consider the other lists you may want to create, such as:</p>
+
+<ul>
+  <li>Potential Contacts</li>
+  <li>Contacts who have Responded</li>
+  <li>Companies to Research</li>
+  <li>Meetups – include when they’re happening</li>
+  <li>Follow Up</li>
+  <li>Coffee Meetings</li>
+  <li>Informational Interviews</li>
+  <li>Interviews</li>
+</ul>
+
+<p><em>Feel free to add more that are relevant to keeping you organized</em></p>
+
+<p><a href="http://help.trello.com/article/797-adding-labels-to-cards?utm_source=Trello%20blog&amp;utm_medium=blog%20post&amp;utm_campaign=Job%20Search">Labels</a> can be helpful as you figure out what you want to prioritize, and remember to record your progress by utilizing the <a href="http://help.trello.com/article/765-commenting-on-cards?utm_source=Trello%20blog&amp;utm_medium=blog%20post&amp;utm_campaign=Job%20Search">comments</a> on the back of each card.</p>
+
+<p>Check out this info on <a href="https://trello.com/guide/getting-started.html">getting started with Trello</a></p>
+
+<h3 id="meetup-differently">Meetup Differently</h3>
+<p>Meetup is traditionally used to find local networking groups. However, it can also be used to find companies you would like to work with.</p>
+
+<h4 id="your-turn-1">Your Turn</h4>
+<ul>
+  <li>Navigate to <a href="http://www.meetup.com/">Meetup.com</a></li>
+  <li>Using information from your Flower Exercise findings, search for groups local to the area you’re interested in working and in topics that you’re interested in pursuing (i.e. Ruby, JavaScript, etc.). Be sure to select “Groups” (not “Calendar”).</li>
+  <li>On the group page, there are two things that will be very useful to your job search:
+    <ul>
+      <li>Organizers list</li>
+      <li>Upcoming events</li>
+    </ul>
+  </li>
+  <li>Check out who the organizers are. Where do they work? What other meetups are they active in? Are any of these companies of interest?</li>
+  <li>Now navigate to the RSVP list. Who else is going? What companies do they work for? These are great resources for finding companies that you may be interested in working for that you may not have known before!</li>
+</ul>
+
+<h3 id="linkedin-actively">LinkedIn Actively</h3>
+<p>It’s not enough to just have a profile and hope employers find you. Use LinkedIn to learn more about people using similar skills to those you’d like to use in your career or find people with the working titles you’d like to have, living in the location you’d like to be living and working in, and working in the industry you’d like to be working in.</p>
+
+<h4 id="your-turn-2">Your Turn</h4>
+
+<ul>
+  <li>Navigate to <a href="http://www.linkedin.com/">LinkedIn.com</a></li>
+  <li>Use the “Advanced Search” tool to find people based on skillset, location, and industry.</li>
+  <li>In “Keywords” type in the skills or focus you want to be working in (i.e., JavaScript, Ruby, Python, EdTech, FinTech, etc.)</li>
+  <li>In “Location” type in the area you’d like to be working it, whether it is where you’re located or not.</li>
+  <li>In “Industry” select “computer software”</li>
+  <li>Select search</li>
+  <li>Of those profiles that return, look at their profiles to see the list of companies they’ve worked for throughout their experience.</li>
+  <li>Add those companies of interest to your company tracker, include the person(s) you believe you could build a relationship with at those companies.</li>
+</ul>
+
+<h3 id="linkedin-company-connections">LinkedIn Company Connections</h3>
+<p>If you already have companies in mind that you would like to work with/for, don’t just apply to an open position, <em>if</em> there is an open position. Find someone at the company that you believe you could build a relationship with and ask for an informational interview to learn more about the company culture, team dynamics, and work flow.</p>
+
+<h4 id="your-turn-3">Your Turn</h4>
+
+<ul>
+  <li>Navigate to <a href="http://linkedin.com">LinkedIn.com</a></li>
+  <li>Search for people to connect with that work for companies you’re interested in by typing the search box the name of the company. As you type a drop down selection of “People who work at…” will appear. Select that option.</li>
+  <li>Narrow it down by the location where you’d like to work.</li>
+  <li>Then narrow it down by industry - “computer software.”</li>
+  <li>Now click through the results and determine whom you feel you can build a relationship with. When you find one, research them.</li>
+  <li>When you feel like you know what you need to, write a personalized connection message to them with a call to action. See <em><a href="./module_two/cold_outreach_i.md">Cold Outreach I</a></em> and look ahead at Module 4’s <em><a href="./module_four/cold_outreach_ii">Cold Outreach II</a></em> for some a refresher on tips for reaching out.</li>
+  <li>You can also click on the company’s page and on the right side, view “Similar Companies” where your connections work.</li>
+</ul>
+
+<h3 id="google-because-its-at-your-fingertips">Google… because it’s at your fingertips</h3>
+<p>Often job seekers forget to Google the simplest of searches. Don’t forget to research even the simplest of phrases.</p>
+
+<p><strong>Resources for making the most of a Google search:</strong></p>
+
+<ul>
+  <li><a href="https://moz.com/blog/25-killer-combos-for-googles-site-operator">25 Killer Combos for Google’s Site: Operator</a></li>
+  <li><a href="http://mashable.com/2011/11/24/google-search-infographic/">How to Use Google Search More Effectively</a></li>
+  <li><a href="http://booleanblackbelt.com/">Boolean Black Belt-Sourcing/Recruiting</a></li>
+</ul>
+
+<h4 id="your-turn-4">Your Turn</h4>
+
+<ul>
+  <li>Navigate to <a href="http://google.com">Google</a></li>
+  <li>Pick a location you’re interested in exploring opportunities.</li>
+  <li>Search “top tech companies in [location]” / “top workplaces in [industry (edtech, fintech, etc.)]”</li>
+  <li>Look for a journalist-generated list of companies that are recommended in that area.</li>
+  <li>Pick a couple companies to look into.</li>
+  <li>Walk through the about page, careers page, and team page</li>
+  <li>Research these people on LinkedIn, Twitter, and look for a personal blog by this person/people</li>
+  <li>Evaluate how you could build a connection with someone from that company</li>
+</ul>
+
+<h3 id="other-tools">Other Tools</h3>
+
+<ul>
+  <li>BuiltIn – located in Austin, Boston, Chicago, Colorado, LA, New York
+    <ul>
+      <li>Create a profile – there are 150 companies that are hiring in Colorado alone!</li>
+    </ul>
+  </li>
+  <li>Training Opportunities from Skillful on LinkedIn
+    <ul>
+      <li>Use the “See Jobs” button to generate a list of companies to learn about.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="your-turn-5">Your Turn</h4>
+
+<ul>
+  <li>If you are interested in any of the 6 locations for BuiltIn, navigate to <a href="http://builtin.com/">BuiltIn</a> to set up a profile</li>
+  <li>Explore the companies listed in Skillful’s list</li>
+</ul>
+
+<h3 id="research-time">Research Time</h3>
+<p>Apply the steps we discussed above to creating more cards on your Trello board and get organized by adding companies to your Icebox list.</p>
+
+<p>As you go through and continue to track your job search, keep in mind to:</p>
+
+<ul>
+  <li>Include the contact information for the individual you would like to build a connection with / have an informational interview with</li>
+  <li>Track the communication between you and the individual(s) at the company</li>
+  <li>Track the stage of the process you are currently in with the company</li>
+</ul>
+
+<h3 id="closing">Closing</h3>
+<p>It’s important to take the time now to organize your job search. Take these steps to make this process less daunting and empower yourself. Meg will use your Trello board to discuss next steps and tailored advice with you during career office hours and Module 4 1-on-1s. Reach out to her with any questions or to <a href="https://megstew.youcanbook.me/index.jsp">set up a time to meet</a>. Password: <em>complete</em></p>
+
+<h3 id="additional-resources">Additional Resources</h3>
+
+<h4 id="social-media-for-your-job-search">Social Media for Your Job Search:</h4>
+<ul>
+  <li><a href="http://www.forbes.com/sites/trudysteinfeld/2012/09/28/the-best-ways-to-use-social-media-in-your-job-search/">The Best Way to Use Social Media for Your Job Search</a></li>
+  <li><a href="https://www.themuse.com/advice/twitter-101-a-tutorial-for-the-timid">Twitter 101: A Tutorial for the Timid</a></li>
+  <li><a href="https://www.themuse.com/advice/how-not-to-suck-at-twitter">How to Not Suck at Twitter</a></li>
+  <li><a href="https://www.themuse.com/advice/5-better-ways-to-network-on-twitter-linkedin">5 Better Ways to Network on Twitter and LinkedIn</a></li>
+</ul>
+
+<h4 id="additional-sites">Additional sites</h4>
+<p>These are additional sites for finding opportunities, but <em>remember applying blind is less effective than finding someone.</em> Use these sites to find companies that are hiring, then go back through the steps listed above before applying to positions:</p>
+
+<ul>
+  <li><a href="https://jobs.github.com/">Github’s Job Board</a></li>
+  <li><a href="http://jobs.smashingmagazine.com/">Smashing Magazine’s Job Board</a></li>
+  <li><a href="http://jobs.mashable.com/jobs/search/results">Mashable’s Job Board</a></li>
+  <li><a href="https://angel.co/jobs">Angel List</a></li>
+  <li><a href="http://careers.stackoverflow.com/jobs">Stack Overflow Job Board</a></li>
+  <li><a href="http://www.builtinchicago.org/jobs">Built in Chicago Job Board</a></li>
+  <li>Twitter searches:<a href="https://twitter.com/search?q=ruby%20hire&amp;src=typd">ruby+hire</a>,<a href="https://twitter.com/search?q=ruby%20job&amp;src=typ">ruby+job</a></li>
+  <li><a href="http://chicago.craigslist.org/search/sof">Craigslist</a></li>
+  <li><a href="https://toprubyjobs.com/">Top Ruby Jobs</a></li>
+  <li><a href="http://rubyweekly.com/">Ruby Weekly</a></li>
+  <li><a href="http://www.builtinchicago.org/companies/chicagos-top-digital-companies">Built in Chicago’s List of Top Digital Companies in Chicago</a></li>
+  <li><a href="https://gun.io/">gun.io</a></li>
+  <li><a href="http://arstechnica.com/jobs/">Ars Technica Job Board</a></li>
+  <li><a href="https://weworkremotely.com/">We Work Remotely Job Board</a></li>
+</ul>
+:ET

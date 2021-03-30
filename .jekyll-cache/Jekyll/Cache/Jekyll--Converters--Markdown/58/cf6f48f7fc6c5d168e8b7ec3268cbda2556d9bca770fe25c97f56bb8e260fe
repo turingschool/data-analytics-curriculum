@@ -1,0 +1,203 @@
+I"I#<h2 id="why">Why</h2>
+
+<p>Professional software teams use tools to organize their development. While simple tools Trello or Waffle can work in small teams with simple structures, larger teams use larger tools. These larger tools are particularly appropriate when we have multiple parties involved including developers, project managers, product owners, Q/A, etc.</p>
+
+<p>While tools like Pivotal Tracker and Jira can be used in different ways in different organizations, let’s explore a mainstream way to use Tracker.</p>
+
+<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Learners are familiar with a project naming pattern to keep things organized</li>
+  <li>Learners are familiar with the visual layout of Tracker</li>
+  <li>Learners can explain the four types of tracker cards: feature, bug, chore, and release</li>
+  <li>Learners can assign point estimates to a feature</li>
+  <li>Learners are familiar with a recommended progression of features</li>
+</ul>
+
+<h2 id="exploring-tracker">Exploring Tracker</h2>
+
+<h3 id="warmup-2-minutes">Warmup (2 minutes)</h3>
+
+<ul>
+  <li>Open the provided sample project</li>
+  <li>Find <em>two</em> terms, buttons, or features that you don’t understand</li>
+  <li>Try to create a new story card with a two-point estimate where the</li>
+</ul>
+
+<p>Pivotal Tracker is a heavy tool that will take some practice.</p>
+
+<p>Get started by working your way through this <a href="https://www.pivotaltracker.com/help/articles/quick_start/">Quick Start</a></p>
+
+<h3 id="create-a-project">Create a Project</h3>
+
+<p>If you have admin access, let’s start with creating a project.</p>
+
+<ul>
+  <li>Click the top left project menu (might say “Pivotal Tracker”)</li>
+  <li>Click “Dashboard”</li>
+  <li>Click the green “Create Project” button in the top right</li>
+</ul>
+
+<h4 id="project-naming">Project Naming</h4>
+
+<p>We’re potentially going to create a really large number of projects, more than Tracker was really designed for. To help keep thing organized, let’s adopt a naming convention like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cohort w/ Program &amp; Module - Project Abbreviation - Students
+</code></pre></div></div>
+
+<p>Like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1610BEM1 - QS - Ben &amp; Mike
+</code></pre></div></div>
+
+<p>That way we can sort them alphabetically and easily delete old projects once a module is completed.</p>
+
+<p><strong>Create a project now</strong> named <code class="highlighter-rouge">1700BEM1 - Sample - Your Name</code> where you fill in your own name.</p>
+
+<h4 id="public-private">Public? Private?</h4>
+
+<p>For student work it’s probably best to make the project’s <em>public</em>. That’ll allow casual participants like mentors and students in other cohorts to view the project details but not contribute.</p>
+
+<h4 id="what-you-see">What You See</h4>
+
+<p>Now you’ve got a blank project for further experimenting. Here are a few things to observe:</p>
+
+<ul>
+  <li><em>Current Iteration / Backlog</em> - this is where we keep the prioritized cards we’re working on now or in the near future</li>
+  <li><em>Icebox</em> - this is where we keep cards for the future and ideas we don’t want to forget about</li>
+  <li><em>Velocity</em> - Right next to the backlog title is a velocity that estimates how many points our team is delivering per week</li>
+  <li><em>Members</em> - Up the the top tab bar, note that Members is where we control who has access to this project</li>
+</ul>
+
+<h2 id="creating-cards">Creating Cards</h2>
+
+<p>There are four card types:</p>
+
+<h3 id="feature">Feature</h3>
+
+<p>A feature is the most common card type – it describes a unit of business value to be delivered through software.</p>
+
+<ul>
+  <li>One feature card for each story</li>
+  <li>A feature card can be estimated</li>
+  <li>Completing the feature adds to the team’s velocity</li>
+</ul>
+
+<p><em>Practice</em>: Create a feature card with the story below and give it a one-point estimate</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a Tracker user
+When I create a new feature card
+And I enter the story
+And I set an estimate
+And I click Save
+Then my teammates see the card in their project views
+</code></pre></div></div>
+
+<h3 id="bug">Bug</h3>
+
+<p>A bug card is used to track bugs that are found in features already deployed.</p>
+
+<ul>
+  <li>One bug card per problem</li>
+  <li>Bugs do not carry estimates</li>
+  <li>Bugs do not affect velocity</li>
+</ul>
+
+<p>If a bug is going to take more than two hours to solve it may deserve to be upgraded to a  feature.</p>
+
+<p><em>Practice</em>: Create a bug card with the title “Debug why new account emails are sent properly in staging but not production”</p>
+
+<h3 id="chore">Chore</h3>
+
+<p>Chores are tasks that needs to be completed but do not directly deliver business value. For instance, a team/project might need to “Setup PostgreSQL accounts on the production server”. That’s a chore. They are not estimated and don’t contribute to velocity.</p>
+
+<p><em>Practice</em>: Create a chore card with the title “Setup email provider account keys for production server instance”</p>
+
+<h3 id="release">Release</h3>
+
+<p>These are dated checkpoints. Typically you’ll want to create a Release card for each check-in date and the project submission.</p>
+
+<p><em>Practice</em>: Create a release card with the name “End of First Sprint” dated for tomorrow</p>
+
+<h2 id="card-states">Card States</h2>
+
+<p>Feature cards in Tracker go through several stages: “Not Yet Started”, “Started”, “Finished”, “Delivered”, “Accepted”, and/or “Rejected”.</p>
+
+<p>What’s important for each stage:</p>
+
+<ul>
+  <li>WHO: who clicks the button</li>
+  <li>WHY: why they click it</li>
+  <li>NEXT: what happens next</li>
+</ul>
+
+<p>Here are the transitions that each story card should progress through for your project.</p>
+
+<h3 id="a-note-on-priority">A Note on Priority</h3>
+
+<p>The order that cards appear in a Tracker project indicates their priority as determined by the product manager and/or project manager. No cards should be in progress unless <em>all</em> cards of higher priority are completed or also in progress.</p>
+
+<h3 id="start">START</h3>
+
+<ul>
+  <li>WHO: Developer</li>
+  <li>WHY: They’re ready to begin work on a new feature</li>
+  <li>NEXT: After clicking start they begin their development work</li>
+</ul>
+
+<p>Any Tracker story card being worked on should be started when work <em>begins</em>. This lets other developers know not to duplicate the work going in to that card’s feature.</p>
+
+<h3 id="finish">FINISH</h3>
+
+<ul>
+  <li>WHO: Developer</li>
+  <li>WHY: They’ve completed the work and ready to move on</li>
+  <li>NEXT: After clicking finish they’re ready to deliver</li>
+</ul>
+
+<p>When the feature is built, submit a PR to the project and click FINISH.</p>
+
+<p>If there are other tightly-related cards, mark the PR as a WIP, then go through the same START/FINISH cycle and add additional features to the same PR.</p>
+
+<h3 id="deliver">DELIVER</h3>
+
+<ul>
+  <li>WHO: Developer, Team Lead</li>
+  <li>WHY: The feature is merged and pushed to staging</li>
+  <li>NEXT: The PO will need to review the work</li>
+</ul>
+
+<p>Once the PR is reviewed and accepted it’s time to transition responsibility to the product owner. Push the feature to staging and click DELIVER.</p>
+
+<h3 id="accept-or-reject">ACCEPT or REJECT</h3>
+
+<ul>
+  <li>WHO: Product Owner</li>
+  <li>WHY: Determine if the feature is ready for production</li>
+  <li>NEXT: Deploy to prod</li>
+</ul>
+
+<p><strong>Only the Product Owner decides to Accept/Reject a card.</strong></p>
+
+<p>The PO visits the staging environment and exercises the feature according to the story.</p>
+
+<p>If the PO finds the feature to meet the expectations of the story, they click “Accept”. Once accepted, the card is frozen and the status should <em>never</em> be changed. The code is ready to be deployed to production.</p>
+
+<p>If the PO finds a problem, they click “REJECT” and add a comment explaining the problem. At that point the entire cycle can be restarted by the developer.</p>
+
+<p>If the PO finds additional functionality that should be implemented, they create a new feature card (rather than modifying this one).</p>
+
+<p>If a problem is found after the story is accepted the PO should create a BUG card, not modify this feature.``</p>
+
+<h2 id="estimation-refresher">Estimation Refresher</h2>
+
+<p>Each feature story should have an estimate. As a quick refresher, here’s how we understand the point scale:</p>
+
+<ul>
+  <li>3 Points - A vague idea or technology we don’t understand</li>
+  <li>2 Points - A concept that we understand, but it’s too big to start work on (needs to be subdivided)</li>
+  <li>1 Point - A story that is understood and ready for work</li>
+</ul>
+
+<p>A good 1-point story represents less than a half day of work.</p>
+:ET

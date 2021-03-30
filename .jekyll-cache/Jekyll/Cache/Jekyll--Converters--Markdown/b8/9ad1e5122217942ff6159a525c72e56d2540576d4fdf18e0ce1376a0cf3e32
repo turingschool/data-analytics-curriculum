@@ -1,0 +1,29 @@
+I"Q<p>You’re comfortable working on your own MacOS machine, but much of your career will be spent running code on remote/virtual computers. Let’s explore how those remote machines work.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students are familiar with the concepts of virtualization and containerization</li>
+  <li>Students are able to interact with a virtualized operating system</li>
+  <li>Students are able to deploy an application in a virtualized operating system</li>
+</ul>
+
+<h2 id="part-1-how-it-works">Part 1: How It Works</h2>
+
+<ul>
+  <li>Review of the Hardware/OS/Process stack</li>
+  <li>How containerization like Docker works</li>
+  <li>How virtualization works</li>
+  <li>The “one to many” relationships between host OS and virtual OS</li>
+  <li>How a VPS works</li>
+  <li>Steps for setting up and deploying on a virtual server</li>
+</ul>
+
+<h2 id="part-2-getting-linux-operational">Part 2: Getting Linux Operational</h2>
+
+<p>For ease of reading we’ve pulled out the <a href="introduction_to_virtual_servers_linux">Setup VirtualBox &amp; Linux</a> steps into their own document.</p>
+
+<h2 id="part-3-serving-an-application">Part 3: Serving an Application</h2>
+
+<p>Now that you have an operating system and requisite tools ready, let’s <a href="introduction_to_virtual_servers_rails">Deploy a Rails Application</a>.</p>
+:ET

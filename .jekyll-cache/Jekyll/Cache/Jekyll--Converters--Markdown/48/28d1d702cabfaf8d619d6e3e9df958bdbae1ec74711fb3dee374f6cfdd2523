@@ -1,0 +1,87 @@
+I"‰<h2 id="presentation-and-documentation">Presentation and Documentation</h2>
+
+<p><strong>Choose either Live Demo or Video Presentation to Complete:</strong></p>
+
+<ul class="task-list">
+  <li class="task-list-item">
+    <p><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Team members who are not part of the demo/presentation, participate in Q&amp;A</p>
+  </li>
+  <li class="task-list-item">Live Demo
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />End-to-end demo on localhost</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />End-to-end demo in production</li>
+    </ul>
+  </li>
+  <li class="task-list-item">Video Presentation
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Team has prepared a demonstration video</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Video displays end-to-end application demo of happy path</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Video discusses persona analysis and user empathy</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Video discusses service-oriented architecture</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<p>Slide Presentation</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Outlines MVP of the project</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Discusses end users, persona analysis</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Discusses technical design choices made</li>
+</ul>
+
+<hr />
+
+<p>README and Documentation</p>
+
+<p>Each Repoâ€™s README meets the following:</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />links to other project repos &amp; production links</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />contains a list of contributors, their GitHub profiles and LinkedIn profiles</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />discusses the purpose of its purpose (how it fits into the project SOA)</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />discusses how to install and test the repo</li>
+</ul>
+
+<p>Rails front-end README:</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />has screenshots</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />discusses OAuth</li>
+</ul>
+
+<p>Rails back-end README:</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />includes database schema</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />each endpoint is documented with example request &amp; response</li>
+</ul>
+
+<p>Microservice READMEs:</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />each endpoint exposed to the back-end</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />its use of external service API</li>
+</ul>
+
+<hr />
+
+<p><strong>When the above criteria is met, here are additional points to achieve a 4</strong></p>
+
+<p>Demo or Presentation</p>
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />ENV variables are changed on Heroku to point to invalid backend/services or API keys, or backend services are somehow taken offline; front-end shows a user-friendly error scenario</li>
+</ul>
+
+<p>Documentation</p>
+<ul>
+  <li>A Postman collection JSON file is included in the following repos(except for any portion which needs OAuth)
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Back End</li>
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Microservice 1</li>
+    </ul>
+  </li>
+  <li>Explains user personas and exhibits user empathy
+    <ul class="task-list">
+      <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Rails Front End</li>
+    </ul>
+  </li>
+</ul>
+:ET

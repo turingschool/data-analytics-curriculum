@@ -1,0 +1,74 @@
+I"$<p>Today we’re going to talk about the basics of scaling an application. Up to this point, you’ve mostly been exposed to using Rails as your primary tool for building full stack applications. While Ruby and Ruby on Rails are considerably powerful, they may not always be the best tool for every job that you’ll ever encounter. This lesson will look at various ideas that surround the idea of scaling an application and picking the right tool to do so.</p>
+
+<h3 id="discussion-what-are-some-ways-we-can-make-our-rails-application-more-performant">Discussion: What are some ways we can make our Rails application more performant?</h3>
+
+<ol>
+  <li>Leveraging the asset pipeline</li>
+  <li>Background workers</li>
+  <li>Benchmarking our applications</li>
+</ol>
+
+<p>These are a few options in our toolbox that we can use right off the bat.</p>
+
+<h4 id="heroku-instances">Heroku Instances</h4>
+<p>Deploying on Heroku has been commonplace for you over the last few modules. The creation of your Rails application on Heroku can be found in an instance that is created after being deployed. The instance is a lightweight and isolated environment that allow your application to run, just like on your own local machine. By default, you’ll share space with other applications that have been deployed on Heroku. This is why your application goes to sleep when you’re not using it.</p>
+
+<h3 id="discussion-if-our-application-needs-more-computational-power-what-would-be-a-good-strategy-to-help-it-scale-more-easily">Discussion: If our application needs more computational power, what would be a good strategy to help it scale more easily?</h3>
+
+<ol>
+  <li>Add more machines?</li>
+  <li>Add more CPUs?</li>
+  <li>Add more RAM?</li>
+</ol>
+
+<h4 id="defining-ram-vs-cpu">Defining RAM vs. CPU</h4>
+<ol>
+  <li>More RAM: you can run more apps concurrently</li>
+  <li>RAM let us write the directions of our program and allocates some memory for it.</li>
+  <li>RAM is like the top of a desk. More space means we can do more things at once, even if we aren’t doing anything 
+    2. More CPU: you can run more complex calculations/operations.</li>
+  <li>A CPU will take our written instructions and execute them. If everything goes well, we’ll get the result we were expecting.</li>
+  <li>CPU is similar to a person sitting at the desk. That person is able to do things with the stuff sitting on the desk in front of them. The more people (the more CPUs), the more that can be done with the items on the desk.
+    <h4 id="vertical-scaling-vs-horizontal-scaling">Vertical scaling vs. Horizontal scaling</h4>
+  </li>
+  <li>Vertical scaling is where we add more machines to help scale our problem. This help us distribute load across multiple machines and will help us avoid having a single source of truth if something goes wrong in our system.</li>
+  <li>Horizontal scale is where we add more additional RAM or CPUs into our system. This allows us to take on more requests from our users.</li>
+  <li>We can use a combination of the two in a variety of ways that fit our particular problem.
+    <h4 id="autoscaling">Autoscaling</h4>
+    <p>Think of this as machines being on standby. When you need a machine to fire up, you can automatically do this when load becomes too heavy for your current system. If you are expecting a spike in traffic, this may be a good solution for the short term.</p>
+    <h4 id="load-balancing">Load balancing</h4>
+    <p>Distributing the load of requests across all machines, ideally in an even way. This distribution of traffic can be done randomly across machines, or by using a round robin approach.</p>
+  </li>
+</ol>
+
+<h3 id="under-the-hood">Under the hood:</h3>
+
+<h4 id="defining-a-process-vs-thread">Defining a process vs. thread</h4>
+<ol>
+  <li>A process is an instance of a computer program that is being executed by a thread (or many).</li>
+  <li>A thread is a program’s execution context. It usually executes the instructions of your program in a sequential manner. Threads may also share memory with other threads in your system. You can think of a thread as a tiny process within the process of your application.</li>
+  <li>As threads use up your system’s memory and it begins to run out, the system may begin to slow down.</li>
+  <li>You can think of memory as a chest of tiny drawers. Each drawer has an address associated to it and can hold some items inside. As more of the drawers get filled up, the system won’t have as many options to execute more requests from your users.</li>
+  <li>As a program’s function finishes up, a thing called garage collection will take that memory and reallocate it back into your system. If your system gets bogged down, then GC will be running in overtime in an attempt to reallocate memory to that additional users can use your application.</li>
+  <li>Ruby is single threaded by nature</li>
+  <li>You can add more threads in a variety of ways, but there will be an upper limit to its use (as with any programming language).</li>
+</ol>
+
+<h4 id="defining-concurrency-vs-parallelism">Defining concurrency vs. parallelism</h4>
+<ol>
+  <li>Concurrency is when two or more tasks can start, run, and complete over the course of a predefined time period. This is useful if many people are attempting to upload large CSVs at the same time. Not one file upload will slow the system down. If the system were purely synchronous, each person in life to upload their file would have to wait.</li>
+  <li>Parallelism is when multiple tasks start to run at the same time. This could be useful if you are attempting to upload a big CSV.</li>
+</ol>
+
+<h3 id="picking-the-right-tool-for-the-job">Picking the right tool for the job</h3>
+
+<p>As our system begins to grow, we should be thinking about how we can successfully scale our applications. This could potentially mean that we only use Rails for our frontend while our backend uses something a bit more performant (such as Go or Scala). Picking the right tool is all dependent on what you’re attempting to achieve. If you know that your application will only need basic CRUD functionality, you may be good to use Rails for an extended period of time (or perhaps forever). If your application is need of something that requires heavy computational power, then perhaps you should look into other options.</p>
+
+<h3 id="another-perspective-the-majestic-monolith">Another perspective: The Majestic Monolith</h3>
+
+<p>Breaking your application out into separates services or smaller applications may not always be the best way to go about it. Here is an article from DHH, the creator of Rails, talking about why they think their monolith application at their company is perfect for the job.</p>
+
+<p><a href="https://m.signalvnoise.com/the-majestic-monolith/">The Majestic Monolith - Signal v. Noise</a></p>
+
+<p>As you can see, there are many perspectives on how to go about this. There isn’t a perfect way to build out our applications.</p>
+:ET

@@ -1,0 +1,78 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>Explain, identify motivation for, and implement the Move Method refactoring pattern</li>
+  <li>Explain, identify motivation for, and implement the Extract Class refactoring pattern</li>
+  <li>Explain, identify motivation for, and implement the Hide Delegate refactoring pattern</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<p>5min - WarmUp
+5min - Review
+15min - Station Session 1
+15min - Station Session 2
+15min - Station Session 3
+5min - WrapUp</p>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Refactoring</li>
+  <li>Move Method</li>
+  <li>Extract Class</li>
+  <li>Hide Delegate</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+
+<ul>
+  <li>How have you already implemented refactoring strategies in your code?</li>
+  <li>What’s a key distinction between changing code and refactoring?</li>
+  <li>Recall yesterday’s red-green-refactor example. What are some strategies to get your code back to green again after you refactor and your tests run red?  (a.k.a. how do you refactor without breaking everything?)</li>
+  <li>What are three reasons for refactoring your code?</li>
+</ul>
+
+<h2 id="refactoring-strategies">Refactoring Strategies</h2>
+
+<p>Three highlighted refactoring patterns from Jay Fields revised Fowler’s book for Ruby:
+<a href="http://www.amazon.com/Refactoring-Edition-Addison-Wesley-Professional-Series/dp/0321984137">Refactoring: Ruby Edition</a></p>
+<ol>
+  <li>Move Method</li>
+  <li>Extract Class</li>
+  <li>Hide Delegate</li>
+</ol>
+
+<p><strong>Turn &amp; Talk</strong>
+What is the gist of each of these refactoring patterns? What are the pros/cons of each?</p>
+
+<h2 id="stations">Stations</h2>
+
+<p>You will spend 15 min at each station focusing on one of the strategies.
+For each station you will apply the refactoring pattern to the code from <a href="https://github.com/turingschool-examples/refactoring_patterns">this</a> repo. Make sure to clone it down before you start.</p>
+<ol>
+  <li><a href="./refactoring_patterns_station_1.markdown">Move Method</a></li>
+  <li><a href="./refactoring_patterns_station_2.markdown">Extract Class</a></li>
+  <li><a href="./refactoring_patterns_station_3.markdown">Hide Delegate</a></li>
+</ol>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>What was challenging about refactoring the above exercises?</li>
+  <li>Which refactoring pattern might you reach for first?</li>
+  <li>Explain each refactoring pattern and the key motivation for using it.</li>
+</ul>
+
+<h2 id="homework">Homework</h2>
+
+<ul>
+  <li>Tonight you should watch <a href="http://confreaks.tv/videos/cascadiaruby2012-therapeutic-refactoring">Katrina’s Therapeutic Refactoring talk</a>.</li>
+</ul>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li>The readings we used today can be <a href="https://drive.google.com/file/d/0B4C6lfVKu-E7ZlFDTnhyTklXdm8/view?usp=sharing">found here</a>. Read through the refactoring patterns not covered in this lesson.</li>
+  <li>Apply the techniques practiced today to a sample Enigma project; work through <a href="https://github.com/turingschool-examples/enigma_refactoring_exercises">these exercises</a>. The first should be tackled alone &amp; if possible, the second exercise should be done with a partner.</li>
+</ul>
+:ET

@@ -1,0 +1,383 @@
+I"Ji<h1 id="sorting-suite">Sorting Suite</h1>
+
+<p>Sorting algorithms are one of the common domains for studying Computer Science data structures and algorithms. They give us an opportunity to focus on algorithms of various complexity all solving a relatively simple problem.</p>
+
+<p>In this project, you are challenged to implement at least <em>two</em>
+fundamental sorting algorithms. Your final submission should include tests:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">bubble_sort.rb</code></li>
+  <li><code class="highlighter-rouge">bubble_sort_test.rb</code></li>
+  <li><code class="highlighter-rouge">insertion_sort.rb</code></li>
+  <li><code class="highlighter-rouge">insertion_sort_test.rb</code></li>
+  <li><code class="highlighter-rouge">merge_sort.rb</code></li>
+  <li><code class="highlighter-rouge">merge_sort_test.rb</code></li>
+</ul>
+
+<p>Use the <a href="https://github.com/turingschool-examples/sorting_suite">starter repo</a> to complete and submit your work for review.</p>
+
+<h2 id="1-bubble-sort">1. Bubble Sort</h2>
+
+<h3 id="big-picture">Big Picture</h3>
+
+<p>Bubble Sort is often one of the first algorithms of any kind that programmers attempt. There are very few steps which make it not too difficult to implement. But it takes many instructions to actually execute – so the performance is typically quite bad.</p>
+
+<h3 id="the-algorithm">The Algorithm</h3>
+
+<p>You can see a <a href="https://vimeo.com/channels/sortalgorithms/15558527">graphical run of the algorithm here</a>.</p>
+
+<p>For a high level understanding check out the <a href="https://en.wikipedia.org/wiki/Bubble_sort">wikipedia article</a>.
+Bubble sort works by comparing and possibly swapping two values in an array. Say we
+start with this array of numbers:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2 0 1 3 4 5
+</code></pre></div></div>
+
+<p>The algorithm would start with a variable <code class="highlighter-rouge">previous</code> pointing to the first element,
+<code class="highlighter-rouge">2</code> and <code class="highlighter-rouge">current</code> pointing to the second value <code class="highlighter-rouge">0</code>. Then if <code class="highlighter-rouge">current</code> is
+less than <code class="highlighter-rouge">previous</code> the two values are <em>swapped</em>. The swap would take
+place in this case, because <code class="highlighter-rouge">0</code> is less than <code class="highlighter-rouge">2</code>.
+After that single swap the sequence would be:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 2 1 3 4 5
+</code></pre></div></div>
+
+<p>The algorithm would continue with <code class="highlighter-rouge">previous</code> advancing one spot to the right,
+to point at <code class="highlighter-rouge">2</code>, and <code class="highlighter-rouge">current</code> advancing to point at <code class="highlighter-rouge">1</code>.
+<code class="highlighter-rouge">1</code> is less than <code class="highlighter-rouge">2</code>, so we swap them again to get:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 1 2 3 4 5
+</code></pre></div></div>
+
+<p>Notice that the <code class="highlighter-rouge">2</code> moved forward two spaces.
+This is commonly called “bubbling up”.
+The number being “bubbled” will always be the largest number seen up to this point.</p>
+
+<p>Now, <code class="highlighter-rouge">previous</code> advances to <code class="highlighter-rouge">2</code>, and <code class="highlighter-rouge">current</code> advances to <code class="highlighter-rouge">3</code>.
+<code class="highlighter-rouge">3</code> is not less than <code class="highlighter-rouge">2</code>, so the focus advances without swapping.
+This repeats moving right one space at a time until
+reaching the end of the array,
+meaning the largest number in the array must be in the last position.</p>
+
+<p>After the second bubbling, we know that the last two items must be the two
+largest items in the array, and they are sorted. After the third iteration,
+the last 3 items are sorted. Thus we repeat the process once for each
+element in the array, allowing us to know that the last <code class="highlighter-rouge">n</code> items are sorted,
+where <code class="highlighter-rouge">n</code> is the size of the array.</p>
+
+<h4 id="richer-example">Richer Example</h4>
+
+<p>Let’s look at the sequence for a more out-of-order sequence:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Pre-Sequence Previous Current Swap? Post-Sequence
+   4 2 0 3 1     4       2      Y   2 4 0 3 1
+   2 4 0 3 1     4       0      Y   2 0 4 3 1
+   2 0 4 3 1     4       3      Y   2 0 3 4 1
+   2 0 3 4 1     4       1      Y   2 0 3 1 4
+   2 0 3 1 4     2       0      Y   0 2 3 1 4
+   0 2 3 1 4     2       3      N   0 2 3 1 4
+   0 2 3 1 4     3       1      Y   0 2 1 3 4
+   0 2 1 3 4     3       4      N   0 2 1 3 4
+   0 2 1 3 4     0       2      N   0 2 1 3 4
+   0 2 1 3 4     2       1      Y   0 1 2 3 4
+   0 1 2 3 4     2       3      N   0 1 2 3 4
+   0 1 2 3 4     3       4      N   0 1 2 3 4
+   0 1 2 3 4     0       1      N   0 1 2 3 4
+   0 1 2 3 4     1       2      N   0 1 2 3 4
+   0 1 2 3 4     2       3      N   0 1 2 3 4
+   0 1 2 3 4     3       4      N   0 1 2 3 4
+   0 1 2 3 4     0       1      N   0 1 2 3 4
+   0 1 2 3 4     1       2      N   0 1 2 3 4
+   0 1 2 3 4     2       3      N   0 1 2 3 4
+   0 1 2 3 4     3       4      N   0 1 2 3 4
+</code></pre></div></div>
+
+<h3 id="expectations">Expectations</h3>
+
+<p>Implement a <code class="highlighter-rouge">BubbleSort</code> class which will make the following code snippet work:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sorter</span> <span class="o">=</span> <span class="no">BubbleSort</span><span class="p">.</span><span class="nf">new</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;BubbleSort:0x007f81a19e94e8&gt;</span>
+<span class="n">sorter</span><span class="p">.</span><span class="nf">sort</span><span class="p">([</span><span class="s2">"d"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="2-insertion-sort">2. Insertion Sort</h2>
+
+<h3 id="big-picture-1">Big Picture</h3>
+
+<p>Insertion sort is a next step up from Bubble Sort. Make sure that you’ve successfully implemented Bubble Sort before you dive into this section.</p>
+
+<p>Insertion sort uses slightly more complex logic but the algorithm is generally much higher performing than Bubble.</p>
+
+<h3 id="the-algorithm-1">The Algorithm</h3>
+
+<p>You can <a href="https://vimeo.com/channels/sortalgorithms/15558983">see a visualization of the algorithm here</a>.</p>
+
+<p>For a high level understanding check out the <a href="https://en.wikipedia.org/wiki/insertion_sort">wikipedia article</a>.
+Insertion sort works by creating a new, empty array of results. We iterate through the set to be sorted, pulling one element at a time, then inserting it into its correct position in the new array.</p>
+
+<p>Let’s start with this array of numbers: <code class="highlighter-rouge">[1,0,4,3,2]</code></p>
+
+<h4 id="pass-1">Pass 1</h4>
+
+<p>We pull the first element from the unsorted list and insert it into the sorted list:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsorted:      [1,0,4,3,2]
+to insert:     1
+sorted pre:    []
+sorted post:   [1]
+unsorted post: [0,4,3,2]
+</code></pre></div></div>
+
+<h4 id="pass-2">Pass 2</h4>
+
+<p>We pull the first unsorted element, the <code class="highlighter-rouge">0</code>, and compare it to the first element of the sorted set, <code class="highlighter-rouge">1</code>. Since the <code class="highlighter-rouge">0</code> before the <code class="highlighter-rouge">1</code>, we insert it at the front of the sorted set:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsorted:      [0,4,3,2]
+to insert:     0
+sorted pre:    [1]
+sorted post:   [0,1]
+unsorted post: [4,3,2]
+</code></pre></div></div>
+
+<h4 id="pass-3">Pass 3</h4>
+
+<p>We pull the first unsorted element, the <code class="highlighter-rouge">4</code>, and compare it to the first element of the sorted set, <code class="highlighter-rouge">0</code>. Since the <code class="highlighter-rouge">4</code> is greater, we look at the next position of the sorted set, <code class="highlighter-rouge">1</code>. The <code class="highlighter-rouge">4</code> is greater but there are no other elements, so we add the <code class="highlighter-rouge">4</code> to the end of the sorted array.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsorted:      [4,3,2]
+to insert:     4
+sorted pre:    [0,1]
+sorted post:   [0,1,4]
+unsorted post: [3,2]
+</code></pre></div></div>
+
+<h4 id="pass-4">Pass 4</h4>
+
+<p>We pull the first unsorted element, the <code class="highlighter-rouge">3</code>, and compare it to the first element of the sorted set, <code class="highlighter-rouge">0</code>. Since the <code class="highlighter-rouge">3</code> is greater, we look at the next position of the sorted set, <code class="highlighter-rouge">1</code>. The <code class="highlighter-rouge">3</code> is greater, so we look at the next position of the sorted set, <code class="highlighter-rouge">4</code>. The <code class="highlighter-rouge">3</code> is less than <code class="highlighter-rouge">4</code>, so we insert the <code class="highlighter-rouge">3</code> at this position pushing the <code class="highlighter-rouge">4</code> to the right.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsorted:      [3,2]
+to insert:     3
+sorted pre:    [0,1,4]
+sorted post:   [0,1,3,4]
+unsorted post: [2]
+</code></pre></div></div>
+
+<h4 id="pass-5">Pass 5</h4>
+
+<p>We pull the first unsorted element, the <code class="highlighter-rouge">2</code>, and compare it to the first element of the sorted set, <code class="highlighter-rouge">0</code>. Since the <code class="highlighter-rouge">2</code> is greater, we look at the next position of the sorted set, <code class="highlighter-rouge">1</code>. The <code class="highlighter-rouge">2</code> is greater, so we look at the next position of the sorted set, <code class="highlighter-rouge">3</code>. The <code class="highlighter-rouge">2</code> is less than <code class="highlighter-rouge">3</code>, so we insert the <code class="highlighter-rouge">3</code> at this position pushing the <code class="highlighter-rouge">3</code> to the right.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsorted:      [2]
+to insert:     2
+sorted pre:    [0,1,3,4]
+sorted post:   [0,1,2,3,4]
+unsorted post: []
+</code></pre></div></div>
+
+<p>Then our unsorted array is empty, meaning we’re done with the algorithm.</p>
+
+<h3 id="challenge">Challenge</h3>
+
+<p>Implement an <code class="highlighter-rouge">InsertionSort</code> which will make the following code snippet
+work:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sorter</span> <span class="o">=</span> <span class="no">InsertionSort</span><span class="p">.</span><span class="nf">new</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;InsertionSort:0x007f81a19e94e8&gt;</span>
+<span class="n">sorter</span><span class="p">.</span><span class="nf">sort</span><span class="p">([</span><span class="s2">"d"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="3-merge-sort">3. Merge Sort</h2>
+
+<p>Merge sort is the most fascinating sorting algorithm of the three, IMO, because it uses a technique called recursion.
+Recursion was a total mind-trip for me when I learned it.
+Here is a video I made with the intent of introducing recursion in a much more gradual way: https://vimeo.com/24716767</p>
+
+<h3 id="theory">Theory</h3>
+
+<p>https://vimeo.com/channels/sortalgorithms/15559012</p>
+
+<p>For a high level understanding check out the <a href="https://en.wikipedia.org/wiki/merge_sort">wikipedia article</a>.
+For a sweet line dancing example, <a href="https://www.youtube.com/watch?v=XaqR3G_NVoo">see this</a>
+Merge sort can be thought of as splitting an array into two arrays and sorting
+the halves by also splitting them in half and sorting those halves by splitting
+them in half… and so on.</p>
+
+<p>For a brief example let’s look at a simple array. The first step would be to
+split the array into smaller arrays</p>
+
+<h4 id="split-the-arrays">Split the arrays</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="ss">original_array:  </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="ss">first_split:     </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="ss">remaining_split: </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>We then proceed to split one of those arrays further until we are left with just
+numbers to compare.</p>
+
+<h4 id="split-again">Split again</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="ss">first_split: </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="ss">first_num:   </span><span class="mi">2</span>
+<span class="ss">second_num:  </span><span class="mi">0</span>
+</code></pre></div></div>
+
+<p>We then compare those numbers and put them back into an array together. 1 and 0
+will swap, creating a sorted split array.</p>
+
+<h4 id="sort-the-doubly-split-array">Sort the doubly split array</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="ss">sorted_first_split: </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="ss">remaining_split:    </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>We do the same operation on the remaining split, but we it’s already sorted so
+there will be no change. We then merge these two sorted halves together to
+create a final sorted array. This is accomplished by comparing the each element
+in the first split to those in the remaining split.</p>
+
+<h4 id="merge-the-split-and-sorted-arrays">Merge the split and sorted arrays</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="ss">first_split_candidates:     </span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span>
+<span class="ss">remaining_split_candidates: </span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span>
+<span class="ss">first_combination:          </span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="ss">second_combination:         </span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<span class="ss">third_combination:          </span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="ss">merged_array:               </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="challenge-1">Challenge</h3>
+
+<p>Implement a namespaced MergeSort which will make the following code snippets
+work.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sorter</span> <span class="o">=</span> <span class="no">MergeSort</span><span class="p">.</span><span class="nf">new</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;MergeSort:0x007f81a19e94e8&gt;</span>
+<span class="n">sorter</span><span class="p">.</span><span class="nf">sort</span><span class="p">([</span><span class="s2">"d"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="extensions">Extensions</h2>
+
+<h3 id="benchmark">Benchmark</h3>
+
+<p>Sometimes you want to test more than the functionality. Sometimes you want
+to test the speed of that functionality.
+We can do that by timing how long it takes to do its job,
+and then compare them as we choose arrays of different sizes,
+or compare them to other algorithms to understand which is better.
+This is called benchmarking.</p>
+
+<p>Write a benchmarker which can evaluate the temporal
+shortcomings and accomplishments of the algorithms you just wrote.</p>
+
+<p>Implement a namespaced Benchmark which will make the following code snippets
+work:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">benchmark</span> <span class="o">=</span> <span class="no">SortingSuite</span><span class="o">::</span><span class="no">Benchmark</span><span class="p">.</span><span class="nf">new</span>
+
+<span class="n">benchmark</span><span class="p">.</span><span class="nf">time</span><span class="p">(</span><span class="no">SortingSuite</span><span class="o">::</span><span class="no">InsertionSort</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="s2">"InsertionSort took 0.004333 seconds"</span>
+
+<span class="n">benchmark</span><span class="p">.</span><span class="nf">time</span><span class="p">(</span><span class="no">SortingSuite</span><span class="o">::</span><span class="no">MergeSort</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="s2">"MergeSort took 0.000274 seconds"</span>
+
+<span class="n">benchmark</span><span class="p">.</span><span class="nf">fastest</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="s2">"MergeSort is the fastest"</span>
+
+<span class="n">benchmark</span><span class="p">.</span><span class="nf">slowest</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="s2">"BubbleSort is the slowest"</span>
+</code></pre></div></div>
+
+<h3 id="selection-sort">Selection Sort</h3>
+
+<p>https://vimeo.com/channels/sortalgorithms/15673458</p>
+
+<iframe src="https://player.vimeo.com/video/15673458?color=F6AD3F&amp;byline=0&amp;portrait=0" width="500" height="333" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+
+<p>For a high level understanding check out the <a href="https://en.wikipedia.org/wiki/selection_sort">wikipedia article</a>.
+This sorting algorithm is most similar to the insertion sort, just in reverse.
+The implementation chooses the lowest value and forms a new array starting with
+that value and working up.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">SortingSuite</span><span class="o">::</span><span class="no">Selection</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="no">SortingSuite</span><span class="o">::</span><span class="no">Selection</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="in-place-insertion-sort">In-Place Insertion Sort</h3>
+
+<p>In-place insertion (or, if you did it in place earlier, then not in-place :P)</p>
+
+<p>In-place sorting algorithms don’t create new data structures while they solve the problem.
+Instead, they move elements around within the array,
+such that they never need to work with more than the array they are sorting.</p>
+
+<p>Try writing the Insertion Sort so that it doesn’t instantiate a new
+array during the solution.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">SortingSuite</span><span class="o">::</span><span class="no">InsertionSort</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]).</span><span class="nf">inplace_sort</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="no">SortingSuite</span><span class="o">::</span><span class="no">InsertionSort</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">array</span><span class="p">).</span><span class="nf">inplace_sort</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="no">SortingSuite</span><span class="o">::</span><span class="no">InsertionSort</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">array</span><span class="p">).</span><span class="nf">sort</span><span class="p">.</span><span class="nf">object_id</span> <span class="o">==</span> <span class="n">array</span><span class="p">.</span><span class="nf">object_id</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+</code></pre></div></div>
+
+<h2 id="evaluation-rubric">Evaluation Rubric</h2>
+
+<p>The project will be assessed with the following guidelines:</p>
+
+<ul>
+  <li>4: Above expectations</li>
+  <li>3: Meets expectations</li>
+  <li>2: Below expectations</li>
+  <li>1: Well-below expectations</li>
+</ul>
+
+<p><strong>Expectations:</strong></p>
+
+<h3 id="1-ruby-syntax--style">1. Ruby Syntax &amp; Style</h3>
+
+<ul>
+  <li>Applies appropriate attribute encapsulation</li>
+  <li>Developer creates instance and local variables appropriately</li>
+  <li>Naming follows convention (is idiomatic)</li>
+  <li>Ruby methods used are logical and readable</li>
+  <li>Developer implements appropriate enumerable methods (#each is used sparingly)</li>
+  <li>Code is indented properly</li>
+  <li>Code does not exceed 80 characters per line</li>
+  <li>Each class has correctly-named files and corresponding test files in the proper directories</li>
+</ul>
+
+<h3 id="2-breaking-logic-into-components">2. Breaking Logic into Components</h3>
+
+<ul>
+  <li>Code is effectively broken into methods &amp; classes</li>
+  <li>Developer writes methods less than 8 lines</li>
+  <li>No more than 3 methods break the principle of SRP</li>
+</ul>
+
+<h3 id="3-test-driven-development">3. Test-Driven Development</h3>
+
+<ul>
+  <li>Each method is tested</li>
+  <li>Functionality is accurately covered</li>
+  <li>Tests implement Ruby syntax &amp; style</li>
+  <li>Balances unit and integration tests</li>
+  <li>Evidence of edge cases testing</li>
+  <li>Test Coverage metrics are present (SimpleCov)</li>
+</ul>
+
+<h3 id="4-functionality">4. Functionality</h3>
+
+<ul>
+  <li>Application meets all requirements (extension not req’d)</li>
+</ul>
+:ET

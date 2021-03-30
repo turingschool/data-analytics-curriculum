@@ -1,0 +1,198 @@
+I"�F<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Be able to explain the difference between the Enumerable module and Enumerator class</li>
+  <li>Understand when and how to use <code class="highlighter-rouge">zip</code>, <code class="highlighter-rouge">group_by</code>, and <code class="highlighter-rouge">inject</code> appropriately</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Enumerable</li>
+  <li>Enumerator</li>
+  <li>zip</li>
+  <li>group_by</li>
+  <li>inject</li>
+</ul>
+
+<h2 id="hook">Hook</h2>
+
+<p>We’ve looked at a number of enumerables in the past, quite a lot of them, and today we are going to look at some of the tougher enumerables, and how we can chain them.</p>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>Make a chart of all the enumerables you know at this point, what they do, and what they return</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enumerable | what it's used for | return value
+----------------------------------------------
+           |                    |
+</code></pre></div></div>
+
+<h2 id="zip"><code class="highlighter-rouge">zip</code></h2>
+
+<p>We have two arrays. We want to put them together, but how can we do that? We would use the enumerable <code class="highlighter-rouge">zip</code>. Similar to the way a zipper works: when we zip up a zipper, we tooth by tooth combine a tooth from the left side and a tooth from the right side and then a tooth from the left side and so on until we are all zipped up.</p>
+
+<p><code class="highlighter-rouge">zip</code> in Ruby essentially shifts an element from the first array and shifts one from the second array and continues doing so until it creates a new array where the first element of this array is an array itself where the first element is the shifted element from the first array and the second element is the shifted element of the second array.</p>
+
+<p>That’s complicated so let’s just see it in action.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">]</span>
+
+<span class="n">a</span><span class="p">.</span><span class="nf">zip</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="p">[[</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"2"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"3"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<p>Is that what we expected? (The answer to this should be yes.)</p>
+
+<h3 id="exercise-zip">Exercise: <code class="highlighter-rouge">zip</code></h3>
+
+<p><strong>Challenge #1:</strong> Zip these two arrays together and then print out to the screen this brilliant ditty.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">chocolate</span>     <span class="o">=</span> <span class="p">[</span> <span class="s2">"Ritual"</span><span class="p">,</span>
+                  <span class="s2">"Chuao"</span><span class="p">,</span>
+                  <span class="s2">"Chocolove"</span><span class="p">,</span>
+                  <span class="s2">"Scharffen Berger"</span><span class="p">]</span>
+<span class="n">peanut_butter</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">"Peter Pan"</span><span class="p">,</span>
+                  <span class="s2">"Skippy"</span><span class="p">,</span>
+                  <span class="s2">"Justin's"</span><span class="p">,</span>
+                  <span class="s2">"Smucker's"</span><span class="p">,</span>
+                  <span class="s2">"Crazy Richard's"</span><span class="p">]</span>
+
+<span class="s2">"You got your Ritual in my Peter Pan!"</span>
+<span class="s2">"You got your Peter Pan in my Ritual!"</span>
+<span class="s2">"You got your Chuao in my Skippy!"</span>
+<span class="c1"># ...and so on and so forth.</span>
+</code></pre></div></div>
+
+<p><strong>Challenge #2:</strong> Let’s practice with some real world data. This is something that you’ll often get. Someone writes some pretty poor software, and you get two associated arrays, but you need to actually put it together. People are the worst.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">people</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Hannah"</span><span class="p">,</span>
+          <span class="s2">"Penelope"</span><span class="p">,</span>
+          <span class="s2">"Rabastan"</span><span class="p">,</span>
+          <span class="s2">"Neville"</span><span class="p">,</span>
+          <span class="s2">"Tonks"</span><span class="p">,</span>
+          <span class="s2">"Seamus"</span><span class="p">]</span>
+
+<span class="n">houses</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Hufflepuff"</span><span class="p">,</span>
+          <span class="s2">"Ravenclaw"</span><span class="p">,</span>
+          <span class="s2">"Slytherin"</span><span class="p">,</span>
+          <span class="s2">"Gryffindor"</span><span class="p">,</span>
+          <span class="s2">"Hufflepuff"</span><span class="p">,</span>
+          <span class="s2">"Gryffindor"</span><span class="p">]</span>
+
+<span class="s2">"Hannah is in Hufflepuff."</span>
+<span class="s2">"Penelope is in Ravenclaw."</span>
+<span class="c1"># ...and so on and so forth.</span>
+</code></pre></div></div>
+
+<p><strong>FlashCard</strong></p>
+
+<p>Let’s make a #zip flashcard! Following the format that we used for our previous enumerables, create two flashcards for the enumerable #zip.</p>
+
+<h2 id="group_by"><code class="highlighter-rouge">group_by</code></h2>
+
+<p>We’re going to put this idea of people and houses on hold for a second and talk about the greater idea of why we use enumerables. We’ve done a lot of things with enumerables.</p>
+
+<p>With <code class="highlighter-rouge">.each</code> we’ve iterated through a collection and done something with each item. With <code class="highlighter-rouge">.map</code> we’ve iterated through a collection, and returned a new collection whose result was what the block returned. With <code class="highlighter-rouge">.find</code> and <code class="highlighter-rouge">.find_all</code> we’ve searched in a collection for something. We can probably say that <code class="highlighter-rouge">.max</code>, <code class="highlighter-rouge">.min</code>, <code class="highlighter-rouge">.max_by</code> and <code class="highlighter-rouge">.min_by</code> do the same thing, essentially. We’re looking for something in a collection, and what we are looking for has certain criteria.</p>
+
+<p>The next step is to start using enumerables to take existing collections and MAKE OUR OWN. <code class="highlighter-rouge">group_by</code> is a great place to start.</p>
+
+<p><code class="highlighter-rouge">group_by</code> takes an array, creates a Hash where the key is the return value of the block, and the value is the item we are currently examining in the enumerable. Let’s just repeat that one more time to ourselves slowly. We are creating a HASH, where the KEY is the return value of the block and the VALUE is the item we are currently examining in the enumerable (the element in the collection we’re examining).</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"dog"</span><span class="p">,</span> <span class="s2">"fish"</span><span class="p">,</span> <span class="s2">"corgi"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>In this example, <code class="highlighter-rouge">group_by</code> is going to help create a hash, where the keys are how long the words are, and the values are the actual words. This is what <code class="highlighter-rouge">group_by</code> DOES.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span><span class="p">.</span><span class="nf">group_by</span> <span class="p">{</span> <span class="o">|</span><span class="n">string</span><span class="o">|</span> <span class="n">string</span><span class="p">.</span><span class="nf">length</span> <span class="p">}</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="mi">3</span><span class="o">=&gt;</span><span class="p">[</span><span class="s2">"dog"</span><span class="p">],</span> <span class="mi">4</span><span class="o">=&gt;</span><span class="p">[</span><span class="s2">"fish"</span><span class="p">],</span> <span class="mi">5</span><span class="o">=&gt;</span><span class="p">[</span><span class="s2">"corgi"</span><span class="p">]}</span>
+</code></pre></div></div>
+
+<p>Note that the values in this hash are all arrays. In this example, when more than one word shares the same length, the words will be held in the array matching the key length they share.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"dog"</span><span class="p">,</span> <span class="s2">"cat"</span><span class="p">,</span> <span class="s2">"fish"</span><span class="p">,</span> <span class="s2">"corgi"</span><span class="p">]</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="mi">3</span><span class="o">=&gt;</span><span class="p">[</span><span class="s2">"dog"</span><span class="p">,</span> <span class="s2">"cat"</span><span class="p">],</span> <span class="mi">4</span><span class="o">=&gt;</span><span class="p">[</span><span class="s2">"fish"</span><span class="p">],</span> <span class="mi">5</span><span class="o">=&gt;</span><span class="p">[</span><span class="s2">"corgi"</span><span class="p">]}</span>
+</code></pre></div></div>
+<p>This is cool but kind of useless. What else can we do? How about first letters?</p>
+
+<h3 id="exercise-group_by">Exercise: <code class="highlighter-rouge">group_by</code></h3>
+
+<p>Using <code class="highlighter-rouge">group_by</code> on this array (<code class="highlighter-rouge">array = ["aardvark", "art", "airplane", "boy", "burp", "boot", "green", "goop", "super"]</code>), create a Hash where the keys are the first letter of words, and the values are the list of words that share that first letter.</p>
+
+<h3 id="group-discussion">Group Discussion</h3>
+
+<ul>
+  <li>Given what you now know about #group_by, what might be some limitations of this method?</li>
+  <li>If you were given the array of Record objects created with the class below, how would you produce a hash where the keys are the artist and the values are the array of songs for that artist?</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Record</span>
+  <span class="nb">attr_reader</span> <span class="ss">:title</span><span class="p">,</span>
+              <span class="ss">:artist</span><span class="p">,</span>
+              <span class="ss">:songs</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">artist</span><span class="p">,</span> <span class="n">songs</span><span class="p">)</span>
+    <span class="vi">@title</span> <span class="o">=</span> <span class="n">title</span>
+    <span class="vi">@artist</span> <span class="o">=</span> <span class="n">artist</span>
+    <span class="vi">@songs</span> <span class="o">=</span> <span class="n">songs</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">abbey_road</span> <span class="o">=</span> <span class="no">Record</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Abbey Road"</span><span class="p">,</span> <span class="s2">"the Beatles"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"Come Together"</span><span class="p">,</span> <span class="s2">"Here Comes the Sun"</span><span class="p">,</span> <span class="s2">"Because"</span><span class="p">])</span>
+<span class="n">sgt_pepper</span> <span class="o">=</span> <span class="no">Record</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Sgt Peppers"</span><span class="p">,</span> <span class="s2">"the Beatles"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"Sgt. Pepper's Lonely Hearts Club Band"</span><span class="p">,</span> <span class="s2">"With a Little Help from My Friends"</span><span class="p">,</span> <span class="s2">"Lucy in the Sky with Diamods"</span><span class="p">])</span>
+<span class="n">out_of_our_heads</span> <span class="o">=</span> <span class="no">Record</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Out of Our Heads"</span><span class="p">,</span> <span class="s2">"the Rolling Stones"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"Mercy Mercy"</span><span class="p">,</span> <span class="s2">"Hitch Hike"</span><span class="p">,</span> <span class="s2">"The Last Time"</span><span class="p">])</span>
+
+<span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">abbey_road</span><span class="p">,</span> <span class="n">sgt_pepper</span><span class="p">,</span> <span class="n">out_of_our_heads</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><strong>FlashCard</strong></p>
+
+<p>Let’s make a #group_by flashcard! Following the format that we used for our previous enumerables, create two flashcards for the enumerable #group_by.</p>
+
+<h2 id="inject"><code class="highlighter-rouge">inject</code></h2>
+
+<p>Inject can be very powerful. It allows us to <strong>inject</strong> something to a single value. To know how to use it, we’ll need these three things:</p>
+
+<p>1) The starting value in parens. This isn’t always required, but it defaults to the first element of the collection.
+2) The block’s first argument, which will act as a memory/storage holder. Begins as the starting value.
+2) The block’s second argument stands in for the single element of the plural collection we’re operating over.
+3) The block itself</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">collection</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="n">starting_value</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">running_total</span><span class="p">,</span> <span class="n">variable</span><span class="o">|</span> <span class="n">block</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, in practice.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+
+<span class="n">array</span><span class="p">.</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">num</span><span class="o">|</span>
+   <span class="n">sum</span> <span class="o">+</span> <span class="n">num</span>
+<span class="k">end</span>
+<span class="o">=&gt;</span> <span class="mi">15</span>
+</code></pre></div></div>
+
+<h3 id="exercise-inject">Exercise: <code class="highlighter-rouge">inject</code></h3>
+
+<p>Summing is easy, but we can also use <code class="highlighter-rouge">inject</code> to build other things.</p>
+
+<p><strong>Challenge #1:</strong> Start with a array of 6 words, and write a <code class="highlighter-rouge">inject</code> block that returns a string with the first letter of all the words in the array.</p>
+
+<p><strong>Challenge #2:</strong> Start with a string of one long word (your choice). Write a <code class="highlighter-rouge">inject</code> block that returns a count of all the letters in the word.</p>
+
+<p><strong>Challenge #3:</strong> Given an array of the numbers 1 through ten, use inject to return the sum of all even numbers.</p>
+
+<p><strong>FlashCard</strong></p>
+
+<p>Let’s make an #inject flashcard! Following the format that we used for our previous enumerables, create two flashcards for the enumerable #inject.</p>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>What do zip, group_by, and inject do?  What are the gotchas for each?</li>
+</ul>
+
+<h2 id="additional-reading">Additional Reading</h2>
+
+<p><a href="http://patshaughnessy.net/2013/4/3/ruby-2-0-works-hard-so-you-can-be-lazy">Ruby 2.0 Works Hard So You Can Be Lazy</a></p>
+:ET

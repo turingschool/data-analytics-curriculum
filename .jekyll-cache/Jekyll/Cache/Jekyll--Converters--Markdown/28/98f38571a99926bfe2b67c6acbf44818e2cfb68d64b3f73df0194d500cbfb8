@@ -1,0 +1,85 @@
+I"h<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Identify use cases for class methods and instance methods in the context of a Rails app</li>
+  <li>Identify available AR methods depending on current context of <code class="highlighter-rouge">self</code></li>
+  <li>Differentiate when to use a class method or an instance method</li>
+</ul>
+
+<h1 id="lesson">Lesson</h1>
+
+<h2 id="discussion-questions">Discussion Questions</h2>
+
+<ul>
+  <li>What is a class method?</li>
+  <li>What is an instance method?</li>
+  <li>What is self in each context?</li>
+  <li>What does an instance of a model represent in our DB?</li>
+  <li>What does the class of a model represent in our DB?</li>
+</ul>
+
+<h2 id="setlist-activity-1">SetList Activity 1</h2>
+
+<p>For each method you create, answer the following questions:</p>
+<ul>
+  <li>What is self when you pry into the method?</li>
+  <li>Can you call your ActiveRecord helper?</li>
+  <li>Can you call a model directly inside this method?</li>
+  <li>Which ActiveRecord methods can you call in the current context of self?</li>
+</ul>
+
+<p>In your SetList app:</p>
+
+<ul>
+  <li>Create a test for a corresponding method that returns an artist name given a song</li>
+  <li>Create a test for a corresponding method to retrieve a random song</li>
+  <li>Create a test for a corresponding method that returns an artist’s song given a song id and an artist</li>
+  <li>Create a test for a corresponding method that will find all song ids</li>
+</ul>
+
+<h2 id="setlist-activity-2">SetList Activity 2</h2>
+
+<p>For each method you create, answer the following questions:</p>
+<ul>
+  <li>What is self when you pry into the method?</li>
+  <li>Can you call your ActiveRecord helper?</li>
+  <li>Can you call a model directly inside this method?</li>
+  <li>Which ActiveRecord methods can you call in the current context of self?</li>
+</ul>
+
+<p>In your SetList app:</p>
+<ul>
+  <li>Create a test for a corresponding method to retrieve a random song given an artist</li>
+  <li>Create a test for a corresponding method that orders an artist’s songs by name</li>
+  <li>Create a test for a corresponding method that will return all song ids given an artist</li>
+  <li>Create a test for a corresponding method that will find all artist names given a collection of song ids</li>
+</ul>
+
+<h2 id="setlist-activity-3">SetList Activity 3</h2>
+
+<p>For each method you create, answer the following questions:</p>
+<ul>
+  <li>What is self when you pry into the method?</li>
+  <li>Can you call your ActiveRecord helper?</li>
+  <li>Can you call a model directly inside this method?</li>
+  <li>Which ActiveRecord methods can you call in the current context of self?</li>
+</ul>
+
+<p>In your SetList app:</p>
+<ul>
+  <li>Create a test for a corresponding method that finds an artist’s longest song</li>
+  <li>Create a test for a corresponding method that finds the song with the most plays</li>
+  <li>Create a test for a corresponding method that order artists by the time they were created at OR the time they were updated at (add a migration for these columns if you need to)</li>
+  <li>Create a test for for a corresponding method that orders an artist’s songs by play_count and returns the top 5</li>
+</ul>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>How do you know whether a task requires a class or an instance method?</li>
+  <li>What are some common error messages we might see if we confuse a class method with an instance method and vice versa?</li>
+  <li>How can we list the methods available for self in pry?</li>
+  <li>What does an instance of a model represent in our DB?</li>
+  <li>What does the class of a model represent in our DB?</li>
+</ul>
+:ET

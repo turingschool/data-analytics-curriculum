@@ -1,0 +1,84 @@
+I"�<p>In this workshop we’re going to implement the “proxy” model of a service.</p>
+
+<ul>
+  <li>We’ll start with a single “monolithic” application.</li>
+  <li>We’ll identify a chunk of functionality to extract</li>
+  <li>We’ll ensure/improve the test coverage</li>
+  <li>We’ll build a service application</li>
+  <li>We’ll proxy the work from the primary app to the service</li>
+</ul>
+
+<p>This work should be completed in pairs and will likely take 4-6 hours.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>We’ll use a project called the Monsterporium:</p>
+
+<ul>
+  <li>Clone it from <a href="https://github.com/turingschool-examples/store_demo">https://github.com/turingschool-examples/store_demo</a></li>
+  <li>Read the README for setup instructions</li>
+</ul>
+
+<h2 id="work-plan">Work Plan</h2>
+
+<h3 id="getting-started">Getting Started</h3>
+
+<ul>
+  <li>Explore the Ratings functionality in Monsterporium (M)</li>
+  <li>M: Review the existing test coverage</li>
+  <li>M: Write at least one acceptance test</li>
+  <li>M: Review the Ratings schema</li>
+</ul>
+
+<h3 id="a-second-application">A Second Application</h3>
+
+<ul>
+  <li>Create a second Rails application for our Service (S)</li>
+  <li>S: Implement a similar model schema</li>
+  <li>S: Implement a barebones API controller to SHOW ratings for a product</li>
+  <li>S: Create a rating manually from the console</li>
+</ul>
+
+<h3 id="stitching-them-together">Stitching Them Together</h3>
+
+<ul>
+  <li>M: Manually fetch the rating from the console</li>
+  <li>M: Experiment from the <code class="highlighter-rouge">Rating</code> model to dynamically read ratings</li>
+  <li>M: Revise the <code class="highlighter-rouge">Product</code> model to match your new <code class="highlighter-rouge">Rating</code></li>
+  <li>M: Prove that the Monsterporium still works correctly with your acceptance tests</li>
+</ul>
+
+<h3 id="challenges-from-the-front-end">Challenges from the Front-End</h3>
+
+<p>With the basic read in place, you can consider the following challenge or move on directly to the next section.</p>
+
+<ul>
+  <li>Move the API read so it happens from the front-end JavaScript and not the Monsterporium backend app</li>
+</ul>
+
+<h3 id="writing-ratings-remotely">Writing Ratings Remotely</h3>
+
+<ul>
+  <li>S: Write a controller test to demonstrate the creation of ratings via the API</li>
+  <li>S: Implement the controller functionality to make it work</li>
+  <li>M: Send the API create request directly from the controller (along with continuing to store it locally)</li>
+  <li>M: When it works, push the API request down to the model</li>
+</ul>
+
+<h3 id="big-finish">Big Finish</h3>
+
+<ul>
+  <li>M: Remove any functionality from the <code class="highlighter-rouge">RatingsController</code> that isn’t used</li>
+  <li>M: Remove the <code class="highlighter-rouge">ActiveRecord::Base</code> inheritance from <code class="highlighter-rouge">Rating</code></li>
+  <li>M: Remove anything unnecessary from <code class="highlighter-rouge">Rating</code></li>
+  <li>M: What functionality have we lost? Do we need it? If so, how would/should we bring it back?</li>
+</ul>
+
+<h3 id="finishing-touches">Finishing Touches</h3>
+
+<ul>
+  <li>M: If you haven’t implemented it already, fetch the ratings via JavaScript when displaying a product</li>
+  <li>M: Instead of POSTing the ratings from the Model, send them directly from the form via JavaScript</li>
+  <li>M: Can you wrap the <code class="highlighter-rouge">Rating</code> model into a gem?</li>
+</ul>
+:ET

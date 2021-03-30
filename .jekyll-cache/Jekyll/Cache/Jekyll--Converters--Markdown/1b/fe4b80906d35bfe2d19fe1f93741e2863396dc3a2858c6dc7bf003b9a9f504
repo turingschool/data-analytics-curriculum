@@ -1,0 +1,671 @@
+I"��<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Describe the relationship between a foreign key on one table and a primary key on another table</li>
+  <li>Diagram a one-to-many relationship</li>
+  <li>Diagram a many-to-many relationship</li>
+  <li>Understand what a join table is and why we need one</li>
+  <li>Create many-to-many relationships in Rails</li>
+  <li>Interpret <code class="highlighter-rouge">schema.rb</code></li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Foreign Key</li>
+  <li>Primary Key</li>
+  <li>One-to-Many Relationship</li>
+  <li>Many-to-Many Relationship</li>
+  <li>Join Table</li>
+  <li>Migration</li>
+  <li>Schema</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<p>This lesson builds off of the <a href="./passing_data_in_rails">Passing Data Lesson</a>. You can find the completed code from this lesson on the <code class="highlighter-rouge">passing_data</code> branch of <a href="https://github.com/turingschool-examples/set_list/tree/passing_data">this repo</a></p>
+
+<h2 id="warm-up">Warm-Up</h2>
+
+<p>In SetList:</p>
+
+<ol>
+  <li>What is the relationship between Songs and Artists?</li>
+  <li>Diagram the database tables for Songs and Artists.</li>
+</ol>
+
+<h2 id="defining-key-terms">Defining Key Terms</h2>
+
+<ul>
+  <li><strong>Primary Key</strong> - a key in a relational database that is unique for each record. This is also known as an <code class="highlighter-rouge">id</code>. It is a unique identifier, such as a driver’s license, or the VIN on a car. You may have one and only one primary key value per table.</li>
+  <li><strong>Foreign Key</strong> - a foreign key is a field in one table that uniquely identifies a row of another table. A foreign key is defined in a second table, but it refers to the primary key in the first table.</li>
+</ul>
+
+<h1 id="one-to-many-relationships">One-to-Many Relationships</h1>
+
+<ul>
+  <li>The relationship between <code class="highlighter-rouge">songs</code> and <code class="highlighter-rouge">artists</code> is a one-to-many relationship.</li>
+  <li><code class="highlighter-rouge">songs</code> has a column called <code class="highlighter-rouge">artist_id</code> which refers to the primary key of the <code class="highlighter-rouge">artist</code> table.</li>
+  <li><code class="highlighter-rouge">artist_id</code> is the foreign key</li>
+</ul>
+
+<p><strong>Songs Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>title</th>
+      <th>length</th>
+      <th>play_count</th>
+      <th>artist_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>This Must Be the Place</td>
+      <td>345</td>
+      <td>23</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Aint No Bread in the Breadbox</td>
+      <td>432</td>
+      <td>12</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Reuben and Cherise</td>
+      <td>367</td>
+      <td>45</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Purple Rain</td>
+      <td>183</td>
+      <td>49</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Artists Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Talking Heads</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Jerry Garcia Band</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Prince</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="independent-practice---students-and-modules">Independent Practice - Students and Modules</h3>
+
+<p>Think about the relationship between students and modules (i.e. “Mod 1: Object Oriented Programming”, “Mod 2: Web Applications with Ruby”).</p>
+
+<p>Diagram what the database would look like.</p>
+
+<h1 id="many-to-many-relationships">Many-to-Many Relationships</h1>
+
+<p>Now, we’re going to add playlists to our app.</p>
+
+<p>Let’s think about the relationship between songs and playlists.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A playlist can have many songs. A song can be in many playlists.
+</code></pre></div></div>
+
+<p>If we have Songs and Playlists tables that look like this:</p>
+
+<p><strong>Songs Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>title</th>
+      <th>length</th>
+      <th>play_count</th>
+      <th>artist_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>This Must Be the Place</td>
+      <td>345</td>
+      <td>23</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Aint No Bread in the Breadbox</td>
+      <td>432</td>
+      <td>12</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Reuben and Cherise</td>
+      <td>367</td>
+      <td>45</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Purple Rain</td>
+      <td>183</td>
+      <td>49</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Playlists Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Classic Rock</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Uplifting Sound</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Jerry Jams</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We can imagine that the “Classic Rock” playlist could include all of our current songs (a playlist has many songs). We can also imagine that the song “Reuben and Cherise” could be in both the “Classic Rock” and “Jerry Jams” playlists (a song has many playlists).</p>
+
+<p>So far, we have used <strong>foreign keys</strong> to create relationships. The problem is that a <strong>foreign key</strong> can identify a <em>single</em> record from another table, but in a many-to-many both sides of the relationship need to reference <em>multiple</em> records. This means that we’re going to need more than just foreign keys.</p>
+
+<p>One solution that might come to mind is, instead of our foreign keys storing a single id, we could store an array of ids. This is a good guess, but in a database there is no concept of an array. The reason is that, for the database to be efficient, it needs to know the exact size of the datatype it is storing. For example, our DB knows exactly how much space an integer takes up (8 bytes).</p>
+
+<p>But what about strings? They can vary in length. The Database handles strings by giving them a maximum length, which is 255 bytes by default. If we tried to do the same thing with arrays, we would be limiting how many relationships we could create, which is a bigger problem than limiting how long a string can be.</p>
+
+<p>The key takeaway here is <strong>a database can’t store an array of ids</strong>, so we’re going to need something else.</p>
+
+<h2 id="join-tables">Join Tables</h2>
+
+<p>Since we can’t achieve the many-to-many relationship with our given tables, we are going to add a third table to manage this relationship. This is called a <strong>join table</strong>.</p>
+
+<p><strong>Songs Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>title</th>
+      <th>length</th>
+      <th>play_count</th>
+      <th>artist_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>This Must Be the Place</td>
+      <td>345</td>
+      <td>23</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Aint No Bread in the Breadbox</td>
+      <td>432</td>
+      <td>12</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Reuben and Cherise</td>
+      <td>367</td>
+      <td>45</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Purple Rain</td>
+      <td>183</td>
+      <td>49</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>PlaylistSongs Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>playlist_id</th>
+      <th>song_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>3</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Playlists Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Classic Rock</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Uplifting Sound</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Jerry Jams</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Note:</strong> Join tables are just ordinary tables with a unique purpose. Each row of our <strong>join table</strong> relates a row of one table to a row of another table.</p>
+
+<p><strong>Turn and Talk</strong>: Which songs are associated with which playlists?</p>
+
+<p>The join table’s name doesn’t really matter. We could call it <code class="highlighter-rouge">song_playlists</code> or <code class="highlighter-rouge">playlist_songs</code>, it’s really up to you as the developer. You could even choose to name it <code class="highlighter-rouge">happy_fun_times</code> but that would be confusing.</p>
+
+<p>When you’re thinking about what to call this table, think about how you’re likely to use it most within your application. Since our app’s goal will be to show a playlist of songs more often, we’re going to call it <code class="highlighter-rouge">playlist_songs</code>.</p>
+
+<p><strong>Note</strong>: Don’t confuse <strong>join table</strong> with a sql joins operation. They are two different things.</p>
+
+<h3 id="independent-practice">Independent Practice</h3>
+
+<p>Diagram the DB tables you would need to create a many-to-many relationship between two tables that you think up on your own. Include some example data in your tables. If you can’t come up with an example on your own, use Photographs and Albums.</p>
+
+<h1 id="many-to-many-relationships-in-rails">Many-to-Many Relationships in Rails</h1>
+
+<h2 id="adding-playlists">Adding Playlists</h2>
+
+<p>We’re now going to add playlists to our SetList app. We are going to work bottom-up in this case by starting with a model test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/playlist_spec.rb</span>
+
+<span class="nb">require</span> <span class="s2">"rails_helper"</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Playlist</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">"relationships"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_many</span> <span class="ss">:playlist_songs</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The first thing we need to set up is the connection between our model and our table. Running this gives us:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NameError:
+  uninitialized constant Playlist
+</code></pre></div></div>
+
+<p>Let’s go create our Playlist model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/playlist.rb</span>
+
+<span class="k">class</span> <span class="nc">Playlist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When we run our tests again, we get:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::StatementInvalid:
+       PG::UndefinedTable: ERROR:  relation <span class="s2">"playlists"</span> does not exist
+</code></pre></div></div>
+
+<p>Let’s write a migration to create Playlists.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g migration CreatePlaylists name:string
+</code></pre></div></div>
+
+<p>Open up that migration and add timestamps to it. Run it with <code class="highlighter-rouge">rake db:migrate</code>.</p>
+
+<p>Running rspec again will give us this failure:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failure/Error: it { should have_many :playlist_songs}
+       Expected Playlist to have a has_many association called playlist_songs (no association called playlist_songs)
+</code></pre></div></div>
+
+<p>Let’s go into our model and add that association:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Playlist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:playlist_songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run rspec again and we get:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failure/Error: it { should have_many :playlist_songs}
+  Expected Playlist to have a has_many association called playlist_songs (PlaylistSong does not exist)
+</code></pre></div></div>
+
+<p>It says our join table doesn’t exist. Let’s go create it.</p>
+
+<h2 id="creating-the-playlistsongs-join-table">Creating the PlaylistSongs Join Table</h2>
+
+<p>Let’s start with a test. First we’ll think about what a record in the join table should do. Looking back at our diagram of this table, it should relate a single song with a single playlist:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/playlist_song_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">PlaylistSong</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">"relationships"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">belong_to</span> <span class="ss">:playlist</span><span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">belong_to</span> <span class="ss">:song</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run this test, and we get:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NameError:
+  uninitialized constant PlaylistSong
+</code></pre></div></div>
+
+<p>Go create the model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/playlist_song.rb</span>
+<span class="k">class</span> <span class="nc">PlaylistSong</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the test again and we get:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::StatementInvalid:
+       PG::UndefinedTable: ERROR:  relation "playlist_songs" does not exist
+</code></pre></div></div>
+
+<p>Now we’ll generate the migration to create our join table:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g migration CreatePlaylistSongs song:references playlist:references
+</code></pre></div></div>
+
+<p><strong>Add timestamps to your table, and then migrate your database:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake db:migrate
+</code></pre></div></div>
+
+<p>Run the tests again, and both fail:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Expected PlaylistSong to have a belongs_to association called playlist (no association called playlist)
+
+Expected PlaylistSong to have a belongs_to association called song (no association called song)
+</code></pre></div></div>
+
+<p>Let’s go create those associations:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PlaylistSong</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">belongs_to</span> <span class="ss">:playlist</span>
+  <span class="n">belongs_to</span> <span class="ss">:song</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the test and it passes! Our joins table is now ready to go.</p>
+
+<h2 id="a-playlist-has-many-songs">A Playlist has many Songs</h2>
+
+<p>Run the <code class="highlighter-rouge">playlist_spec</code> again and it passes! Now that our join table is set up, the connection between the <code class="highlighter-rouge">playlist</code> and <code class="highlighter-rouge">playlist_songs</code> is working. Now we can set up the has_many relationship between songs and playlists. Let’s add this test to our <code class="highlighter-rouge">playlist_spec.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">have_many</span><span class="p">(</span><span class="ss">:songs</span><span class="p">).</span><span class="nf">through</span><span class="p">(</span><span class="ss">:playlist_songs</span><span class="p">)}</span>
+</code></pre></div></div>
+
+<p>We are using the ShouldaMatchers <code class="highlighter-rouge">through</code> method to test that we can access a Playlist’s songs through the join table.</p>
+
+<p>Running this test gives us:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failure/Error: it {should have_many(:songs).through(:playlist_songs)}
+      Expected Playlist to have a has_many association called songs (no association called songs)
+</code></pre></div></div>
+
+<p>Let’s try to add a has_many to our Playlist model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Playlist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:playlist_songs</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Running this gives us:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failure/Error: it { should have_many(:songs).through(:playlist_songs) }
+       Expected Playlist to have a has_many association called songs (Song does not have a playlist_id foreign key.)
+</code></pre></div></div>
+
+<p>The error is telling us that our songs table doesn’t have a foreign key for playlists. We <em>could</em> be very literal and add a foreign key to songs, but this won’t work per our previous discussion of many to many relationships. Instead, we want to access the songs <strong>through</strong> the join table:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Playlist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:playlist_songs</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">through: :playlist_songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run this test and it passes!</p>
+
+<p>It is very important that for a model with a many to many relationship, that you set up both the <code class="highlighter-rouge">has_many, through:</code> relationship and the <code class="highlighter-rouge">has_many</code> with the join table. If we take out the connection to the join table like so:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Playlist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">through: :playlist_songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>and run our test, we will get:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NoMethodError:
+      undefined method `klass' for nil:NilClass
+</code></pre></div></div>
+
+<p>Unfortunately, if you do this tdd will let you down a bit since this error is entirely unhelpful.While it may be unintuitive, if you see the <code class="highlighter-rouge">undefined method 'klass' for nil:NilClass</code>, remember to check that your model associations are set up properly:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Playlist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:playlist_songs</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">through: :playlist_songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the test again to make sure our Playlist is still working properly.</p>
+
+<p>We’ve now set up one end of the many-to-many, but what about the other?</p>
+
+<h2 id="a-song-has-many-playlists">A Song has many Playlists</h2>
+
+<p>Let’s add tests for our many to many in <code class="highlighter-rouge">song_spec.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">have_many</span> <span class="ss">:playlist_songs</span><span class="p">}</span>
+<span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">have_many</span><span class="p">(</span><span class="ss">:playlists</span><span class="p">).</span><span class="nf">through</span><span class="p">(</span><span class="ss">:playlist_songs</span><span class="p">)}</span>
+</code></pre></div></div>
+
+<p>This is very similar to what we have for our Playlist model tests. When we run these tests, we’ll see two failures:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failure/Error: it {should have_many :playlist_songs}
+      Expected Song to have a has_many association called playlist_songs (no association called playlist_songs)
+
+Failure/Error: it {should have_many(:playlists).through(:playlist_songs)}
+      Expected Song to have a has_many association called playlists (no association called playlists)
+</code></pre></div></div>
+
+<p>So now we can go into our Song model and add those relationships:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">has_many</span> <span class="ss">:playlist_songs</span>
+  <span class="n">has_many</span> <span class="ss">:playlists</span><span class="p">,</span> <span class="ss">through: :playlist_songs</span>
+</code></pre></div></div>
+
+<p>Run the test again and it passes.</p>
+
+<h2 id="check-schema">Check Schema</h2>
+
+<p>Open up <code class="highlighter-rouge">schema.rb</code>. Compare what is in this file with our original diagram of the many-to-many relationship.</p>
+
+<h2 id="playlist-index-page">Playlist Index Page</h2>
+
+<p>Now that we have playlists, let’s add an index page to view all our playlists:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/features/playlists/index_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="s2">"the Playlist index page"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"should display all playlists"</span> <span class="k">do</span>
+    <span class="n">talking_heads</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Talking Heads"</span><span class="p">)</span>
+    <span class="n">jgb</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Jerry Garcia Band"</span><span class="p">)</span>
+    <span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Prince"</span><span class="p">)</span>
+
+    <span class="n">place</span> <span class="o">=</span> <span class="n">talking_heads</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"This Must Be The Place"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">832</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">83209</span><span class="p">)</span>
+    <span class="n">breadbox</span> <span class="o">=</span> <span class="n">jgb</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Aint No Bread in the Breadbox"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">832</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">83209</span><span class="p">)</span>
+    <span class="n">r_and_c</span> <span class="o">=</span> <span class="n">jgb</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Reuben and Cherise"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">832</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">83209</span><span class="p">)</span>
+
+    <span class="c1"># Creates a playlist</span>
+    <span class="n">uplifting_sound</span> <span class="o">=</span> <span class="no">Playlist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Uplifting Sound"</span><span class="p">)</span>
+    <span class="n">jams</span> <span class="o">=</span> <span class="no">Playlist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Jerry Jams"</span><span class="p">)</span>
+
+    <span class="c1"># Creates playlist and associates it with a song. Under the hood, creates a row in the playlist_songs table</span>
+    <span class="n">rock</span> <span class="o">=</span> <span class="n">breadbox</span><span class="p">.</span><span class="nf">playlists</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Classic Rock"</span><span class="p">)</span>
+
+    <span class="c1"># Creates song and associates it with a playlist. Under the hood, creates a row in the playlist_songs table</span>
+    <span class="n">purple</span> <span class="o">=</span> <span class="n">uplifting_sound</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Purple Rain"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">4378</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">7453689</span><span class="p">,</span> <span class="ss">artist: </span><span class="n">prince</span><span class="p">)</span>
+
+    <span class="c1"># Creates a row in the playlist_songs table. Associates a playlist with a song</span>
+    <span class="no">PlaylistSong</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">song: </span><span class="n">purple</span><span class="p">,</span> <span class="ss">playlist: </span><span class="n">jams</span><span class="p">)</span>
+    <span class="no">PlaylistSong</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">song: </span><span class="n">place</span><span class="p">,</span> <span class="ss">playlist: </span><span class="n">jams</span><span class="p">)</span>
+
+    <span class="c1"># Creates a row in the playlist_songs table. Associates a playlist with a song</span>
+    <span class="n">rock</span><span class="p">.</span><span class="nf">songs</span> <span class="o">&lt;&lt;</span> <span class="n">place</span>
+
+    <span class="c1"># Creates a row in the playlist_songs table. Associates a playlist with a song</span>
+    <span class="n">r_and_c</span><span class="p">.</span><span class="nf">playlists</span> <span class="o">&lt;&lt;</span> <span class="n">rock</span>
+
+    <span class="n">visit</span> <span class="s1">'/playlists'</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#playlist-</span><span class="si">#{</span><span class="n">rock</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">rock</span><span class="p">.</span><span class="nf">name</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">place</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">breadbox</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">r_and_c</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#playlist-</span><span class="si">#{</span><span class="n">uplifting_sound</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">uplifting_sound</span><span class="p">.</span><span class="nf">name</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">purple</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#playlist-</span><span class="si">#{</span><span class="n">jams</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">jams</span><span class="p">.</span><span class="nf">name</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">purple</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="n">place</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>In the setup portion of the test, we are creating the relationships in a couple different ways. Normally, you would want to be more consistent with your syntax, but in this case we want to show a couple different ways to create relationships. Take a minute to review all these different strategies.</p>
+
+<p>In the assertion portion of the test, we want to use the <code class="highlighter-rouge">within</code> as much as possible to identify specific songs and playlists.</p>
+
+<p>Run this test and you should get an error for a missing route. In <code class="highlighter-rouge">routes.rb</code>, add:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/playlists'</span><span class="p">,</span> <span class="ss">to: </span><span class="s2">"playlists#index"</span>
+</code></pre></div></div>
+
+<p>Run the test again and you’ll get an undefined constant for the controller, so we’ll add the controller with the index action:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/controllers/playlists_controller.rb</span>
+<span class="k">class</span> <span class="nc">PlaylistsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@playlists</span> <span class="o">=</span> <span class="no">Playlist</span><span class="p">.</span><span class="nf">all</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Running the tests now will give us a missing template error, so go create <code class="highlighter-rouge">app/views/playlists/index.html.erb</code> and add the view:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%</span> <span class="vi">@playlists</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">playlist</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">"playlist-</span><span class="cp">&lt;%=</span> <span class="n">playlist</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="n">playlist</span><span class="p">.</span><span class="nf">name</span> <span class="cp">%&gt;</span><span class="nt">&lt;/h1&gt;</span>
+    <span class="cp">&lt;%</span> <span class="n">playlist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">song</span><span class="o">|</span> <span class="cp">%&gt;</span>
+       <span class="nt">&lt;p&gt;</span><span class="cp">&lt;%=</span> <span class="n">song</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/section&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>We should now have a passing test. Check your work in development by adding some playlists to the seeds file, seeding the db with <code class="highlighter-rouge">rake db:seed</code>, and running your server.</p>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>How is a one-to-many relationship set up in a database?</li>
+  <li>What does a join table do? Why would we need one?</li>
+  <li>How do we test many-to-many relationships?</li>
+  <li>What migrations do we need to create to set up a many-to-many?</li>
+  <li>What do we need to add to our models to set up a many-to-many?</li>
+  <li>What is the relationship between Songs and Playlists?</li>
+</ul>
+:ET

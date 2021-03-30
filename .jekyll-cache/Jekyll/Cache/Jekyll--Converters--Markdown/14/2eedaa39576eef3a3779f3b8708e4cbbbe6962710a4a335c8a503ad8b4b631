@@ -1,0 +1,39 @@
+I"<h2 id="themes">Themes</h2>
+
+<ul>
+  <li>Applying JavaScript &amp; jQuery in the DOM</li>
+  <li>Using Websockets to dynamically update content</li>
+  <li>Using AJAX to send and recieve content</li>
+  <li>Diving deeper into SQL</li>
+  <li>SQL scalability, performance, diagnostics, CLI</li>
+  <li>Revisiting REST beyond CRUD (ex: workflows, search, etc)</li>
+</ul>
+
+<h2 id="expectations-for-students">Expectations for Students</h2>
+
+<ul>
+  <li>Integrate JavaScript &amp; jQuery to meaningfully improve the user experience</li>
+  <li>Implement websockets or equivalent technology to dynamically update data</li>
+  <li>Isolate database/SQL weaknesses and improve them</li>
+  <li>Add or improve a non-CRUD chunk of functionality with REST patterns</li>
+  <li>Contribute to a non-Turing open source project</li>
+</ul>
+
+<h2 id="instructional-sessions---week-1">Instructional Sessions - Week 1</h2>
+
+<h3 id="sql-deep-dive">SQL Deep Dive</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/sql_deep_dive">Lesson Plan</a></li>
+</ul>
+
+<h3 id="continuous-integration--continuous-deployment">Continuous Integration &amp; Continuous Deployment</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Outline</li>
+  <li><a href="lessons/ci_and_cd">Lesson Plan</a></li>
+</ul>
+:ET

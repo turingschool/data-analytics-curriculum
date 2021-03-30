@@ -1,0 +1,96 @@
+I"<h1 id="activerecord-association-practice">ActiveRecord Association Practice</h1>
+
+<p>We’ll be using this starter <a href="https://github.com/turingschool-examples/sinatra-active-record-skeleton">repository</a> to work through the following exercises.</p>
+
+<h2 id="self-eval-statements">Self-Eval Statements</h2>
+
+<ul>
+  <li>I feel <em>very</em> comfortable creating has_many and belongs_to associations</li>
+  <li>I feel <em>very</em> comfortable modifying tables and models to accommodate new data</li>
+  <li>I feel pretty confident that I can make a joins table if I need to</li>
+</ul>
+
+<h2 id="step-1---tables">Step 1 - Tables</h2>
+
+<h3 id="timing">Timing</h3>
+
+<ul>
+  <li>Work (20 min)</li>
+  <li>Group Review (10 min)</li>
+  <li>Break (5 min)</li>
+</ul>
+
+<h3 id="work">Work</h3>
+
+<p>We’re going to start building a <code class="highlighter-rouge">BoardGame</code> tracking application. A <code class="highlighter-rouge">BoardGame</code> has a <code class="highlighter-rouge">name</code>, <code class="highlighter-rouge">description</code>, and <code class="highlighter-rouge">year</code>. Each board is added by a user, so a user can add many <code class="highlighter-rouge">BoardGames</code>. Each <code class="highlighter-rouge">BoardGame</code> will also belong to a <code class="highlighter-rouge">Category</code> (for example, <code class="highlighter-rouge">family</code>, <code class="highlighter-rouge">adult</code>, <code class="highlighter-rouge">card</code>, etc.). A <code class="highlighter-rouge">Category</code> simply has a <code class="highlighter-rouge">name</code>.</p>
+
+<p>Draw the database schema to model this application description. Be sure to follow naming conventions and to put the foreign key in the correct table. When you’re done, check with an instructor or your neighbor to ensure you’re on the right track.</p>
+
+<ul>
+  <li><strong>Baseline:</strong> A <code class="highlighter-rouge">BoardGame</code> will belong to one <code class="highlighter-rouge">User</code> at a time and belong to one <code class="highlighter-rouge">Category</code> at a time.</li>
+  <li><strong>Spicy:</strong> A <code class="highlighter-rouge">BoardGame</code> can belong to multiple users, and a user can have multiple <code class="highlighter-rouge">board_games</code>. Also, a <code class="highlighter-rouge">BoardGame</code> can belong to multiple <code class="highlighter-rouge">categories</code>, and each <code class="highlighter-rouge">Category</code> will have multiple associated <code class="highlighter-rouge">board_games</code>.</li>
+</ul>
+
+<p>Once your schema looks good, go ahead and create some migrations to setup your database.</p>
+
+<h2 id="step-2---models">Step 2 - Models</h2>
+
+<h3 id="timing-1">Timing</h3>
+
+<ul>
+  <li>Work (20 min)</li>
+  <li>Group Review (10 min)</li>
+  <li>Break (5 min)</li>
+</ul>
+
+<h3 id="work-1">Work</h3>
+
+<p>What models do you need? How does a model relate to your database?</p>
+
+<p>Setup your models (don’t forget to follow naming conventions!).</p>
+
+<ul>
+  <li><strong>Finish Early?:</strong> Write tests</li>
+</ul>
+
+<h2 id="step-3---relationships">Step 3 - Relationships</h2>
+
+<h3 id="timing-2">Timing</h3>
+
+<ul>
+  <li>Work (10 min)</li>
+  <li>Group Review (10 min)</li>
+  <li>Break (5 min)</li>
+</ul>
+
+<h3 id="work-2">Work</h3>
+
+<p>Given that you have the correct relationship created on the database level, we can now create our relationships on the model level. How does a user relate to a <code class="highlighter-rouge">BoardGame</code>? How does a <code class="highlighter-rouge">BoardGame</code> relate to a <code class="highlighter-rouge">Category</code>? Work through each relationship and add the correct association to the correct model.</p>
+
+<ul>
+  <li><strong>Spicy:</strong> You’ll also want to add validations to ensure that all <code class="highlighter-rouge">Categories</code> have a <code class="highlighter-rouge">name</code>, all <code class="highlighter-rouge">BoardGames</code> have <code class="highlighter-rouge">users</code> and <code class="highlighter-rouge">categories</code>.</li>
+  <li><strong>Finish Early?:</strong> Write tests</li>
+</ul>
+
+<h2 id="step-4---does-it-work">Step 4 - Does it Work?</h2>
+
+<h3 id="timing-3">Timing</h3>
+
+<ul>
+  <li>Work (15 min)</li>
+  <li>Group Review (10 min)</li>
+  <li>Break (5 min)</li>
+</ul>
+
+<h3 id="work-3">Work</h3>
+
+<p>How do we know if our models and our database tables are associated correctly? Let’s hop into <code class="highlighter-rouge">tux</code>, create some data, and practice calling the methods we’ve written (our association methods)!</p>
+
+<h2 id="done">Done?</h2>
+
+<ul>
+  <li>If you did the baseline with no joins tables, pair with someone who did the joins table and get one up and running in your code.</li>
+  <li>What if we wanted a user to be able to review a <code class="highlighter-rouge">BoardGame</code>? What tables, models, and associations would we need to create to add this review feature?</li>
+  <li>Read about polymorphic associations <a href="http://guides.rubyonrails.org/association_basics.html#polymorphic-associations">here</a>. They are pretty neat!</li>
+</ul>
+:ET

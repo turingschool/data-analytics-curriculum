@@ -1,0 +1,121 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Student can use webpacker for managing their JavaScript in Rails</li>
+  <li>Student can make tradeoff decisions on whether webpacker is right for their project</li>
+</ul>
+
+<h2 id="the-hook">The Hook</h2>
+
+<blockquote>
+  <p>Because the hook brings you back<br />
+ I ain’t tellin’ you no lie<br />
+ The hook brings you back<br />
+ On that you can rely<br />
+ – <cite>Blues Traveler</cite></p>
+</blockquote>
+
+<p>Rails is perfectly capable of managing the back-end and the front-end, but it falters a little with the front-end, especially as our applications become more and more complicated. For a couple reasons:</p>
+
+<ul>
+  <li>
+    <p><strong>We’re using Ruby to import javascript</strong></p>
+
+    <p>Any javascript library you want to bring in (jQuery, bootstrap, react, underscore, etc..) has to be added by downloading the JS file itself (increasingly difficult) or wait for someone to pack it up as a gem. So now you’re adding a JS package by adding a Ruby gem. Kinda funky.</p>
+  </li>
+  <li>
+    <p><strong>Everything is global</strong></p>
+
+    <p>As our applications get more and more complicated, we should be scoping our code into modules, so we aren’t creating globals all over the place, but sprockets can’t handle that.</p>
+  </li>
+  <li>
+    <p><strong>Babel is so nice</strong></p>
+
+    <p>All transpiling has to be forced in as a sprockets gem, instead of using the gold standard babel package</p>
+  </li>
+  <li>
+    <p><strong>Front End developers want to use their tools</strong></p>
+
+    <p>How do you ramp up a front end developer to put their code into rails. Tell them they don’t have any of their favorite tools or packages.</p>
+  </li>
+</ul>
+
+<p>Webpack and NPM solve all these problems. Why can’t we use them? No, really. Why can’t we?</p>
+
+<h2 id="enter-webpacker-gem">Enter Webpacker gem</h2>
+
+<p>DHH and the Rails team have been working on a gem that will let you organize your javascript, css and images the same way you would in Webpack. And you can install all the modules available through NPM.</p>
+
+<p>This is pretty new stuff, and will continue to evolve before it’s wide release in Rails 5.1, but I was so excited that I wrote this lesson plan that will probably never be useful again.</p>
+
+<h3 id="quick-note-about-yarn">Quick note about yarn</h3>
+
+<p>Yarn is Facebook’s replacement for npm. It’s like faster and hotter and stuff. Moving on….</p>
+
+<h2 id="code-along">Code Along</h2>
+
+<p>Let’s start a new rails project, and add some modular javascript to it.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>Add the <code class="highlighter-rouge">webpacker</code> gem to your Gemfile. They recommend pulling directly from github since this gem is being worked on heavily right now:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s1">'webpacker'</span><span class="p">,</span> <span class="ss">github: </span><span class="s1">'rails/webpacker'</span>
+</code></pre></div></div>
+
+<p>Then install it from your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle
+rails webpacker:install
+</code></pre></div></div>
+
+<p>This is going to install a <code class="highlighter-rouge">config/webpack</code> folder (which we’ll get so some of) and a new <code class="highlighter-rouge">app/javascript</code> folder. For now, let’s just disable the dev server. We don’t need two servers running.</p>
+
+<p>The last step is to load the “pack file” in the head of your layout</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">javascript_pack_tag</span> <span class="s1">'application'</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>If you’re not planning on using the asset pipeline, you can also remove the <code class="highlighter-rouge">javascript_include_tag</code>. Technically you can use them side by side, but I can see that being confusing.</p>
+
+<h3 id="development">Development</h3>
+
+<p>A couple things to keep in mind while developing your application:</p>
+
+<ul>
+  <li>Use <code class="highlighter-rouge">bin/yarn add</code> to add packages instead of <code class="highlighter-rouge">npm install</code></li>
+  <li>Whenever you’re actively developing javascript, and want to have your changes automatically loaded, you’ll need to run <code class="highlighter-rouge">bin/webpack-watcher</code> in a separate terminal window.</li>
+  <li>You can also use <code class="highlighter-rouge">bin/webpack-dev-server</code>, but I thought it was silly to run a whole other server.</li>
+  <li>You don’t have to use the sprockets specific <code class="highlighter-rouge">// require</code> syntax anymore. In your <code class="highlighter-rouge">app/javascripts/packs/application.js</code> file, you can use your standard require/import syntax to load modules.
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">module</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">module</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// OR //</span>
+<span class="kd">const</span> <span class="nx">module</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">module</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="deployment">Deployment</h3>
+
+<p>Really, you shouldn’t have to do anything different. The build phase of webpack is now included whenever <code class="highlighter-rouge">rails precompile:assets</code> is run. So if you’re using Heroku, it will be taken care of, and if you needed to precompile assets in any other deployment process, just keep doing that.</p>
+
+<h3 id="testing">Testing</h3>
+
+<p>You should be able to use all the same integration test features you’re used to, like selenium or poltergeist. I haven’t tested this extensively, and there may be edge cases, but selenium is mostly edge cases already.</p>
+
+<p>You can also unit test your JavaScript from the <code class="highlighter-rouge">app/javascript</code> folder. They won’t automatically run when you run rspec, but if you write a clever rake file, you should be able to get them to run together.</p>
+
+<h3 id="documentation">Documentation</h3>
+
+<p>You’ve added additional steps that most Rails developers don’t know about. Don’t forget to add them so collaborators can setup and maintain your application, including running <code class="highlighter-rouge">yarn</code> along with <code class="highlighter-rouge">bundler</code> when you first clone down.</p>
+
+<h2 id="next-steps">Next steps</h2>
+
+<p>Check out the <a href="https://github.com/rails/webpacker">webpacker readme</a> for more tricks.</p>
+
+<ul>
+  <li>You can preinstall react, angular or vue.js</li>
+  <li>You can use Foreman to run both <code class="highlighter-rouge">rails s</code> and <code class="highlighter-rouge">webpack-watcher</code> with one command</li>
+  <li>You can use ERB in your modules for linking to asset pipeline images, or using environment variables</li>
+  <li></li>
+</ul>
+:ET

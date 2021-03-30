@@ -1,0 +1,158 @@
+I"�#<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>use interactive rebase to rewrite history by squashing and/or modifying commits</li>
+  <li>navigate GitHub using keyboard shortcuts</li>
+  <li>demonstrate git workflow in teams</li>
+  <li>review and discuss code using GitHub’s tools (pull requests, line comments)</li>
+  <li>write complete documentation using commit messages and pull requests</li>
+</ul>
+
+<h2 id="lesson">Lesson</h2>
+
+<h3 id="warmup-ace-ventura-git-detective">Warmup: Ace Ventura Git Detective</h3>
+
+<p>Learning to search git for specific info is incredibly useful when you are working on large projects. In your teams, take 5-10 minutes to do the following:</p>
+
+<ol>
+  <li>Clone down the source code for <a href="https://github.com/bundler/bundler">bundler</a>.</li>
+  <li>Do some Googling to figure out how to view the git log by author. Katrina Owen has one commit in the project. Find it.</li>
+  <li>What change was made? Why?</li>
+  <li>Find all commits referencing “rubocop” (case insensitive) in the commit message.</li>
+</ol>
+
+<h3 id="team-research">Team Research</h3>
+
+<h4 id="person-1">Person 1:</h4>
+
+<ul>
+  <li>What are some rules of thumb for proper commit messages? Write a gist of rules you can share with your team.</li>
+  <li>Search some popular open source repositories to find two examples of “good” commit messages. Link to those commit messages in your gist.</li>
+</ul>
+
+<p>Resources:</p>
+
+<ul>
+  <li><a href="http://chris.beams.io/posts/git-commit/">http://chris.beams.io/posts/git-commit/</a></li>
+  <li><a href="https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message">https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message</a></li>
+</ul>
+
+<h4 id="person-2">Person 2:</h4>
+
+<p>Research what each of these Git commands will do. Create a gist that you can share with your team.</p>
+
+<ul>
+  <li>git stash</li>
+  <li>git stash apply</li>
+  <li>git shortlog</li>
+  <li>git commit –amend</li>
+  <li>git reset –hard</li>
+  <li>git reset –soft</li>
+  <li>git reset –hard HEAD~2</li>
+  <li>Find three different ways to display the git log. One example is <code class="highlighter-rouge">git log --oneline</code>.</li>
+</ul>
+
+<h4 id="person-3">Person 3:</h4>
+
+<p>GitHub has keyboard shortcuts that increase efficiency when navigating around the interface. One example is pressing <code class="highlighter-rouge">t</code> in a repository which will bring up a file finder.</p>
+
+<p>What other keyboard shortcuts might be helpful when navigating on GitHub? Create a gist with descriptions of ~8 of the most helpful shortcuts you can share with your team. Try them out to make sure they work :)</p>
+
+<h4 id="whoever-finishes-first">Whoever finishes first</h4>
+
+<p>Look at <a href="https://github.com/thoughtbot/guides/tree/master/code-review">thoughtbot’s code review guide</a> and GitHub’s blog <a href="https://github.com/blog/1943-how-to-write-the-perfect-pull-request">How to Write the Perfect Pull Request</a>.</p>
+
+<h3 id="git-workflow-review">Git Workflow Review</h3>
+
+<p>When working on a team, it’s important to have a workflow. The details of the workflow will vary from team to team and company to company, but it’s important that you have a workflow.</p>
+
+<p>Below is GitHub’s workflow. Most teams will do something similar.</p>
+
+<ol>
+  <li>Anything in the master branch is deployable</li>
+  <li>To work on something new, create a descriptively named branch off of master (ie: new-oauth2-scopes)</li>
+  <li>Commit to that branch locally and regularly push your work to the same named branch on the server</li>
+  <li>When you need feedback or help, or you think the branch is ready for merging, open a pull request</li>
+  <li>After someone else has reviewed and signed off on the feature, you can merge it into master</li>
+  <li>Once it is merged and pushed to ‘master’, you can and should deploy immediately</li>
+</ol>
+
+<p>It’s useful to think of branches like Ruby methods: they should be small, have descriptive names and implement a single feature. Use branches for the small features that you can implement quickly.</p>
+
+<p><strong>WIP Pull Request:</strong> A pull request isn’t the final word. You can always add to it based on feedback, so it can be a useful collaboration tool for code that’s still “under development.” Many teams will call this a “WIP” PR and label it as such (to make sure it doesn’t accidentally get merged).</p>
+
+<p>Having your code reviewed gives you confidence that your code is clear and that it’s not accidently causing an error somewhere else in the application. It’s also an opportunity to allow a mentor to review the code you’re writing and give you advice.</p>
+
+<p>Reviewing a teammate’s code allows you to be familiar with parts of the codebase that you may not have touched. It also provides context for how the code your writing in your branch fits into the larger app.</p>
+
+<p>Tools for conducting a code review:</p>
+
+<ul>
+  <li>Line comments on GitHub</li>
+  <li>Discussion in GitHub Issues and Waffle.io</li>
+</ul>
+
+<p>Take a look at <a href="https://github.com/blog/1943-how-to-write-the-perfect-pull-request">this GitHub blog post</a> for more tips on writing a pull request, reviewing code, and responding to feedback.</p>
+
+<h3 id="using-interactive-rebase">Using Interactive Rebase</h3>
+
+<p>The master branch of your team’s project should be as pristine as possible. Take a look at <a href="https://github.com/kristinabrown/dinner-dash/commits/master?page=5">this repo</a> and find commits that probably shouldn’t have made it into the master branch.</p>
+
+<p>“WIP” commits or style changes should <em>not</em> be merged into master. When rebasing, you’ll have the ability to combine (“squash”) and reword commits.</p>
+
+<ul>
+  <li>DO NOT REBASE MASTER (or anthing that anyone else already has been distributed to other team members)</li>
+  <li>git rebase -i HEAD~3</li>
+  <li>commits ordered bottom (most recent) to top (least recent)</li>
+  <li>you’ll need to force push to your branch since the commit SHA changes</li>
+  <li>selecting “s” for a certain commit will squash it together with the previous commit (the one above it)</li>
+  <li>watch carefully to see if you are in a detached head state</li>
+  <li>git rebase –abort will abort the rebase without consequences</li>
+</ul>
+
+<p><code class="highlighter-rouge">git rebase</code> allows you to easily change a series of commits, modifying the history of your repository.</p>
+
+<p>Because changing your commit history can make things very difficult for everyone else using the repository, it’s bad practice to rebase commits when you’ve already pushed to a repository.</p>
+
+<p>You can rebase against a point in time:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">git rebase -i commit_sha</code></li>
+  <li><code class="highlighter-rouge">git rebase -i HEAD^</code></li>
+  <li><code class="highlighter-rouge">git rebase -i HEAD~7</code></li>
+</ul>
+
+<p>The caret stands for one commit back from <code class="highlighter-rouge">HEAD</code>. You can use multiple carets (e.g. <code class="highlighter-rouge">HEAD^^^^^</code>) or you can specify the number of commits back you want to rebase from using <code class="highlighter-rouge">~</code>.</p>
+
+<p>The <code class="highlighter-rouge">-i</code> flag stands for “interactive mode”.</p>
+
+<p>Let’s look at an example rebase.</p>
+
+<h2 id="practice-git-rebasing-commit-messages-and-code-reviews">Practice: Git Rebasing, Commit Messages, and Code Reviews</h2>
+
+<p>Clone down <a href="https://github.com/turingschool-examples/git-rebase">this repo</a></p>
+
+<p>Check out a branch <code class="highlighter-rouge">items-index-view-your-NAME</code>.</p>
+
+<ol>
+  <li>Generate an <code class="highlighter-rouge">item</code> model, migrate, and commit.</li>
+  <li>Push the branch to GitHub and open a WIP pull request.</li>
+  <li>Add a route for the items index. Make an items_controller with an index action and commit. Push to your branch.</li>
+  <li>Make an index view for the items and commit. Push to your branch.</li>
+  <li>Check to make sure everything is working properly by making a few items in the rails console, then start up the server and navigate to <code class="highlighter-rouge">/items</code>. If you need to make any changes, do that and commit. Push to your branch.</li>
+  <li>Squash the commits you made into one commit. Make sure to use proper commit message format (subject line + description). Push to your branch.</li>
+  <li>Remove “[WIP]” from your pull request.</li>
+  <li>Take a look at one other person’s pull request and make comments on it.</li>
+</ol>
+
+<h3 id="takeaways">Takeaways</h3>
+
+<p>What did you learn that you didn’t already know?</p>
+
+<h3 id="other-resources">Other resources:</h3>
+
+<ul>
+  <li><a href="https://www.atlassian.com/git/tutorials/merging-vs-rebasing/">Here</a> is a great tutorial about the details of rebaseing vs merging.</li>
+  <li><a href="https://medium.freecodecamp.com/git-rebase-and-the-golden-rule-explained-70715eccc372#.3nkd2p6c8">This post is about the golden rule of rebaseing</a></li>
+</ul>
+:ET

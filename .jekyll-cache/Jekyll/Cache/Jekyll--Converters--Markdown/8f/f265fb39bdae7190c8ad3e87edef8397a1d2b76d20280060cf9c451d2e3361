@@ -1,0 +1,189 @@
+I"� <h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>discuss a variety of options for large scale data storage</li>
+  <li>explain what is an ORM and why is it useful?</li>
+  <li>evaluate pros/cons of strategies for navigating your data structure</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+<p>5 min - Warm Up<br />
+10 min - Some Data Storage Options<br />
+15 min - ORM<br />
+5 min - Break<br />
+20 min - Navigating Your Data Structure<br />
+5 min - Wrap Up</p>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Comma Separated Values (CSV)</li>
+  <li>Object Relational Map (ORM)</li>
+  <li>Ruby Object</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>What do you know about large scale data storage?</li>
+  <li>How have you stored data in your previous Ruby programs?</li>
+</ul>
+
+<h2 id="some-data-storage-options">Some Data Storage Options</h2>
+<h4 id="hashes">Hashes</h4>
+<p>It might be stored as a mix of hashes and arrays such as:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"teachers" =&gt; [{id: 2, first_name: "Ali", last_name: "Schlereth", module: 1},  
+                {id: 5, first_name: "Mike", last_name: "Dao", module: 1},  
+                {id: 1, first_name: "Sal", last_name: "Espinosa", module: 1},  
+                {id: 6, first_name: "Lauren", last_name: "Fazah", module: 2}]
+}
+</code></pre></div></div>
+
+<h4 id="csv-comma-separated-values">CSV Comma Separated Values</h4>
+<p>It might be in a CSV where information is organized using commas such as:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id,first_name,last_name,module  
+ 2,Ali,Schlereth,1  
+ 5,Mike,Dao,1  
+ 1,Sal,Espinosa,1  
+ 6,Lauren,Fazah,2
+</code></pre></div></div>
+
+<h4 id="relational-database-w-tables">Relational Database (w/ tables)</h4>
+<p>It might be in a Relational Database which uses tables such as:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>| Teachers|  
+----------
+|id | first_name | last_name | module |  
+ 2    Ali          Schlereth   1  
+ 5    Mike         Dao         1  
+ 1    Sal          Espinosa    1  
+ 6    Lauren       Fazah       2
+</code></pre></div></div>
+
+<h4 id="array-of-ruby-objects">Array of Ruby Objects</h4>
+<p>It might be an array of Ruby Objects such as:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[#&lt;Teacher:0x007fc543b7ca90 @first_name="Ali", @id=2, @last_name="Schlereth", @mod=1&gt;,  
+ #&lt;Teacher:0x007fc544540590 @first_name="Mike", @id=5, @last_name="Dao", @mod=1&gt;,  
+ #&lt;Teacher:0x007fc544661758 @first_name="Sal", @id=1, @last_name="Espinosa", @mod=1&gt;,  
+ #&lt;Teacher:0x007fc54479b6a0 @first_name="Lauren", @id=6, @last_name="Fazah", @mod=2&gt;]  
+</code></pre></div></div>
+
+<h3 id="independent-practice">Independent Practice</h3>
+<p>Write the Ruby code that you would use to make these Teacher objects.</p>
+
+<h4 id="turn--talk">Turn &amp; Talk</h4>
+<p>Consider the scenario where some data comes from one type of data structure while other information comes from another data structure. How would that impact your application? What are some thoughts on how to make it easier for your application to navigate this different information?</p>
+
+<h2 id="orm">ORM</h2>
+<h3 id="what-is-orm">What is ORM</h3>
+
+<p>Object Relational Mapping (ORM) is a technique for managing and interacting with data that come from incompatible data sources. Sometimes referred to as “<em>an</em>” ORM, thus “Object Relational Mapper.”</p>
+
+<h3 id="where-youre-likely-to-see-orm">Where You’re Likely to See ORM</h3>
+
+<p>Rails applications use an ORM framework called Active Record to manage this mapping process. Once your applications incorporate the use of formal databases, frameworks like Active Record allow you to dictate the loading of data into your system using (in this case) Ruby objects. We refer to Active Record as an Object Relational Mapper. The details of how you get your Ruby class to map to the database and what’s in that Ruby class will depend on what ORM you’re using.</p>
+
+<p>A Ruby Object like Item would align with a corresponding database table. In Rails, we will call these classes “models.”
+Active Record Model:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Item
+  def initialize(id, name, description, unit_price, created_at, updated_at, merchant_id)
+    @id = id
+    @name = name
+    @description = description
+    @unit_price = unit_price
+    @created_at = created_at
+    @updated_at = updated_at
+    @merchant_id = merchant_id
+  end
+end
+</code></pre></div></div>
+<p>Relational Database Table:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>| Items |  
+---------
+| id | name | description | unit_price | created_at | updated_at | merchant_id |
+</code></pre></div></div>
+<p>Or, the same table headers organized differently</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Items</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>id</td>
+    </tr>
+    <tr>
+      <td>name</td>
+    </tr>
+    <tr>
+      <td>description</td>
+    </tr>
+    <tr>
+      <td>unit_price</td>
+    </tr>
+    <tr>
+      <td>created_at</td>
+    </tr>
+    <tr>
+      <td>updated_at</td>
+    </tr>
+    <tr>
+      <td>merchant_id</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In Rails applications, the process for defining new tables and models is slightly different than is called for in simple Ruby applications, but the underlying concept of using objects to organize and interact with data persists.</p>
+
+<h3 id="independent-practice-1">Independent Practice</h3>
+<p>In your notebook, write a pro/con table for using an ORM.</p>
+
+<h4 id="advantages">Advantages</h4>
+
+<ul>
+  <li>Allows you to extract data from disparate sources and interact with using consistent tactics (OOP).</li>
+  <li>Wraps data from disparate sources in one consistent object model, objects are easy to deal with</li>
+  <li>Maintenance: if/when your data source changes, you only need to make updates in one location</li>
+</ul>
+
+<p>** break **</p>
+
+<h2 id="navigating-your-data-structure">Navigating Your Data Structure</h2>
+<p>In an ORM we might need to get something like <code class="highlighter-rouge">Merchant.all</code> which returns to us an array of merchant objects.</p>
+<ul>
+  <li>Where would this live? Why?</li>
+</ul>
+
+<p>You might also need to find all the items that belong to a merchant.<br />
+Let’s pause and take a moment to draw out how our classes relate to one another:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                          SalesEngine 
+       _______________________|____________________________
+       |             |                 |                  |
+  MerchantRepo   ItemRepo       InvoiceItemsRepo     InvoicesRepo
+       |            |                  |                  | 
+   Merchant       Item            InvoiceItem          Invoice
+
+</code></pre></div></div>
+<h4 id="turn--talk-1">Turn &amp; Talk</h4>
+<p>If we need to know about all the items for a merchant, <code class="highlighter-rouge">merchant.items</code> which returns to us an array of item objects, what are some options for how to create these relationships? How can a merchant know about its items?</p>
+
+<h4 id="common-strategies">Common Strategies:</h4>
+<ul>
+  <li>Horizontal Knowledge</li>
+  <li>Vertical Knowledge</li>
+</ul>
+
+<p><strong>Share &amp; Record</strong></p>
+<ul>
+  <li>What are some of the pros/cons of each of these strategies?</li>
+  <li>How does SRP(Single Responsiblity Principle) impact this list?</li>
+  <li>What happens to our code base once we add on each new thing?  How will the diagram be impacted when we add customer            information into the mix?</li>
+  <li>What happens if the structure/attributes of an Invoice changes? How will that impact each relationship strategy?</li>
+</ul>
+
+<h2 id="wrap-up">Wrap Up</h2>
+<ul>
+  <li>What is an ORM, where might you use one?</li>
+  <li>What are some types of large scale data storage? What are some pros/cons of each? When would you want to use each?</li>
+  <li>Which method of data storage do you think will be the most useful in a Ruby Application? Why?</li>
+  <li>What are the costs/benefits of traversing vertically verses auto-loading? Which do you think you’d prefer to use in your project?</li>
+</ul>
+:ET

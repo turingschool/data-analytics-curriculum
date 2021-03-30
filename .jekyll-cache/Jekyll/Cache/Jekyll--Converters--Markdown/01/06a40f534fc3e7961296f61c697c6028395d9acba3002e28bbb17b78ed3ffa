@@ -1,0 +1,84 @@
+I"Y<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>letsencrypt
+letsencrypt certonly <span class="nt">--manual</span>
+<span class="c"># Enter your email</span>
+<span class="c"># Accept terms</span>
+<span class="c"># Enter 'localhost' as the domain</span>
+<span class="c"># Say 'No' to re-entering domain names</span>
+</code></pre></div></div>
+
+<h3 id="lets-encrypt-on-wordpress-on-digital-ocean">Let’s Encrypt on Wordpress on digital ocean</h3>
+
+<ol>
+  <li>Buy a domain</li>
+  <li>Create DO account</li>
+  <li>Add SSH key</li>
+  <li>Create wordpress container</li>
+  <li>Point domain to docker container</li>
+  <li>Log in via SSH</li>
+  <li>Basic set up of wordpress</li>
+  <li>clone letsencrypt</li>
+  <li>Run letsencrypt</li>
+  <li>Enter your domain name</li>
+  <li>Go to wordpress admin and change site url to https</li>
+</ol>
+
+<h2 id="lets-encrypt-in-rails-on-digital-ocean">Let’s Encrypt in Rails on digital ocean</h2>
+
+<ol>
+  <li>Create a Ruby on Rails droplet</li>
+  <li>Needs to be 2GB</li>
+  <li>Name it</li>
+  <li>Put your SSH key there</li>
+  <li>Point a subdomain to your droplet</li>
+  <li>SSH into your droplet</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh root@<span class="o">{</span>IP_YOU_GOT_FROM_DIGITAL_OCEAN<span class="o">}</span>
+<span class="nv">$ </span>git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+<span class="nv">$ </span><span class="nb">cd</span> /opt/letsencrypt
+<span class="nv">$ </span>./letsencrypt <span class="nt">--nginx</span>
+<span class="nv">$ </span>/root/.local/share/letsencrypt/bin/pip <span class="nb">install</span> <span class="nt">-U</span> letsencrypt-nginx
+</code></pre></div></div>
+
+<ol>
+  <li>Continue through the warning</li>
+  <li>Enter your full domain with subdomain</li>
+  <li>Enter your email address</li>
+  <li>Agree to the terms</li>
+  <li>Choose Easy</li>
+  <li>Go to your subdomain</li>
+  <li>Now go to your subdomain with https:// at the front</li>
+</ol>
+
+<h2 id="getting-your-code-to-run-on-this-server">Getting your code to run on this server</h2>
+
+<h3 id="changes-to-your-codebase">Changes to your codebase</h3>
+
+<ol>
+  <li>Add <code class="highlighter-rouge">unicorn</code> to your gemfile</li>
+</ol>
+
+<h3 id="changes-to-your-server-config">Changes to your server config</h3>
+
+<ol>
+  <li>Copy the server section from <code class="highlighter-rouge">ngnix.conf</code>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+     server_name letsencrypt.neight.co;
+     listen 443 ssl;
+     ssl_certificate /etc/letsencrypt/live/letsencrypt.neight.co/fullchain.pem;
+     ssl_certificate_key /etc/letsencrypt/live/letsencrypt.neight.co/privkey.pem;
+     include /etc/letsencrypt/options-ssl-nginx.conf;
+     ssl_trusted_certificate /etc/letsencrypt/live/letsencrypt.neight.co/chain.pem;
+     ssl_stapling on;
+     ssl_stapling_verify on;
+ }
+</code></pre></div>    </div>
+  </li>
+  <li>Paste it at the bottom of <code class="highlighter-rouge">sites-available/rails</code>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano sites-available/rails
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>https://www.ssllabs.com/ssltest/analyze.html?d=letsencrypt.neight.co</p>
+:ET

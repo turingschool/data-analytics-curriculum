@@ -1,0 +1,210 @@
+I"[^<p>The <code class="highlighter-rouge">EventEmitter</code> library is built in to Node.js, so there is no need to install anything via npm. We can simply require it like anything else in the standard library.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">EventEmitter</code> is a constructor and we can use it for create objects that can—umm—emit events.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventEmitter</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">e</code> is now an object with some special properties. If we took a look at it in the Node console, we’d see the following:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">EventEmitter</span> <span class="p">{</span>
+  <span class="nl">domain</span><span class="p">:</span>
+   <span class="nx">Domain</span> <span class="p">{</span>
+     <span class="nl">domain</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+     <span class="nx">_events</span><span class="p">:</span> <span class="p">{</span> <span class="nl">error</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">]</span> <span class="p">},</span>
+     <span class="nx">_eventsCount</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+     <span class="nx">_maxListeners</span><span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
+     <span class="nx">members</span><span class="p">:</span> <span class="p">[]</span> <span class="p">},</span>
+  <span class="nx">_events</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="nx">_eventsCount</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nx">_maxListeners</span><span class="p">:</span> <span class="kc">undefined</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>There is not much to see here. Remember, prefixing property names with underscores is—in many programming languages—a convention for letting the user know that the property is for internal use only and should be blissfully ignored.</p>
+
+<p>We know from our previous studies that all of our <code class="highlighter-rouge">EventEmitter</code> instances inherit from <code class="highlighter-rouge">EventEmitter.prototype</code>—and that’s where the interesting things hang out. Below is an example of what we’ll get if we log <code class="highlighter-rouge">EventEmitter.prototype</code> to the Node console.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">EventEmitter</span> <span class="p">{</span>
+  <span class="nl">domain</span><span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
+  <span class="nx">_events</span><span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
+  <span class="nx">_maxListeners</span><span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
+  <span class="nx">setMaxListeners</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">setMaxListeners</span><span class="p">],</span>
+  <span class="nx">getMaxListeners</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">getMaxListeners</span><span class="p">],</span>
+  <span class="nx">emit</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">emit</span><span class="p">],</span>
+  <span class="nx">addListener</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">addListener</span><span class="p">],</span>
+  <span class="nx">on</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">addListener</span><span class="p">],</span>
+  <span class="nx">once</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">once</span><span class="p">],</span>
+  <span class="nx">removeListener</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">removeListener</span><span class="p">],</span>
+  <span class="nx">removeAllListeners</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">removeAllListeners</span><span class="p">],</span>
+  <span class="nx">listeners</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">listeners</span><span class="p">],</span>
+  <span class="nx">listenerCount</span><span class="p">:</span> <span class="p">[</span><span class="nb">Function</span><span class="p">:</span> <span class="nx">listenerCount</span><span class="p">]</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>A few methods should jump out at us from our client-side experience with the browser and jQuery APIs. The first pair we should recognize is <code class="highlighter-rouge">on</code> and <code class="highlighter-rouge">addListener</code>, which are aliased to eachother and are non-surprisingly similar to <code class="highlighter-rouge">on</code> and <code class="highlighter-rouge">addEventListener</code> in jQuery and the browser, respectively.</p>
+
+<p><code class="highlighter-rouge">on</code> and <code class="highlighter-rouge">addListener</code> allow us to add event listeners to our little <code class="highlighter-rouge">EventEmitter</code> instance we created earlier. Let’s take a closer look:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventEmitter</span><span class="p">();</span>
+
+<span class="nx">e</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">someEvent</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">A "someEvent" event was fired.</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">someEvent</code> could literally be anything you’d like. It could be <code class="highlighter-rouge">blockDropped</code> in your Game Time application or some other lifecycle event. In the browser, events are firing all the time and we’re used to just listening for the built-in events like <code class="highlighter-rouge">click</code>, <code class="highlighter-rouge">mousemove</code>, <code class="highlighter-rouge">dblclick</code>, <code class="highlighter-rouge">mouseenter</code>, and <code class="highlighter-rouge">mouseleave</code> to fire. With <code class="highlighter-rouge">EventEmitter</code> we can not only listen for events, but we can also fire them as well.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventEmitter</span><span class="p">();</span>
+
+<span class="nx">e</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">someEvent</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">A "someEvent" event was fired.</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">});</span>
+
+<span class="nx">e</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">someEvent</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>When we emit an event, any listeners on that event will fire.</p>
+
+<p>There are a few more methods that are variations on a theme:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">once</code> is like <code class="highlighter-rouge">on</code> but it will only fire once.</li>
+  <li><code class="highlighter-rouge">removeListener</code> will remove a listen for a given event. But, like <code class="highlighter-rouge">setInterval</code>, you’ll need a reference to the event you want to remove. In order to do this, it’s helpful to store your event callback in a variable or use a named function when you add the listener in order to refer to it later when you want to remove it.</li>
+  <li><code class="highlighter-rouge">removeAllListeners</code> is the nuclear version of <code class="highlighter-rouge">removeListener</code>. It will remove all the listeners for a given event. This should be used with caution, because you could potentially remove listeners you didn’t add and break other parts of the code base.</li>
+  <li><code class="highlighter-rouge">setMaxListeners</code> and <code class="highlighter-rouge">setMaxListeners</code> are pretty straight forward. By default, <code class="highlighter-rouge">EventEmitter</code> instances will max out at 10 listeners, you’re welcome to change that if you need more.</li>
+  <li><code class="highlighter-rouge">listeners</code> returns a copy of the array of listeners for the specified event.</li>
+  <li><code class="highlighter-rouge">listenerCount</code> returns the number of listeners for a given event.</li>
+</ul>
+
+<h3 id="inheriting-from-eventemitter">Inheriting from EventEmitter</h3>
+
+<p><code class="highlighter-rouge">EventEmitter</code> is used all over the place in Node. It’s the foundation of the Node’s Streams API as well as many of the filesystem events. As we discussed earlier in the module. Most of the time, what we think of asynchronous code is really just event-driven code. The callback that we hand a given function is invoked when some kind of completion event fires. So, it makes sense that we would want to and be able to inherit from <code class="highlighter-rouge">EventEmitter</code> in our own code.</p>
+
+<p>In order to inherit from <code class="highlighter-rouge">EventEmitter</code>, we need to do two things.</p>
+
+<ol>
+  <li>Set up the prototype chain so that <code class="highlighter-rouge">EventEmitter.prototype</code> sits one step up from the prototype function of our custom constructor function.</li>
+  <li>Call the <code class="highlighter-rouge">EventEmitter</code> constructor function as part of our custom constructor function.</li>
+</ol>
+
+<p>Let’s take a look at how to do this using traditional constructor functions from ES5 and earlier as well as using ES6 classes.</p>
+
+<h4 id="using-es5-and-earlier">Using ES5 and Earlier</h4>
+
+<p>Let’s start by saying that we’re creating some kind of <code class="highlighter-rouge">Block</code> object.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Block</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">moveDown</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s start with Step One: Setting up the inheritence chain so that our our block instances inherit all of the lovely methods from <code class="highlighter-rouge">EventEmitter.prototype</code>. You can do this by hand pretty easily, but it’s a little tedious.</p>
+
+<p>Setting up inheritance is common enough that Node has an <code class="highlighter-rouge">inherits</code> method in it’s <code class="highlighter-rouge">util</code> library for doing this super simply.</p>
+
+<p>The syntax looks like this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">util</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">util</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="kd">constructor</span><span class="p">,</span> <span class="nx">superConstructor</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>If this is still a mystery to you, it might be helpful to look at the implementation in <a href="https://github.com/nodejs/node/blob/master/lib/util.js#L734-L781">Node’s source code</a>.</p>
+
+<p>So, now let’s implement that in the context of our <code class="highlighter-rouge">Block</code> constructor.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">util</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">util</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">Block</span><span class="p">,</span> <span class="nx">EventEmitter</span><span class="p">);</span>
+
+<span class="nx">Block</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">moveDown</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>A block instance will inherit from <code class="highlighter-rouge">Block.prototype</code>, which will inherit from <code class="highlighter-rouge">Event.prototype</code>, which will—as an extra bonus—be stored in the <code class="highlighter-rouge">Block.prototype.super_</code> property if you ever need to get your hands on it.</p>
+
+<p>The second step is that we have to call <code class="highlighter-rouge">EventEmitter</code>’s constructor, which does some important setup.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">util</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">EventEmitter</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// &lt;--</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">util</span><span class="p">.</span><span class="nx">inherits</span><span class="p">(</span><span class="nx">Block</span><span class="p">,</span> <span class="nx">EventEmitter</span><span class="p">);</span>
+
+<span class="nx">Block</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">moveDown</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>(Again, if you’re curious about what’s happening here, I totally encourage you to <a href="https://github.com/nodejs/node/blob/master/lib/events.js#L23-L39">check out the source code</a>.)</p>
+
+<p>Now, our regular block instance has all of the super powers of an <code class="highlighter-rouge">EventEmitter</code> along with all of the all of the custom functionality we will eventually go on to define in <code class="highlighter-rouge">Block.prototype</code>.</p>
+
+<h4 id="a-second-apporach-with-javascript-classes">A Second Apporach with JavaScript Classes</h4>
+
+<p>The ES5 version is pretty solid and probably the correct choice for you at the time of this writing, but this whole topic does open up a good opportunity to talk about how inheritance works using classes in JavaScript.</p>
+
+<p><strong>Important Reminder</strong>: Classes in JavaScript are just syntantic sugar over the traditional constructor pattern we discussed above.</p>
+
+<p>First let’s start with our basic <code class="highlighter-rouge">Block</code> class refactored to use classes.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Block</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">moveDown</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="o">++</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So, if you remember from last time, the first thing we need to do is to make sure our <code class="highlighter-rouge">Block</code> class inherits from <code class="highlighter-rouge">EventEmitter</code>. This is pretty simple an doesn’t require any special utilities.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nx">Block</span> <span class="kd">extends</span> <span class="nx">EventEmitter</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">moveDown</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="o">++</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Finally, we need to call <code class="highlighter-rouge">EventEmitter</code>’s constructor. This, again, is pretty straightforward.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">EventEmitter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">events</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">class</span> <span class="nx">Block</span> <span class="kd">extends</span> <span class="nx">EventEmitter</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">();</span> <span class="c1">// &lt;--</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">moveDown</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">y</span><span class="o">++</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>And, that’s it. We’ve inherited from <code class="highlighter-rouge">EventEmitter</code>.</p>
+:ET

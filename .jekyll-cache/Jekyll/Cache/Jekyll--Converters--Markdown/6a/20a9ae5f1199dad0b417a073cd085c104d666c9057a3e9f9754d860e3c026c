@@ -1,0 +1,559 @@
+I"қ<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand how an internal API at a conceptual level</li>
+  <li>Use controller tests to cover an internal API</li>
+  <li>Feel comfortable writing controller tests that deal with different HTTP verbs (GET, POST, PUT, DELETE)</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<h3 id="block-1-25-minutes">Block 1: 25 minutes</h3>
+
+<ul>
+  <li>5  - Conceptual discussion</li>
+  <li>10 - Intro to Fixtures</li>
+  <li>5  - Application setup</li>
+  <li>5  - Break</li>
+</ul>
+
+<h3 id="block-2-35-minutes">Block 2: 35 minutes</h3>
+
+<ul>
+  <li>10 - Implement the #index controller test</li>
+  <li>5  - Implement the #index API endpoint</li>
+  <li>10 - Workshop 1: Implementing the #show controller test</li>
+  <li>5  - Demo: How to implement the #show controller test</li>
+  <li>5  - Break</li>
+</ul>
+
+<h3 id="block-3-30-minutes">Block 3: 30 minutes</h3>
+
+<ul>
+  <li>5  - Implement the #create controller test</li>
+  <li>5  - Implement the #create API endpoint</li>
+  <li>10 - Workshop 2: Implementing the #update controller test</li>
+  <li>5  - Demo: How to implement the #update controller test</li>
+  <li>5  - Recap</li>
+</ul>
+
+<h2 id="fixtures-mini-lesson">Fixtures mini-lesson</h2>
+
+<h3 id="why-fixtures">Why fixtures?</h3>
+
+<p>You’ve got to create dummy data anyway. Why not use a standard, readable language like YAML, and built in testing features to do it.</p>
+
+<blockquote>
+  <p>You got it already. Don’t have to make a new one! -Dr. Steve Brule</p>
+</blockquote>
+
+<h3 id="yaml-files">YAML files</h3>
+
+<p>Fixtures are defined in YAML. YAML (Yet another markup language) is a format for storing simple nested key-value pairs. It’s just text, like JSON, but also like JSON, parsers exist in many languages</p>
+
+<p>Consider this hash:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="ss">rubyonrails: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s2">"Ruby on Rails"</span><span class="p">,</span>
+    <span class="ss">url: </span><span class="s2">"http://www.rubyonrails.org"</span>
+  <span class="p">},</span>
+  <span class="ss">google: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s2">"Google"</span><span class="p">,</span>
+    <span class="ss">url: </span><span class="s2">"http://www.google.com"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The same structure can be defined in YAML:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">rubyonrails</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Ruby on Rails</span>
+  <span class="na">url</span><span class="pi">:</span> <span class="s">http://www.rubyonrails.org</span>
+
+<span class="na">google</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Google</span>
+  <span class="na">url</span><span class="pi">:</span> <span class="s">http://www.google.com</span>
+</code></pre></div></div>
+
+<p>In YAML, <strong><em>Whitespace Matters</em></strong>. You don’t use curly braces to define the beginning and end of a hash or object. You simply tab in one level, and YAML interprets that as a nested object.</p>
+
+<h3 id="using-fixtures-in-your-tests">Using fixtures in your tests</h3>
+
+<p>Let’s pretend the YAML example above is in <code class="highlighter-rouge">test/fixtures/websites.yml</code>. When you tests start up, two records will be added as <code class="highlighter-rouge">Website</code> objects.</p>
+
+<p>You might be used to retrieving records in your test with something like <code class="highlighter-rouge">website = Website.find(1)</code>. In the interest of keeping things random, records from fixtures are given random ids. So you can’t count on the first one having an <code class="highlighter-rouge">id</code> of <code class="highlighter-rouge">1</code>, and you can’t even count on the first one being <code class="highlighter-rouge">.first</code>.</p>
+
+<p>To get a record from a fixture, use the syntax <code class="highlighter-rouge">website = websites(:google)</code>. Whatever the lowercase plural version of your model name is, and then pass it a symbol that you defined in your YAML file.</p>
+
+<h3 id="id-based-relationships-in-fixtures">Id based relationships in Fixtures</h3>
+
+<p>Let’s say we wanted to add a <code class="highlighter-rouge">Category</code> model, and add a <code class="highlighter-rouge">belongs_to :category</code> to our <code class="highlighter-rouge">Website</code> model. We would need to define some <code class="highlighter-rouge">Category</code> fixtures:</p>
+
+<p><strong>categories.yml</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">development</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">development</span>
+
+<span class="na">search</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">search</span>
+</code></pre></div></div>
+
+<p>If we want to modify our <code class="highlighter-rouge">Website</code> fixtures to include a category, we would need to know the id of category to use in our <code class="highlighter-rouge">websites.yml</code> file. Since fixtures sets random ids each time you run your tests, we can hard code the ids like so:</p>
+
+<p><strong>categories.yml</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">development</span><span class="pi">:</span>
+  <span class="na">id</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">development</span>
+
+<span class="na">search</span><span class="pi">:</span>
+  <span class="na">id</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">search</span>
+</code></pre></div></div>
+
+<p>This enables you to add related <code class="highlighter-rouge">Category</code> records to your <code class="highlighter-rouge">Website</code> fixtures:</p>
+
+<p><strong>websites.yml</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">rubyonrails</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Ruby on Rails</span>
+  <span class="na">url</span><span class="pi">:</span> <span class="s">http://www.rubyonrails.org</span>
+  <span class="na">category_id</span><span class="pi">:</span> <span class="m">1</span>
+
+<span class="na">google</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Google</span>
+  <span class="na">url</span><span class="pi">:</span> <span class="s">http://www.google.com</span>
+  <span class="na">category_id</span><span class="pi">:</span> <span class="m">2</span>
+</code></pre></div></div>
+
+<p>Now when you use <code class="highlighter-rouge">Website</code> fixtures in your tests, they will have a related <code class="highlighter-rouge">Category</code> record from the fixtures.</p>
+
+<p>There’s a couple disadvantages here.</p>
+
+<ol>
+  <li>We’ve lost our randomness that we like to have in our tests</li>
+  <li>When you’re looking at <code class="highlighter-rouge">websites.yml</code>, how do you remember which category has which id, especially when you have a lot of categories.</li>
+</ol>
+
+<h3 id="key-based-relationships-in-fixtures">Key based relationships in Fixtures</h3>
+
+<p>When you use fixtures in your test, you refer to the key you defined in your YAML file, e.g. <code class="highlighter-rouge">websites(:rubyonrails)</code>. You can use that same key when defining relationships. Let’s modify the YAML files from above.</p>
+
+<p><strong>categories.yml</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">development</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">development</span>
+
+<span class="na">search</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">search</span>
+</code></pre></div></div>
+
+<p><strong>websites.yml</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">rubyonrails</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Ruby on Rails</span>
+  <span class="na">url</span><span class="pi">:</span> <span class="s">http://www.rubyonrails.org</span>
+  <span class="na">category</span><span class="pi">:</span> <span class="s">development</span>
+
+<span class="na">google</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Google</span>
+  <span class="na">url</span><span class="pi">:</span> <span class="s">http://www.google.com</span>
+  <span class="na">category</span><span class="pi">:</span> <span class="s">search</span>
+</code></pre></div></div>
+
+<p>Now we get to keep our random id’s, we know which category a website is just by looking at the fixtures, and our <code class="highlighter-rouge">categories.yml</code> file is a little bit smaller.</p>
+
+<h2 id="workshops">Workshops</h2>
+
+<h3 id="workshop-1-implementing-the-show-controller-test">Workshop 1: Implementing the #show controller test</h3>
+
+<ul>
+  <li>Can you implement a controller test that sends a request to the show action in the items controller?</li>
+  <li>You need to make sure that the response is successful.</li>
+  <li>You also need to make sure that the contents that you are expecting are there.</li>
+</ul>
+
+<h3 id="workshop-2-implementing-the-update-controller-test">Workshop 2: Implementing the #update controller test</h3>
+
+<ul>
+  <li>Can you implement a controller test that sends a request to the update action in the items controller?</li>
+  <li>You need to make sure that the response is successful.</li>
+  <li>You also need to make sure that the contents that you are expecting are there.</li>
+</ul>
+
+<h2 id="procedure">Procedure</h2>
+
+<h3 id="0-setup">0. Setup</h3>
+
+<p>Let’s start by creating a new Rails project.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails _5.0_ new testing_internal_apis <span class="nt">-d</span> postgresql <span class="nt">--api</span>
+<span class="nv">$ </span><span class="nb">cd </span>testing_internal_apis
+<span class="nv">$ </span>bundle
+<span class="nv">$ </span>bundle <span class="nb">exec </span>rake db:create
+</code></pre></div></div>
+
+<p>Add <code class="highlighter-rouge">require 'minitest/pride'</code> to your test_helper because colors make it more fun to test.</p>
+
+<p><strong>test/test_helper.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ENV</span><span class="p">[</span><span class="s1">'RAILS_ENV'</span><span class="p">]</span> <span class="o">||=</span> <span class="s1">'test'</span>
+<span class="nb">require</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s1">'../../config/environment'</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">'rails/test_help'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+
+<span class="k">class</span> <span class="nc">ActiveSupport::TestCase</span>
+  <span class="c1"># Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.</span>
+  <span class="n">fixtures</span> <span class="ss">:all</span>
+
+  <span class="c1"># Add more helper methods to be used by all tests here...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="1-create-item-model-and-item-controller">1. Create Item model and Item controller</h3>
+
+<p>Our goal is to implement a controller test that sends a request to the show action in the items controller. To do this, we need some items.</p>
+
+<p>Let’s generate a model.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails g model Item name description:text
+<span class="nv">$ </span>bundle <span class="nb">exec </span>rake db:migrate
+<span class="o">==</span> 20160229180616 CreateItems: migrating <span class="o">======================================</span>
+<span class="nt">--</span> create_table<span class="o">(</span>:items<span class="o">)</span>
+   -&gt; 0.0412s
+<span class="o">==</span> 20160229180616 CreateItems: migrated <span class="o">(</span>0.0413s<span class="o">)</span> <span class="o">=============================</span>
+</code></pre></div></div>
+
+<p>And let’s fill in our Item fixture</p>
+
+<p><strong>test/fixtures/items.yml</strong></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">one</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Hammer</span>
+  <span class="na">description</span><span class="pi">:</span> <span class="s">When it is this time, you stop.</span>
+
+<span class="na">two</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">Screwdriver</span>
+  <span class="na">description</span><span class="pi">:</span> <span class="s">Not just for breakfast anymore.</span>
+
+</code></pre></div></div>
+
+<p>Our model wouldn’t be very helpful without a related controller:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> <span class="nt">-p</span> app/controllers/api/v1
+<span class="nv">$ </span><span class="nb">touch </span>app/controllers/api/v1/items_controller.rb
+</code></pre></div></div>
+
+<p>Note that we are namespacing the controller under <code class="highlighter-rouge">api/v1</code>.</p>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Api::V1::ItemsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="2-implement-apiv1itemscontrollerindex">2. Implement Api::V1::ItemsController#index</h3>
+
+<p>Since we didn’t generate the controller, we need to create the structure of the test folders ourselves.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nb">test</span>/controllers/api/v1
+<span class="nv">$ </span><span class="nb">touch test</span>/controllers/api/v1/items_controller_test.rb
+</code></pre></div></div>
+
+<p>Great! Now we can start test driving our code. First, let’s set up the test file.</p>
+
+<p>On the first line of the test we are making the request. We want a <code class="highlighter-rouge">get</code> request to <code class="highlighter-rouge">api/v1/items</code> and we would like to get json back. At the end of the test we are asserting that the response was a success.</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'test_helper'</span>
+
+<span class="k">class</span> <span class="nc">Api::V1::ItemsControllerTest</span> <span class="o">&lt;</span> <span class="no">ActionDispatch</span><span class="o">::</span><span class="no">IntegrationTest</span>
+  <span class="nb">test</span> <span class="s2">"can get all items in index"</span> <span class="k">do</span>
+    <span class="n">get</span> <span class="s2">"/api/v1/items"</span>
+
+    <span class="n">assert_response</span> <span class="ss">:success</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s make the test pass!</p>
+
+<p>First, the test tells us that we don’t have a matching route. <code class="highlighter-rouge">ActionController::RoutingError: No route matches [GET] "/api/v1/items"</code>. Add the namespaced routes:</p>
+
+<p><strong>config/routes.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">namespace</span> <span class="ss">:api</span> <span class="k">do</span>
+    <span class="n">namespace</span> <span class="ss">:v1</span> <span class="k">do</span>
+      <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:index</span><span class="p">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Also, add the action in the controller:</p>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Api::V1::ItemsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Great! We are successfully getting a response. But we aren’t actually getting any data. Without any data or templates, Rails 5 API will respond with <code class="highlighter-rouge">Status 204 No Content</code>. Since it’s a <code class="highlighter-rouge">2xx</code> status code, it is interpreted as a success.</p>
+
+<p>Now lets see if we can actually get some data.</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">test</span> <span class="s2">"can get all items in index"</span> <span class="k">do</span>
+  <span class="n">get</span> <span class="s2">"/api/v1/items"</span>
+
+  <span class="n">assert_response</span> <span class="ss">:success</span>
+
+  <span class="n">items</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When we run our tests again, we get a semi-obnoxious error of <code class="highlighter-rouge">JSON::ParserError: A JSON text must at least contain two octets!</code>. This just means that we need open and closing braces for it to actually be JSON. Either <code class="highlighter-rouge">[]</code> or <code class="highlighter-rouge">{}</code></p>
+
+<p>Well that makes sense. We aren’t actually rendering anything yet. Let’s render some JSON from our controller.</p>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Api::V1::ItemsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="n">render</span> <span class="ss">json: </span><span class="no">Item</span><span class="p">.</span><span class="nf">all</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And… our test is passing again.</p>
+
+<p>Let’s take a closer look at the response. Put a pry on line six in the test, right below where we make the request.</p>
+
+<p>If you just type <code class="highlighter-rouge">response</code> you can take a look at the entire response object. We care about the response body. If you enter <code class="highlighter-rouge">response.body</code> you can see the data that is returned from the endpoint. We are getting back two items that we never created - this is data served from fixtures. Please feel free to edit the data in the fixtures file as you see fit.</p>
+
+<p>The data we got back is json, and we need to parse it to get a Ruby object. Try entering <code class="highlighter-rouge">JSON.parse(response.body)</code>. As you see, the data looks a lot more like Ruby after we parse it. Now that we have a Ruby object, we can make assertions about it.</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">test</span> <span class="s2">"can get all items in index"</span> <span class="k">do</span>
+  <span class="n">get</span> <span class="s2">"/api/v1/items"</span>
+
+  <span class="n">assert_response</span> <span class="ss">:success</span>
+
+  <span class="n">items</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
+  <span class="n">assert_equal</span> <span class="n">items</span><span class="p">.</span><span class="nf">count</span><span class="p">,</span> <span class="mi">2</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="3-implement-itemscontrollershow-test">3. Implement ItemsController#show test</h3>
+
+<p>Now we are going to test drive the <code class="highlighter-rouge">/api/v1/items/:id</code> endpoint. From the <code class="highlighter-rouge">show</code> action, we want to return a single item.</p>
+
+<p>First, let’s write the test. As you can see, we have added a key <code class="highlighter-rouge">id</code> in the request:</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">test</span> <span class="s2">"can get one item by its id"</span> <span class="k">do</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">items</span><span class="p">(</span><span class="ss">:one</span><span class="p">).</span><span class="nf">id</span>
+
+    <span class="n">get</span> <span class="s2">"/api/v1/items/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
+
+    <span class="n">assert_response</span> <span class="ss">:success</span>
+    <span class="n">assert_equal</span> <span class="n">item</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="nb">id</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="try-to-test-drive-the-implementation-before-looking-at-the-code-below">Try to test drive the implementation before looking at the code below.</h2>
+
+<p>Run the tests and the first error we get is: <code class="highlighter-rouge">ActionController::RoutingError: No route matches [GET] "/api/v1/items/980190962"</code>, or some other similar route. Fixtures has created an id for us.</p>
+
+<p>Let’s update our routes.</p>
+
+<p><strong>config/routes.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">namespace</span> <span class="ss">:api</span> <span class="k">do</span>
+  <span class="n">namespace</span> <span class="ss">:v1</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:index</span><span class="p">,</span> <span class="ss">:show</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the tests and… <code class="highlighter-rouge">The action 'show' could not be found for Api::V1::ItemsController</code>.</p>
+
+<p>Add the action and declare what data should be returned from the endpoint:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">show</span>
+  <span class="n">render</span> <span class="ss">json: </span><span class="no">Item</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">id: </span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the tests and… we should have two passing tests.</p>
+
+<h3 id="4-implement-apiv1itemscontrollercreate">4. Implement Api::V1::ItemsController#create</h3>
+
+<p>Let’s start with the test. Since we are creating a new item, we need to pass data for the new item via the HTTP request. We can do this easily by adding the params as a key-value pair. Also note that we swapped out the <code class="highlighter-rouge">get</code> in the request for a <code class="highlighter-rouge">post</code> since we are creating data.</p>
+
+<p>Also note that we aren’t parsing the response to access the last item we created, we can simply query for the last Item record created.</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">test</span> <span class="s2">"can create a new item"</span> <span class="k">do</span>
+  <span class="n">item_params</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">name: </span><span class="s2">"Saw"</span><span class="p">,</span> <span class="ss">description: </span><span class="s2">"I want to play a game"</span> <span class="p">}</span>
+
+  <span class="n">post</span> <span class="s2">"/api/v1/items"</span><span class="p">,</span> <span class="ss">params: </span><span class="p">{</span><span class="ss">item: </span><span class="n">item_params</span><span class="p">}</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="no">Item</span><span class="p">.</span><span class="nf">last</span>
+
+  <span class="n">assert_response</span> <span class="ss">:success</span>
+  <span class="n">assert_equal</span> <span class="n">item_params</span><span class="p">[</span><span class="ss">:name</span><span class="p">],</span> <span class="n">item</span><span class="p">.</span><span class="nf">name</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>First, we need to add the route and the action.
+<strong>config/routes.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">namespace</span> <span class="ss">:api</span> <span class="k">do</span>
+  <span class="n">namespace</span> <span class="ss">:v1</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:index</span><span class="p">,</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:create</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the tests… and the test fails. It should be telling you that it was expecting “Saw” but instead got “Hammer” or “Screwdriver”, depending on the order fixtures created them. That’s because we aren’t actually creating anything yet.</p>
+
+<p>We are going to create an item with the incoming params. Let’s take advantage of all the niceties Rails gives us and use strong params.</p>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create</span>
+  <span class="n">render</span> <span class="ss">json: </span><span class="no">Item</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">item_params</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="kp">private</span>
+
+<span class="k">def</span> <span class="nf">item_params</span>
+  <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:item</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:description</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the tests and we should have 3 passing tests.</p>
+
+<h3 id="5-implement-apiv1itemscontrollerupdate">5. Implement Api::V1::ItemsController#update</h3>
+
+<p>Like before, let’s add a test.</p>
+
+<p>This test looks very similar to the previous one we wrote. Note that we aren’t making assertions about the response, instead we are accessing the item we updated from the database to make sure it actually updated the record.</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">test</span> <span class="s2">"can update an existing item"</span> <span class="k">do</span>
+  <span class="nb">id</span> <span class="o">=</span> <span class="n">items</span><span class="p">(</span><span class="ss">:one</span><span class="p">).</span><span class="nf">id</span>
+  <span class="n">previous_name</span> <span class="o">=</span> <span class="n">items</span><span class="p">(</span><span class="ss">:one</span><span class="p">).</span><span class="nf">name</span>
+  <span class="n">item_params</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">name: </span><span class="s2">"Sledge"</span> <span class="p">}</span>
+
+  <span class="n">put</span> <span class="s2">"/api/v1/items/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="ss">params: </span><span class="p">{</span><span class="ss">item: </span><span class="n">item_params</span><span class="p">}</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="no">Item</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">id: </span><span class="nb">id</span><span class="p">)</span>
+
+  <span class="n">assert_response</span> <span class="ss">:success</span>
+  <span class="n">refute_equal</span> <span class="n">previous_name</span><span class="p">,</span> <span class="n">item</span><span class="p">.</span><span class="nf">name</span>
+  <span class="n">assert_equal</span> <span class="s2">"Sledge"</span><span class="p">,</span> <span class="n">item</span><span class="p">.</span><span class="nf">name</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="try-to-test-drive-the-implementation-before-looking-at-the-code-below-1">Try to test drive the implementation before looking at the code below.</h2>
+
+<p><strong>config/routes.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">namespace</span> <span class="ss">:api</span> <span class="k">do</span>
+  <span class="n">namespace</span> <span class="ss">:v1</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:index</span><span class="p">,</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:update</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">update</span>
+  <span class="n">render</span> <span class="ss">json: </span><span class="no">Item</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">],</span> <span class="n">item_params</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="6-implement-apiv1itemscontrollerdestroy">6. Implement Api::V1::ItemsController#destroy</h3>
+
+<p>Ok, last endpoint to test and implement: destroy!</p>
+
+<p>In this test, the last line in this test is refuting the existence of the item we created at the top of this test.</p>
+
+<p><strong>test/controllers/api/v1/items_controller_test.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">test</span> <span class="s2">"can destroy an item"</span> <span class="k">do</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">(</span><span class="ss">:one</span><span class="p">)</span>
+
+  <span class="n">delete</span> <span class="s2">"/api/v1/items/</span><span class="si">#{</span><span class="n">item</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span>
+
+  <span class="n">assert_response</span> <span class="ss">:success</span>
+  <span class="n">refute</span> <span class="no">Item</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">id: </span><span class="n">item</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can also use Minitest’s <a href="http://apidock.com/rails/ActiveSupport/Testing/Assertions/assert_difference">assert_difference</a> method as an extra check. In our case, <code class="highlighter-rouge">assert_difference</code> will check that the numeric difference of <code class="highlighter-rouge">Item.count</code> before and after the block is run is <code class="highlighter-rouge">-1</code>.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">test</span> <span class="s2">"#destroy"</span> <span class="k">do</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">(</span><span class="ss">:one</span><span class="p">)</span>
+
+  <span class="n">assert_difference</span><span class="p">(</span><span class="s1">'Item.count'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">delete</span> <span class="s2">"/api/v1/items/</span><span class="si">#{</span><span class="n">item</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">end</span>
+
+  <span class="n">assert_response</span> <span class="ss">:success</span>
+  <span class="n">refute</span> <span class="no">Item</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">id: </span><span class="n">item</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="make-the-test-pass">Make the test pass.</h2>
+
+<p><strong>config/routes.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">namespace</span> <span class="ss">:api</span> <span class="k">do</span>
+  <span class="n">namespace</span> <span class="ss">:v1</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">except: </span><span class="p">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:edit</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>app/controllers/api/v1/items_controller.rb</strong></p>
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">destroy</span>
+  <span class="no">Item</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="discussion">Discussion</h2>
+
+<p>In this session, we’ll be looking at some techniques to test an API
+within our own application.</p>
+
+<h3 id="terminology">Terminology</h3>
+
+<ul>
+  <li>“Internal” API – In this context we say this to mean an API within
+our own application, i.e. an API we are <em>providing</em></li>
+  <li>This is in contrast to a “3rd party” API that we might consume from
+another entity such as twitter or instagram</li>
+  <li>Sometimes people say “internal API” to refer to an API that is reserved for
+internal use only (for example in a service-oriented architecture)</li>
+  <li>They might also have an “external” API hosted in the same application, which
+could be intended for use by other consumers outside of the organization</li>
+</ul>
+
+<h3 id="topics">Topics</h3>
+
+<ul>
+  <li>Good news – testing an API is often simpler than testing a more complicated UI involving HTML (and possibly JS)</li>
+  <li>Generally when testing an API we are able to treat it in a more “functional” way – that is, data in, data out</li>
+  <li>Controller tests can often be a good fit for this, although we can use full-blown integration/feature tests as well</li>
+  <li>What are we looking for? Given the proper inputs (query parameters, headers) our application should provide the proper data (JSON, XML, etc.)</li>
+  <li>Looking for edge cases – what about bad inputs? Bad request headers? Authentication failures?</li>
+  <li>Recall the main point about APIs – they are designed to be machine readable rather than human readable. For this reason we will often care more about response codes with an API</li>
+  <li>Proper response code handling can be very useful to automated clients, since they can use this information to take correct action in response</li>
+</ul>
+
+<h2 id="supporting-materials">Supporting Materials</h2>
+
+<ul>
+  <li><a href="https://www.dropbox.com/s/zxftnls0at2eqtc/Turing%20-%20Testing%20an%20Internal%20API%20%28Notes%29.pages?dl=0">Notes</a></li>
+  <li><a href="https://vimeo.com/129722778">Video 1502</a></li>
+  <li><a href="https://vimeo.com/126844655">Video 1412</a></li>
+</ul>
+:ET

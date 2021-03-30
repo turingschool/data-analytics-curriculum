@@ -1,0 +1,100 @@
+I"�<p><em><a href="./index">Back to FlashCards Home</a></em><br />
+<em><a href="./requirements">Back to Requirements</a></em></p>
+
+<h2 id="iteration-3">Iteration 3</h2>
+
+<h3 id="playing-the-game">Playing the Game!</h3>
+
+<p>So far we’ve focused on modeling the data, classes, and methods that make up our game. However we haven’t done much to put any kind of useable <strong>interface</strong> onto the game. In this iteration, let’s remedy this by adding a simple Command-Line-Interface (CLI) to the game.</p>
+
+<p>A few key points to keep in mind as you work on this iteration:</p>
+
+<ul>
+  <li>We’ll abandon testing for this bit – the techniques for testing this kind of input/output behavior are somewhat involved and are beyond the scope of this project</li>
+  <li>Use <code class="highlighter-rouge">puts</code> to display a line of text output to the user</li>
+  <li>Use <code class="highlighter-rouge">gets</code> to read a line of text input from the user (this will be important to allow users to enter guesses)</li>
+  <li>In this iteration we’ll introduce a new file called a “runner” – its job is to serve as the main entry point to our program by starting up a new game</li>
+</ul>
+
+<p><strong>First</strong>, create your runner file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch flashcard_runner.rb
+</code></pre></div></div>
+
+<p>Inside of this file, write the code to do the following:</p>
+
+<ul>
+  <li>Create some Cards</li>
+  <li>Put those card into a Deck</li>
+  <li>Create a new Round using the Deck you created</li>
+  <li><strong>Start</strong> the round using a new method called <code class="highlighter-rouge">start</code></li>
+</ul>
+
+<p><strong>Keep in mind</strong> that your existing objects should already contain, more or less, the data and methods needed to manage this process. Your challenge in this iteration is to build out the input/output messaging to support the user’s card experience <em>using your existing pieces to store and manage all the necessary data</em>.</p>
+
+<p>When we start the round by running <code class="highlighter-rouge">ruby flashcard_runner.rb</code>, it should produce the following interaction from the command line:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome! You're playing with 4 cards.
+-------------------------------------------------
+This is card number 1 out of 4.
+Question: What is 5 + 5?
+</code></pre></div></div>
+
+<p>Then a user will be able to type in a guess, in this case <code class="highlighter-rouge">10</code>, and hit enter to move the game play forward.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10
+Correct!
+This is card number 2 out of 4.
+Question: What is Rachel's favorite animal?
+</code></pre></div></div>
+
+<p>The game will continue until all the Cards in the Deck have had a guess made against them (until you have completed as many Turns as you have Cards in the Deck).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>panda
+Incorrect.
+This is card number 3 out of 4.
+Question: What is Mike's middle name?
+nobody knows
+Correct!
+This is card number 4 out of 4.
+Question: What cardboard cutout lives at Turing?
+Justin Bieber
+Correct!
+</code></pre></div></div>
+
+<p>When all the Turns have been made, the game will end and will present the user with a final score.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>****** Game over! ******
+You had 3 correct guesses out of 4 for a total score of 75%.
+STEM - 100% correct
+Turing Staff - 50% correct
+Pop Culture - 100% correct
+</code></pre></div></div>
+
+<p>Seen together, the CLI will look something like this when the game is over:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome! You're playing with 4 cards.
+-------------------------------------------------
+This is card number 1 out of 4.
+Question: What is 5 + 5?
+10
+Correct!
+This is card number 2 out of 4.
+Question: What is Rachel's favorite animal?
+panda
+Incorrect.
+This is card number 3 out of 4.
+Question: What is Mike's middle name?
+nobody knows
+Correct!
+This is card number 4 out of 4.
+Question: What cardboard cutout lives at Turing?
+Justin Bieber
+Correct!
+****** Game over! ******
+You had 3 correct guesses out of 4 for a total score of 75%.
+STEM - 100% correct
+Turing Staff - 50% correct
+Pop Culture - 100% correct
+</code></pre></div></div>
+:ET

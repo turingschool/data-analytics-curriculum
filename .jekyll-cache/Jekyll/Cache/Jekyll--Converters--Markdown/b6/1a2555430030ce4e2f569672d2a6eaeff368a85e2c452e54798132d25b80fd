@@ -1,0 +1,137 @@
+I"�W<h2 id="decomposing-headcount-aka-headcount-pep-talk">Decomposing Headcount aka Headcount Pep Talk</h2>
+
+<h3 id="guiding-principles">Guiding Principles:</h3>
+
+<ol>
+  <li><strong>Get feedback</strong> - includes TDD, test fixtures (speed of tests), running tests, pry,
+progress vs. feedback (not outpacing your feedback)</li>
+  <li><strong>Verify Assumptions</strong> - includes method type annotations,
+<em>tracing objects through code</em>, use <code class="highlighter-rouge">fetch</code> instead of <code class="highlighter-rouge">[]</code></li>
+  <li><strong>Pay Attention to Connections</strong> - Importance of inter-class interfaces;
+what does thing B need? Thing A should return it. Number of files/classes;
+verifying connections with tests;</li>
+</ol>
+
+<h3 id="specific-tools--techniques">Specific Tools / Techniques</h3>
+
+<p>An example test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">TestEconomicProfile</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def</span> <span class="nf">test_free_or_reduced_lunch_in_year</span>
+    <span class="n">path</span>       <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s2">"../data"</span><span class="p">,</span> <span class="n">__dir__</span><span class="p">)</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="no">DistrictRepository</span><span class="p">.</span><span class="nf">from_csv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">district</span>   <span class="o">=</span> <span class="n">repository</span><span class="p">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="s2">"ACADEMY 20"</span><span class="p">)</span>
+
+    <span class="n">assert_equal</span> <span class="mf">0.125</span><span class="p">,</span> <span class="n">district</span><span class="p">.</span><span class="nf">economic_profile</span><span class="p">.</span><span class="nf">free_or_reduced_lunch_in_year</span><span class="p">(</span><span class="mi">2012</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Why it’s good:</p>
+
+<ol>
+  <li>Putting all the pieces together</li>
+  <li><em>verifying assumptions</em> about what each method takes in
+and returns; <code class="highlighter-rouge">fetch</code> vs <code class="highlighter-rouge">[]</code> (don’t let nils percolate)</li>
+  <li>Starts from a large “sketch” and puts smaller things together</li>
+</ol>
+
+<p><strong>Other things to expect</strong></p>
+
+<p>Pattern: working with hashes and arrays:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rows</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span> <span class="p">[</span><span class="n">row</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="ss">:key</span><span class="p">),</span> <span class="n">row</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="ss">:value</span><span class="p">)]</span> <span class="p">}.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_h</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="structure--repositories-and-the-things">Structure – Repositories, and the “Things”</h3>
+
+<ul>
+  <li>analogy: Turing -&gt; students</li>
+  <li>how do the repositories relate to their respective “things”?</li>
+  <li>how is the sales engine related to the repositories?</li>
+  <li>traveling down the chain: easy</li>
+  <li>traveling up the chain: trickier, but doable</li>
+  <li>what would a “thing” need to have in order to travel up the chain?</li>
+  <li>what would a repository need to have in order to travel up the chain?</li>
+</ul>
+
+<h3 id="visual-representation-of-the-data">Visual Representation of the Data</h3>
+
+<ul>
+  <li>This <a href="http://ondras.zarovi.cz/sql/demo/">online schema designer</a> can be useful</li>
+</ul>
+
+<h3 id="exceptions">Exceptions</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">014</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">UnknownDataError</span> <span class="o">&lt;</span> <span class="no">Exception</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">015</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="k">end</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">016</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="k">raise</span> <span class="no">UnknownDataError</span>
+<span class="no">UnknownDataError</span><span class="p">:</span> <span class="no">UnknownDataError</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">01</span><span class="mi">9</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">try_to_get_thing</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">020</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="ss">a: </span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">c: </span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">021</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">h</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">022</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="k">if</span> <span class="n">value</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">023</span><span class="p">:</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">value</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">024</span><span class="p">:</span><span class="mi">2</span><span class="o">&gt;</span> <span class="k">else</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">025</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span> <span class="k">raise</span> <span class="no">UnknownDataError</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">026</span><span class="p">:</span><span class="mi">2</span><span class="o">&gt;</span> <span class="k">end</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">027</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="k">end</span>
+<span class="o">=&gt;</span> <span class="ss">:try_to_get_thing</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">02</span><span class="mi">8</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">try_to_get_thing</span><span class="p">(</span><span class="ss">:a</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="s2">"b"</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">02</span><span class="mi">9</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">try_to_get_thing</span><span class="p">(</span><span class="ss">:pizza</span><span class="p">)</span>
+<span class="no">UnknownDataError</span><span class="p">:</span> <span class="no">UnknownDataError</span>
+	<span class="n">from</span> <span class="p">(</span><span class="n">irb</span><span class="p">):</span><span class="mi">25</span><span class="ss">:in</span> <span class="sb">`try_to_get_thing'
+	from (irb):29
+	from /usr/local/var/rbenv/versions/2.1.1/bin/irb:11:in `</span><span class="o">&lt;</span><span class="n">main</span><span class="o">&gt;</span><span class="err">'</span>
+</code></pre></div></div>
+
+<p><strong>Manipulating Hashes:</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">032</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">033</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">pair</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">pair</span> <span class="p">}</span>
+<span class="n">a</span>
+<span class="n">b</span>
+<span class="n">c</span>
+<span class="n">d</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">034</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">pair</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">pair</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span>
+<span class="p">[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">]</span>
+<span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">035</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">"key: </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span> <span class="nb">puts</span> <span class="s2">"value: </span><span class="si">#{</span><span class="n">value</span><span class="si">}</span><span class="s2"> }
+irb(main):036:1"</span> <span class="p">}</span><span class="o">^</span><span class="no">C</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">036</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">"key: </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span> <span class="nb">puts</span> <span class="s2">"value: </span><span class="si">#{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
+<span class="ss">key: </span><span class="n">a</span>
+<span class="ss">value: </span><span class="n">b</span>
+<span class="ss">key: </span><span class="n">c</span>
+<span class="ss">value: </span><span class="n">d</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">037</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]]</span>
+<span class="o">=&gt;</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]]</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">03</span><span class="mi">8</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]].</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="nb">puts</span> <span class="s2">"key: </span><span class="si">#{</span><span class="n">key</span><span class="si">}</span><span class="s2">, value: </span><span class="si">#{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span> <span class="p">}</span>
+<span class="ss">key: </span><span class="n">a</span><span class="p">,</span> <span class="ss">value: </span><span class="n">b</span>
+<span class="ss">key: </span><span class="n">c</span><span class="p">,</span> <span class="ss">value: </span><span class="n">d</span>
+<span class="o">=&gt;</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]]</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">03</span><span class="mi">9</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">040</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">a</span>
+<span class="o">=&gt;</span> <span class="mi">1</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">041</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">b</span>
+<span class="o">=&gt;</span> <span class="mi">2</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">042</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">pair</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">pair</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">inspect</span> <span class="p">}</span><span class="no">Array</span>
+<span class="no">Array</span>
+<span class="o">=&gt;</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]]</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">043</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span>
+<span class="o">=&gt;</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]]</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">044</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">]].</span><span class="nf">to_h</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">045</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span> <span class="o">=</span> <span class="n">_</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"b"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"d"</span><span class="p">}</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">046</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="nf">upcase</span><span class="p">]</span> <span class="p">}</span>
+<span class="o">=&gt;</span> <span class="p">[[</span><span class="ss">:a</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">],</span> <span class="p">[</span><span class="ss">:c</span><span class="p">,</span> <span class="s2">"D"</span><span class="p">]]</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">047</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">h</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="nf">upcase</span><span class="p">]</span> <span class="p">}.</span><span class="nf">to_h</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:a</span><span class="o">=&gt;</span><span class="s2">"B"</span><span class="p">,</span> <span class="ss">:c</span><span class="o">=&gt;</span><span class="s2">"D"</span><span class="p">}</span>
+</code></pre></div></div>
+:ET

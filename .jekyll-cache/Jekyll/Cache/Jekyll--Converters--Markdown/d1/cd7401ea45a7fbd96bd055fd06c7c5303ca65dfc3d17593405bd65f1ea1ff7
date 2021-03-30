@@ -1,0 +1,76 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>access and manipulate CSS from the Chrome Developer Tools</li>
+  <li>use a <code class="highlighter-rouge">layout.erb</code> file in Sinatra for a common structure</li>
+  <li>style and position HTML elements using CSS</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>10 - Setting up a Layout in Sinatra</li>
+  <li>80 - Worktime: Styling TaskManager</li>
+  <li>30 - Wrap-up, Share Out, Reflection</li>
+</ul>
+
+<h2 id="full-group-instruction">Full-Group Instruction</h2>
+
+<h3 id="layouts-and-views-in-sinatra">Layouts and Views in Sinatra</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">views</code> folder - html/erb files</li>
+  <li><code class="highlighter-rouge">public</code> folder - css, js, images</li>
+  <li><code class="highlighter-rouge">views/layout.erb</code> will automatically render around any other <code class="highlighter-rouge">.erb</code> file that you specify to render in your route block</li>
+</ul>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"/application.css"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;title&gt;</span>My Sinatra Application<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="k">yield</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+
+</code></pre></div></div>
+
+<h2 id="styling-taskmanager">Styling TaskManager</h2>
+
+<ul>
+  <li>Center the <code class="highlighter-rouge">.container</code> div</li>
+  <li>Remove underlines from all hyperlinks</li>
+  <li>Change the style of the hyperlinks when a mouse hovers over them</li>
+  <li>Create a horizontal navbar on the top of the page that contains links to all tasks and create task</li>
+  <li>Style the individual tasks in separate divs</li>
+  <li>Design a landing page (<code class="highlighter-rouge">'/'</code>)</li>
+  <li>Add a footer with your name and a link to your repo on Github</li>
+</ul>
+
+<h3 id="extensions">Extensions</h3>
+
+<ul>
+  <li>Gradually transition the color of a hyperlink when a mouse hovers over it</li>
+  <li>Make the page responsive to different screen sizes (desktop, tablet, mobile)</li>
+</ul>
+
+<h2 id="wrap-up">Wrap-Up</h2>
+
+<p>Let’s pair up and share our finished products.</p>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://www.khanacademy.org/computing/computer-programming/html-css">Khanacademy’s HTML &amp; CSS</a></li>
+  <li><a href="http://learnlayout.com/">Learn Layout</a></li>
+  <li><a href="http://static.incompl.com/awful/">CSS is Awful</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/learn/css">Learn CSS MDN</a></li>
+  <li><a href="https://developer.apple.com/library/ios/documentation/appleapplications/reference/safariwebcontent/usingtheviewport/usingtheviewport.html">Safari Web Content Guide: Configuring the Viewport</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Using_CSS_transitions">CSS Transitions</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform">CSS Transformations</a></li>
+</ul>
+:ET

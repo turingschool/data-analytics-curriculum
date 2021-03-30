@@ -1,0 +1,300 @@
+I"�`<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Define classes with instance methods in Ruby</li>
+  <li>Define classes with instance variables in Ruby</li>
+  <li>Identify the application of Abstraction and Encapsulation principles</li>
+</ul>
+
+<h2 id="schedule">Schedule</h2>
+<ul>
+  <li>5min - WarmUp</li>
+  <li>15min - Organizing Methods with Classes</li>
+  <li>5min - Break</li>
+  <li>15min - Behavior &amp; State</li>
+  <li>10min - Independent Practice</li>
+  <li>5min - WrapUp</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Class</li>
+  <li>Instance</li>
+  <li>Instance Method</li>
+  <li>Object</li>
+  <li>Abstract/Abstraction</li>
+  <li>Instance Variable</li>
+  <li>Encapsulation</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Linked <a href="../slides/intro_to_classes">here</a></p>
+
+<h2 id="warmup">Warmup</h2>
+
+<ul>
+  <li>Define a method <code class="highlighter-rouge">hello</code> that returns the string “Hello, and welcome!”</li>
+  <li>Define a method <code class="highlighter-rouge">sum</code> that takes two numbers as arguments and returns their sum</li>
+  <li>Wrap these methods in a <code class="highlighter-rouge">Calculator</code> class</li>
+  <li>Create a new instance of our <code class="highlighter-rouge">Calculator</code> class and call the methods you defined</li>
+</ul>
+
+<h2 id="lesson">Lesson</h2>
+
+<h3 id="basic-classes">Basic Classes</h3>
+
+<p>Using our Converter from yesterday, we have a nice small set of methods that hang together to provide some functionality. Let’s do just a little bit more work to wrap these methods together. We’ll do that by creating a class to wrap these methods.</p>
+
+<p>The general pattern for creating a class is as follows:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">NameOfClass</span>
+  <span class="c1"># stuff</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When we wrap these methods in a class we need to create a new <strong>instance</strong> of the class on which to call these methods. We sometimes say that the instance is the <strong>receiver</strong>, that we’re sending messages to it, and that it is responding to those messages.</p>
+
+<h3 id="organizing-methods-with-classes">Organizing Methods with Classes</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># converter.rb</span>
+
+<span class="k">class</span> <span class="nc">Converter</span>
+  <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">third</span><span class="p">)</span>
+    <span class="n">print_welcome</span>
+    <span class="n">print_converted</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="n">print_converted</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
+    <span class="n">print_converted</span><span class="p">(</span><span class="n">third</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">print_welcome</span>
+    <span class="nb">puts</span> <span class="s1">'Welcome to Converter!'</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">convert_to_celsius</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+    <span class="p">((</span><span class="n">temperature</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">).</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">print_converted</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+    <span class="n">converted</span> <span class="o">=</span> <span class="n">convert_to_celsius</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+    <span class="nb">puts</span> <span class="s2">"</span><span class="si">#{</span><span class="n">temperature</span><span class="si">}</span><span class="s2"> degrees Fahrenheit is equal to </span><span class="si">#{</span><span class="n">converted</span><span class="si">}</span><span class="s2"> degrees Celsius"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Wrapping these methods in a class changes the way we will interact with them and provides some organization. We’ve provided an indication to our future selves and to others who might work with this code that these methods are related.</p>
+
+<p>One of the primary functions of a class is to create new instances of that class. Putting these methods inside of this class means that we will now need to call them on an instance of that class. They are now <strong>instance methods</strong>.</p>
+
+<p>Add the following to a new file called <code class="highlighter-rouge">converter_runner.rb</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># converter_runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./converter'</span>
+
+<span class="n">converter</span> <span class="o">=</span> <span class="no">Converter</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">converter</span><span class="p">.</span><span class="nf">convert</span><span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">73</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"This is our converter: </span><span class="si">#{</span><span class="n">converter</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">converter</span> <span class="o">=</span> <span class="no">Converter</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">converter</span><span class="p">.</span><span class="nf">convert</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"This is our converter: </span><span class="si">#{</span><span class="n">converter</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">converter</span> <span class="o">=</span> <span class="no">Converter</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">converter</span><span class="p">.</span><span class="nf">convert</span><span class="p">(</span><span class="mi">34</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">83</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"This is our converter: </span><span class="si">#{</span><span class="n">converter</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>Run that file by typing <code class="highlighter-rouge">ruby converter_runner.rb</code> into your terminal and see what happens.</p>
+
+<p>First we get our expected output from running the <code class="highlighter-rouge">.convert</code> method on our <code class="highlighter-rouge">Converter</code> class.</p>
+
+<p>What’s after that?</p>
+
+<p>The output from <code class="highlighter-rouge">puts "This is our converter: #{converter}"</code> is the way that Ruby represents an instance of an object to use in print. Notice there’s an <code class="highlighter-rouge">object_id</code> that is unique to each instance we’ve created. Even though they generally look the same, our computer is now tracking three separate instances of our Converter object.</p>
+
+<p>An <em>object</em> is an abstract representation of a real world thing. Remember, Abstraction is the practice of creating classes/objects and building out an interface with logical behaviors and characteristics.</p>
+
+<p>Here we see Abstraction coming in to play where the user can interface with a Converter. It has specific details about it that we interact with such as <code class="highlighter-rouge">.convert</code> but other details that we do not interact with such as .<code class="highlighter-rouge">convert_to_celcius</code>.</p>
+
+<h3 id="behavior--state">Behavior &amp; State</h3>
+
+<p>Thus far we’ve only used classes as a place to collect <strong>instance methods</strong> (methods that we call on a specific instance of the class). Sometimes we say that these methods define the <strong>behavior</strong> of these instances. But why bother creating multiple instances if they all have exactly the same behavior? That’s where <strong>state</strong> comes in. State refers to the specific attributes of an instance of a class. Applying this to a <code class="highlighter-rouge">Classroom</code> example, a specific classroom might have a width <strong>attribute</strong>. It’s width would be considered to be part of its <strong>state</strong>.</p>
+
+<h4 id="adding-state-to-our-classes">Adding State to Our Classes</h4>
+
+<p>We generally store state with <strong>instance variables</strong>, and frequently define them using an <code class="highlighter-rouge">initialize</code> method that is invoked in the background when we call <code class="highlighter-rouge">.new</code>.</p>
+
+<p>Imagine we are creating a program that tells a general contractor how to plan out rooms. Let’s create a new <code class="highlighter-rouge">Room</code> class that holds information about a classroom:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Room.rb</span>
+<span class="k">class</span> <span class="nc">Room</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="vi">@length</span> <span class="o">=</span> <span class="n">length</span>
+    <span class="vi">@width</span>  <span class="o">=</span> <span class="n">width</span>
+    <span class="vi">@height</span> <span class="o">=</span> <span class="n">height</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Those variables beginning with <code class="highlighter-rouge">@</code> are <strong>instance variables</strong> they can have a unique value for each <strong>instance</strong> that we create. That’s great. That means that we can now create multiple room instances that have different lengths/widths/heights.</p>
+
+<p>How do we use this new Room class? Let’s create a runner file!</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room_runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./room'</span>
+
+<span class="n">room</span> <span class="o">=</span> <span class="no">Room</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">room</span>
+</code></pre></div></div>
+
+<p>Run that and what do we get? Sure enough, it’s an instance of Room!</p>
+
+<p>That’s great. We can set the attributes of the classroom instance when we create it. What if I want to access those attributes? Basically, what happens if I forget the length of the this particular room? How do I ask it?
+We could put a pry to dig around.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#room_runner.rb</span>
+<span class="nb">require</span> <span class="s1">'pry'</span>
+<span class="nb">require</span> <span class="s1">'./room'</span>
+
+<span class="n">room</span> <span class="o">=</span> <span class="no">Room</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>When we call <code class="highlighter-rouge">room_a</code> in our pry session, we get something like this <code class="highlighter-rouge">#&lt;Room:0x007fe119e926c0&gt;</code>, we still can’t see the length. This is due in part to the principle of Encapsulation, where information is only exposed when intentionally built to do so. Right now, we want to expose that information, so let’s do that.</p>
+
+<p>Let’s add a line to our runner file.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room_runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./room'</span>
+
+<span class="n">room</span> <span class="o">=</span> <span class="no">Room</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"Length: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">length</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>Run that, and we get a no method error. This is a little bit tricky. It’s true we could create a method to access these instance variables, but Ruby gives us a shortcut. Update your <code class="highlighter-rouge">room.rb</code> file as follows:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room.rb</span>
+<span class="k">class</span> <span class="nc">Room</span>
+  <span class="nb">attr_reader</span> <span class="ss">:length</span><span class="p">,</span>
+              <span class="ss">:width</span><span class="p">,</span>
+              <span class="ss">:height</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="vi">@length</span> <span class="o">=</span> <span class="n">length</span>
+    <span class="vi">@width</span>  <span class="o">=</span> <span class="n">width</span>
+    <span class="vi">@height</span> <span class="o">=</span> <span class="n">height</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This will allow us to access all of the instance variables by sending messages to our instance (e.g. calling <code class="highlighter-rouge">room.width</code> or <code class="highlighter-rouge">room.length</code>, etc.).</p>
+
+<h4 id="combining-state-and-behavior">Combining State and Behavior</h4>
+
+<p>That’s great! What about methods? Yesterday we used methods in our classes, and we can still do that. Now, we can use our instance variables to create instance methods that return different values based on the state of our instance.</p>
+
+<p>Let’s update our runner:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room_runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./room'</span>
+
+<span class="n">room</span> <span class="o">=</span> <span class="no">Room</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"Length: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">length</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Width: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">width</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Area: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">area</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+<p>Run that, and we get a no method error for <code class="highlighter-rouge">area</code>. Let’s build that method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room.rb</span>
+<span class="k">class</span> <span class="nc">Room</span>
+  <span class="nb">attr_reader</span> <span class="ss">:length</span><span class="p">,</span>
+              <span class="ss">:width</span><span class="p">,</span>
+              <span class="ss">:height</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="vi">@length</span> <span class="o">=</span> <span class="n">length</span>
+    <span class="vi">@width</span>  <span class="o">=</span> <span class="n">width</span>
+    <span class="vi">@height</span> <span class="o">=</span> <span class="n">height</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">area</span>
+    <span class="n">length</span> <span class="o">*</span> <span class="n">width</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="changing-state">Changing State</h4>
+
+<p>What if we want to change the values of our instance? Imagine mid way through construction, the client wants to change the dimensions to a room they had planned. We need the program to accomodate changing values.</p>
+
+<p>Our runner:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room_runner.rb</span>
+<span class="nb">require</span> <span class="s1">'./room'</span>
+
+<span class="n">room</span> <span class="o">=</span> <span class="no">Room</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="s2">"Length: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">length</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Width: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">width</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Area: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">area</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nb">puts</span> <span class="s2">"Make length 1."</span>
+<span class="n">room</span><span class="p">.</span><span class="nf">add_length</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"New Length: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">length</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"New Area: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">area</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nb">puts</span> <span class="s2">"Add four to length"</span>
+<span class="n">room</span><span class="p">.</span><span class="nf">width</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="nb">puts</span> <span class="s2">"New Length: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">length</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"New Width: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">width</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"New Area: </span><span class="si">#{</span><span class="n">room</span><span class="p">.</span><span class="nf">area</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+<p>We have two ways that we could potentially change these values. Update our files based on the code below:
+We get a no method error for add_length. As well as an error for <code class="highlighter-rouge">room.width = 1</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># room.rb</span>
+<span class="k">class</span> <span class="nc">Room</span>
+
+  <span class="nb">attr_reader</span> <span class="ss">:length</span><span class="p">,</span>
+              <span class="ss">:width</span><span class="p">,</span> 
+	      
+  <span class="nb">attr_accessor</span> <span class="ss">:height</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="vi">@length</span> <span class="o">=</span> <span class="n">length</span>
+    <span class="vi">@width</span>  <span class="o">=</span> <span class="n">width</span>
+    <span class="vi">@height</span> <span class="o">=</span> <span class="n">height</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">area</span>
+    <span class="n">length</span> <span class="o">*</span> <span class="n">width</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">add_length</span><span class="p">(</span><span class="n">feet</span><span class="p">)</span>
+    <span class="vi">@length</span> <span class="o">+=</span> <span class="n">feet</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Changing an <code class="highlighter-rouge">attr_reader</code> to an <code class="highlighter-rouge">attr_accessor</code> makes it so that we can change the room’s value from outside the class to <strong>anything</strong> we want. Note, we are changing, and reducing this object’s Encapsulation. We are placing some trust in people using the class that they will use it responsibly. We use an <code class="highlighter-rouge">attr_accessor</code> <strong>only</strong> when we need to change something from outside the class and <strong>only</strong> when we are sure we can trust what they change it to - since they can change it to <strong>ANYTHING</strong>.</p>
+
+<p>Meanwhile, the method <code class="highlighter-rouge">add_length</code> is a little more specific in what it allows us to do; specifically, using this method we can make the classroom longer. No other change is allowed. We do this by accessing the <strong>instance variable</strong> from within the method. Note, we could also do this with an <code class="highlighter-rouge">attr_accessor</code> but may not want to.</p>
+
+<h3 id="practice">Practice</h3>
+
+<p>Create a <code class="highlighter-rouge">Lunchbox</code> class that has theme, height, width, and length attributes. Allow users to access the theme, and create a method <code class="highlighter-rouge">capacity</code> that returns the total volume the lunchbox can hold.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Explain Abstraction in your own words.</li>
+  <li>Explain Encapsulation in your own words.</li>
+  <li>How would you define a <code class="highlighter-rouge">Cubby</code> class in Ruby?
+    <ul>
+      <li>What might be some of its attributes?</li>
+      <li>What might be some of its methods?</li>
+    </ul>
+  </li>
+</ul>
+:ET

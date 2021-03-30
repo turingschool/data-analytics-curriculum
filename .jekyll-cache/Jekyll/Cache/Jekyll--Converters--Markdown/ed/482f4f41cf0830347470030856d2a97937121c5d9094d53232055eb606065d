@@ -1,0 +1,25 @@
+I"<h1 id="iteration-5---creating-the-wagontrain-linked-list-wrapper">Iteration 5 - Creating the WagonTrain Linked List “Wrapper”</h1>
+
+<p>Awesome! We have built most of our program and now it’s time to wrap the Linked List logic in a <code class="highlighter-rouge">WagonTrain</code> class.</p>
+
+<p>When we create a new instance of the <code class="highlighter-rouge">WagonTrain</code> class, a <code class="highlighter-rouge">LinkedList</code> object is also instantiated and available as an attribute on the <code class="highlighter-rouge">WagonTrain</code> instance. Now, we can manage our linked list through the <code class="highlighter-rouge">WagonTrain</code> class.</p>
+
+<p>Expected behavior:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="nb">require</span> <span class="s2">"./lib/wagon_train"</span>
+<span class="o">&gt;</span> <span class="n">wt</span> <span class="o">=</span> <span class="no">WagonTrain</span><span class="p">.</span><span class="nf">new</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">WagonTrain</span> <span class="n">list</span><span class="o">=&lt;</span><span class="no">LinkedList</span> <span class="n">head</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#234567890890&gt; #456789045678&gt;</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">list</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">LinkedList</span> <span class="n">head</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#234567890890&gt;</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">list</span><span class="p">.</span><span class="nf">head</span>
+<span class="o">=&gt;</span> <span class="kp">nil</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s2">"Burke"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Node</span> <span class="n">surname</span><span class="o">=</span><span class="s2">"Burke"</span> <span class="n">next_node</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#5678904567890&gt;</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">list</span><span class="p">.</span><span class="nf">head</span><span class="p">.</span><span class="nf">surname</span>
+<span class="o">=&gt;</span> <span class="s2">"Burke"</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s2">"West"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Node</span> <span class="n">surname</span><span class="o">=</span><span class="s2">"West"</span> <span class="n">next_node</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#5678904567890&gt;</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">count</span>
+<span class="mi">2</span>
+</code></pre></div></div>
+:ET

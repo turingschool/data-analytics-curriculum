@@ -1,0 +1,69 @@
+I"�<h1 id="module-2-portfolio-requirements">Module 2 Portfolio Requirements</h1>
+
+<h2 id="instructions">Instructions</h2>
+
+<h3 id="1-fork-the-portfolios-repository">1. Fork the Portfolios Repository</h3>
+
+<p>You likely already have this on your machine from last module.</p>
+
+<p>If not, you can find it here: <a href="https://github.com/turingschool/portfolios">Turing’s Portfolios Repository</a>.</p>
+
+<h3 id="2-create-an-m2-portfolio">2. Create an M2 Portfolio</h3>
+
+<p>Use the <a href="https://github.com/turingschool/portfolios/blob/master/templates/BEM2_template.md">Module 2 template</a> to create a new portfolio template for yourself. Markdown formatting is already set up for you (although not obvious for copy and pasting purposes).</p>
+
+<p>The file should be saved in the format <code class="highlighter-rouge">"date-name-completing.markdown"</code> where:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">date</code> is the last day of the module in compressed year/month/day, like <code class="highlighter-rouge">20170831</code></li>
+  <li><code class="highlighter-rouge">name</code> is your first and last name like <code class="highlighter-rouge">jeff-casimir</code></li>
+  <li><code class="highlighter-rouge">completing</code> is the module that you’re completing, like <code class="highlighter-rouge">m4</code></li>
+</ul>
+
+<p>So a complete filename might look like <code class="highlighter-rouge">20170831-jeff-casimir-m4.markdown</code>. This file needs to be stored in a directory <code class="highlighter-rouge">portfolios/students/your-cohort/your-name</code> where <code class="highlighter-rouge">your-name</code> is like <code class="highlighter-rouge">jeff-casimir</code> and <code class="highlighter-rouge">your-cohort</code> is your cohort number.</p>
+
+<p>If you were completing Module 4 in Cohort 1610 on August 31, 2017 and your name was Jeff Casimir, your portfolio submission would reside at the following location: <code class="highlighter-rouge">portfolios/students/1610/jeff-casimir/20170831-jeff-casimir-m4.markdown</code>.</p>
+
+<p><strong>Note:</strong> Do <em>not</em> move the file from the templates directory. If you do that and then commit, Git will register it as you deleting the template.</p>
+
+<h3 id="3-update-your-portfolio">3. Update Your Portfolio</h3>
+
+<p>Provide reflections in each section of your portfolio.</p>
+
+<p>Enter self-assessed outcomes in the final section.</p>
+
+<h2 id="evaluation">Evaluation</h2>
+
+<h3 id="process">Process</h3>
+
+<ul>
+  <li>Your portfolio will be evaluated in the last week of the module.</li>
+  <li>A pull request with your submission must be made by 8am the day of your portfolio review.</li>
+  <li>Non-conforming formats, filenames, or directories will be rejected and your review rescheduled.</li>
+  <li>Instructors will review all portfolio submissions before your scheduled portfolio review and merge pull requests.</li>
+  <li>During your portfolio review, you will discuss:
+    <ul>
+      <li>Areas of strength</li>
+      <li>Areas in which continued attention is warranted.</li>
+      <li>Discrepancies (if any) between self-assessment scores and instructors’ estimation of performance.</li>
+      <li>Provisional work, if applicable, to close out expectations for the module.</li>
+    </ul>
+  </li>
+  <li>Instructors will render a promotion/retained/excused/provisional outcome.</li>
+</ul>
+
+<h3 id="outcomes">Outcomes</h3>
+
+<p>Portfolio evaluations have four possible outcomes.</p>
+
+<ul>
+  <li><em>PROMOTED</em> - your portfolio demonstrates a successful fulfillment of expectations
+and you may move on to the next module or graduate</li>
+  <li><em>PROVISIONAL</em> - your portfolio demonstrates a high likelihood that you will be successful in Module 3 with additional preparation. Failure to complete additional work assigned will result in being either be <em>RETAINED</em> or <em>EXCUSED</em></li>
+  <li><em>RETAINED</em> - your portfolio is lacking in one or more areas and you may either
+repeat the current module or leave the program</li>
+  <li><em>EXCUSED</em> - your portfolio is lacking in one or more areas and either (a) you’ve
+now failed to pass the module in two attempts or (b) the reviewers have determined
+that you will not be successful at Turing</li>
+</ul>
+:ET

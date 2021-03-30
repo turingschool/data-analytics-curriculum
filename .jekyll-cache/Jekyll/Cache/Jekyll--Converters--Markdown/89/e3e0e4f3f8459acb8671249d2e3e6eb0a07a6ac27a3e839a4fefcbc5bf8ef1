@@ -1,0 +1,106 @@
+I"}(<p><em><a href="./index">Back to FlashCards Home</a></em><br />
+<em><a href="./requirements">Back to Requirements</a></em></p>
+
+<h2 id="iteration-1">Iteration 1</h2>
+
+<h3 id="cards">Cards</h3>
+
+<p>A <code class="highlighter-rouge">Card</code> represents a single flashcard in our set. It stores a question, an answer, and a category.</p>
+
+<p>Use the tests provided to drive the development of your <code class="highlighter-rouge">Card</code> class. From the root directory of your project, run the test like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rspec spec/card_spec.rb
+</code></pre></div></div>
+
+<p>If you haven’t already, you will need to install minitest:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install rspec
+</code></pre></div></div>
+
+<p>If your <code class="highlighter-rouge">Card</code> class is written properly and is located at <code class="highlighter-rouge">./lib/card.rb</code>, you should be able to open a pry session from your <code class="highlighter-rouge">flashcards</code> directory and interact with it like so:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># double check that you are in your flashcards project directory!</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"What is the capital of Alaska?"</span><span class="p">,</span> <span class="s2">"Juneau"</span><span class="p">,</span> <span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007f800e29f0c8 @question=""What is the capital of Alaska?", @answer="Juneau", @category=:Geography&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card</span><span class="p">.</span><span class="nf">question</span>
+<span class="c1">#=&gt; "What is the capital of Alaska?"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card</span><span class="p">.</span><span class="nf">answer</span>
+<span class="c1">#=&gt; "Juneau"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card</span><span class="p">.</span><span class="nf">category</span>
+<span class="c1">#=&gt; :Geography</span>
+</code></pre></div></div>
+
+<h3 id="turns">Turns</h3>
+
+<p>Create a <code class="highlighter-rouge">Turn</code> class and an accompanying test file with the following methods:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">initialize(string, card)</code> - A turn is initialized with two arguments. The first is a string representing a guess to a card’s question. The second argument is a <code class="highlighter-rouge">Card</code> object representing the current flashcard being shown.</li>
+  <li><code class="highlighter-rouge">guess</code> - This method returns the guess</li>
+  <li><code class="highlighter-rouge">card</code> - This method returns the Card</li>
+  <li><code class="highlighter-rouge">correct?</code> - This method returns a boolean indicating if the guess matched the answer on the Card.</li>
+  <li><code class="highlighter-rouge">feedback</code> - This method either returns <code class="highlighter-rouge">"Correct!"</code> or <code class="highlighter-rouge">"Incorrect."</code> based on whether the guess was correct or not.</li>
+</ul>
+
+<p>The <code class="highlighter-rouge">Turn</code> class should respond to the following interaction pattern:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/turn'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"What is the capital of Alaska?"</span><span class="p">,</span> <span class="s2">"Juneau"</span><span class="p">,</span> <span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007f800e29f0c8 @question=""What is the capital of Alaska?", @answer="Juneau", @category=:Geography&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span> <span class="o">=</span> <span class="no">Turn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Juneau"</span><span class="p">,</span> <span class="n">card</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Turn:0x00007f99842f0998 @card=#&lt;Card:0x00007f800e29f0c9 @question=""What is the capital of Alaska?", @answer="Juneau", @category=:geography&gt;, @guess="Juneau"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">card</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007f800e29f0c8 @question=""What is the capital of Alaska?", @answer="Juneau", @category=:Geography&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">guess</span>
+<span class="c1">#=&gt; "Juneau"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">correct?</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">feedback</span>
+<span class="c1">#=&gt; "Correct!"</span>
+</code></pre></div></div>
+
+<p>We also want to make sure that incorrect guesses are handled properly.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/turn'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Which planet is closest to the sun?"</span><span class="p">,</span> <span class="s2">"Mercury"</span><span class="p">,</span> <span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x007ffdf1820a90 @answer="Mercury", @question="Which planet is closest to the sun?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span> <span class="o">=</span> <span class="no">Turn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Saturn"</span><span class="p">,</span> <span class="n">card</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Turn:0x00007f998413ee60 @card=#&lt;Card:0x007ffdf1820a90 @answer="Mercury", @question="Which planet is closest to the sun?", @category=:STEM&gt;, @guess="Saturn"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">card</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;Card:0x007ffdf1820a90 @answer="Mercury", @question="Which planet is closest to the sun?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">guess</span>
+<span class="o">=&gt;</span> <span class="s2">"Saturn"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">correct?</span>
+<span class="o">=&gt;</span> <span class="kp">false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">feedback</span>
+<span class="o">=&gt;</span> <span class="s2">"Incorrect."</span>
+</code></pre></div></div>
+
+<p>Remember, <code class="highlighter-rouge">#&lt;Turn:0x00007f998413ee60 ... &gt;</code> means “A Turn Object” or “An Instance of the Turn Class”.</p>
+:ET

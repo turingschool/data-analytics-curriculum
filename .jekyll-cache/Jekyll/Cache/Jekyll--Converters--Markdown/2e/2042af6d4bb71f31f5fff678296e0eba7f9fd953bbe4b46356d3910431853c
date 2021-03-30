@@ -1,0 +1,334 @@
+I"�{<h1 id="stubs-and-spies-in-javascript-testing-with-sinonjs">Stubs and Spies in JavaScript Testing with Sinon.js</h1>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the purpose of a test double</li>
+  <li>Begin to identify situations where a test spy or stub will be useful</li>
+  <li>Practice spying and stubbing with Sinon.js</li>
+  <li>Discuss potential downsides of over-zealous stubbing.</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<ul>
+  <li>Clone <a href="https://github.com/turingschool-examples/sinon-roll-for-it">this repository</a></li>
+  <li>Run <code class="highlighter-rouge">npm install</code></li>
+</ul>
+
+<h2 id="running-the-test-suite">Running the Test Suite</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">npm test</code></li>
+</ul>
+
+<h2 id="spies-and-stubs-and-mocks---what">Spies and Stubs and Mocks - What?</h2>
+
+<p>Spying, stubbing and mocking are powerful tools in the world of testing. They use the concept of creating a thing called a ‘test double’ within a test to replace or measure behavior. The concept of test doubles is also difficult to understand for developers (from junior level to senior level).</p>
+
+<p><a href="http://sinonjs.org/">Sinon.js</a> is a helpful JavaScript library that gives you some helper functions for adding spying, stubbing and mocking into your unit tests.</p>
+
+<p>Since Sinon.js is a little bit hard to understand immediately, I’ve decided to help their marketing department and come up with a few helpful slogans.</p>
+
+<p><strong><em>Sinon.js:</em></strong> Because you don’t always want to test all the things in order to test one thing in particular.</p>
+
+<p><strong><em>Sinon.js:</em></strong> Because unit tests should be faster than just reloading the page and clicking around.</p>
+
+<p><strong><em>Sinon.js</em></strong> Because you should be able to run your test suite on a plane that doesn’t have wifi.</p>
+
+<p><strong><em>Sinon.js</em></strong> Because the answer to ‘can we test that’ should somethings be ‘why’ but never just ‘I don’t think so’.</p>
+
+<p><strong><em>Sinon.js:</em></strong> Because you’re worth it.</p>
+
+<p><em>okay that last one might already be taken</em></p>
+
+<h3 id="enough-slogans-though---why-do-i-use-this">Enough Slogans Though - Why Do I Use This?</h3>
+
+<p>Basically, you may need to use Sinon.js when your test code calls a function that gives you some trouble.</p>
+
+<p>The cause of that trouble is usually a <code class="highlighter-rouge">dependency</code> in that piece of code.</p>
+
+<p>For example, let’s say you have a function that take the result of an ajax call and does something to it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function doSomethingToTheResultofanAjaxCall(){
+  var something = ajaxCall();
+  return something + ': I found it'
+}
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">dependency</code> in this call is that <code class="highlighter-rouge">ajaxCall</code> function. Which is to say, <strong><em>the result of your function is dependent on the result of the ajaxCall</em></strong> function.</p>
+
+<h4 id="primary-stubbingspying-use-cases">Primary Stubbing/Spying Use-Cases</h4>
+
+<ul>
+  <li>Behavior outside your control</li>
+  <li>Behavior that is difficult to setup and reproduce within a test environment</li>
+  <li>Slow things (e.g. <code class="highlighter-rouge">setTimeout()</code>)</li>
+  <li>Unpredictable things (e.g. random number generation)</li>
+  <li>Time-based things</li>
+</ul>
+
+<h2 id="spying">Spying</h2>
+
+<p>A spy watches your code and records how many times a method was called, the arguments passed in, the return value, and even the value of <code class="highlighter-rouge">this</code>.</p>
+
+<h3 id="logger">Logger</h3>
+
+<ul>
+  <li><a href="https://github.com/turingschool-examples/sinon-roll-for-it/blob/master/lib/logger.js">Code</a></li>
+  <li><a href="https://github.com/turingschool-examples/sinon-roll-for-it/blob/master/test/logger-test.js">Tests</a></li>
+</ul>
+
+<p>Like <code class="highlighter-rouge">puts</code> in Ruby, <code class="highlighter-rouge">console.log</code> is hard to test. In fairness, you probably don’t want to leave <code class="highlighter-rouge">console.log</code>s in your code and you probably shouldn’t be testing them. But the idea is a simple representation of a much harder set of problems (e.g. did you fire an AJAX call?).</p>
+
+<p>Here is our <code class="highlighter-rouge">logger</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">logger</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">LOG: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">message</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">message</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s look at how we can use spies to record if a method was called. In <code class="highlighter-rouge">test/spy-test</code>, we have a simple <code class="highlighter-rouge">logger</code> function that delegates to <code class="highlighter-rouge">console.log</code>. We’ll set up a spy on <code class="highlighter-rouge">console.log</code> and call the <code class="highlighter-rouge">logger</code> function to see if it was called.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">(</span><span class="nx">console</span><span class="p">,</span> <span class="dl">'</span><span class="s1">log</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We also want to make sure that we put everything back when we’re done. Sinon will add some new methods to our spied on function. Here we’ll use <code class="highlighter-rouge">restore</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">afterEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Now, let’s call the <code class="highlighter-rouge">logger</code> function and assert that <code class="highlighter-rouge">console.log</code> was called once.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should log to the console</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">logger</span><span class="p">(</span><span class="dl">'</span><span class="s1">some message</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">assert</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">calledOnce</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="testing-arguments">Testing Arguments</h3>
+
+<p>Again, our logger is super, super simple (and intentionally so). But let’s make believe for a second that we needed to test it actually passes “LOG: ${message}” into <code class="highlighter-rouge">console.log</code>. We can use Sinon’s <code class="highlighter-rouge">calledWith</code> method to analyze the arguments that were passed into the function.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should log prefix the message with "LOG: "</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">logger</span><span class="p">(</span><span class="dl">'</span><span class="s1">some message</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">assert</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">calledWith</span><span class="p">(</span><span class="dl">'</span><span class="s1">LOG: some message</span><span class="dl">'</span><span class="p">));</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="testing-callbacks">Testing Callbacks</h3>
+
+<ul>
+  <li><a href="https://github.com/turingschool-examples/sinon-roll-for-it/blob/master/test/fakeQuery-test.js">Test and Code</a></li>
+</ul>
+
+<p>Frequently, in JavaScript, we pass callbacks to as arguments to functions. You’ve probably done this in jQuery with AJAX. But, can we actually test</p>
+
+<p>Here is our <code class="highlighter-rouge">fakeQuery</code> implementation:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">fakeData</span> <span class="o">=</span> <span class="p">{</span> <span class="na">ideas</span><span class="p">:</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Learn JavaScript</span><span class="dl">'</span><span class="p">,</span> <span class="na">quality</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test JavaScript</span><span class="dl">'</span><span class="p">,</span> <span class="na">quality</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}</span>
+<span class="p">]</span> <span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">fakeQuery</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">getJSON</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="nx">fakeData</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">fakeQuery.getJSON</code> takes a URL (which it immediately ignores) an anonymous callback function as an argument, makes believe that it’s talking to the server for a moment, and then calls the callback with some fake data that it got from the non-existent server. Ideally, it’s a simplification of what jQuery does without us needed in a server and all that jazz.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should call the callback when it hears back from the server</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">spyCallback</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="nx">spyCallback</span><span class="p">.</span><span class="nx">called</span><span class="p">);</span>
+    <span class="nx">done</span><span class="p">();</span>
+  <span class="p">});</span>
+
+  <span class="nx">fakeQuery</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="dl">'</span><span class="s1">/bogus</span><span class="dl">'</span><span class="p">,</span> <span class="nx">spyCallback</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>There is a lot going on here. First, notice that the we passed <code class="highlighter-rouge">done</code> into the anonymous function passed to <code class="highlighter-rouge">it</code>. This tells Mocha to wait until the asynchrous call comes back before ending the test. We also need to make sure that the callback was called before—umm—test that it was called.</p>
+
+<p>We can also make sure it was called with the <code class="highlighter-rouge">fakeData</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should call the callback with fakeData</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">spyCallback</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">spy</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="nx">spyCallback</span><span class="p">.</span><span class="nx">calledWith</span><span class="p">(</span><span class="nx">fakeData</span><span class="p">));</span>
+    <span class="nx">done</span><span class="p">();</span>
+  <span class="p">});</span>
+
+  <span class="nx">fakeQuery</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="dl">'</span><span class="s1">/bogus</span><span class="dl">'</span><span class="p">,</span> <span class="nx">spyCallback</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="discussion-points">Discussion Points</h3>
+
+<ul>
+  <li>Look back on your old GameTime projects:
+    <ul>
+      <li>What parts were untested?</li>
+      <li>Where could a spy have helped you test?</li>
+      <li>If you used spying, would you have split your code up as much as you did?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="stubs">Stubs</h2>
+
+<ul>
+  <li><a href="https://github.com/turingschool-examples/sinon-roll-for-it/blob/master/test/api-fetcher-test.js">Tests</a></li>
+</ul>
+
+<p>Sometimes we have things in our application that call out to external services. That’s not the kind of thing we want running in our test suite. If we had a function that called out to the Github API, then our test suite would need an Internet connection to run and then use up our API calls. That’s not good. We’re better off stubbing the function and having it return some fake data that we can use.</p>
+
+<p>If you’ve used the vcr gem in Ruby, what’s happening under the covers is stubbing. VCR records a fixture file of an api response the first time a test is run. It then stubs ajax calls to the same url and refers to that fixture data (or cassette) for all future tests.</p>
+
+<p>The vcr gem can quickly bloat a project, if the fixture files are checked in to git- and if not,  cause intermittent failures when each developer has different fixture files depending on when they run the specs.</p>
+
+<p>We can use stubs instead of an automatic solution like vcr to control our fixture data instead.</p>
+
+<p>Let’s say that we have a <code class="highlighter-rouge">Twitter</code> module that makes requests out to Twitter over the network:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">Twitter</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">get</span><span class="p">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Crazy stuff happens over the network…</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, we may have functionality that we need to test that relies on this <code class="highlighter-rouge">Twitter</code> module. But, we don’t want to call out to the server, right? Let’s stub it!</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">stub</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">Twitter</span><span class="p">,</span> <span class="dl">'</span><span class="s1">get</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">stub</span><span class="p">.</span><span class="nx">withArgs</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users</span><span class="dl">'</span><span class="p">).</span><span class="nx">returns</span><span class="p">([</span>
+      <span class="p">{</span> <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">stevekinney</span><span class="dl">'</span><span class="p">,</span> <span class="na">tweetCount</span><span class="p">:</span> <span class="mi">5</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">jcasimir</span><span class="dl">'</span><span class="p">,</span> <span class="na">tweetCount</span><span class="p">:</span> <span class="mi">3</span> <span class="p">}</span>
+    <span class="p">]);</span>
+  <span class="p">});</span>
+
+<span class="nx">it</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="dl">'</span><span class="s1">should return the stubbed data</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">users</span> <span class="o">=</span> <span class="nx">Twitter</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/users</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">users</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">username</span><span class="p">,</span> <span class="dl">'</span><span class="s1">stevekinney</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="mocks">Mocks</h2>
+
+<ul>
+  <li><a href="https://github.com/turingschool-examples/sinon-roll-for-it/blob/master/lib/play.js">Code</a></li>
+  <li><a href="https://github.com/turingschool-examples/sinon-roll-for-it/blob/master/test/play-test.js">Tests</a></li>
+</ul>
+
+<p>Mocks combine being fake methods, (like spies) and having pre-programmed behavior (like stubs) and then add on pre-programmed expectations. These expectations can automatically make a test fail.</p>
+
+<p>Let’s say we’ve got a little DnD playing block of code.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">roll</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">dTwenty</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">20</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">play</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">castMagicMissile</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">newRoll</span> <span class="o">=</span> <span class="nx">roll</span><span class="p">.</span><span class="nx">dTwenty</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">newRoll</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cheat</span><span class="p">(</span><span class="nx">newRoll</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">newRoll</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="na">cheat</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newRoll</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">newRoll</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In our code, the object <code class="highlighter-rouge">roll</code> has a function <code class="highlighter-rouge">dTwenty</code> which gives us a random number between 1 and 20. The object <code class="highlighter-rouge">play</code> has two methods, <code class="highlighter-rouge">castMagicMissile</code> which rolls for us, and <code class="highlighter-rouge">cheat</code> which increases a number by 1.</p>
+
+<p>We want to test that <code class="highlighter-rouge">castMagicMissile</code> is cheating on any roll under 20, but will not cheat on a 20 and give us away by returning an invalid number.</p>
+
+<p>We can start with the test:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should cheat on a lousy dTwenty Roll</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//....</span>
+  <span class="p">});</span>
+</code></pre></div></div>
+<p>Now first, castMagicMissile calls out to Roll and gives us a random number. This won’t be good for testing purposes, so we should enforce a result that we want.</p>
+
+<p>We’re not testing that Roll works here though, so it would be an inappropriate place to use a mock (remember that mocks inherently include expectations - therefor they should only be used for code we want to test).</p>
+
+<p>Instead, let’s use a stub:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should cheat on a lousy dTwenty Roll</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">critical_fail</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">stub</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">roll</span><span class="p">,</span> <span class="dl">'</span><span class="s1">dTwenty</span><span class="dl">'</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">critical_fail</span><span class="p">);</span>
+
+   <span class="c1">//...</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Now let’s use a mock to confirm that the cheat method was called once and passed the correct value.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should cheat on a lousy dTwenty Roll</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">critical_fail</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">stub</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">roll</span><span class="p">,</span> <span class="dl">'</span><span class="s1">dTwenty</span><span class="dl">'</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">critical_fail</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">mock</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">play</span><span class="p">);</span>
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">expects</span><span class="p">(</span><span class="dl">"</span><span class="s2">cheat</span><span class="dl">"</span><span class="p">).</span><span class="nx">once</span><span class="p">().</span><span class="nx">withArgs</span><span class="p">(</span><span class="nx">critical_fail</span><span class="p">);</span>
+
+  <span class="nx">Play</span><span class="p">.</span><span class="nx">castMagicMissile</span><span class="p">();</span>
+
+     <span class="c1">//...</span>
+  <span class="p">});</span>
+</code></pre></div></div>
+
+<p>Now the we have the mock expectation set up, let’s verify that it happened and then clean up everything that we stubbed and mocked so we can write another test.</p>
+
+<p>The entire test should look like:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should cheat on a lousy dTwenty Roll</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">critical_fail</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">stub</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">roll</span><span class="p">,</span> <span class="dl">'</span><span class="s1">dTwenty</span><span class="dl">'</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">critical_fail</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">mock</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">play</span><span class="p">);</span>
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">expects</span><span class="p">(</span><span class="dl">"</span><span class="s2">cheat</span><span class="dl">"</span><span class="p">).</span><span class="nx">once</span><span class="p">().</span><span class="nx">withArgs</span><span class="p">(</span><span class="nx">critical_fail</span><span class="p">);</span>
+
+  <span class="nx">play</span><span class="p">.</span><span class="nx">castMagicMissile</span><span class="p">();</span>
+
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">verify</span><span class="p">();</span>
+  <span class="nx">stub</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>We could then write another test to verify that we don’t cheat when the roll is a twenty.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should not cheat on a natural 20</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">natural_twenty</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">stub</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">stub</span><span class="p">(</span><span class="nx">roll</span><span class="p">,</span> <span class="dl">'</span><span class="s1">dTwenty</span><span class="dl">'</span><span class="p">).</span><span class="nx">returns</span><span class="p">(</span><span class="nx">natural_twenty</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">mock</span> <span class="o">=</span> <span class="nx">sinon</span><span class="p">.</span><span class="nx">mock</span><span class="p">(</span><span class="nx">play</span><span class="p">);</span>
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">expects</span><span class="p">(</span><span class="dl">"</span><span class="s2">cheat</span><span class="dl">"</span><span class="p">).</span><span class="nx">never</span><span class="p">();</span>
+
+  <span class="nx">Play</span><span class="p">.</span><span class="nx">castMagicMissile</span><span class="p">();</span>
+
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">verify</span><span class="p">();</span>
+  <span class="nx">stub</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+  <span class="nx">mock</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+:ET

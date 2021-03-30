@@ -1,0 +1,244 @@
+I"�O<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>test model validations, including presence, uniqueness, format, length, and exclusion/inclusion</li>
+  <li>create and test custom validators</li>
+  <li>test associations using <a href="http://matchers.shoulda.io/docs/v2.8.0/">shoulda-matchers</a></li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Clone this app: <code class="highlighter-rouge">git clone -b model-testing-rspec https://github.com/turingschool-examples/belibery</code>. Let’s walk through the schema to see what we already have. Then…</p>
+
+<ul>
+  <li>Generate a migration and model for donations (only use the generator for migrations - not the model!). The migration needs to have an amount and a reference to the fans table. Migrate and look at the schema.</li>
+  <li>Now, generate a migration that adds a <code class="highlighter-rouge">status</code> column (string) to the donations table. Migrate and look at the schema.</li>
+  <li>Open your schema, and rollback. Now try to rollback two steps. What do you see?</li>
+  <li>Migrate again to apply your migrations to the database.</li>
+</ul>
+
+<h2 id="getting-started-with-model-testing-with-rspec">Getting Started with Model Testing (with RSpec)</h2>
+
+<p>From the RailsGuides: “In Rails, models tests are what you write to test your models.”</p>
+
+<p>If you use <code class="highlighter-rouge">rails g model Resource</code>, you’ll have a model test file available to you within the <code class="highlighter-rouge">spec/models</code> folder. This application is already have these two test files.</p>
+
+<p>However, if you need to create a model test by hand: <code class="highlighter-rouge">$ touch spec/models/model-name_test.rb</code> and add this code inside of it:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">ModelNameHere</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<h2 id="testing-validations">Testing Validations</h2>
+
+<p>You can find the Rails Guides validation documentation <a href="http://edgeguides.rubyonrails.org/active_record_validations.html#validation-helpers">here</a>.</p>
+
+<h2 id="basic-validity">Basic Validity</h2>
+
+<p>Let’s write a test to check that a fan with all attributes is valid. Inside of <code class="highlighter-rouge">spec/models/fan_spec.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Fan</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+
+  <span class="n">it</span> <span class="s2">"creates a fan when passed valid attributes"</span> <span class="k">do</span>
+    <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Jorge"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_valid</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">.</span><span class="nf">name</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Jorge"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">.</span><span class="nf">email</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<h2 id="presence-validations">Presence Validations</h2>
+
+<p>What happens if a name isn’t entered? We shouldn’t have a valid fan. Let’s add a test. Inside of <code class="highlighter-rouge">spec/models/fan_spec.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"cannot create a fan without a name"</span> <span class="k">do</span>
+    <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">email: </span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_invalid</span>
+  <span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>This fails because we don’t have any validations for presence of a name. Inside of <code class="highlighter-rouge">fan.rb</code>, let’s add a validation:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Fan</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">validates</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="uniqueness-validations">Uniqueness Validations</h2>
+
+<p>Let’s assume that a fan logs into Belibery using their email address. Email addresses will need to be unique. Let’s add a test for this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"cannot create a fan with the same email"</span> <span class="k">do</span>
+    <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Penelope"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+    <span class="n">fan_two</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Penelope"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan_two</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_invalid</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>It will fail because it’s creating two fans and we’re asserting that there should only be one. Inside of <code class="highlighter-rouge">fan.rb</code> we need to add a validation:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">validates</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span><span class="p">,</span> <span class="ss">uniqueness: </span><span class="kp">true</span>
+</code></pre></div></div>
+
+<h2 id="format-validations">Format Validations</h2>
+
+<p>Names should only contain capital and lower case letters. Let’s write a test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"only accepts letters as a name"</span> <span class="k">do</span>
+    <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Penelope12345"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"penelope@pene-lope.com"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_invalid</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can use regex and a format validator to make this test pass:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">validates</span> <span class="ss">:name</span><span class="p">,</span>  <span class="ss">presence:   </span><span class="kp">true</span><span class="p">,</span> 
+                    <span class="ss">format:     </span><span class="p">{</span> <span class="ss">with: </span><span class="sr">/\A[a-zA-Z]+\z/</span><span class="p">,</span> <span class="ss">message: </span><span class="s2">"only allows uppercase and lowercase letters"</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="length-validations">Length Validations</h2>
+
+<p>Let’s limit our fans’ email addresses to between 5 and 50 characters. Our test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"only accepts an email between 5 and 50 characters"</span> <span class="k">do</span>
+    <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Penelope"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"pen"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_invalid</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>We’ll use the length validation to make this test pass:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">validates</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">presence:   </span><span class="kp">true</span><span class="p">,</span> 
+                    <span class="ss">uniqueness: </span><span class="kp">true</span><span class="p">,</span>
+                    <span class="ss">length:     </span><span class="p">{</span> <span class="ss">in: </span><span class="mi">5</span><span class="o">..</span><span class="mi">50</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="custom-validations">Custom Validations</h2>
+
+<p>What happens if we want to ban all users named Dao? We will need a custom validation method. First, let’s write a test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"it cannot create a fan named Dao"</span> <span class="k">do</span>
+    <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Dao"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"mike-dao@gmail.com"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_invalid</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can validate <code class="highlighter-rouge">:no_daos</code> with a custom validation:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Fan</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">validate</span> <span class="ss">:no_daos</span>
+
+  <span class="k">def</span> <span class="nf">no_daos</span>
+    <span class="n">errors</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="s2">"cannot be Richard"</span><span class="p">)</span> <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="s2">"Dao"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>You can also use <a href="http://guides.rubyonrails.org/active_record_validations.html#custom-validators">ActiveModel::Validator</a> for custom validations.</p>
+
+<h2 id="inclusion-and-exclusion-validations">Inclusion and Exclusion Validations</h2>
+
+<p>Examples from RailsGuides:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Coffee</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">validates</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">inclusion: </span><span class="p">{</span> <span class="ss">in: </span><span class="sx">%w(small medium large)</span><span class="p">,</span>
+                                <span class="ss">message:   </span><span class="s2">"%{value} is not a valid size"</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Account</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">validates</span> <span class="ss">:subdomain</span><span class="p">,</span> <span class="ss">exclusion: </span><span class="p">{</span> <span class="ss">in: </span><span class="sx">%w(www us ca jp)</span><span class="p">,</span>
+                                     <span class="ss">message: </span><span class="s2">"%{value} is reserved."</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="testing-custom-methods">Testing Custom Methods</h2>
+
+<p>Every fan needs a belieber nickname. For example, Penelope’s belieber nickname is “Penelopelieber”. Let’s write a test for the nickname functionality:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"it has a beliber nickname"</span> <span class="k">do</span>
+     <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Penelope"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+     <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">.</span><span class="nf">nickname</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Penelopelieber"</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>We’ll make this pass by creating a <code class="highlighter-rouge">nickname</code> method in <code class="highlighter-rouge">fan.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">nickname</span>
+    <span class="s2">"</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">lieber"</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="testing-relationships">Testing Relationships</h2>
+
+<p>Relationships can be tested in the model, but the functionality is probably better tested in a feature test. The only thing we’ll test at the model level is that an object can respond to an association method.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">it</span> <span class="s2">"it belongs to a location"</span> <span class="k">do</span>
+     <span class="n">fan</span> <span class="o">=</span> <span class="no">Fan</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Penelope"</span><span class="p">,</span> <span class="ss">email: </span><span class="s2">"yosoybelieber@example.com"</span><span class="p">)</span>
+     <span class="n">expect</span><span class="p">(</span><span class="n">fan</span><span class="p">).</span><span class="nf">to</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:location</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>However, this test will pass even if we just put <code class="highlighter-rouge">def location;end</code> in the model.</p>
+
+<p>We can use <a href="https://github.com/thoughtbot/shoulda-matchers">shoulda-matchers</a> to easily test out the association.</p>
+
+<p><strong>Take 5 minutes and see if you can use the <code class="highlighter-rouge">shoulda-matchers</code> gem to test this relationship.</strong></p>
+
+<h3 id="using-shoulda-matchers">Using Shoulda-Matchers</h3>
+
+<p>In the Gemfile:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'shoulda-matchers'</span><span class="p">,</span> <span class="s1">'~&gt; 3.1'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In your <code class="highlighter-rouge">rails_helper.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Shoulda</span><span class="o">::</span><span class="no">Matchers</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">integrate</span> <span class="k">do</span> <span class="o">|</span><span class="n">with</span><span class="o">|</span>
+    <span class="n">with</span><span class="p">.</span><span class="nf">test_framework</span> <span class="ss">:rspec</span>
+
+    <span class="n">with</span><span class="p">.</span><span class="nf">library</span> <span class="ss">:rails</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>In the model test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">belong_to</span><span class="p">(</span><span class="ss">:location</span><span class="p">)</span> <span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Get this test to pass by adding the association in the model.</p>
+
+<h2 id="check-for-understanding">Check for Understanding</h2>
+
+<p>Using your <code class="highlighter-rouge">BookShelf</code> application, write model tests for the following:</p>
+
+<ul>
+  <li>A <code class="highlighter-rouge">Book</code> should not be valid without a title</li>
+  <li>A <code class="highlighter-rouge">Book</code>’s title is unique</li>
+  <li>A <code class="highlighter-rouge">Book</code>’s price may not be more than $90005</li>
+  <li><code class="highlighter-rouge">Book.all</code> should return all book’s ordered alphabetically by title</li>
+</ul>
+
+<h2 id="independent-practice">Independent Practice</h2>
+
+<ul>
+  <li><a href="https://github.com/turingschool/challenges/blob/master/model_testing_rails.markdown">Model Testing in Rails Challenges</a></li>
+</ul>
+
+:ET

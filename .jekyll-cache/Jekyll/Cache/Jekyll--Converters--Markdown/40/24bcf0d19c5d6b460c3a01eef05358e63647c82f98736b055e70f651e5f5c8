@@ -1,0 +1,395 @@
+I"�O<h1 id="important-note-about-getting-started">Important Note about Getting Started</h1>
+
+<ol>
+  <li>
+    <p>This project is an API based application. <strong>Use</strong> the <code class="highlighter-rouge">rails new --api and other flags</code> when creating your application. <em>Doing <code class="highlighter-rouge">rails new</code> which includes views, etc is NOT a correct project structure.</em></p>
+  </li>
+  <li>
+    <p>We would like to see a README file included in your project that outlines the learning goals, how someone can clone and set up your application and where they can get their own API keys, and happy path endpoint use.</p>
+  </li>
+  <li>
+    <p>It is <strong>optional</strong> to use the <a href="https://github.com/Netflix/fast_jsonapi">Fast JSON API</a> but we strongly recommend it.</p>
+  </li>
+</ol>
+
+<h2 id="1-application-landing-page">1. Application Landing Page</h2>
+
+<p>The front-end team has drawn up this wireframe for the application’s landing page:</p>
+
+<p><img src="./images/root.png" alt="Root Page" /></p>
+
+<p>They need your API to expose two API endpoints in order to populate this page with the necessary data.</p>
+
+<hr />
+
+<h3 id="1a-retrieve-weather-for-a-city">1a. Retrieve weather for a city</h3>
+
+<p><strong>Request:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/v1/forecast?location=denver,co
+Content-Type: application/json
+Accept: application/json
+</code></pre></div></div>
+
+<p><strong>Response:</strong></p>
+
+<p>The response data should contain exactly these elements and nothing more:</p>
+
+<ul>
+  <li>a data attribute, under which all other attributes are present:
+    <ul>
+      <li>id, always set to null</li>
+      <li>type, always set to “forecast”</li>
+      <li>attributes, an object containing weather information:
+        <ul>
+          <li>current_weather, holds current weather data:
+            <ul>
+              <li>datetime, in a human-readable format such as “2020-09-30 13:27:03 -0600”</li>
+              <li>sunrise, in a human-readable format such as “2020-09-30 06:27:03 -0600”</li>
+              <li>sunset, in a human-readable format such as “2020-09-30 18:27:03 -0600”</li>
+              <li>temperature, floating point number indicating the current temperature in Fahrenheit</li>
+              <li>feels_like, floating point number indicating a temperature in Fahrenheit</li>
+              <li>humidity, numeric (int or float), as given by OpenWeather</li>
+              <li>uvi, numeric (int or float), as given by OpenWeather</li>
+              <li>visibility, numeric (int or float), as given by OpenWeather</li>
+              <li>conditions, the first ‘description’ field from the weather data as given by OpenWeather</li>
+              <li>icon, string, as given by OpenWeather</li>
+            </ul>
+          </li>
+          <li>daily_weather, array of the next 5 days of daily weather data:
+            <ul>
+              <li>date, in a human-readable format such as “2020-09-30”</li>
+              <li>sunrise, in a human-readable format such as “2020-09-30 06:27:03 -0600”</li>
+              <li>sunset, in a human-readable format such as “2020-09-30 18:27:03 -0600”</li>
+              <li>max_temp, floating point number indicating the maximum expected temperature in Fahrenheit</li>
+              <li>min_temp, floating point number indicating the minimum expected temperature in Fahrenheit</li>
+              <li>conditions, the first ‘description’ field from the weather data as given by OpenWeather</li>
+              <li>icon, string, as given by OpenWeather</li>
+            </ul>
+          </li>
+          <li>hourly_weather, array of the next 8 hours of hourly weather data:
+            <ul>
+              <li>time, in a human-readable format such as “14:00:00”</li>
+              <li>temperature, floating point number indicating the current temperature in Fahrenheit</li>
+              <li>conditions, the first ‘description’ field from the weather data as given by OpenWeather</li>
+              <li>icon, string, as given by OpenWeather</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Example:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forecast"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"current_weather"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"datetime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-09-30 13:27:03 -0600"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">79.4</span><span class="p">,</span><span class="w">
+        </span><span class="err">etc</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"daily_weather"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-10-01"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"sunrise"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-10-01 06:10:43 -0600"</span><span class="p">,</span><span class="w">
+          </span><span class="err">etc</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w"> </span><span class="err">etc</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"hourly_weather"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"14:00:00"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"conditions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cloudy with a chance of meatballs"</span><span class="p">,</span><span class="w">
+          </span><span class="err">etc</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w"> </span><span class="err">etc</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Requirements:</strong></p>
+
+<ul>
+  <li>Endpoint needs to use the city and state from the GET request’s query parameter and send it to <a href="https://developer.mapquest.com/documentation/geocoding-api/">MapQuest’s Geocoding API</a> to retrieve the latitude and longitude for the city. Use of the MapQuest’s Geocoding API is a hard requirement.</li>
+  <li>Retrieve forecast data from the <a href="https://openweathermap.org/api/one-call-api">OpenWeather One Call API</a> using the latitude and longitude from MapQuest.</li>
+  <li>Testing should look for more than just the presence of attribute fields in the response. Testing should also determine which fields should NOT be present. (don’t send unnecessary data)</li>
+</ul>
+
+<hr />
+
+<h3 id="1b-background-image-for-the-city">1b. Background Image for the City</h3>
+
+<p>The frontend developers will also call an endpoint to fetch a background image for that page showing the city.</p>
+
+<p><strong>Request:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/v1/backgrounds?location=denver,co
+Content-Type: application/json
+Accept: application/json
+</code></pre></div></div>
+
+<p><strong>Response:</strong></p>
+
+<ul>
+  <li>This will return the url of an appropriate background image for a location.</li>
+  <li>An example of a response COULD look something like this:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>status: 200
+body:
+
+{
+  "data": {
+    "type": "image",
+    "id": null,
+    "attributes": {
+      "image": {
+        "location": "denver,co",
+        "image_url": "https://pixabay.com/get/54e6d4444f50a814f1dc8460962930761c38d6ed534c704c7c2878dd954dc451_640.jpg",
+        "credit": {
+          "source": "pixabay.com",
+          "author": "quinntheislander",
+          "logo": "https://pixabay.com/static/img/logo_square.png"
+        }
+      }
+    }
+  }
+}
+</code></pre></div></div>
+
+<p><strong>Requirements:</strong></p>
+
+<ul>
+  <li>Implement a new API service (Unsplash, Pexels, Microsoft Bing Image search, Wikimedia image search, Flickr and more) to use the name of the city to get the URL of an appropriate background image. (we don’t recommend pixabay, it has a very limited image search, it’s only for an example above!)</li>
+  <li>Please read the terms of use of your image provider about giving credit for the search results, and put appropriate content in the response!!</li>
+</ul>
+
+<p><strong>Extension:</strong></p>
+
+<ul>
+  <li>Determine the time of day and current weather and include that in your search; for example, searching for “denver evening snow” might return a far more interesting result</li>
+</ul>
+
+<hr />
+
+<h2 id="2-user-registration">2. User Registration</h2>
+
+<p>The front-end team has drawn up this wireframe for registration:</p>
+
+<p><img src="./images/sign_up.png" alt="Sign Up Mockup" /></p>
+
+<p>Your api should expose this endpoint:</p>
+
+<p><strong>Request:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "whatever@example.com",
+  "password": "password",
+  "password_confirmation": "password"
+}
+</code></pre></div></div>
+
+<p><strong>Response:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>status: 201
+body:
+
+{
+  "data": {
+    "type": "users",
+    "id": "1",
+    "attributes": {
+      "email": "whatever@example.com",
+      "api_key": "jgn983hy48thw9begh98h4539h4"
+    }
+  }
+}
+</code></pre></div></div>
+
+<p><strong>Requirements:</strong></p>
+
+<ul>
+  <li>This POST endpoint should NOT call your endpoint like <code class="highlighter-rouge">/api/v1/users?email=person@woohoo.com&amp;password=abc123&amp;password_confirmation=abc123</code>, and should NOT send as form data either. You must send a <strong>JSON payload</strong> in the <strong>body</strong> of the request
+    <ul>
+      <li>in Postman, under the address bar, click on “Body”, select “raw”, which will show a dropdown that probably says “Text” in it, choose “JSON” from the list</li>
+      <li>this is a <strong>hard requirement</strong> to pass this endpoint!</li>
+    </ul>
+  </li>
+  <li>A successful request creates a user in your database, and generates a unique api key associated with that user, with a 201 status code. The response should NOT include the password in any form</li>
+  <li>An unsuccessful request returns an appropriate <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors">400-level status code</a> and body with a description of why the request wasn’t successful.
+    <ul>
+      <li>Potential reasons a request would fail: passwords don’t match, email has already been taken, missing a field, etc.</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="3-login">3. Login</h2>
+
+<p>The front-end team has drawn up this wireframe for log in:</p>
+
+<p><img src="./images/login.png" alt="Login Mockup" /></p>
+
+<p>Your api should expose this endpoint:</p>
+
+<p><strong>Request:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/sessions
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "whatever@example.com",
+  "password": "password"
+}
+</code></pre></div></div>
+
+<p><strong>Response:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>status: 200
+body:
+
+{
+  "data": {
+    "type": "users",
+    "id": "1",
+    "attributes": {
+      "email": "whatever@example.com",
+      "api_key": "jgn983hy48thw9begh98h4539h4"
+    }
+  }
+}
+</code></pre></div></div>
+
+<p><strong>Requirements:</strong></p>
+
+<ul>
+  <li>This POST endpoint should NOT call your endpoint like <code class="highlighter-rouge">/api/v1/sessions?email=person@woohoo.com&amp;password=abc123</code>, and should NOT send as form data either. You must send a <strong>JSON payload</strong> in the <strong>body</strong> of the request
+    <ul>
+      <li>in Postman, under the address bar, click on “Body”, select “raw”, which will show a dropdown that probably says “Text” in it, choose “JSON” from the list</li>
+      <li>this is a <strong>hard requirement</strong> to pass this endpoint!</li>
+    </ul>
+  </li>
+  <li>A successful request returns the user’s api key.</li>
+  <li>An unsuccessful request returns an appropriate <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#4xx_Client_errors">400-level status code</a> and body with a description of why the request wasn’t successful.
+    <ul>
+      <li>Potential reasons a request would fail: credentials are bad, etc</li>
+      <li><strong>Security tip:</strong> never tell a user which field (email/password) is incorrect, as this alerts malicious users how to attack your site (eg, if they’ve guessed a correct email address, and you tell them the password is bad, then they don’t need to keep guessing email addresses, and can just try to crack the password)</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="4-road-trip">4. Road Trip</h2>
+
+<p>The front-end team has drawn up these wireframes for a feature where users can plan road trips:</p>
+
+<p><img src="./images/road_trip.png" alt="Road Trip Mockup" /></p>
+
+<p><strong>Request:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v1/road_trip
+Content-Type: application/json
+Accept: application/json
+
+body:
+
+{
+  "origin": "Denver,CO",
+  "destination": "Pueblo,CO",
+  "api_key": "jgn983hy48thw9begh98h4539h4"
+}
+</code></pre></div></div>
+
+<p><strong>Response:</strong></p>
+
+<p>Your response should have the following information for the front-end:</p>
+
+<ul>
+  <li>a data attribute, under which all other attributes are present:
+    <ul>
+      <li>id, always set to null</li>
+      <li>type, always set to “roadtrip”</li>
+      <li>attributes, an object containing road trip information:
+        <ul>
+          <li>start_city, string, such as “Denver, CO”</li>
+          <li>end_city, string, such as “Estes Park, CO”</li>
+          <li>travel_time, string, something user-friendly like “2 hours, 13 minutes” or “2h13m” or “02:13:00” or something of that nature (you don’t have to include seconds); set this string to “impossible route” if there is no route between your cities</li>
+          <li>weather_at_eta, conditions at end_city when you arrive (not CURRENT weather), object containing:
+            <ul>
+              <li>temperature, numeric value in Fahrenheit</li>
+              <li>conditions, string, as given by OpenWeather</li>
+              <li>note: this object will be blank if the travel time is impossible</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>eg:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"roadtrip"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"start_city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Denver, CO"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"end_city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Estes Park, CO"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"travel_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2 hours, 13 minutes"</span><span class="w">
+      </span><span class="nl">"weather_at_eta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">59.4</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"conditions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"partly cloudy with a chance of meatballs"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Requirements:</strong></p>
+
+<ul>
+  <li>This POST endpoint should NOT call your endpoint like <code class="highlighter-rouge">/api/v1/road_trip?origin=Denver,CO&amp;destination=Pueblo,CO&amp;api_key=abc123</code>, and should NOT send as form data either. You must send a <strong>JSON payload</strong> in the <strong>body</strong> of the request
+    <ul>
+      <li>in Postman, under the address bar, click on “Body”, select “raw”, which will show a dropdown that probably says “Text” in it, choose “JSON” from the list</li>
+      <li>this is a <strong>hard requirement</strong> to pass this endpoint!</li>
+    </ul>
+  </li>
+  <li>API key must be sent</li>
+  <li>If no API key is given, or an incorrect key is provided, return 401 (Unauthorized)</li>
+  <li>You will use MapQuest’s Directions API:  <code class="highlighter-rouge">https://developer.mapquest.com/documentation/directions-api/</code></li>
+  <li>The structure of the response should be JSON API 1.0 Compliant.</li>
+  <li>Your code should allow for the following:
+    <ul>
+      <li>Traveling from New York, NY to Los Angeles, CA, with appropriate weather in L.A. when you arrive 40 hours later</li>
+      <li>Traveling from New York, NY to London, UK, weather block should be empty and travel time should be “impossible”</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="extensions">Extensions</h2>
+
+<ol>
+  <li>
+    <p>Add a query parameter to applicable endpoints called “units”, and allow the user to pass “metric” or “imperial” as a value (ie, units=metric or units=imperial) and convert temperatures to Celcius for metric, and Fahrenheit for imperial.</p>
+  </li>
+  <li>
+    <p>Cache the city/state and lat/lng data within Rails for a period of time. Also consider storing it in your database.</p>
+  </li>
+  <li>
+    <p>Check the <a href="https://backend.turing.io/module3/extensions/">Mod 3 Extensions page</a> for additional things you can add to your project.</p>
+  </li>
+</ol>
+:ET

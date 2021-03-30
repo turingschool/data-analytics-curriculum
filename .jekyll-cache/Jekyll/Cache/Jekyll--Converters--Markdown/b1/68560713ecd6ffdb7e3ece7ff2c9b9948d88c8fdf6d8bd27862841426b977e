@@ -1,0 +1,40 @@
+I"Ö<h2 id="iteration-5---supporting-feature-1">Iteration 5 - Supporting Feature #1</h2>
+
+<p>Do at least one of the following. Additional supporting features will be considered extensions.</p>
+
+<h3 id="adding-variables-to-markdown">Adding variables to markdown</h3>
+
+<p>Use this to set variables that are used in your ERB layouts. This way, each page can have a slightly different layout. Implement a pattern similar to the YAML frontmatter:</p>
+
+<p><a href="https://middlemanapp.com/basics/frontmatter/">https://middlemanapp.com/basics/frontmatter/</a></p>
+
+<p>Then, if you have something like this in your <code class="highlighter-rouge">default.html.erb</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;title&gt;Sweet Blog - &lt;%= current_page.title =&gt;&lt;/title&gt;
+</code></pre></div></div>
+
+<p>And this at the top of one of your source posts:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+title: "Sweet Post"
+---
+</code></pre></div></div>
+
+<p>The resulting output HTML for that post will be:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;title&gt;Sweet Blog - Sweet Post&lt;/title&gt;
+</code></pre></div></div>
+
+<h3 id="watch-for-file-changes">Watch for file changes</h3>
+
+<p>Add a script that will watch for changes in source files, and rebuild them when source files are changed.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/hyde watchfs
+</code></pre></div></div>
+
+<h3 id="support-partials">Support Partials</h3>
+
+<p>Create partial layout files to keep your layout from getting out of control. Then render those partials in your layout.</p>
+
+<p>TK</p>
+:ET

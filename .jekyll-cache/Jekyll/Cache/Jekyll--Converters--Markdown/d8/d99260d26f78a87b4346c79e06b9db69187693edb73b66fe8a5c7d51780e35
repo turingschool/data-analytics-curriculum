@@ -1,0 +1,111 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Practice project management (create user stories, daily stand-ups and retros)</li>
+  <li>Create an Express API given specified endpoints and response formats</li>
+  <li>Test endpoints</li>
+  <li>Write good documentation</li>
+  <li>Practice articulating code presentation and process</li>
+  <li>Maintain a good Git workflow with partner</li>
+</ul>
+
+<h3 id="requirements-overview">Requirements Overview</h3>
+
+<p>To get started for this project clone the <a href="https://github.com/turingschool-examples/all-your-base">all-your-base repo</a>.
+You will want to rename your repo and make adjustments to some of the files(knexfile, migrations etc.) that have pre-existing code.</p>
+
+<p>Next register for an api key for the <a href="https://developer.musixmatch.com/">Musixmatch API</a></p>
+
+<p>For this project, the requirements will be given out in mini-sprints.</p>
+
+<h4 id="sprint-1">Sprint 1</h4>
+
+<p>For the first sprint you will want to have the following completed:</p>
+
+<ul>
+  <li>DTR as a gist</li>
+  <li>Deployment to Heroku</li>
+  <li>The endpoints listed below</li>
+</ul>
+
+<p><strong>POST /api/v1/favorites</strong></p>
+
+<p>You will use the <a href="https://developer.musixmatch.com/">Musixmatch API</a> to get song information to create a favorite.
+<em>Please note that the rating system should only allow for a number between 1-100. If a genre is not provided, the genre should be “Unknown”.</em></p>
+
+<p>To create a new favorite, use the following request parameters:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{ title: "We Will Rock You", artistName: "Queen" }
+</code></pre></div></div>
+
+<p>Response Body:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">title</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">We Will Rock You</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">artistName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Queen</span><span class="dl">"</span>
+  <span class="dl">"</span><span class="s2">genre</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Rock</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">rating</span><span class="dl">"</span><span class="p">:</span> <span class="mi">88</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If a favorite is successfully created, the item will be returned with a status code of 201.
+If the favorite is not successfully created, a 400 status code will be returned.</p>
+
+<p><strong>GET /api/v1/favorites</strong></p>
+
+<p>Returns all favorited songs currently in the database.
+The index of favorites will be returned in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">title</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">We Will Rock You</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">artistName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Queen</span><span class="dl">"</span>
+    <span class="dl">"</span><span class="s2">genre</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Rock</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">rating</span><span class="dl">"</span><span class="p">:</span> <span class="mi">88</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">title</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Careless Whisper</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">artistName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">George Michael</span><span class="dl">"</span>
+    <span class="dl">"</span><span class="s2">genre</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Pop</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">rating</span><span class="dl">"</span><span class="p">:</span> <span class="mi">93</span>
+  <span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p><strong>GET /api/v1/favorites/:id</strong></p>
+
+<p>Returns the favorite object with the specific <code class="highlighter-rouge">:id</code> you’ve passed in.
+A 404 is returned if the favorite is not found.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">title</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">We Will Rock You</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">artistName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Queen</span><span class="dl">"</span>
+    <span class="dl">"</span><span class="s2">genre</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Rock</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">rating</span><span class="dl">"</span><span class="p">:</span> <span class="mi">88</span>
+  <span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><strong>DELETE /api/v1/favorites/:id</strong></p>
+
+<p>Will delete the favorite with the id passed in and return a 204 status code.
+If the favorite can’t be found, a 404 will be returned.</p>
+
+<h3 id="communication-expectations">Communication Expectations</h3>
+
+<ul>
+  <li>Communicate with your instructors if you feel like your team is falling behind or cannot complete the tasks assigned.</li>
+  <li>Communicate with your instructors if your team has completed all requirements before the deadline.</li>
+  <li>Tag instructors in pull requests on GitHub wherever you’d like feedback.</li>
+  <li>If there is any question about functionality, ASK.</li>
+</ul>
+
+<h3 id="rubric">Rubric</h3>
+
+<p>You will be graded by an instructor on the criteria in this <a href="./play_rubric">rubric</a>.</p>
+:ET

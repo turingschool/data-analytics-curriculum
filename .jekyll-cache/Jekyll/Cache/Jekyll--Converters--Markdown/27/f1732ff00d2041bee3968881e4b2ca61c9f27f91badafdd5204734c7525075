@@ -1,0 +1,98 @@
+I"9<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand how cookies are a part of the HTTP request/response cycle</li>
+  <li>Understand how cookies and sessions tie together</li>
+  <li>Understand how to store state in both cookies and sessions</li>
+  <li>Practice the syntax for setting and fetching session data</li>
+  <li>Practice setting flash messages based on conditionals</li>
+</ul>
+
+<h2 id="exercise">Exercise</h2>
+
+<h3 id="background">Background</h3>
+
+<ol>
+  <li>Download <a href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg">EditThisCookie</a>.</li>
+  <li>Watch <a href="https://youtu.be/64veb6tKTm0">this</a> video about sessions and cookies.</li>
+  <li>Watch <a href="https://youtu.be/xdH9zsW1CK0">this</a> video covering the same topic with a slightly different focus.</li>
+  <li><a href="https://youtu.be/IPQhME1UYQU">This one</a> as well.</li>
+  <li>Read <a href="http://guides.rubyonrails.org/action_controller_overview.html">Sections 5.1, 5.2, and 6</a> of the Action Controller Overview in the Rails docs.</li>
+  <li>Visit a big name site (Wikipedia, Facebook, Amazon, Google, etc.), or another site that you visit frequently and click on EditThisCookie in your nav bar (you should see a cookie logo). Explore the different cookies that are being stored for each site. Many will likely be encrypted or at the very least seem cryptic, but some may have information that is more easily parsed by us mere mortals.</li>
+</ol>
+
+<h3 id="practice">Practice</h3>
+
+<h4 id="cookies">Cookies</h4>
+
+<p>Per section 6 of the docs linked above: Rails gives us a <code class="highlighter-rouge">cookies</code> method that acts like a hash that will allow us to set data in our controller and send it to our user as a cookie. Let’s try this out.</p>
+
+<p>Open SetList and in the <code class="highlighter-rouge">show</code> method on the <code class="highlighter-rouge">ArtistsController</code> change the <code class="highlighter-rouge">show</code> to match the method below:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/controllers/artists_controller.rb</span>
+
+<span class="k">def</span> <span class="nf">show</span>
+  <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">cookies</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"It's a secret to everybody"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">rails s</code> in a terminal, open your browser, and visit the show page for one of the artists in your database. Use EditThisCookie to view the cookie that you have created (it should have a title of <code class="highlighter-rouge">secret</code>).</p>
+
+<p>Now, delete the line <code class="highlighter-rouge">cookie[:secret] = "It's a secret to everybody"</code> from your controller. Visit the page again and check to see if the cookie is still there. Click refresh a few times. What changed?</p>
+
+<p>Use EditThisCookie to change the value in the cookie to “It’s a secret to nobody” (edit the value that you see and click the green checkbox). Hit refresh a few times and check to see what the value is. Remember: cookies are stored <strong>client side</strong> and can be edited by users.</p>
+
+<h4 id="sessions">Sessions</h4>
+
+<p>The session method that Rails gives us in our controller offers similar behavior for sessions.</p>
+
+<p>Go back to the <code class="highlighter-rouge">show</code> method of your ArtistsController and adjust it to the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/controllers/artists_controller.rb</span>
+
+<span class="k">def</span> <span class="nf">show</span>
+  <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">session</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"This time for real, though."</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Reload your artist show page again, and use EditThisCookie to see what cookies you have now. What is different about the sesssion? Can you change it?</p>
+
+<p>Update the <code class="highlighter-rouge">show</code> method in your ArtistsController one more time:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/controllers/artists_controller</span>
+<span class="k">def</span> <span class="nf">show</span>
+  <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+  <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">session</span><span class="p">[</span><span class="ss">:secret</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"This time for real, though."</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Visit the artist show page once more and check to see that you hit the Pry in the terminal where your server is running.</p>
+
+<p>From there, check to see what is stored in our session by entering <code class="highlighter-rouge">session[:secret]</code> in your Pry session.</p>
+
+<p>Rails translates the encrypted cookie that lives on the client’s machine into something that you can read and use in your controller.</p>
+
+<p>Note that the <code class="highlighter-rouge">flash</code> that you have been using is a special type of session that Rails automatically expires after one request. Generally we use it in our views to give users feedback about actions they have performed.</p>
+
+<h2 id="questions-to-hand-in">Questions to Hand-in:</h2>
+
+<p>Answer the following questions in the Google Form provided to you.</p>
+
+<ol>
+  <li>What is a cookie?</li>
+  <li>What’s the difference between a cookie and a session?</li>
+  <li>What would it mean to store a user id in a cookie?</li>
+  <li>When would we want to use a session over a cookie?</li>
+</ol>
+
+<h2 id="if-you-finish-early">If you finish early…</h2>
+
+<ul>
+  <li>experiment with <a href="http://guides.rubyonrails.org/action_controller_overview.html#flash-now"><code class="highlighter-rouge">flash.now</code></a></li>
+  <li>read this blog post about <a href="http://robertheaton.com/2013/07/22/how-to-hack-a-rails-app-using-its-secret-token/">hacking Rails</a> from 2013. Some of the content in this article is out of date but the concepts still apply.</li>
+</ul>
+
+:ET

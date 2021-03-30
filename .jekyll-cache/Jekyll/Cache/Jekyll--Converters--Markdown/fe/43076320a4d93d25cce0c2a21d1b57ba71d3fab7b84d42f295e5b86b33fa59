@@ -1,0 +1,936 @@
+I"��<p><em>Project spec updated on 10/15/2019</em></p>
+
+<h2 id="introduction">Introduction</h2>
+<p>You are going to build a simple calorie tracker using Javascript and Express.  You will also have an opportunity to build out a second micro-services that focuses on recipes <em>or</em> a frontend that will interface with your calorie tracker.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Create an Express API given specified endpoints and response formats.</li>
+  <li>Create an optional micro-service that interfaces with the Edamam API.</li>
+  <li>Integrate both apps together and complete the quantified self experience</li>
+</ul>
+
+<h2 id="requirements-overview">Requirements Overview</h2>
+
+<p>You will be creating a tested Express API that users will utilize to track calories in meals that they eat.</p>
+
+<ul>
+  <li>All applications should be deployed with Heroku. For more information on how to do this, look <a href="https://codeburst.io/deploy-your-webpack-apps-to-heroku-in-3-simple-steps-4ae072af93a8">here</a></li>
+</ul>
+
+<h2 id="back-end-features">Back End Features</h2>
+
+<p>For your Express backend:</p>
+
+<ul>
+  <li>Make sure that you already have the express generator installed on your machine. If you don’t, you can run <code class="highlighter-rouge">npm install express-generator -g</code></li>
+  <li>Use the express generator and run  <code class="highlighter-rouge">express —no-view &lt;&lt;INSERT APP NAME HERE&gt;&gt;</code> to get started</li>
+  <li>Create an agile board on Github Projects and write stories for each of your endpoints. Use <a href="https://www.pivotaltracker.com/blog/principles-of-effective-story-writing-the-pivotal-labs-way">this as a reference point</a> on how to write effective stories. We’ll go into more detail on this.</li>
+  <li>Send your agile board, repo, and production links to your instructors.</li>
+</ul>
+
+<p>You will need to build the following foods and meals endpoints for your application (listed below). Based on the extensions below you may need to modify and add the endpoints listed in project spec - do so as needed. You will definitely need to add some.</p>
+
+<h3 id="week-1-endpoints">Week 1 Endpoints</h3>
+
+<p><strong>Foods Endpoints</strong></p>
+
+<p><em>GET /api/v1/foods</em></p>
+
+<p>Returns all foods currently in the database</p>
+
+<p>Each individual food will be returned in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Meatloaf</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">700</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></div>
+<p>]</p>
+
+<p><em>GET /api/v1/foods/:id</em></p>
+
+<p>Returns the food object with the specific <code class="highlighter-rouge">:id</code> you’ve passed in or 404 if the food is not found</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>POST /api/v1/foods</em></p>
+
+<p>Allows creating a new food with the parameters:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="dl">"</span><span class="s2">food</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span> <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Pear</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>If food is successfully created, the food item will be returned.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If the food is not successfully created, a 400 status code will be returned. Both name and calories are required fields.</p>
+
+<p><em>PUT /api/v1/foods/:id</em></p>
+
+<p>Allows one to update an existing food with the parameters:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="dl">"</span><span class="s2">food</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span> <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Mint</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">14</span><span class="dl">"</span><span class="p">}</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>If food is successfully updated (name and calories are required fields), the food item will be returned.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Mint</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">14</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If the food is not successfully updated, a 400 status code will be returned.</p>
+
+<p><em>DELETE /api/v1/foods/:id</em></p>
+
+<p>Will delete the food with the id passed in and return a 204 status code. No body will be returned after a deletion. If the food can’t be found, a 404 will be returned.</p>
+
+<p><strong>Meals Endpoints</strong></p>
+
+<p><em>GET /api/v1/meals</em></p>
+
+<p>Returns all the meals in the database along with their associated foods</p>
+
+<p>If successful, this request will return a response in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Breakfast</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Yogurt</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">550</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">220</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Snack</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Gum</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">50</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Cheese</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">400</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Lunch</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Bagel Bites - Four Cheese</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">650</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Chicken Burrito</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">800</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">220</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Dinner</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Bagel Bites - Four Cheese</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">650</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Chicken Burrito</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">800</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p><em>GET /api/v1/meals/:meal_id/foods</em></p>
+
+<p>Returns all the foods associated with the meal with an id specified by <code class="highlighter-rouge">:meal_id</code> or a 404 if the meal is not found</p>
+
+<p>If successful, this request will return a response in the following format:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Breakfast</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Banana</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">150</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Yogurt</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">550</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">id</span><span class="dl">"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Apple</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span><span class="p">:</span> <span class="mi">220</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>POST /api/v1/meals/:meal_id/foods/:id</em></p>
+
+<p>Adds the food with :id to the meal with <code class="highlighter-rouge">:meal_id</code></p>
+
+<p>This creates a new record in the MealFoods table to establish the relationship between this food and meal. If the meal/food cannot be found, a 404 will be returned.</p>
+
+<p>If successful, this request will return a status code of 201 with the following body:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">message</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Successfully added FOODNAME to MEALNAME</span><span class="dl">"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>DELETE /api/v1/meals/:meal_id/foods/:id</em></p>
+
+<p>Removes the food with <code class="highlighter-rouge">:id</code> from the meal with <code class="highlighter-rouge">:meal_id</code></p>
+
+<p>This deletes the existing record in the MealFoods table that creates the relationship between this food and meal. If the meal/food cannot be found, a 404 will be returned.</p>
+
+<p>If successful, this request will return a 204 status code and no body will be present.</p>
+
+<h2 id="week-2---choose-your-own-adventure-from-the-following-two-options">Week 2 - Choose your own adventure from the following two options:</h2>
+
+<h3 id="option-1--a-recipe-micro-service-with-the-edamam-api">Option 1 — A Recipe micro-service with the Edamam API</h3>
+
+<p>This extension’s focus is to create and use an independent micro-service that you’ve built yourself. This means that you’ll need to use the Express generator as you did above and create a brand new application This new micro-service will be created and deployed, just as you did with your first one.</p>
+
+<p>So let’s break this down. You’ll need to do a few things to get everything set up.</p>
+
+<ul>
+  <li>Register for an API key from <a href="https://developer.edamam.com/edamam-recipe-api">Edamam</a></li>
+  <li>Look over the Edamam documentation on how to search for recipes.</li>
+  <li>Use the Edamam API to search for a particular kind of food (for example, bananas).</li>
+  <li>Build a recipes table in your new micro-service.</li>
+  <li>Look below to see what an example recipes response would look like. You may not need all of the information that the Edamam API gives back to you. Pick out the most important data and <em>seed your database with at least 10 results per food item</em>. In other words, you’ll seed your database with 10 recipes that include bananas. Then another 10 recipes that would include chicken. This will go on until you have successfully seeded your database with 100 recipes from 10 unique foods.</li>
+</ul>
+
+<p><em>Example query:</em></p>
+
+<p><code class="highlighter-rouge">curl "https://api.edamam.com/search?q=chicken&amp;app_id=API_ID&amp;app_key=API_KEY&amp;from=0&amp;to=1&amp;calories=591-722&amp;health=alcohol-free"</code></p>
+
+<p><em>Example result:</em></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">q</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">chicken</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">from</span><span class="dl">"</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">to</span><span class="dl">"</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">params</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">sane</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">q</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">chicken</span><span class="dl">"</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">app_key</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">99b2a57e1d4286eed868626b3df01d96</span><span class="dl">"</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">health</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">alcohol-free</span><span class="dl">"</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">from</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">0</span><span class="dl">"</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">to</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">1</span><span class="dl">"</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">591-722</span><span class="dl">"</span> <span class="p">],</span>
+    <span class="dl">"</span><span class="s2">app_id</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">8e41a3ab</span><span class="dl">"</span> <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="dl">"</span><span class="s2">more</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">count</span><span class="dl">"</span> <span class="p">:</span> <span class="mi">11882</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">hits</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">recipe</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">uri</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">http://www.edamam.com/ontologies/edamam.owl#recipe_d81795fb677ba4f12ab1a104e10aac98</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Citrus Roasted Chicken</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">image</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">https://www.edamam.com/web-img/d4b/d4bb1e6c7a6c3738d8e01707eb0ad83d.jpg</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">source</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Food52</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">https://food52.com/recipes/3403-citrus-roasted-chicken</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">shareAs</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">http://www.edamam.com/recipe/citrus-roasted-chicken-d81795fb677ba4f12ab1a104e10aac98/chicken/alcohol-free/591-722-cal</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">yield</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">dietLabels</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">Low-Carb</span><span class="dl">"</span> <span class="p">],</span>
+      <span class="dl">"</span><span class="s2">healthLabels</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">Peanut-Free</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Tree-Nut-Free</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Alcohol-Free</span><span class="dl">"</span> <span class="p">],</span>
+      <span class="dl">"</span><span class="s2">cautions</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">Sulfites</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">FODMAP</span><span class="dl">"</span> <span class="p">],</span>
+      <span class="dl">"</span><span class="s2">ingredientLines</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="dl">"</span><span class="s2">1 chicken, about 3.5 to 4 pounds</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">1 lemon</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">1 blood orange</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">1 tangerine or clementine</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Kosher salt</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">1/2 cup chicken broth</span><span class="dl">"</span> <span class="p">],</span>
+      <span class="dl">"</span><span class="s2">ingredients</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">1 chicken, about 3.5 to 4 pounds</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">weight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1700.9713875</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">1 lemon</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">weight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">58.0</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">1 blood orange</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">weight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">131.0</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">1 tangerine or clementine</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">weight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">74.0</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Kosher salt</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">weight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">12.503828324999999</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">1/2 cup chicken broth</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">weight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">120.0</span>
+      <span class="p">}</span> <span class="p">],</span>
+      <span class="dl">"</span><span class="s2">calories</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2643.1901685250004</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">totalWeight</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2093.938546284647</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">totalTime</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">424.0</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">totalNutrients</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">ENERC_KCAL</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Energy</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2643.1901685250004</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">kcal</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FAT</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Fat</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">176.07527785109997</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FASAT</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Saturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">50.27953942484999</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FATRN</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Trans</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1.121960727195</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FAMS</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Monounsaturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">72.91052791439999</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FAPU</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Polyunsaturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">37.70010555505</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">CHOCDF</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Carbs</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">33.9289</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FIBTG</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Fiber</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">6.026</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">SUGAR</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Sugars</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">22.3877</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">PROCNT</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Protein</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">220.661261091</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">CHOLE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Cholesterol</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">871.095407625</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">NA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Sodium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">4846.2337822035</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">CA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Calcium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">222.90477789331527</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">MG</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Magnesium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">261.37178028784643</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">K</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Potassium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2761.015799917772</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Iron</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">11.277436515489338</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">ZN</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Zinc</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">15.501120278634646</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">P</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Phosphorus</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1775.850998945</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITA_RAE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin A</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">490.42082283499997</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITC</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin C</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">155.290568696</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">THIA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Thiamin (B1)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.9368063261</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">RIBF</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Riboflavin (B2)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1.5761926522</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">NIA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Niacin (B3)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">81.46334356343502</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITB6A</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin B6</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">4.30201190225</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FOLDFE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Folate equivalent (total)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">138.83963261</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FOLFD</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Folate (food)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">138.83963261</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITB12</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin B12</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">3.58564768485</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITD</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin D</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2.313321087</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">TOCPHA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin E</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">3.9767816305000006</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITK1</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin K</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">17.589908152499998</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="dl">"</span><span class="s2">totalDaily</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">ENERC_KCAL</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Energy</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">132.15950842625003</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FAT</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Fat</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">270.8850428478461</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FASAT</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Saturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">251.39769712424996</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">CHOCDF</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Carbs</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">11.309633333333332</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FIBTG</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Fiber</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">24.104</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">PROCNT</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Protein</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">441.32252218200006</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">CHOLE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Cholesterol</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">290.36513587499996</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">NA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Sodium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">201.92640759181248</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">CA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Calcium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">22.290477789331526</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">MG</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Magnesium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">62.23137625901106</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">K</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Potassium</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">58.74501701952706</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Iron</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">62.65242508605187</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">ZN</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Zinc</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">140.91927526031498</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">P</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Phosphorus</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">253.69299984928568</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITA_RAE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin A</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">54.49120253722222</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITC</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin C</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">172.5450763288889</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">THIA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Thiamin (B1)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">78.06719384166668</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">RIBF</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Riboflavin (B2)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">121.24558863076923</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">NIA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Niacin (B3)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">509.14589727146887</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITB6A</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin B6</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">330.92399248076924</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">FOLDFE</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Folate equivalent (total)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">34.7099081525</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITB12</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin B12</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">149.40198686875001</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITD</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin D</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">15.422140579999999</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">TOCPHA</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin E</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">26.51187753666667</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">},</span>
+        <span class="dl">"</span><span class="s2">VITK1</span><span class="dl">"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin K</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">quantity</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">14.658256793749997</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">%</span><span class="dl">"</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="dl">"</span><span class="s2">digest</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Fat</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FAT</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">fatContent</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">176.07527785109997</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">270.8850428478461</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">sub</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Saturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FASAT</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">saturatedFatContent</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">50.27953942484999</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">251.39769712424996</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Trans</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FATRN</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">transFatContent</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1.121960727195</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Monounsaturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FAMS</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">72.91052791439999</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Polyunsaturated</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FAPU</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">37.70010555505</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">}</span> <span class="p">]</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Carbs</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">CHOCDF</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">carbohydrateContent</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">33.9289</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">11.309633333333332</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">sub</span><span class="dl">"</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Carbs (net)</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">CHOCDF.net</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">27.9029</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Fiber</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FIBTG</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">fiberContent</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">6.026</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">24.104</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Sugars</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">SUGAR</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">sugarContent</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">22.3877</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">},</span> <span class="p">{</span>
+          <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Sugars, added</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">SUGAR.added</span><span class="dl">"</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+          <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+        <span class="p">}</span> <span class="p">]</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Protein</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">PROCNT</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">proteinContent</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">220.661261091</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">441.32252218200006</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">g</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Cholesterol</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">CHOLE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">cholesterolContent</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">871.095407625</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">290.36513587499996</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Sodium</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">NA</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">sodiumContent</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">4846.2337822035</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">201.92640759181248</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Calcium</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">CA</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">222.90477789331527</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">22.290477789331526</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Magnesium</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">MG</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">261.37178028784643</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">62.23137625901106</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Potassium</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">K</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2761.015799917772</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">58.74501701952706</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Iron</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">11.277436515489338</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">62.65242508605187</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Zinc</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">ZN</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">15.501120278634646</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">140.91927526031498</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Phosphorus</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">P</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1775.850998945</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">253.69299984928568</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin A</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">VITA_RAE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">490.42082283499997</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">54.49120253722222</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin C</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">VITC</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">155.290568696</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">172.5450763288889</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Thiamin (B1)</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">THIA</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.9368063261</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">78.06719384166668</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Riboflavin (B2)</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">RIBF</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">1.5761926522</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">121.24558863076923</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Niacin (B3)</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">NIA</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">81.46334356343502</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">509.14589727146887</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin B6</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">VITB6A</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">4.30201190225</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">330.92399248076924</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Folate equivalent (total)</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FOLDFE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">138.83963261</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">34.7099081525</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Folate (food)</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FOLFD</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">138.83963261</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Folic acid</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">FOLAC</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin B12</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">VITB12</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">3.58564768485</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">149.40198686875001</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin D</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">VITD</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">2.313321087</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">15.422140579999999</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin E</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">TOCPHA</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">3.9767816305000006</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">26.51187753666667</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">mg</span><span class="dl">"</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">Vitamin K</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">tag</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">VITK1</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">schemaOrgTag</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">total</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">17.589908152499998</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">hasRDI</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">daily</span><span class="dl">"</span> <span class="p">:</span> <span class="mf">14.658256793749997</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">unit</span><span class="dl">"</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">µg</span><span class="dl">"</span>
+      <span class="p">}</span> <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="dl">"</span><span class="s2">bookmarked</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">bought</span><span class="dl">"</span> <span class="p">:</span> <span class="kc">false</span>
+  <span class="p">}</span> <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="now-its-your-turn-to-be-creative-with-the-api">Now it’s your turn to be creative with the API</h3>
+
+<p>Choose and create three new endpoints in your Edamam Recipe Service.</p>
+
+<p>For example, you could create an endpoint where the user can search for recipes by food type, calorie amount, preparation time, number of ingredients, or cuisine type.</p>
+
+<p><em>Example Enpoints</em></p>
+<ul>
+  <li>GET /api/v1/recipes/food_search?q=food_type</li>
+  <li>GET /api/v1/recipes/calorie_search?q=calorie_count</li>
+  <li>GET /api/v1/recipes/ingredient_search?q=num_of_ingredients</li>
+</ul>
+
+<p>Now create <em>two</em> additional endpoints that will analyze your recipe results. For example</p>
+
+<ul>
+  <li>With a list of recipes, create an endpoint that finds the average calorie total based off food type</li>
+  <li>With a list of recipes, create an endpoint that orders recipes from least to greatest amount of ingredients</li>
+  <li>With a list of recipes, create an endpoint that orders recipes from least to great amount of time it takes to prepare the meal</li>
+</ul>
+
+<h3 id="option-2--build-a-frontend-for-your-application">Option 2 — Build a Frontend for your application</h3>
+
+<p>You can use <a href="https://github.com/turingschool-examples/qs-fe-starter-kit">this repo</a> as your FE starter kit. This starter kit is responsible for a setting up a simple server that will work in your browser. To get started, look inside the <code class="highlighter-rouge">lib</code> folder and you’ll find a file by the name of <code class="highlighter-rouge">index.js</code>. This is where you’ll want to write your Javascript code.</p>
+
+<p>Create a simple frontend that consumes both of your new APIs. This frontend can be a single page application and shouldn’t require the user to refresh the page at any time. This means that data will load dynamically.</p>
+
+<p>Notice: You do <em>not</em> have to write tests for your frontend, but should test features manually to ensure they work as expected.</p>
+
+<h2 id="potential-extensions">Potential Extensions</h2>
+<p>If you get through your first week’s work and one extension, then you can work on any stretch goals you may have. Below are some options:</p>
+
+<ol>
+  <li>
+    <p>Complete the other option you did not choose.</p>
+  </li>
+  <li>
+    <p>Add a calendar feature 
+What’s the point of this app if one can’t look back in time and see what eating habits they have? You’ll need to build out additional endpoints that lists all dates a user has recorded meals, and what they ate for each meal.</p>
+  </li>
+</ol>
+
+<p>Please note that this extension will require you to create additional endpoints that include the creation of users.</p>
+
+<h2 id="expectations">Expectations</h2>
+
+<ul>
+  <li>Reach out to instructors on Slack wherever you’d like feedback.</li>
+  <li>Reach out for extra support if you feel like your team is falling behind.</li>
+  <li>If there’s any question about functionality, let us know!</li>
+</ul>
+
+<h2 id="rubric">Rubric</h2>
+
+<p>You will be graded by an instructor on the criteria in <a href="./rubric">this rubric</a>.</p>
+:ET

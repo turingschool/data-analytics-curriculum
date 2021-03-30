@@ -1,0 +1,27 @@
+I" <h3 id="goals">Goals</h3>
+
+<p>By the end of this lesson, you will know/be able to:</p>
+
+<ul>
+  <li>define CRUD in the programming sense of the word</li>
+  <li>understand functionality of update and delete of CRUD for a Sinatra app</li>
+  <li>divide responsibilities between the controller, views, and models</li>
+</ul>
+
+<h3 id="mvc-overview">MVC Overview</h3>
+
+<p>We’ll talk about MVC and diagram what this looks like on the board.</p>
+
+<h3 id="crud-overview">CRUD Overview</h3>
+
+<p>Assuming we want to create full CRUD functionality in our Sinatra app for users accessing our site through a browser, there are seven routes that we will need to define. Let’s make a chart together.</p>
+
+<p>(Here’s a <a href="https://www.dropbox.com/s/qfh9zmca7i7r3u4/CRUD%20%26%20Sinatra.jpg?dl=0">completed chart</a>, but don’t open it until you’re finished!)</p>
+
+<h3 id="crud-homework-recap">CRUD Homework Recap</h3>
+
+<ul>
+  <li>What was the most difficult piece about adding edit/delete functionality?</li>
+  <li>What are you still curious about?</li>
+</ul>
+:ET

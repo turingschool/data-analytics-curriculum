@@ -1,0 +1,128 @@
+I"8<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students can explain the benefits of using continuous integration</li>
+  <li>Students understand the steps used in the practice of CI</li>
+  <li>Students can utilize a CI service on a Github repo to automate testing code changes</li>
+</ul>
+
+<h2 id="intro-10-min">Intro (10 min)</h2>
+
+<p>Read <a href="https://aws.amazon.com/devops/continuous-integration/">What is Continuous Integration?</a></p>
+
+<p>Discuss with the person next to you:</p>
+<ul>
+  <li>What is CI?</li>
+  <li>Why would we want to use it?</li>
+</ul>
+
+<h2 id="continuous-integration">Continuous Integration</h2>
+
+<h3 id="what-is-ci">What is CI?</h3>
+
+<p>Continuous Integration is a development practice of routinely merging in code changes into a central repository and testing these changes as early and often as possible. The CI process entails both a automation aspect such as a CI platform or build service and a cultural aspects of integrating more frequently.</p>
+
+<h3 id="what-are-the-benefits">What are the benefits?</h3>
+
+<ul>
+  <li>Identify conflicts early</li>
+  <li>Find and address bugs quicker</li>
+  <li>Avoid Integration Hell</li>
+  <li>Improve Software Quality</li>
+</ul>
+
+<h3 id="what-are-the-steps">What are the steps?</h3>
+
+<ol>
+  <li>Write tests for all critical parts of the code base</li>
+  <li>Use a CI service to run those tests automatically with all repo changes</li>
+  <li>Make sure team integrates as early as possible</li>
+  <li>Fix broken build ASAP</li>
+  <li>Write tests for all new features</li>
+</ol>
+
+<h2 id="utilizing-travis-ci">Utilizing Travis CI</h2>
+
+<h3 id="step-1-create-rails-repo">Step 1. Create Rails Repo</h3>
+
+<ol>
+  <li>Create new Application
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new tweet-saver
+</code></pre></div>    </div>
+  </li>
+  <li>Scaffold the app
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails generate scaffold Tweet message:string published:boolean
+</code></pre></div>    </div>
+  </li>
+  <li>Run app to make sure everything is working
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails server
+</code></pre></div>    </div>
+  </li>
+  <li>Run tests to make sure everything is working
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="step-2-push-app-to-github">Step 2. Push App to Github</h3>
+
+<ol>
+  <li>Initialize a new git repo</li>
+  <li>Add your new changes and link up a remote from your new Github repo</li>
+  <li>Push up changes like you always do</li>
+</ol>
+
+<h3 id="step-3-sign-up-for-travis-ci">Step 3. Sign up for Travis CI</h3>
+
+<ol>
+  <li>Go to <a href="https://github.com/marketplace/travis-ci">Travis CI Github App</a></li>
+  <li>Add the <code class="highlighter-rouge">tweet-saver</code> repo</li>
+  <li>Confirm you can see you repo on <a href="https://travis-ci.com">Travis CI</a></li>
+  <li>Change settings to NOT ‘Build Pushed Branches’</li>
+</ol>
+
+<h3 id="step-4-add-travis-config-to-trigger-initial-build">Step 4. Add Travis config to trigger initial build</h3>
+<ol>
+  <li>Create <code class="highlighter-rouge">.travis.yml</code> file in your <code class="highlighter-rouge">tweet-saver</code> project
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>language: ruby
+rvm:
+ - 2.4.1
+</code></pre></div>    </div>
+    <blockquote>
+      <p>Hint: Be sure to use your ruby version</p>
+    </blockquote>
+  </li>
+  <li>Add <code class="highlighter-rouge">.travis.yml</code> file to git, commit, &amp; push</li>
+  <li>Go to your dashboard in travis - confirm that the build PASSED</li>
+  <li>Go to your repo in github and notice the dot next to the commit</li>
+</ol>
+
+<h3 id="step-5-lets-break-the-build">Step 5. Let’s break the build</h3>
+<ol>
+  <li>Create a new branch <code class="highlighter-rouge">break-the-build</code></li>
+  <li>BREAK IT - sabotage test</li>
+  <li>Commit changes and push to Github</li>
+  <li>Create a PR and watch the magic happen</li>
+</ol>
+
+<p>What do you see on Github?
+What do you see on Travis CI?</p>
+
+<h4 id="dont-break-the-build---example-issues">Don’t Break the Build - Example Issues</h4>
+<ul>
+  <li>Forgetting a new asset or file</li>
+  <li>Not running tests locally</li>
+  <li>Inconsistent dependency versions</li>
+</ul>
+
+<h2 id="continuous-integration-vs-continuous-delivery">Continuous Integration vs Continuous Delivery</h2>
+
+<p>Continuous delivery is an extension of CI that deploys code changes automatically to a specific environment (i.e testing, staging, production) after the build stage.</p>
+
+<p>It is also known as the process of releasing code frequently to the end user (daily, weekly, etc) based typically on business requirements.</p>
+
+<p>Where have you already seen this? <em>cough, cough</em> Github pages?</p>
+
+<p>Many CI platforms have these features built in and can automatically deploy your application after your code is merged.
+<a href="https://docs.travis-ci.com/user/deployment/heroku/">Auto Deploy With Travis CI and Heroku</a></p>
+:ET

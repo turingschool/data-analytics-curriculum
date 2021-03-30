@@ -1,0 +1,213 @@
+I"C;<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Explain the difference between class and instance methods.</li>
+  <li>Use a class method to create instances of that class.</li>
+  <li>Distinguish between class and instance methods with the same name.</li>
+</ul>
+
+<h2 id="agenda">Agenda</h2>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Instance Method</li>
+  <li>Class Method</li>
+</ul>
+
+<h2 id="lesson">Lesson</h2>
+
+<h3 id="warm-up">Warm Up</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">sam</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Sam"</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;User:0x007f94e3ab6218 @name="Sam"&gt;</span>
+<span class="o">&gt;</span> <span class="n">sam</span><span class="p">.</span><span class="nf">say_hello</span><span class="p">(</span><span class="s2">"Jay"</span><span class="p">)</span>
+<span class="c1"># =&gt; "Hello, Jay!"</span>
+</code></pre></div></div>
+
+<ul>
+  <li>What do we call the method <code class="highlighter-rouge">say_hello</code> on? What do we call the method <code class="highlighter-rouge">new</code> on?</li>
+</ul>
+
+<h3 id="discussion">Discussion</h3>
+
+<p>Up to this point we have primarily used classes as blueprints for instances of that class.</p>
+
+<p>We define methods in our class, we store some state in our instance variables, we call <code class="highlighter-rouge">.new</code>, and then we can use them.</p>
+
+<p>In Ruby, classes are also objects themselves. We can call methods on full classes the same way that we call methods on instances of that class (think about <code class="highlighter-rouge">.new</code>), the difference is how we define those methods.</p>
+
+<h3 id="exploration">Exploration</h3>
+
+<p>Using the following SocialMediaUser class, think about what you expect each method to return and why. If you have time, pseudocode what you think you’d do (in words/logic, not in code) to get that return value.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SocialMediaUser</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">rating</span><span class="p">)</span>
+    <span class="vi">@id</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="vi">@rating</span> <span class="o">=</span> <span class="n">rating</span> 
+  <span class="k">end</span>
+  
+  <span class="k">def</span> <span class="nf">rating</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">most_popular</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">add_post</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What is the difference between these methods?</p>
+
+<h4 id="syntax--uses">Syntax &amp; Uses</h4>
+
+<p>In order to define a class method, we prepend the method name with <code class="highlighter-rouge">self.</code>. So, for example, if we wanted to define a method called <code class="highlighter-rouge">say_hello</code> as a class method, we could do something like the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Greeter</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">say_hello</span>
+    <span class="nb">puts</span> <span class="s2">"Hello!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Then, in order to call that method we could use <code class="highlighter-rouge">Greeter.say_hello</code>. Note that we don’t have to create an instance of this class to do this.</p>
+
+<p>Why would we do this? There are a number of pieces of functionality that we might want to ascribe to a Class over a specific instance of a class. We could use the class to track information about all instances of a class, or make it so that a class is in charge of creating instances of itself in those cases where creation is not as straightforward as calling <code class="highlighter-rouge">new</code> and passing some variables.</p>
+
+<p>Look above at our SocialMediaUser class– why do you think we defined <code class="highlighter-rouge">most_popular</code> and <code class="highlighter-rouge">find</code> as class methods and not instance methods?</p>
+
+<h3 id="demo">Demo</h3>
+
+<p>For example, let’s say that we wanted to create not just one instance of a User, but a collection of Users. We could certainly iterate over a collection of attributes and create a new instance of an object each time, but whose responsibility is it to do that work? We could do it in a runner file or in a class that was specifically responsible for setting up this collection of objects, <em>or</em> now that we have the syntax for a class method, we could assign that responsibility to the class itself and then return a collection of User objects.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># user.rb</span>
+<span class="k">class</span> <span class="nc">User</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">create_multiple</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="n">users</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
+      <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="ss">:name</span><span class="p">])</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># runner.rb</span>
+<span class="n">users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="ss">name: </span><span class="s2">"Sal"</span><span class="p">},</span>
+    <span class="p">{</span><span class="ss">name: </span><span class="s2">"Brian"</span><span class="p">},</span>
+    <span class="p">{</span><span class="ss">name: </span><span class="s2">"Megan"</span><span class="p">},</span>
+  <span class="p">]</span>
+
+<span class="no">User</span><span class="p">.</span><span class="nf">create_multiple</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="exploration--cfu">Exploration / CFU</h3>
+
+<ul>
+  <li>What happens if you create a class method and an instance method with the same name?</li>
+  <li>What happens if you call an instance method from within a class method?</li>
+  <li>What about a class method from within another class method?</li>
+  <li>How would you explain the difference between class and instance methods to someone else?</li>
+</ul>
+
+<h2 id="practical-use-experimentation">Practical Use, Experimentation</h2>
+
+<p>In Module 2, you will learn about databases and use a library to fetch things from a database. The following exercises will allow you to explore these ideas further to give you a better understanding of what’s happening within your classes that interact with the database.</p>
+
+<h3 id="getting-started">Getting Started</h3>
+
+<p>Download the following CSV of popular baby names:</p>
+
+<p>https://data.cityofnewyork.us/api/views/25th-nujf/rows.csv?accessType=DOWNLOAD</p>
+
+<p>Place this CSV file in the same folder as a new Ruby script you’ll call “name.rb”</p>
+
+<p>In that name.rb, start with the following code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'csv'</span>
+<span class="nb">require</span> <span class="s1">'pry'</span>
+
+<span class="k">class</span> <span class="nc">Name</span>
+  <span class="nb">attr_reader</span> <span class="ss">:year</span><span class="p">,</span> <span class="ss">:bio_gender</span><span class="p">,</span> <span class="ss">:ethnicity</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:rank</span>
+  <span class="vc">@@filename</span> <span class="o">=</span> <span class="s1">'Popular_Baby_Names.csv'</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="vi">@year</span> <span class="o">=</span> 
+    <span class="vi">@bio_gender</span> <span class="o">=</span> 
+    <span class="vi">@ethnicity</span> <span class="o">=</span> 
+    <span class="vi">@name</span> <span class="o">=</span> 
+    <span class="vi">@count</span> <span class="o">=</span> 
+    <span class="vi">@rank</span> <span class="o">=</span> 
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_by_name</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="vc">@@filename</span><span class="p">,</span> <span class="ss">headers: </span><span class="kp">true</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># new code goes here</span>
+    
+    <span class="n">result</span>
+  <span class="k">end</span>
+
+</code></pre></div></div>
+
+<ol>
+  <li>Add code to the <code class="highlighter-rouge">self.find_by_name</code> method, which builds an array of <code class="highlighter-rouge">Name</code> objects that match the name column from our CSV data.</li>
+  <li>how many rows of data can you find for the following names:
+    1. Ian, MEGAN, Sal, Omar, Riley, HUNTER</li>
+  <li>Build ONE alternative copy of <code class="highlighter-rouge">seld.find_by_name</code> for findind things specifically by another field, like <code class="highlighter-rouge">count</code>, <code class="highlighter-rouge">rank</code>, and <code class="highlighter-rouge">year</code>. These would be called, for instance, <code class="highlighter-rouge">self.find_by_year</code> etc.</li>
+  <li>Create a new class method called <code class="highlighter-rouge">self.where</code> which takes a hash of details, and builds an array of <code class="highlighter-rouge">Name</code> objects that match the CSV data. This method will need to copy the <code class="highlighter-rouge">CSV.read</code> line from our <code class="highlighter-rouge">self.find_by_name</code> method.</li>
+  <li>The ‘key’ of the hash will be a symbol that matches the name of the column in the CSV file.</li>
+  <li>For example, we might call <code class="highlighter-rouge">results = Name.where( { rank: "15" } )</code></li>
+  <li>how many rows of data can you find for:
+    1. Rows with a rank of 25
+    1. Rows with a bio_gender of male? of female?
+    1. Rows with an ethnicity of “BLACK NON HISPANIC”?</li>
+  <li>Create a new class method called <code class="highlighter-rouge">self.order</code> which will allow us to sort data based on a hash of input.</li>
+  <li>A use-case will look like <code class="highlighter-rouge">results = Name.order( { year: :asc } )</code>
+    1. This would sort our CSV file by year in ascending order.
+    1. What is the first row of data that comes back?</li>
+  <li>A use-case will look like <code class="highlighter-rouge">results = Name.order( { name: :desc } )</code>
+    1. This would sort our CSV file by name in descending order.
+    1. What is the first row of data that comes back?</li>
+</ol>
+
+<p>Extensions</p>
+
+<ol>
+  <li>How would you adapt your <code class="highlighter-rouge">.where</code> method to take multiple fields of data to match?</li>
+  <li>For example, we might call <code class="highlighter-rouge">results = Name.where( { name: "Ian", rank: "15" } )</code></li>
+  <li>How would you adapt your <code class="highlighter-rouge">.order</code> method to take multiple fields of data to sort?</li>
+  <li>For example, we might call <code class="highlighter-rouge">results = Name.order( { ethnicity: :asc, name: :descending } )</code></li>
+</ol>
+
+<p>There are other methods that our database library would build for us including the following. Discuss with your partner how you would build these:</p>
+
+<ul>
+  <li>select: takes a list of fields, and only populates Name objects with the fields you choose
+    <ul>
+      <li>example:
+        <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result</span> <span class="o">=</span> <span class="no">Name</span><span class="p">.</span><span class="nf">select</span><span class="p">([</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"rank"</span><span class="p">])</span>
+<span class="nb">p</span> <span class="n">result</span><span class="p">.</span><span class="nf">first</span>
+<span class="c1">#&lt;Name:0x00007fa22cfe7dd0 @year=nil, @bio_gender=nil, @ethnicity=nil, @name="Ian", @count=nil, @rank="24"&gt;</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>limit: takes an integer parameter and returns only that many objects, eg <code class="highlighter-rouge">Name.limit(10)</code></li>
+  <li>average: takes a field name to average, returns a float, eg <code class="highlighter-rouge">Name.average("rank")</code></li>
+</ul>
+
+<p><strong>The <code class="highlighter-rouge">ActiveRecord</code> library will also build methods on-the-fly based on the attribute names.</strong> If there is a field called “name” it will build a method called “find_by_name”. If there is a field called “ethnicity”, it will build a method called “find_by_ethnicity” and so on.</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p><a href="https://launchschool.com/books/oo_ruby/read/classes_and_objects_part2">Class Methods Review w/ Launch School</a>
+<a href="https://robots.thoughtbot.com/meditations-on-a-class-method">Dig Deeper On Class Methods w/ ThoughtBot</a></p>
+:ET

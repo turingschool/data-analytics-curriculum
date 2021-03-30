@@ -1,0 +1,102 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the structure of a HTML5 page</li>
+  <li>Learn how to access and manipulate CSS from the Chrome Developer Tools</li>
+  <li>Layout semantic HTML using CSS</li>
+  <li>Style HTML elements using CSS</li>
+  <li>Apply CSS transformations and transitions</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 - Warm Up</li>
+  <li>10 - Group Discussion</li>
+  <li>10 - Anatomy of an HTML Page</li>
+  <li>5 - Break</li>
+  <li>15 - Basic CSS Refresher</li>
+  <li>5 - Mini-Project Introduction</li>
+  <li>110 - Mini-Project Work Time</li>
+  <li>15 - Wrap-up, Share Out, Reflection</li>
+</ul>
+
+<h2 id="warm-up">Warm-up</h2>
+
+<p>Start a new gist. Over the intermission you read up on HTML and CSS. Take a few minutes to answer the questions below.</p>
+
+<ul>
+  <li>What are two topics that confused you?</li>
+  <li>What are two topics that made instant sense to you?</li>
+</ul>
+
+<h2 id="full-group-instruction">Full-Group Instruction</h2>
+
+<h3 id="anatomy-of-an-html-page">Anatomy of an HTML Page</h3>
+
+<p>As a group, we’re going to go through the <code class="highlighter-rouge">index.html</code> in <a href="https://github.com/turingschool-examples/turing-bistro">https://github.com/turingschool-examples/turing-bistro</a> and discuss all of the components. Feel free to interject and ask questions at this time.</p>
+
+<h3 id="css-refresher">CSS Refresher</h3>
+
+<p>As a group, we’ll discuss the basics of CSS selectors and properties. Feel free to interject and ask questions.</p>
+
+<h2 id="independent-challenges">Independent Challenges</h2>
+
+<p>Fork <a href="https://github.com/turingschool-examples/turing-bistro">https://github.com/turingschool-examples/turing-bistro</a> and style the <code class="highlighter-rouge">index.html</code> in <a href="https://github.com/turingschool-examples/turing-bistro">https://github.com/turingschool-examples/turing-bistro</a> using any of the stylesheets in the <code class="highlighter-rouge">css</code> folder. You may work in pairs or individually.</p>
+
+<p>You have two constraints:</p>
+
+<ul>
+  <li>You can’t change any of the HTML markup</li>
+  <li>You can’t use JavaScript</li>
+</ul>
+
+<h3 id="beginning">Beginning</h3>
+
+<ul>
+  <li>Center the container</li>
+  <li>Remove the underline from the hyperlinks</li>
+  <li>Change the style of the hyperlinks when a mouse hovers over them</li>
+  <li>Prefix each of the menu prices with a dollar sign ($)</li>
+</ul>
+
+<h3 id="intermediate">Intermediate</h3>
+
+<ul>
+  <li>Make the items in the navigation align horizontally</li>
+  <li>Style the menu items like a traditional menu you’d find at a restaurant</li>
+  <li>Float the Turing Logo to either the left or the right</li>
+</ul>
+
+<h3 id="challenging">Challenging</h3>
+
+<ul>
+  <li>Move the announcements to a side bar</li>
+  <li>Gradually transition the color of a hyperlink when a mouse hovers over it</li>
+  <li>Make the page responsive to different screen sizes (desktop, tablet, mobile)</li>
+</ul>
+
+<h2 id="wrap-up">Wrap-Up</h2>
+
+<ul>
+  <li>Submit a pull request with your page.</li>
+  <li>Let’s go around for 1 minute each and give a lightning introduction to your page design.</li>
+  <li>Revisit your gist from the warm up. What areas are still unclear to you? Open an issue on <a href="https://github.com/turingschool-examples/turing-bistro">https://github.com/turingschool-examples/turing-bistro</a> so your instructor can respond to you.</li>
+</ul>
+
+<h2 id="corrections--improvements-for-next-time">Corrections &amp; Improvements for Next Time</h2>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="http://learnlayout.com/">Learn Layout</a></li>
+  <li><a href="http://static.incompl.com/awful/">CSS is Awful</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/learn/css">Learn CSS MDN</a></li>
+  <li><a href="http://www.quirksmode.org/css/quirksmode.html">Quirks Mode and Strict Mode</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag">Using the viewport meta tag to control layout on mobile browsers</a></li>
+  <li><a href="https://developer.apple.com/library/ios/documentation/appleapplications/reference/safariwebcontent/usingtheviewport/usingtheviewport.html">Safari Web Content Guide: Configuring the Viewport</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Using_CSS_transitions">CSS Transitions</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform">CSS Transformations</a></li>
+</ul>
+
+:ET

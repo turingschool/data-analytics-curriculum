@@ -1,0 +1,84 @@
+I"�<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Understand how to consume API endpoints</li>
+  <li>Gain familiarity with the Faraday and Postman HTTP clients</li>
+</ul>
+
+<h3 id="vocabulary-bank">Vocabulary Bank</h3>
+
+<ul>
+  <li><strong>API</strong>: Application Programming Interface</li>
+  <li><strong>API Endpoint</strong>: An address to which a client can request information</li>
+  <li><strong>JSON</strong>: JavaScript Object Notation</li>
+  <li><strong>Client</strong>: A program that relies on requesting information from a server</li>
+  <li><strong>HTTP</strong>: Hypertext Transfer Protocol</li>
+  <li><strong>HTTP Verb</strong>: methods that define the intended action to be performed on a resource</li>
+  <li><strong>HTTP request</strong>: A standard way to communicate information between a client <em>ex. Browser</em> and a server</li>
+  <li><strong>HTTP response</strong>: A standard way to return information from a server to a client based on the client’s request</li>
+  <li><strong>Postman</strong>: A tool that allows developers to visualize the parts of HTTP requests and responses</li>
+  <li><strong>Faraday Gem</strong>: An HTTP client library that allows developers to more easily write requests and handle responses in Ruby</li>
+  <li><strong>Response Status</strong>: A numerical code provided by a server to indicate the result of a request</li>
+</ul>
+
+<h3 id="warmup">Warmup</h3>
+
+<ul>
+  <li>What is the purpose of an API?</li>
+  <li>Why do we expose data through APIs?</li>
+  <li>What format is the data in when it is exposed through an API endpoint?</li>
+</ul>
+
+<h3 id="overview">Overview</h3>
+
+<p>In this lesson, we will review the anatomy of a HTTP request and response. In the intermission work, you were asked to write this out, so feel free to reference your diagram or create a new one from today’s review. We will be looking at the types of requests &amp; responses you made in Mod 2 for HTML and how they compare to the requests and responses from APIs.</p>
+
+<p>Throughout the lesson you will have the opportunity to explore how to make a <code class="highlighter-rouge">GET</code> request to an API using different clients: the browser, Postman, and a Ruby file using the Faraday gem. For each of these, we will look at how to make the request and how to understand the response that is returned. We will also discuss some of the benefits to using these tools and explore documentation.</p>
+
+<h4 id="http-request-and-response-review">HTTP Request and Response Review</h4>
+
+<p>List out the parts of a generic HTTP GET request and response</p>
+
+<h4 id="http-client-1-the-browser">HTTP Client 1: The Browser</h4>
+
+<p>Using the browser, make a GET request to hit the <a href="https://developer.github.com/v3/users/#get-a-single-user">GitHub users</a> API endpoint.</p>
+
+<p><code class="highlighter-rouge">https://api.github.com/users/&lt;username&gt;</code></p>
+
+<ul>
+  <li>How did you make this request?</li>
+  <li>What does the response look like?</li>
+  <li>What information is included in the response?</li>
+</ul>
+
+<h4 id="http-client-2-postman">HTTP Client 2: Postman</h4>
+
+<p>Download <a href="https://www.postman.com/downloads/">Postman app</a> Take a minute to explore the different tabs and options in Postman.</p>
+
+<p>After you’ve explored Postman, try to make a GET request to hit the Github users API endpoint.</p>
+
+<ul>
+  <li>How did you make this request in Postman?</li>
+  <li>What is the status of the response?</li>
+  <li>What is included in the response’s Headers?</li>
+</ul>
+
+<h4 id="http-client-3-faraday">HTTP Client 3: Faraday</h4>
+
+<p>Explore the <a href="https://lostisland.github.io/faraday/">Faraday Gem Docs</a>. Then create a Ruby file and require the Faraday library and Pry at the top of it. In this newly created Ruby file, use the Faraday docs to make the same HTTP request to the GitHub users endpoint.</p>
+
+<ul>
+  <li>How did you make this request using Faraday?</li>
+  <li>What is the return of the of the request?</li>
+  <li>How can you access just the body of the response?</li>
+</ul>
+
+<h3 id="practice-with-postman-and-faraday">Practice with Postman and Faraday</h3>
+
+<p>We’ve practiced making a <code class="highlighter-rouge">GET</code> request, so now let’s try making requests using other HTTP verbs.
+Complete the exercises included in this <a href="https://github.com/turingschool-examples/pets_api">README</a></p>
+
+<hr />
+
+<p>Looking for more practice. Try <a href="./exercises/additional_api_consumption_practice">here</a></p>
+:ET

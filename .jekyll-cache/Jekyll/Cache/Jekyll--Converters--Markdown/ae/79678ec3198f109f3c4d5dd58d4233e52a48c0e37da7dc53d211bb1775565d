@@ -1,0 +1,23 @@
+I"<h1 id="extensions">Extensions</h1>
+
+<h2 id="1-hunting">1. Hunting</h2>
+
+<p>The journey is perilous but it is also long. You may not be able to make it the whole way without fresh provisions. Add a <code class="highlighter-rouge">.go_hunting</code> method to your <code class="highlighter-rouge">WagonTrain</code>. This will result in ‘pounds of food’ being added to one of your wagons.</p>
+
+<p>Your hunt will result in a random (0-5) number of animals, and each animal will randomly be a “squirrel”, “deer”, or “bison”. The animals yield 2, 40 and 100 pounds of food respectively. Make sure you pluralize “squirrel” if you get more or less than one.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="nb">require</span> <span class="s2">"./lib/wagon_train"</span>
+<span class="o">&gt;</span> <span class="n">wt</span> <span class="o">=</span> <span class="no">WagonTrain</span><span class="p">.</span><span class="nf">new</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">WagonTrain</span> <span class="n">list</span><span class="o">=&lt;</span><span class="no">LinkedList</span> <span class="n">head</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#234567890890&gt; #456789045678&gt;</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s2">"Burke"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"pounds of food"</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">})</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Node</span> <span class="n">surname</span><span class="o">=</span><span class="s2">"Burke"</span> <span class="n">supplies</span><span class="o">=</span><span class="p">{</span><span class="s2">"pounds of food"</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">}</span> <span class="n">next_node</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#5678904567890&gt;</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">go_hunting</span>
+<span class="o">=&gt;</span> <span class="s2">"You got 3 squirrels, 0 deer and 1 bison for 106 pounds of food"</span>
+<span class="o">&gt;</span> <span class="n">wt</span><span class="p">.</span><span class="nf">supplies</span>
+<span class="o">=&gt;</span> <span class="p">{</span><span class="s2">"pounds of food"</span> <span class="o">=&gt;</span> <span class="mi">306</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="2-circle-the-wagons">2. Circle the Wagons</h2>
+
+<p>The “tail” (the last element) of your LinkedList doesn’t have a <code class="highlighter-rouge">next_node</code>. Rewrite your functionality so that the <code class="highlighter-rouge">next_node</code> of the “tail” now points to the head, but all other functionality still works.</p>
+:ET

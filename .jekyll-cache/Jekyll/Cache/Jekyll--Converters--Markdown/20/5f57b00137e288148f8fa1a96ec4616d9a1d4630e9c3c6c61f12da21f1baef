@@ -1,0 +1,205 @@
+I"
+4<p><strong>Discussion – Integration Testing</strong></p>
+
+<ul>
+  <li><code class="highlighter-rouge">Rack::Test</code> – advantages and disadvantages</li>
+  <li>“Integration” testing – what’s the point?</li>
+  <li>How are our existing integration tests not really…integrative?</li>
+  <li>As our apps involve JS it would be good to be able to test that the JS
+portions and the server portions work correctly together.</li>
+  <li>Capybara Architecture: Modular with respect to drivers</li>
+  <li>Alternate drivers: Seleniuis reduxm, Poltergiest, Webkit, etc. – give us a real
+web browser in our tests. We can actually run JS!</li>
+</ul>
+
+<h2 id="using-selenium">Using Selenium</h2>
+
+<p>The most popular driver is Selenium. It uses an actual browser window and you can
+watch the test happen. It uses the browser’s actual JavaScript engine, so it’s
+identical to having a human Q/A department interacting with your application.</p>
+
+<p><strong>Setup</strong></p>
+
+<p>The only machine dependency for using Selenium is to have Firefox installed.
+If you don’t have this, then go download it. If you do have it, make sure it is
+up to date.</p>
+
+<h2 id="app-setup">App Setup</h2>
+
+<p>For this section, we’ll work through a brief demo using the Blogger example
+project. In this tutorial, we’ll aim to:</p>
+
+<ul>
+  <li>Get selenium set up with our app</li>
+  <li>Write integration tests for a new feature using AJAX</li>
+  <li>Implement the feature and verify the functionality using Selenium</li>
+</ul>
+
+<h3 id="1-clone--setup">1. Clone / Setup</h3>
+
+<p>Get started by cloning and setting up the blogger application:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/JumpstartLab/blogger_advanced.git selenium-workshop
+cd selenium-workshop
+bundle
+rake db:setup
+</code></pre></div></div>
+
+<p>Additionally, go ahead and add the Selenium gem to your Gemfile:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'selenium-webdriver'
+</code></pre></div></div>
+
+<p><strong>Discussion: Browser-based WebDrivers vs. Rack::Test Driver and DB Test Transactions</strong></p>
+
+<p>Finally, we need to tweak one thing in our <code class="highlighter-rouge">spec_helper.rb</code> configuration. Open this file
+and change the <code class="highlighter-rouge">DatabaseCleaner.strategy</code> from <code class="highlighter-rouge">:transaction</code> to <code class="highlighter-rouge">:truncation</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This file is copied to spec/ when you run 'rails generate rspec:install'</span>
+<span class="no">ENV</span><span class="p">[</span><span class="s2">"RAILS_ENV"</span><span class="p">]</span> <span class="o">||=</span> <span class="s1">'test'</span>
+<span class="nb">require</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s2">"../../config/environment"</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
+<span class="nb">require</span> <span class="s1">'rspec/rails'</span>
+<span class="nb">require</span> <span class="s1">'capybara/rails'</span>
+<span class="nb">require</span> <span class="s1">'capybara/rspec'</span>
+<span class="nb">require</span> <span class="s1">'database_cleaner'</span>
+
+<span class="no">Dir</span><span class="p">[</span><span class="no">Rails</span><span class="p">.</span><span class="nf">root</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">"spec/support/**/*.rb"</span><span class="p">)].</span><span class="nf">each</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="nb">require</span> <span class="n">f</span><span class="p">}</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">include</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">url_helpers</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">raise_errors_for_deprecations!</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">mock_with</span> <span class="ss">:rspec</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">use_transactional_fixtures</span> <span class="o">=</span> <span class="kp">false</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">before</span><span class="p">(</span><span class="ss">:suite</span><span class="p">)</span> <span class="k">do</span>
+    <span class="c1"># Changed this line from :transaction to :truncation</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean_with</span><span class="p">(</span><span class="ss">:truncation</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">start</span>
+  <span class="k">end</span>
+
+  <span class="n">config</span><span class="p">.</span><span class="nf">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">ec</span><span class="o">/</span><span class="n">spec_helper</span><span class="p">.</span><span class="nf">rb</span>
+</code></pre></div></div>
+
+<h3 id="2-using-selenium-for-a-test">2. Using Selenium for a Test</h3>
+
+<p>The feature we’d like to add is an AJAX-based comment submission. Currently users
+can submit comments by submitting the form from an Article page, but let’s see if
+we can make this work without a full page reload.</p>
+
+<p>Fortunately, there is already a test written for the content we need – it’s in
+<code class="highlighter-rouge">spec/features/article_comments_spec.rb</code>. However so far this is just using the default
+(<code class="highlighter-rouge">Rack::Test</code>) capybara driver. Let’s start by swapping it to use Selenium, by
+setting the <code class="highlighter-rouge">js</code> flag on the test itself:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># in spec/features/article_comments_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'spec_helper'</span>
+
+<span class="c1">## Add the :js =&gt; true option to the test group:</span>
+<span class="n">describe</span> <span class="s2">"Article Comments"</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:feature</span><span class="p">,</span> <span class="ss">:js</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="k">do</span>
+  <span class="n">let</span><span class="p">(</span><span class="ss">:article</span><span class="p">){</span> <span class="no">Fabricate</span><span class="p">(</span><span class="ss">:article</span><span class="p">)</span> <span class="p">}</span>
+
+  <span class="n">it</span> <span class="s2">"posts a comment"</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="n">article_path</span><span class="p">(</span><span class="n">article</span><span class="p">)</span>
+    <span class="n">fill_in</span> <span class="s2">"comment_author_name"</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="s2">"Cowboy"</span>
+    <span class="n">fill_in</span> <span class="s2">"comment_body"</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="s2">"Testing is too hard."</span>
+    <span class="n">click_link_or_button</span> <span class="s2">"post_comment"</span>
+    <span class="n">within</span><span class="p">(</span><span class="s1">'#comments'</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Cowboy said"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Testing is too hard."</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Once this is in place, run your tests. A couple things should happen:</p>
+
+<ul>
+  <li>A new firefox browser window will open automatically and execute your test.</li>
+  <li>The test will fail – perhaps surprisingly, it can’t find the Article we created
+in our test with Fabricator</li>
+</ul>
+
+<p><strong>Reiterate/Discuss: Browser-based WebDrivers vs. Rack::Test Driver and DB threading</strong></p>
+
+<p>To get around this, we need to fix a couple things. If we want an article to exist
+in our DB for the test, we’ll need to create it via the web UI (this also helps make
+it a more robust/accurate “integration” test – everything is interacting through
+the application’s real UI).</p>
+
+<h3 id="3-creating-articles-in-the-test">3. Creating Articles in the Test</h3>
+
+<ol>
+  <li>Remove the <code class="highlighter-rouge">fabricate(:article)</code> line from our test. We won’t be relying on it now.</li>
+  <li>Remove the <code class="highlighter-rouge">visit article_path(article)</code> line from the test as well.</li>
+  <li>Add the steps (for now we can put them in a <code class="highlighter-rouge">before(:each)</code> block) to create a new
+Article programmatically via the UI:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  before(:each) do
+    visit new_article_path
+    fill_in "article_title", with: "My Article"
+    fill_in "article_body", with: "My Article Body"
+    click_link_or_button "Save"
+    click_link_or_button "My Article"
+  end
+</code></pre></div></div>
+
+<p>Run your tests again. With any luck they should be passing, and you’ll still see the firefox
+activate as the suite hits your selenium tests.</p>
+
+<p>Note that we often use selenium to test JS features, but as we can see here it word
+just fine with standard web interactions as well.</p>
+
+<h3 id="4-creating-comments-using-ajax">4. Creating Comments using AJAX</h3>
+
+<p>Now that we have our test running with Selenium, we have a reasonable foundation
+to add in our AJAX feature and remain confident that it will still be testing.</p>
+
+<p>For starters, let’s replace our existing <code class="highlighter-rouge">articles.js.coffee</code> file with a normal JS file.
+Probably the easiest way to do this is to just remove one and create the other:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm app/assets/javascripts/articles.js.coffee
+touch app/assets/javascripts/articles.js
+</code></pre></div></div>
+
+<p>(don’t skip this step, or the empty coffeescript file will overwrite your work in
+the new JS file)</p>
+
+<p><strong>Workshop: Converting article comments form to AJAX</strong></p>
+
+<p>Follow along with your instructor to modify this form to submit its data via AJAX requests.
+A few topics to cover include:</p>
+
+<ul>
+  <li>Binding to form submission event using JQuery</li>
+  <li>Pulling data from form fields</li>
+  <li>Preventing default submit event handling</li>
+  <li>Submitting form data using <code class="highlighter-rouge">$.post</code></li>
+  <li>Rendering a comment partial without layout from the server so
+we can easily drop the markup into the dom</li>
+  <li>Clearing form fields after submission so a new comment can be created</li>
+</ul>
+
+<p>Here’s a sample of what it will look like when we’re done: <a href="https://github.com/JumpstartLab/blogger_advanced/commit/be8b022e54d9859ebebc5944d1ce3075639c109a">finished commit</a>.</p>
+
+<h3 id="5-your-turn">5. Your Turn</h3>
+
+<p>Get with a pair and practice using TDD to drive another AJAX feature.</p>
+
+<p>For this feature, add some client-side filtering on the Articles#index
+page. The experince we’d like to achieve is:</p>
+
+<ul>
+  <li>When I click a tag name in the sidebar, the articles should be filtered on the client
+so that only the articles including the tag I selected are shown</li>
+  <li>When I click “all”, all articles should be shown</li>
+</ul>
+:ET

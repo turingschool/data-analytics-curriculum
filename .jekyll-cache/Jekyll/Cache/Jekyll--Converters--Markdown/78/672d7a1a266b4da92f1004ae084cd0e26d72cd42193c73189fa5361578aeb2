@@ -1,0 +1,88 @@
+I"ï<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>Access attributes for an instance of a resource from within a method on its model.</li>
+  <li>Create class and instance methods on models.</li>
+  <li>Call class methods on a subset of instances of a class.</li>
+  <li>Practice creating class and instance methods.</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<ul>
+  <li>Available <a href="../slides/active_record_on_models">here</a></li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Assume I have a Horse model and that Horses belong to Owners.</p>
+
+<ul>
+  <li>How do I access the age of a particular horse?</li>
+  <li>How do I access the owner of a particular horse?</li>
+  <li>How do I generate an array of all horse names?</li>
+  <li>How do I determine the average horse age?</li>
+</ul>
+
+<h2 id="background">Background</h2>
+
+<p>In the past much of the ActiveRecord we have used has been in the rails console or a controller.</p>
+
+<p>For example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#rails c</span>
+<span class="o">&gt;</span> <span class="no">Horse</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nf">age</span>
+</code></pre></div></div>
+
+<p>Or from a controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">show</span>
+  <span class="vi">@horse</span> <span class="o">=</span> <span class="no">Horse</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="methods-on-ar-models">Methods on AR Models</h2>
+
+<p>When writing methods on an ActiveRecord model, we can access attributes of a particular instance directly on an instance of a model from within that model.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">years_until_30</span>
+  <span class="mi">30</span> <span class="o">-</span> <span class="n">age</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can also access relationships from within an instance of a model.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">owner_name</span>
+  <span class="n">owner</span><span class="p">.</span><span class="nf">name</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can do both of these things because ActiveRecord is giving us access to <code class="highlighter-rouge">age</code> and <code class="highlighter-rouge">owner</code> methods, which we are calling from within the <code class="highlighter-rouge">#years_until_30</code>, and <code class="highlighter-rouge">#owner_name</code> methods above.</p>
+
+<h2 id="class-methods">Class Methods</h2>
+
+<p>We can also create class methods. One of the nice things about class methods on our models is that they can be called on any collection of instances of the Model. For example, if we have the following method on our <code class="highlighter-rouge">Horse</code> model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">names</span>
+  <span class="n">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can use that method on a collection of all horses:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># In our Horse index view, where @horses has been set to Horse.all
+@horses.names
+</code></pre></div></div>
+
+<p>Or on a smaller collection of horses:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># In our Owner model, returning names of only those horses that belong to a particular owner.
+def horse_names
+  horses.names
+end
+</code></pre></div></div>
+
+<h2 id="practice">Practice</h2>
+
+<p>Clone the repo <a href="https://github.com/turingschool-examples/election">here</a>. Bundle, <code class="highlighter-rouge">rake db:create db:migrate</code>, and then run the test suite using <code class="highlighter-rouge">rspec</code>. Work to make all of the failing tests pass.</p>
+:ET

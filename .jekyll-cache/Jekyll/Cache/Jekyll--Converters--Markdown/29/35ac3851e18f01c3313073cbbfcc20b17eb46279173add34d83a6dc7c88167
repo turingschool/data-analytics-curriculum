@@ -1,0 +1,128 @@
+I"k<p>Every developer has more ideas than time. As David Allen likes to say “the
+human brain is for creating ideas, not remembering them.” In this project,
+we’ll be building a simple application for recording and archiving our ideas
+(good and bad alike).</p>
+
+<p>Throughout the project, one of our focuses will be on providing a fluid and responsive
+client-side interface. To this end, we’ll rely on JavaScript and jQuery
+to implement snappy filtering in the browser, and AJAX to enable
+inconspicuous communication between client and server.</p>
+
+<h3 id="architecture">Architecture</h3>
+
+<p>For this project, we’ll be increasingly thinking about the “server” and “client”
+as separate entities. We’ll be using:</p>
+
+<ul>
+  <li>A Rails application is set up to manage data related to our ideas. <a href="git@github.com:turingschool-examples/idea_box_2.0.git">Here is the API App</a></li>
+  <li>JavaScript (with jQuery) and basic HTML to manage client-side interactions and communicate asynchronously with the server</li>
+</ul>
+
+<p>In order to get more experience doing DOM manipulations and AJAX event handling on our own,
+we will <em>not</em> be using client-side frameworks (Ember, Angular, React, etc.).</p>
+
+<p>Your entire application will consist of one HTML page or template. You will not have separate pages for each CRUD action.</p>
+
+<p>All of your AJAX functionality will be triggered by jQuery.</p>
+
+<h3 id="data-model---set-up-in-the-rails-api">Data Model - Set up in <a href="git@github.com:turingschool-examples/idea_box_2.0.git">the Rails API</a></h3>
+
+<p>We’ll be primarily working with <em>Idea</em> objects.</p>
+
+<ul>
+  <li>An Idea has a <em>title</em>, a <em>body</em>, and a <em>quality</em>.
+    <ul>
+      <li><em>title</em> and <em>body</em> are free-form strings.</li>
+    </ul>
+  </li>
+  <li><em>quality</em> can be represented however you feel best in the database,
+but in the user interface it should manifest as the options “genius”, “plausible”, and “swill”</li>
+  <li>By default, the idea’s “quality” should default to the lowest setting (i.e. “swill”).</li>
+</ul>
+
+<h3 id="user-flows">User Flows</h3>
+
+<h4 id="viewing-ideas---together">Viewing ideas - Together</h4>
+
+<p>On the application’s root, the user should:</p>
+
+<ul>
+  <li>See a list of all existing ideas, including the title, body, and quality for each idea.</li>
+  <li>Idea Body.</li>
+  <li>Ideas should appear in descending chronological order (with the most recently created
+idea at the top).</li>
+</ul>
+
+<h4 id="adding-a-new-idea---together">Adding a new idea - Together</h4>
+
+<p>On the application’s main page, a user should:</p>
+
+<ul>
+  <li>See two text boxes for entering the “Title” and “Body” for a new idea,
+and a “Save” button for committing that idea.</li>
+</ul>
+
+<p>When a user clicks “Save”:</p>
+
+<ul>
+  <li>A new idea with the provided title and body should appear in the idea list.</li>
+  <li>The text fields should be cleared and ready to accept a new idea.</li>
+  <li>The page <em>should not</em> reload.</li>
+  <li>The idea should be committed to the database. It should still be present upon reloading the page.</li>
+</ul>
+
+<h4 id="deleting-an-existing-idea---on-your-own--pairs">Deleting an existing idea - On Your Own / Pairs</h4>
+
+<p>When viewing the idea list:</p>
+
+<ul>
+  <li>Each idea in the list should have a link or button to “Delete” (or 𝗫, etc).</li>
+  <li>Upon clicking “Delete”, the appropriate idea should be removed from the list</li>
+  <li>The page <em>should not</em> reload when an idea is deleted.</li>
+  <li>The idea should be removed from the database. It should not re-appear on next page load.</li>
+</ul>
+
+<h4 id="editing-an-existing-idea---on-your-own--pairs">Editing an existing idea - On Your Own / Pairs</h4>
+
+<ul>
+  <li>When a user clicks the title or body of an idea in the list, that text should become an editable text field, pre-populated with the existing idea title or body.</li>
+  <li>Clicking this link should <em>not</em> take the user to a separate “edit” page for the given idea.</li>
+  <li>The user should be able to “commit” their changes by pressing “Enter/Return” or by clicking outside of the text field.</li>
+  <li>If the user reloads the page, their edits will be reflected.</li>
+</ul>
+
+<h4 id="changing-the-quality-of-an-idea---together">Changing the quality of an idea - Together</h4>
+
+<p>As we said above, ideas should start out as “swill.” This is implemented in the API with a default value if it is not entered. (Spicy challenge: see if you can do this in JavaScript without the default in the API). In order to change the recorded quality of an idea, the user will interact with it from the idea list.</p>
+
+<ul>
+  <li>Each idea in the list should include a “thumbs up” and “thumbs down” button.</li>
+  <li>Clicking thumbs up on the idea should increase its quality one notch (“swill” → “plausible”,
+“plausible” → “genius”).</li>
+  <li>Clicking thumbs down on the idea should decrease its quality one notch (“genius” → “plausible”,
+“plausible” → “swill”).</li>
+  <li>Incrementing a “genius” idea or decrementing a “swill” idea should have no effect.</li>
+</ul>
+
+<h4 id="idea-filtering-and-searching---together">Idea Filtering and Searching - Together</h4>
+
+<p>We’d like our users to be able to easily find specific ideas they already created, so let’s provide them with a filtering interface on the idea list.</p>
+
+<ul>
+  <li>At the top of the idea list, include a text field labeled “Search”.</li>
+  <li>As a user types in the search box, the list of ideas should filter in real time to only display ideas whose title or body include the user’s text. The page <em>should not</em> reload.</li>
+  <li>Clearing the search box should restore all the ideas to the list.</li>
+</ul>
+
+<h3 id="optional-extensions---on-your-own">Optional Extensions - On your Own.</h3>
+
+<h4 id="tagging">Tagging</h4>
+
+<p>Add an optional third text field upon idea creation for “Tags”. Tags should be a comma-separated list of short text tags, and should be processed on the server such that any existing tags are re-used, and any new ones are created. Once there are tags to display, a list of existing tags should appear at the top of the idea list. Clicking one of these tags should show only ideas that include it. When viewing ideas filtered by tag, be sure to include a link to take the user back to “All Ideas”. This filtering could be implemented either as a separate page or via javascript within the same interface.</p>
+
+<p>You will need to write code in the API app.</p>
+
+<h4 id="sorting">Sorting</h4>
+
+<p>When viewing the ideas list, the user should have the option to sort ideas by Quality. The default sort should be descending (“genius” → “plausible” → “swill”), and clicking the sort a second time should reverse it. The Idea list should be sorted client-side without reloading the page.</p>
+:ET

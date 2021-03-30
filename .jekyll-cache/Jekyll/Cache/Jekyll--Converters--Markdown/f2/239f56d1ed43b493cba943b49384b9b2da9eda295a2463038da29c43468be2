@@ -1,0 +1,78 @@
+I"�<h2 id="structure">Structure</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>5</td>
+      <td>Warmup</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Intro &amp; OWASP</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Research &amp; Presentation Prep</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Pomodoro</td>
+    </tr>
+    <tr>
+      <td>50</td>
+      <td>Presentations</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students are familiar with common security risks, examples and steps to begin prevention</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>What do you already know about web application security?</li>
+  <li>Think back to Mod 3, what is Privilege Escalation?</li>
+  <li>What about Mass Assignment Vulnerability?</li>
+</ul>
+
+<h2 id="intro">Intro</h2>
+
+<p>We’ve shown you best practices for security in Rails (authorization, authentication, strong params, etc), but Rails is not the only game in town. Let’s talk about some of these concepts in general, and how they may apply in the various applications you build, and enable you to speak about these concepts from an educated perspective.</p>
+
+<h2 id="owasp">OWASP</h2>
+
+<p><em>OWASP</em> is a international not-for-profit organization focused on the improvement of software security. It is not affiliated with any particular company, instead is made up of mostly volunteers including security experts from around the world. This allows for unbiased and cost-effective information for anyone interested in improving application security.</p>
+
+<p>About every 4 years the organization puts out a call for data to determine the current top 10 security risks. <em>OWASP</em> then puts out a survey to its members (<em>this could be you!</em>) to complete in order to rank the risks based on the following risk factors:</p>
+<ul>
+  <li>Exploitability</li>
+  <li>Weakness Prevalence</li>
+  <li>Weakness Detectability</li>
+  <li>Technical Impacts</li>
+</ul>
+
+<p>Here is a list of the Top 10 security risks as chosen in 2017. For more details on each of the risks check out <a href="https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf">OWASP Top 10 - 2017</a>.</p>
+
+<ol>
+  <li>Injection</li>
+  <li>Broken Authentication</li>
+  <li>Sensitive Data Exposure</li>
+  <li>XML External Entities (XXE)</li>
+  <li>Broken Access Control</li>
+  <li>Security Misconfiguration</li>
+  <li>Cross-Site Scripting (XSS)</li>
+  <li>Insecure Deserialization</li>
+  <li>Using Components with Known Vulnerabilities</li>
+  <li>Insufficient Logging &amp; Monitoring</li>
+</ol>
+
+<p>For each vulnerability, the document describes how to determine if you application is vulnerable, example attack scenarios, as well as ways to prevent it.</p>
+
+<h2 id="research--presentations">Research &amp; Presentations</h2>
+
+<p>Alone or with a partner, describe you assigned vulnerability. Figure out what is important and describe it on your chart paper.</p>
+:ET

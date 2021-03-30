@@ -1,0 +1,318 @@
+I"��<p><em><a href="./index">Back to Battleship Home</a></em>
+<em><a href="./requirements">Back to Requirements</a></em></p>
+
+<h2 id="test-driven-development">Test Driven Development</h2>
+
+<p>In this iteration, you are required to use TDD to create your classes. Use the interaction pattern to determine what a method should do and write one or more tests to verify that expected behavior. Then you can implement the method. You should always write code with the purpose of making a test pass.</p>
+
+<h2 id="board">Board</h2>
+
+<p>The Board class is responsible for keeping track of cells, validating coordinates, validating ship placements, placing ships, and rendering a visual representation of itself.</p>
+
+<h3 id="the-cells">The Cells</h3>
+
+<p>The board is responsible for keeping track of all the cells. Since our board is 4 x 4, it will have 16 Cell objects. It will keep track of these cells in a hash where the coordinates of the cell are the keys that point to Cell objects:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/board'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span> <span class="o">=</span> <span class="no">Board</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; #&lt;Board:0x00007ff0728c8010...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">cells</span>
+<span class="c1"># =&gt;</span>
+<span class="p">{</span>
+ <span class="s2">"A1"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3f58...&gt;,</span>
+ <span class="s2">"A2"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3ee0...&gt;,</span>
+ <span class="s2">"A3"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3e68...&gt;,</span>
+ <span class="s2">"A4"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3df0...&gt;,</span>
+ <span class="s2">"B1"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3d78...&gt;,</span>
+ <span class="s2">"B2"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3d00...&gt;,</span>
+ <span class="s2">"B3"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3c88...&gt;,</span>
+ <span class="s2">"B4"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3c10...&gt;,</span>
+ <span class="s2">"C1"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3b98...&gt;,</span>
+ <span class="s2">"C2"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3b20...&gt;,</span>
+ <span class="s2">"C3"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3aa8...&gt;,</span>
+ <span class="s2">"C4"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3a30...&gt;,</span>
+ <span class="s2">"D1"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a39b8...&gt;,</span>
+ <span class="s2">"D2"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3940...&gt;,</span>
+ <span class="s2">"D3"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a38c8...&gt;,</span>
+ <span class="s2">"D4"</span> <span class="o">=&gt;</span> <span class="c1">#&lt;Cell:0x00007ff0728a3850...&gt;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Testing the <code class="highlighter-rouge">#cells</code> method is a bit tricky because the Cell objects are created in the Board class and not in our tests. We can’t specify exactly what the return value should be because we don’t have reference to the exact cell objects we expect in the hash. Instead, we can assert what we do know about this hash. It’s a hash, it should have 16 key/value pairs, and those keys point to cell objects.</p>
+
+<h3 id="validating-coordinates">Validating Coordinates</h3>
+
+<p>Our board should be able to tell us if a coordinate is on the board or not:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_coordinate?</span><span class="p">(</span><span class="s2">"A1"</span><span class="p">)</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_coordinate?</span><span class="p">(</span><span class="s2">"D4"</span><span class="p">)</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_coordinate?</span><span class="p">(</span><span class="s2">"A5"</span><span class="p">)</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_coordinate?</span><span class="p">(</span><span class="s2">"E1"</span><span class="p">)</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_coordinate?</span><span class="p">(</span><span class="s2">"A22"</span><span class="p">)</span>
+<span class="c1"># =&gt; false</span>
+</code></pre></div></div>
+
+<h3 id="validating-placements">Validating Placements</h3>
+
+<p>Additionally, a Board should be able to tell us if a placement for a ship is valid or not. Our Board should have a method called <code class="highlighter-rouge">valid_placement?</code> that takes two arguments: a Ship object and an array of Coordinates.</p>
+
+<p>There are many things we need to check for validating ship placement. Let’s use this setup:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/board'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/ship'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span> <span class="o">=</span> <span class="no">Board</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; #&lt;Board:0x00007fcb0d9db478...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cruiser</span> <span class="o">=</span> <span class="no">Ship</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Cruiser"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0d989510...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">submarine</span> <span class="o">=</span> <span class="no">Ship</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Submarine"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0e8402c0...&gt;</span>
+</code></pre></div></div>
+
+<p>First, the number of coordinates in the array should be the same as the length of the ship:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">submarine</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A2"</span><span class="p">,</span> <span class="s2">"A3"</span><span class="p">,</span> <span class="s2">"A4"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+</code></pre></div></div>
+
+<p>Next, make sure the coordinates are consecutive:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">,</span> <span class="s2">"A4"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">submarine</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"C1"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A3"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">,</span> <span class="s2">"A1"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">submarine</span><span class="p">,</span> <span class="p">[</span><span class="s2">"C1"</span><span class="p">,</span> <span class="s2">"B1"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+</code></pre></div></div>
+
+<p>Finally, coordinates can’t be diagonal:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"B2"</span><span class="p">,</span> <span class="s2">"C3"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">submarine</span><span class="p">,</span> <span class="p">[</span><span class="s2">"C2"</span><span class="p">,</span> <span class="s2">"D3"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+</code></pre></div></div>
+
+<p>If all the previous checks pass then the placement should be valid:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">submarine</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">])</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"B1"</span><span class="p">,</span> <span class="s2">"C1"</span><span class="p">,</span> <span class="s2">"D1"</span><span class="p">])</span>
+<span class="c1"># =&gt; true</span>
+</code></pre></div></div>
+
+<p>Note that all of the different cases listed above should be their own tests. This will help you break this problem down into small steps and working on them one at a time. You should not have one big test for validating placement.</p>
+
+<h3 id="tools-for-validation">Tools for validation</h3>
+
+<p>There are many ways to go about the validation. Here are some ideas to help you get started:</p>
+
+<h4 id="ranges">Ranges</h4>
+
+<p>Ruby has a built in Class called <code class="highlighter-rouge">Range</code>. It has a special syntax:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">3</span><span class="o">..</span><span class="mi">8</span>
+<span class="c1"># =&gt; 3..8</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">range</span><span class="p">.</span><span class="nf">class</span>
+<span class="c1"># =&gt; Range</span>
+</code></pre></div></div>
+
+<p>The first element (in this case <code class="highlighter-rouge">3</code>) is the start of the range and the second is the end of the range.</p>
+
+<p>You can turn a Range into an Array quite easily and then do Array stuff:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">3</span><span class="o">..</span><span class="mi">8</span>
+<span class="c1"># =&gt; 3..8</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">array</span> <span class="o">=</span> <span class="n">range</span><span class="p">.</span><span class="nf">to_a</span>
+<span class="c1"># =&gt; [3, 4, 5, 6, 7, 8]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">array</span><span class="p">.</span><span class="nf">length</span>
+<span class="c1"># =&gt; 6</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="c1"># =&gt; 6</span>
+</code></pre></div></div>
+
+<p>This also works with Strings:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">range</span> <span class="o">=</span> <span class="s2">"A"</span><span class="o">..</span><span class="s2">"D"</span>
+<span class="c1"># =&gt; "A".."D"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">range</span><span class="p">.</span><span class="nf">to_a</span>
+<span class="c1"># =&gt; ["A", "B", "C", "D"]</span>
+</code></pre></div></div>
+
+<h4 id="ordinal-values">Ordinal Values</h4>
+
+<p>The Range with Strings works because each character has an implicit value that tells us in what order the characters should be. This is called the Ordinal Value, and you can access it with the <code class="highlighter-rouge">ord</code> method for Strings:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="s2">"A"</span><span class="p">.</span><span class="nf">ord</span>
+<span class="c1"># =&gt; 65</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="s2">"D"</span><span class="p">.</span><span class="nf">ord</span>
+<span class="c1"># =&gt; 68</span>
+</code></pre></div></div>
+
+<h4 id="helpful-enumerables">Helpful Enumerables</h4>
+
+<p>Ruby has an enumerable method called <code class="highlighter-rouge">each_cons</code> that allows you to access consecutive elements in a collection. See the <a href="https://ruby-doc.org/core-2.5.3/Enumerable.html#method-i-each_cons">Ruby Docs</a> for more details.</p>
+
+<p>Also consider if the enumerables <code class="highlighter-rouge">any?</code>, <code class="highlighter-rouge">all?</code>, <code class="highlighter-rouge">none?</code> would be helpful.</p>
+
+<h3 id="placing-ships">Placing Ships</h3>
+
+<p>The board should be able to place a ship in its cells. Because a Ship occupies more than one cell, multiple Cells will contain the same ship. This is a little brain bendy at first, but it is a very important concept. This is Object Oriented Programming in a nutshell.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/board'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/ship'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span> <span class="o">=</span> <span class="no">Board</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; #&lt;Board:0x00007fcb0e1f6720...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cruiser</span> <span class="o">=</span> <span class="no">Ship</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Cruiser"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0e1ffa28...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">place</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">,</span> <span class="s2">"A3"</span><span class="p">])</span>    
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_1</span> <span class="o">=</span> <span class="n">board</span><span class="p">.</span><span class="nf">cells</span><span class="p">[</span><span class="s2">"A1"</span><span class="p">]</span>    
+<span class="c1"># =&gt; #&lt;Cell:0x00007fcb0e1f66a8...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_2</span> <span class="o">=</span> <span class="n">board</span><span class="p">.</span><span class="nf">cells</span><span class="p">[</span><span class="s2">"A2"</span><span class="p">]</span>
+<span class="c1"># =&gt; #&lt;Cell:0x00007fcb0e1f6630...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_3</span> <span class="o">=</span> <span class="n">board</span><span class="p">.</span><span class="nf">cells</span><span class="p">[</span><span class="s2">"A3"</span><span class="p">]</span>    
+<span class="c1"># =&gt; #&lt;Cell:0x00007fcb0e1f65b8...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_1</span><span class="p">.</span><span class="nf">ship</span>
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0e1ffa28...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_2</span><span class="p">.</span><span class="nf">ship</span>
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0e1ffa28...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_3</span><span class="p">.</span><span class="nf">ship</span>
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0e1ffa28...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cell_3</span><span class="p">.</span><span class="nf">ship</span> <span class="o">==</span> <span class="n">cell_2</span><span class="p">.</span><span class="nf">ship</span>
+<span class="c1"># =&gt; true</span>
+</code></pre></div></div>
+
+<h3 id="overlapping-ships">Overlapping Ships</h3>
+
+<p>When you are able to place ships, you need to add another check to your validation of ship placements so that ships don’t overlap:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/board'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/ship'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span> <span class="o">=</span> <span class="no">Board</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; #&lt;Board:0x00007fcb0e1f6720...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cruiser</span> <span class="o">=</span> <span class="no">Ship</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Cruiser"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0d92b5f0...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">place</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">,</span> <span class="s2">"A3"</span><span class="p">])</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">submarine</span> <span class="o">=</span> <span class="no">Ship</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Submarine"</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0dace9c0...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">valid_placement?</span><span class="p">(</span><span class="n">submarine</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"B1"</span><span class="p">])</span>
+<span class="c1"># =&gt; false</span>
+</code></pre></div></div>
+
+<h3 id="rendering-the-board">Rendering the Board</h3>
+
+<p>Our board needs to be able to render a String representation of itself to display to the user all of its cells in a formatted grid. Each Cell should be displayed using the rules from Iteration 1:</p>
+
+<ul>
+  <li>”.” if the cell has not been fired upon.</li>
+  <li>“M” if the cell has been fired upon and it does not contain a ship (the shot was a miss).</li>
+  <li>“H” if the cell has been fired upon and it contains a ship (the shot was a hit).</li>
+  <li>“X” if the cell has been fired upon and its ship has been sunk. Note that all of the cells that contain that sunken ship should render as an “X”, not just the cell that resulted in the ship being sunk.</li>
+</ul>
+
+<p>And just like with cells, we will include an optional argument to indicate whether we want to show hidden ships.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/board'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/ship'</span>
+<span class="c1"># =&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span> <span class="o">=</span> <span class="no">Board</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; #&lt;Board:0x00007fcb0f056860...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cruiser</span> <span class="o">=</span> <span class="no">Ship</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Cruiser"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    
+<span class="c1"># =&gt; #&lt;Ship:0x00007fcb0f0573f0...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">place</span><span class="p">(</span><span class="n">cruiser</span><span class="p">,</span> <span class="p">[</span><span class="s2">"A1"</span><span class="p">,</span> <span class="s2">"A2"</span><span class="p">,</span> <span class="s2">"A3"</span><span class="p">])</span>    
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">render</span>
+<span class="c1"># =&gt; "  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">board</span><span class="p">.</span><span class="nf">render</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span>
+<span class="c1"># =&gt; "  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n"</span>
+</code></pre></div></div>
+
+<p>You can format strings on multiple lines using concatenation to make them more readable. The two return values from above can be written as:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"  1 2 3 4 </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"A . . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"B . . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"C . . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"D . . . . </span><span class="se">\n</span><span class="s2">"</span>
+
+<span class="s2">"  1 2 3 4 </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"A S S S . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"B . . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"C . . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"D . . . . </span><span class="se">\n</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>As you move forward, you will need to add functionality to your game so that you can fire on Cells and damage their Ships. When you do this, you should also add new tests for your <code class="highlighter-rouge">render</code> method that it can render with Hits, Misses, and Sunken Ships. A Board in the middle of a game might be rendered as something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"  1 2 3 4 </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"A H . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"B . . . M </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"C X . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"D X . . . </span><span class="se">\n</span><span class="s2">"</span>
+
+<span class="s2">"  1 2 3 4 </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"A H S S . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"B . . . M </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"C X . . . </span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+<span class="s2">"D X . . . </span><span class="se">\n</span><span class="s2">"</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,91 @@
+I"j$<h1 id="pry">Pry</h1>
+
+<h2 id="installing-pry">Installing Pry</h2>
+
+<p>If you haven’t already, in your terminal, enter the command:</p>
+
+<p><code class="highlighter-rouge">gem install pry</code></p>
+
+<p>You should see output saying Pry was successfully installed. If you got an error saying that you don’t have permission, it is likely that you do not have Rbenv set up properly. Look back in the prework setup instructions and verify the Rbenv is setup properly. If you cannot resolve this error, ask an instructor for help before moving on.</p>
+
+<h2 id="pry-as-a-repl">Pry as a REPL</h2>
+
+<p>Pry is very similar to IRB. Enter the command <code class="highlighter-rouge">pry</code> into your terminal and you should see a prompt like <code class="highlighter-rouge">[1] pry(main)&gt;</code>. This is a REPL, which stands for Read, Evaluate, Print, Loop. This means that Pry will read whatever you type in, evaluate it, and print out the evaluation known as the <strong>return value</strong>. It will do all three of those things in a continuous loop. Try entering some Ruby code into Pry that you may already know, for example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">greeting</span> <span class="o">=</span> <span class="s2">"hello"</span>
+<span class="o">=&gt;</span> <span class="s2">"hello"</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">place</span> <span class="o">=</span> <span class="s2">"world"</span>
+<span class="o">=&gt;</span> <span class="s2">"world"</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="s2">"</span><span class="si">#{</span><span class="n">greeting</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">place</span><span class="si">}</span><span class="s2">"</span>
+<span class="o">=&gt;</span> <span class="s2">"hello world"</span>
+</code></pre></div></div>
+
+<p>The value printed after the <code class="highlighter-rouge">=&gt;</code> is the <strong>return value</strong> of the previous line of code.</p>
+
+<h2 id="pry-as-a-debugger">Pry as a Debugger</h2>
+
+<p>As programmers we often make assumptions about what our code is doing. We are often wrong. One of the most important and effective debugging techniques is to validate your assumptions.</p>
+
+<p>Have you ever found yourself working on a programming problem and as you attempt to solve it, you are forced to run the entire file over and over again until you get the correct result? Wouldn’t it be awesome if you could pause your code at a specific line and interact with it? Enter Pry.</p>
+
+<h3 id="pausing">Pausing</h3>
+
+<p>Create a new Ruby file called <code class="highlighter-rouge">pry.rb</code> and add this code to it:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'pry'</span>
+
+<span class="n">favorite_things</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Trapper Keeper"</span><span class="p">,</span> <span class="s2">"Netscape Navigator"</span><span class="p">,</span> <span class="s2">"Troll Doll"</span><span class="p">]</span>
+<span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>The first line requires Pry, which allows us to use it in this file.</p>
+
+<p>Run the code and you should see a Pry prompt. Depending on your screen size, you may also see a colon, which means you are in a pager. Hit <code class="highlighter-rouge">q</code> to exit the pager.</p>
+
+<p>Whenever Ruby sees a <code class="highlighter-rouge">binding.pry</code> statement, Ruby pauses the execution of code and opens up a Pry session <em>in the middle of the code</em>. This Pry session is a the same as the one we opened before, except that you now have access to the variables and methods that Ruby has created up to that point in the code. In your Pry prompt, enter <code class="highlighter-rouge">favorite_things</code> and you will see the array stored in the favorite_things variable. Just like the Pry session before, you can run any Ruby code inside this session. Try it by entering <code class="highlighter-rouge">favorite_things.length</code> and <code class="highlighter-rouge">favorite_things[0]</code>.</p>
+
+<h3 id="resuming">Resuming</h3>
+
+<p>You can type <code class="highlighter-rouge">exit</code> to tell Ruby to close the Pry session and continue running the code. The program will run and stop again if it hits another <code class="highlighter-rouge">binding.pry</code>. Enter <code class="highlighter-rouge">exit</code> into your Pry session and you will see the program end since there are no more <code class="highlighter-rouge">binding.pry</code>s</p>
+
+<p>Update your code to this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'pry'</span>
+
+<span class="n">favorite_things</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Trapper Keeper"</span><span class="p">,</span> <span class="s2">"Netscape Navigator"</span><span class="p">,</span> <span class="s2">"Troll Doll"</span><span class="p">]</span>
+<span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+<span class="n">new_thing</span> <span class="o">=</span> <span class="s2">"Banana Split"</span>
+<span class="n">favorite_things</span> <span class="o">&lt;&lt;</span> <span class="n">new_thing</span>
+<span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+</code></pre></div></div>
+
+<p>Run this code, and your program will pause at the <em>first</em> <code class="highlighter-rouge">binding.pry</code>. Try typing in <code class="highlighter-rouge">new_thing</code> and you will see that this variable hasn’t been defined yet. Type <code class="highlighter-rouge">exit</code> and Ruby will continue running and stop at the second <code class="highlighter-rouge">binding.pry</code>. Now type <code class="highlighter-rouge">new_thing</code> and you will see that you have access to that variable, because this <code class="highlighter-rouge">binding.pry</code> happened after the variable was defined. Also, type in <code class="highlighter-rouge">favorite_things</code> and you will see the array has been updated.</p>
+
+<h3 id="stopping">Stopping</h3>
+
+<p>We can also put a <code class="highlighter-rouge">binding.pry</code> in a loop. Update your code to this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'pry'</span>
+
+<span class="n">favorite_things</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Trapper Keeper"</span><span class="p">,</span> <span class="s2">"Netscape Navigator"</span><span class="p">,</span> <span class="s2">"Troll Doll"</span><span class="p">]</span>
+<span class="n">new_thing</span> <span class="o">=</span> <span class="s2">"Banana Split"</span>
+<span class="n">favorite_things</span> <span class="o">&lt;&lt;</span> <span class="n">new_thing</span>
+<span class="mi">25</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span>
+  <span class="nb">p</span> <span class="n">favorite_things</span>
+  <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>Now our <code class="highlighter-rouge">binding.pry</code> is inside a loop that happens 25 times. Run this code and type <code class="highlighter-rouge">exit</code> a couple times. You’ll notice that you continue to hit the same pry statement. If we have a loop that runs many times, it can be a pain to type <code class="highlighter-rouge">exit</code> over and over to get to the end of the program. You can instead force the program to end by typing <code class="highlighter-rouge">exit!</code> or <code class="highlighter-rouge">!!!</code>.</p>
+
+<h3 id="summary">Summary</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">require 'pry'</code> at the top of your file.</li>
+  <li>Use <code class="highlighter-rouge">binding.pry</code> inside your code to tell Ruby to <em>Pause</em> your program when it hits that line of code.</li>
+  <li>Use <code class="highlighter-rouge">exit</code> to tell Ruby to <em>Resume</em> running your code.</li>
+  <li>Use <code class="highlighter-rouge">exit!</code> or <code class="highlighter-rouge">!!!</code> to tell Ruby to <em>Stop</em> your program.</li>
+  <li>If you get stuck in a pager, denoted by a colon <code class="highlighter-rouge">:</code>, you can hit <code class="highlighter-rouge">q</code> to exit the pager.</li>
+</ul>
+:ET

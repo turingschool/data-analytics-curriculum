@@ -1,0 +1,165 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<p>Students will be able to…</p>
+<ul>
+  <li>explain what considerations go into a polished project</li>
+  <li>do an audit of a current project on their resume and improve at least one area of that project</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>What projects are listed on your resume?</li>
+  <li>How sure are you that they are as good as they could be?</li>
+  <li>If they are as good as they could be, how do you know? What have you done to get them there?</li>
+  <li>If they aren’t as good as they could be, why not? (not sure what to do, haven’t made the time, etc.)</li>
+</ul>
+
+<h2 id="what-should-i-care-about">What should I care about?</h2>
+
+<p>You are human, you are not perfect. That’s why we have teams; to help each other out with blind spots. You have a lot going on and it can be hard to focus on getting the little things done.</p>
+
+<p>Many projects are littered with issues! The exercise of building software is never-ending. Today we are going to discuss some specific things you should consider as you polish projects, specifically for your resume.</p>
+
+<h3 id="error-handling">Error Handling</h3>
+<ul>
+  <li>Human readable errors are important!</li>
+  <li>This includes error handling on the frontend and on the backend</li>
+  <li>Focus on the user experience</li>
+</ul>
+
+<h3 id="validations">Validations</h3>
+<ul>
+  <li>Client side: Let this be your first guard against the user doing something they aren’t supposed to do.</li>
+  <li>Server side: Let this be your last line of defense if client side validations fail for some reason.</li>
+</ul>
+
+<h3 id="navigation-and-standard-ux">Navigation and Standard UX</h3>
+<ul>
+  <li>Making sure UX is simple and useful</li>
+  <li>Making sure that you can go back after you reached a particular page</li>
+  <li>If you don’t know much about UX, you should read this book: <em>Don’t Make Me Think</em> by Steve King</li>
+</ul>
+
+<h3 id="understanding-basic-style">Understanding Basic Style</h3>
+<ul>
+  <li>Understanding a decent amount of CSS (or SASS): https://learn.shayhowe.com/</li>
+  <li>Picking better color palettes: https://flatuicolors.com/</li>
+  <li>Picking great typography: https://fonts.google.com/</li>
+  <li>Making it accessible to users: https://www.usability.gov/what-and-why/accessibility.html</li>
+</ul>
+
+<h3 id="edge-cases">Edge Cases</h3>
+<ul>
+  <li>If user does X, what happens to your application? Are there any unwanted consequences?</li>
+</ul>
+
+<p>You’ll surely discover new edge cases along the way. It’ll make you wonder how a user even did a certain action in the first place. Mapping out edge cases will save you a lot of headaches in the future. It will also make you look thoughtful and thorough, which people who consider paying you a lot of money to write code will like.</p>
+
+<h3 id="no-passing-tests--no-deploys">No passing tests === no deploys</h3>
+<ul>
+  <li>While you should have a decent amount of test coverage, your spec must be passing before it gets deployed.</li>
+  <li>If you see that your tests are not passing while being ran in continuous integration tool, then the deploy should be stopped.</li>
+</ul>
+
+<p>Moral of the story: Use CI.</p>
+
+<h3 id="test-the-most-crucial-front-end-features">Test the most crucial front-end features</h3>
+<ul>
+  <li>You should be making sure that your most crucial features are being tested, even on the front-end.</li>
+  <li>Many times, you’ll hear that it works on my machine but then it doesn’t in other environments.</li>
+  <li>Testing foundational interactions that your user will encounter is essential to building great software.</li>
+</ul>
+
+<h3 id="documentationreadme">Documentation/README</h3>
+<p>I’d like to know a few things:</p>
+<ul>
+  <li>What does your project do?</li>
+  <li>What does it look like? (screenshots)</li>
+  <li>How can I get set up and start contributing?</li>
+  <li>Is there any strange configuration that I need to know about?</li>
+  <li>Is this project dependent on another project?</li>
+</ul>
+
+<h3 id="git-commit-messages">Git Commit messages</h3>
+<p>Sometimes projects can get a little crazy and we commit code with messages that are incoherent. We can fix this by doing a few things:</p>
+<ul>
+  <li>Abiding by a git commit message template</li>
+  <li>Sqashing old commits into something more readable</li>
+  <li>Be professional. Don’t be like these people: http://www.commitlogsfromlastnight.com</li>
+</ul>
+
+<h2 id="project-audit">Project Audit</h2>
+
+<ul>
+  <li>Take 5 minutes to select one of the projects listed on your resume that you would like to polish. Copy and paste the repo link and your resume into the cohort channel.</li>
+  <li>Take 30 minutes to go into your partner’s repo. Do an audit and give them feedback on each category</li>
+  <li>Take 3 minutes to read through the feedback, 3 minutes to clarify anything with your partner.</li>
+  <li>Decide what you are going to prioritize polishing <em>today</em>. You can absolutely continue on this throughout the coming weeks, and this would be a great thing to talk with your coach about! But for today, pick a bite-sized chunk that you think will take 45 minutes - 1 hour.</li>
+</ul>
+
+<h2 id="work-time">Work Time</h2>
+
+<p>Take the next ~1 hour to start working on one bite-sized piece of polishing based on your partners feedback!</p>
+
+<h2 id="wrap-up">Wrap Up</h2>
+
+<p>DM your career coach and instructors letting us know…</p>
+<ul>
+  <li>The feedback I got</li>
+  <li>The area I focused on</li>
+  <li>The steps I took, the outcome (show your group!)</li>
+  <li>The steps I plan to take in the future (and where they are documented)</li>
+</ul>
+
+<h3 id="audit-rubric">Audit Rubric</h3>
+
+<h4 id="git-workflow">Git Workflow</h4>
+<ul>
+  <li>Are the commits following a consistent pattern?</li>
+  <li>How were branches utilized?</li>
+  <li>Was a PR template used?</li>
+  <li>If a pair/group project, are code reviews/conversations present?</li>
+</ul>
+
+<h4 id="testing">Testing</h4>
+<ul>
+  <li>Are you able to clone down the app and run tests?</li>
+  <li>If so, do all tests pass?</li>
+  <li>Is there documentation on how to show coverage?</li>
+  <li>If so, is coverage &gt; 99%?</li>
+</ul>
+
+<h4 id="deployed-application">Deployed Application</h4>
+<ul>
+  <li>Do you know how to use the application?</li>
+  <li>Is navigation clear and easy?</li>
+  <li>Try to poke holes in the app - Did you get any errors? Should you have gotten any errors?</li>
+  <li>Run an accessibility audit (in DevTools, either use the aXe tool or under the Audits tab). Any issues with accessibility?</li>
+  <li>Were you confused about what the app did, how to use it, or anything, at <strong>any</strong> time? Please be as specific as possible, and provide solutions if you have any!</li>
+</ul>
+
+<h4 id="documentation--resume">Documentation / Resume</h4>
+<ul>
+  <li>Does the resume highlight things that set this developer apart from other applicants for a Junior Developer position?</li>
+  <li>Is wording in resume and README consistent?</li>
+  <li>README (lower priority for today - we will have a more in-depth workshop on READMEs later in the mod!)
+    <ul>
+      <li>Is there an explanation of the purpose of the app/problem it is solving?</li>
+      <li>Are there screenshots?</li>
+      <li>Are there crystal-clear instructions on how to get the project up and running on your machine?</li>
+      <li>Is there detailed info on endpoints (verb, human readable explanation of the data, endpoint, response (body and codes), expected request if applicable, errors that will come back and why)?</li>
+      <li>Is this dependent on any other project? Is that project linked?</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="feedback-synthesis-to-be-completed-by-author-of-project">Feedback Synthesis (to be completed by author of project)</h3>
+<ul>
+  <li>What are 2-3 main takeaways from this feedback?</li>
+  <li>What feels most urgent to you?</li>
+  <li>What feels highest leverage?</li>
+  <li>What are you going to start on today (~45 minutes of work time)?</li>
+  <li>What other pieces would you like to continue polishing?</li>
+</ul>
+:ET

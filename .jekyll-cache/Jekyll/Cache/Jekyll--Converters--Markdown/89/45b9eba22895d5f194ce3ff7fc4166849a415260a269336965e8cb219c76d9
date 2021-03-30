@@ -1,0 +1,196 @@
+I"�4<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students can diagram database relationships.</li>
+  <li>Students can identify the tables in a database that hold information required to complete complex queries.</li>
+  <li>Students can generate complex ActiveRecord queries using joins, group, order, select, and merge.</li>
+  <li>Students can use the rails dbconsole  and rails console to generate ActiveRecord queries.</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/advanced_activerecord">here</a></p>
+
+<h2 id="warmup-5-mins">Warmup (5 mins)</h2>
+
+<ul>
+  <li>What are the tables in our RailsEngine project?</li>
+  <li>What information is in each table?</li>
+  <li>How are those tables related?</li>
+  <li>If we wanted to find the 5 most expensive invoices with successful transactions:
+    <ul>
+      <li>What tables would we need to query?</li>
+      <li>What information would we need from each table?</li>
+      <li>What calculations would we need to perform?</li>
+      <li>What SQL would we be able to use to create a table with this information?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="lecture">Lecture</h2>
+
+<p>The SQL we might use to get those top five invoices might look something like this:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">invoices</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">invoice_items</span><span class="p">.</span><span class="n">quantity</span> <span class="o">*</span> <span class="n">invoice_items</span><span class="p">.</span><span class="n">unit_price</span><span class="p">)</span> <span class="k">AS</span> <span class="n">revenue</span> <span class="k">FROM</span> <span class="n">invoices</span>
+<span class="k">JOIN</span> <span class="n">invoice_items</span> <span class="k">ON</span> <span class="n">invoices</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">invoice_items</span><span class="p">.</span><span class="n">invoice_id</span>
+<span class="k">JOIN</span> <span class="n">transactions</span> <span class="k">ON</span> <span class="n">transactions</span><span class="p">.</span><span class="n">invoice_id</span> <span class="o">=</span> <span class="n">invoices</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHERE</span> <span class="n">transactions</span><span class="p">.</span><span class="k">result</span> <span class="o">=</span> <span class="s1">'success'</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">invoices</span><span class="p">.</span><span class="n">id</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">revenue</span> <span class="k">DESC</span>
+<span class="k">LIMIT</span> <span class="mi">5</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>That’s great. We could use <code class="highlighter-rouge">find_by_sql</code>, pass that as an argument, and be done. However, inside of Rails it can sometimes be a little jarring to see raw SQL, and some of our teammates might be more accustomed to ActiveRecord. How can we translate that query into ActiveRecord?</p>
+
+<p>Let’s review some tools that we have at our disposal.</p>
+
+<h3 id="group">Group</h3>
+
+<ul>
+  <li>Used to group by a characteristic</li>
+  <li>Needs an aggregate function</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On Transaction</span>
+<span class="c1"># Returns a hash with IDs for keys</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">results_counts</span>
+  <span class="n">group</span><span class="p">(</span><span class="ss">:result</span><span class="p">).</span><span class="nf">count</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="group-with-calculation">Group With Calculation</h3>
+
+<ul>
+  <li>Can use calculations as aggregate funcitons</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On InvoiceItem</span>
+<span class="c1"># Returns a hash with IDs for keys</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">invoice_totals</span>
+  <span class="n">group</span><span class="p">(</span><span class="ss">:invoice_id</span><span class="p">).</span><span class="nf">sum</span><span class="p">(</span><span class="s2">"quantity * unit_price"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="group-with-order">Group With Order</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On Invoice</span>
+<span class="c1"># Returns a hash with IDs for keys</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">merchant_count_of_invoices</span>
+  <span class="n">group</span><span class="p">(</span><span class="ss">:merchant_id</span><span class="p">).</span><span class="nf">order</span><span class="p">(</span><span class="s1">'count_all DESC'</span><span class="p">).</span><span class="nf">count</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="group-with-order-calculation">Group With Order Calculation</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On InvoiceItem</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">invoices_by_cost</span>
+  <span class="n">group</span><span class="p">(</span><span class="ss">:invoice_id</span><span class="p">).</span><span class="nf">order</span><span class="p">(</span><span class="s2">"sum(quantity * unit_price)"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="joins">Joins</h3>
+
+<ul>
+  <li>Class method</li>
+  <li>Pull multiple records on originating model</li>
+  <li>Limited to records where related record exists</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On the Invoice model</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">invoices_with_a_transaction</span>
+  <span class="n">joins</span><span class="p">(</span><span class="ss">:transactions</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="merge">Merge</h3>
+
+<ul>
+  <li>Use with a <code class="highlighter-rouge">.joins</code> to apply a method from the joined model</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># on the Invoice model</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">successful_invoices</span>
+  <span class="n">joins</span><span class="p">(</span><span class="ss">:transactions</span><span class="p">).</span><span class="nf">merge</span><span class="p">(</span><span class="no">Transaction</span><span class="p">.</span><span class="nf">success</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="select">Select</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On Merchant</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">no_dates</span>
+  <span class="nb">select</span><span class="p">(</span><span class="ss">:id</span><span class="p">,</span> <span class="ss">:name</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Cool. That’s great. I can select only certain elemetns from a table and not others. What good does that do me? Well, in SQL, we can also pass calculations to our SELECT queries.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On Merchant</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">merchant_plus_invoices</span>
+  <span class="n">joins</span><span class="p">(</span><span class="ss">:invoices</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="s1">'merchants.id, name, count(invoices.id) AS count_of_invoices'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="s1">'merchants.id'</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>There’s also a <code class="highlighter-rouge">count</code> method, but it (and other similar aggregate functions like <code class="highlighter-rouge">sum</code>, <code class="highlighter-rouge">average</code>, etc.) will return an integer or float in a way that doesn’t allow us to dig down further.</p>
+
+<h3 id="putting-it-all-together">Putting it All Together</h3>
+
+<p>Using the methods we’ve explored up to this point, we should be able to get a collection of invoices with the highest total cost.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On the Invoice model</span>
+<span class="c1"># Returns an array of invoices!</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">expensive_invoices</span>
+  <span class="n">joins</span><span class="p">(</span><span class="ss">:invoice_items</span><span class="p">,</span> <span class="ss">:transactions</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="ss">transactions: </span><span class="p">{</span><span class="ss">result: </span><span class="s2">"success"</span><span class="p">})</span>
+    <span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="ss">:id</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">order</span><span class="p">(</span><span class="s2">"sum(quantity * unit_price)"</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="potential-refactor">Potential Refactor</h3>
+
+<p>There’s a portion of this query that we might want to use a lot: finding those invoices that have a successful transaction. One of the neat things about ActiveRecord is that it takes an entire chain of commands and evaluates them before executing a query to our database. Because of that, we can extract a portion of our query to another method or a scope. Then we can rewrite our query to something like the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">expensive_invoices</span>
+  <span class="n">success</span>
+    <span class="p">.</span><span class="nf">joins</span><span class="p">(</span><span class="ss">:invoice_items</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">group</span><span class="p">(</span><span class="ss">:id</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">order</span><span class="p">(</span><span class="s2">"sum(quantity * unit_price)"</span><span class="p">)</span>
+    <span class="p">.</span><span class="nf">limit</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="other-things-to-know">Other Things to Know</h2>
+
+<h3 id="find-by-sql">Find By SQL</h3>
+
+<p>If you’re more comfortable in SQL and pressed for time, or if your team generally feels more comfortable in SQL and has decided as a group that the norm will be to use raw SQL for most queries, you can use <code class="highlighter-rouge">find_by_sql</code> to execute SQL queries against your database.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># On the invoice model</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">successful_invoices</span>
+  <span class="n">find_by_sql</span><span class="p">(</span><span class="s2">"SELECT invoices.*, transactions.id AS transaction_id FROM invoices
+               JOIN transactions ON transactions.invoice_id = invoices.id
+               WHERE transactions.result = 'success'"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="practice">Practice</h2>
+
+<p>With a partner, see if you can find the five customers who have spent the most money.</p>
+
+<ul>
+  <li>What tables will be involved?</li>
+  <li>What is the important information from those tables?</li>
+  <li>Why?</li>
+  <li>Where will this method likely live?</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=OccKyvGvLKE&amp;t=1329s">Video</a> from a past class and the core ideas</li>
+</ul>
+
+:ET

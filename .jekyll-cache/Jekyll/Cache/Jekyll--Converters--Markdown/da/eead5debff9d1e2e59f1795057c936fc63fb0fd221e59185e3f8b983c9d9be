@@ -1,0 +1,29 @@
+I"<h2 id="inspecting-the-data">Inspecting the data</h2>
+
+<ul>
+  <li>what categories of data do we have?</li>
+  <li>what information is presented for each category?</li>
+  <li>where are the primary keys?</li>
+  <li>where are the foreign keys?</li>
+</ul>
+
+<h2 id="visual-representation-of-the-data">Visual Representation of the Data</h2>
+
+<ul>
+  <li>use this <a href="http://ondras.zarovi.cz/sql/demo/">online schema designer</a></li>
+</ul>
+
+<h2 id="structuring-salesengine-repositories-and-the-things">Structuring SalesEngine, Repositories, and the “Things”</h2>
+
+<ul>
+  <li>analogy: Turing -&gt; students</li>
+  <li>how do the repositories relate to their respective “things”?</li>
+  <li>how is the sales engine related to the repositories?</li>
+  <li>traveling down the chain: easy</li>
+  <li>traveling up the chain: trickier, but doable</li>
+  <li>what would a “thing” need to have in order to travel up the chain?</li>
+  <li>what would a repository need to have in order to travel up the chain?</li>
+</ul>
+
+<h2 id="questions">Questions?</h2>
+:ET

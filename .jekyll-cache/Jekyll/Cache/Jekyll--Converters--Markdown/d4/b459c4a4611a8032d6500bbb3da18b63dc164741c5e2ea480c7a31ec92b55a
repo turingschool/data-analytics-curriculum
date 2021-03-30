@@ -1,0 +1,142 @@
+I"2#<h1 id="a-perilous-journey">A Perilous Journey</h1>
+
+<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Practice breaking a program into logical components</li>
+  <li>Distinguishing between classes and instances of those classes</li>
+  <li>Understanding how linked lists work to store and find data</li>
+  <li>Testing components in isolation and in combination</li>
+  <li>Use and implement iteration or recursion techniques</li>
+</ul>
+
+<h2 id="basics">Basics</h2>
+
+<p>In this project we’re going to build a wagon train heading West over the treacherous Rocky Mountains. Can your party survive the journey??</p>
+
+<p><img src="https://gamefaqs.akamaized.net/screens/b/4/9/gfs_35158_2_1.jpg#center" alt="Oregon Trail Wagon Train" /></p>
+
+<p>However to add some additional depth, let’s also use this project as a chance to explore one of the fundamental data structures in computer science – the Linked List.</p>
+
+<h3 id="oregon-trail-101-tips-for-survival">Oregon Trail 101– Tips for survival!</h3>
+
+<p>The Oregon Trail is one of the original computer games, created in 1971. It was originally designed to teach school children about 19th century pioneer life, but quickly became a cult classic. The player assumes the role of a wagon leader guiding their party from Independence, Missouri to the Wilamette Valley in Oregon via a wagon train in 1848. Due to the rampant amount of untreated disease and treacherous conditions of the rugged terrain, death was frequent. Thus, the main purpose was to survive, and to do so, each wagon family had to maintain supplies. They collected everything from oxen, food and clothing to ammunition and spare parts (<a href="https://classicreload.com/oregon-trail.html">https://classicreload.com/oregon-trail.html</a>).</p>
+
+<p><img src="http://i.onionstatic.com/avclub/5907/21/16x9/960.jpg" alt="Don't die of Dysentery!" /></p>
+
+<h3 id="linked-lists">Linked Lists</h3>
+
+<p>Linked Lists are one of the most fundamental Computer Science data structures. A Linked List models a collection of data as a series of “nodes” which link to one another in a chain.</p>
+
+<p>In a singly-linked list (the type we will be building) you have a <strong>head</strong>, which is a node representing the “start” of the list, and subsequent nodes which make up the remainder of the list.</p>
+
+<p>The <strong>list</strong> itself can hold a reference to one thing – the head node.</p>
+
+<p>Each node can hold a single element of data and a link to the next node in the list.</p>
+
+<p>The last node of the list is often called its <strong>tail</strong>.</p>
+
+<p>Using sweet ASCII art, it might look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>List -- (head) --&gt; ["hello" | -]-- (link) --&gt; ["world" | -]-- (link) --&gt; ["!" | ]
+</code></pre></div></div>
+<p>The three nodes here hold the data “hello”, “world”, and “!”. The first two nodes have links which point to other nodes. The last node, holding the data “!”, has no reference in the link spot. This signifies that it is the end of the list.</p>
+
+<h2 id="iterative-development">Iterative Development</h2>
+
+<p>As we work through this project, we’ll be following an <em>iterative</em> development process. This means we’ll aim to build the system out of small but complete chunks which could reasonably stand on their own to perform some required function. The iterations are outlined below. It may be worth reading through them all at first to get a sense of the scope of the entire project, but we encourage you to then forget about later iterations until you get to them.</p>
+
+<p>The point of this process is to help us focus on small pieces at a time without getting overwhelmed by the scope of the entire project.</p>
+
+<h3 id="iteration-base-expectations">Iteration Base Expectations</h3>
+
+<ul>
+  <li><a href="perilous_journey_iterations/iteration_0.md">Iteration 0</a> - Node Basics</li>
+  <li><a href="perilous_journey_iterations/iteration_1.md">Iteration 1</a> - Append, To String, and Count (Single Node)</li>
+  <li><a href="perilous_journey_iterations/iteration_2.md">Iteration 2</a> - Append, To String, and Insert (Multiple Nodes)</li>
+  <li><a href="perilous_journey_iterations/iteration_3.md">Iteration 3</a> - Insert and Prepend</li>
+  <li><a href="perilous_journey_iterations/iteration_4.md">Iteration 4</a> - Find, Pop, and Includes?</li>
+  <li><a href="perilous_journey_iterations/iteration_5.md">Iteration 5</a> - Creating the WagonTrain Linked List “Wrapper”</li>
+  <li><a href="perilous_journey_iterations/iteration_6.md">Iteration 6</a> - Carrying Supplies</li>
+  <li><a href="perilous_journey_iterations/extensions.md">Extensions</a> - Hunting and Circle the Wagons</li>
+</ul>
+
+<h2 id="tips">Tips</h2>
+
+<ul>
+  <li>A linked list it not an array. While it may perform many of the same functions as an array, its structure is conceptually very different.</li>
+  <li>There are only 3 types of “state” that need to be tracked for a linked list – the head of the list, the data of each node, and the “next node” of each node.</li>
+  <li>In object-oriented programming, “state” is generally modeled with instance variables</li>
+  <li>There are two main ways to implement Linked Lists: <strong>iteration</strong> and <strong>recursion</strong>. Iterative solutions use looping structures (<code class="highlighter-rouge">while</code>, <code class="highlighter-rouge">for</code>) to walk through the nodes in the list. Recursive solutions use methods which call themselves to walk through nodes. It would be ideal to solve it each way.</li>
+  <li>Most of your methods will be defined on the <code class="highlighter-rouge">List</code> itself, but you will need to manipulate one or more <code class="highlighter-rouge">Node</code>s to implement them.</li>
+  <li><strong>TDD</strong> will be your friend in implementing the list. Remember to start small, work iteratively, and test all of your methods.</li>
+  <li>An <strong>empty</strong> list has <code class="highlighter-rouge">nil</code> as its head</li>
+  <li>The <strong>tail</strong> of a list is the node that has <code class="highlighter-rouge">nil</code> as its next node</li>
+</ul>
+
+<h2 id="constraints">Constraints</h2>
+
+<ul>
+  <li>Make sure that your code is well tested for both <em>expected cases</em> and <em>edge cases</em>. Try popping more elements than there are in the list. Try seeing if an empty list includes anything. Try inserting elements at a position beyond the length of the list.</li>
+  <li>Avoid using other ruby collections (Arrays, Hashes, etc) for the storage of your wagons. That’s where you’re supposed to use the linked list. But having Arrays elsewhere in your code, or using methods that return arrays (like <code class="highlighter-rouge">.split</code>) are totally ok.</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<p>Need some help on Linked Lists? You can check out some of the following resources:</p>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=oiW79L8VYXk">https://www.youtube.com/watch?v=oiW79L8VYXk</a></li>
+  <li><a href="http://www.eternallyconfuzzled.com/tuts/datastructures/jsw_tut_linklist.aspx">http://www.eternallyconfuzzled.com/tuts/datastructures/jsw_tut_linklist.aspx</a></li>
+  <li><a href="http://www.cs.cmu.edu/~adamchik/15-121/lectures/Linked%20Lists/linked%20lists.html">http://www.cs.cmu.edu/~adamchik/15-121/lectures/Linked%20Lists/linked%20lists.html</a></li>
+  <li><a href="http://www.sitepoint.com/rubys-missing-data-structure/">http://www.sitepoint.com/rubys-missing-data-structure/
+</a></li>
+</ul>
+
+<h2 id="evaluation-rubric">Evaluation Rubric</h2>
+
+<p>The project will be assessed with the following guidelines:</p>
+
+<ul>
+  <li>4: Above expectations</li>
+  <li>3: Meets expectations</li>
+  <li>2: Below expectations</li>
+  <li>1: Well-below expectations</li>
+</ul>
+
+<p><strong>Expectations:</strong></p>
+
+<h3 id="1-ruby-syntax--style">1. Ruby Syntax &amp; Style</h3>
+
+<ul>
+  <li>Applies appropriate attribute encapsulation</li>
+  <li>Developer creates instance and local variables appropriately</li>
+  <li>Naming follows convention (is idiomatic)</li>
+  <li>Ruby methods used are logical and readable</li>
+  <li>Code is indented properly</li>
+  <li>Code does not exceed 80 characters per line</li>
+  <li>Each class has correctly-named files and corresponding test files in the proper directories</li>
+</ul>
+
+<h3 id="2-breaking-logic-into-components">2. Breaking Logic into Components</h3>
+
+<ul>
+  <li>Code is effectively broken into methods &amp; classes</li>
+  <li>Developer writes methods less than 10 lines</li>
+  <li>No more than 3 methods break the principle of SRP</li>
+</ul>
+
+<h3 id="3-test-driven-development">3. Test-Driven Development</h3>
+
+<ul>
+  <li>Each method is tested</li>
+  <li>Tests implement Ruby syntax &amp; style</li>
+</ul>
+
+<h3 id="4-functionality">4. Functionality</h3>
+
+<ul>
+  <li>Application meets all requirements (extension not req’d)</li>
+</ul>
+
+:ET

@@ -1,0 +1,411 @@
+I"3Q<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Create a new git repository.</li>
+  <li>Check out new branches to implement pieces of functionality.</li>
+  <li>Add and commit files from the command line.</li>
+  <li>Push branches to GitHub</li>
+  <li>Merge branches on GitHub</li>
+  <li>Pull master from GitHub</li>
+</ul>
+
+<h2 id="walkthrough">Walkthrough</h2>
+
+<h3 id="iteration-10">Iteration 1.0</h3>
+
+<p>In this stage, we want to create a new project locally, create a repository on GitHub and then link the two of them together.</p>
+
+<h4 id="iteration-11-create-a-new-project-locally">Iteration 1.1: Create a New Project Locally</h4>
+
+<p>On your own computer walk through the following steps in your terminal.</p>
+
+<ol>
+  <li><code class="highlighter-rouge">cd</code> into your Turing Mod 1 directory.</li>
+  <li>If you do not already have a practice directory, create one using <code class="highlighter-rouge">mkdir</code></li>
+  <li><code class="highlighter-rouge">cd</code> into your <code class="highlighter-rouge">practice</code> directory.</li>
+  <li><code class="highlighter-rouge">mkdir dog_party</code></li>
+  <li><code class="highlighter-rouge">cd dog_party</code></li>
+  <li><code class="highlighter-rouge">mkdir lib</code></li>
+  <li><code class="highlighter-rouge">mkdir test</code></li>
+  <li><code class="highlighter-rouge">touch test/dog_test.rb</code></li>
+  <li><code class="highlighter-rouge">touch lib/dog.rb</code></li>
+  <li><code class="highlighter-rouge">git init</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git add test/dog_test.rb</code></li>
+  <li><code class="highlighter-rouge">git add lib/dog.rb</code></li>
+  <li><code class="highlighter-rouge">git commit -m "Initial commit"</code></li>
+</ol>
+
+<h4 id="iteration-12-create-a-new-project-on-github">Iteration 1.2: Create a New Project on GitHub</h4>
+
+<p>In your browser:</p>
+
+<ol>
+  <li>Navigate to <code class="highlighter-rouge">github.com</code></li>
+  <li>Click the <code class="highlighter-rouge">New repository</code> button</li>
+  <li>Enter <code class="highlighter-rouge">dog_party</code> as the name of your new repository</li>
+  <li>Click on <code class="highlighter-rouge">Create repository</code></li>
+  <li>Under <code class="highlighter-rouge">...or push an existing repository from the command line</code>, click on the icon to copy the text commands to your clipboard</li>
+</ol>
+
+<h4 id="iteration-13-connect-your-local-repository-to-your-remote">Iteration 1.3: Connect Your Local Repository to Your Remote</h4>
+
+<p>Back in your terminal:</p>
+
+<ol>
+  <li>Paste the commands that you’ve copied</li>
+  <li>Hit enter if the last command doesn’t run</li>
+</ol>
+
+<h3 id="iteration-20">Iteration 2.0</h3>
+
+<p>Here we want to actually add some content to our project. First we’ll check out a branch, then do some work, commit, push to GitHub, merge to master, and then pull down so that we have our work on our local master branch.</p>
+
+<h4 id="iteration-21-create-a-branch">Iteration 2.1: Create a Branch</h4>
+
+<p>Still in the Terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git branch -a</code></li>
+  <li><code class="highlighter-rouge">git branch create_dog_class</code></li>
+  <li><code class="highlighter-rouge">git branch -a</code></li>
+  <li><code class="highlighter-rouge">git checkout create_dog_class</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+</ol>
+
+<h4 id="iteration-22-create-a-test">Iteration 2.2: Create a Test</h4>
+
+<p>From the Terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">atom ./</code></li>
+</ol>
+
+<p>In Atom:</p>
+
+<ol>
+  <li>Copy the code below into your test file.</li>
+</ol>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'minitest/test'</span>
+<span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+<span class="nb">require</span> <span class="s1">'./lib/dog'</span>
+
+<span class="k">class</span> <span class="nc">DogTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+
+  <span class="k">def</span> <span class="nf">test_it_exists</span>
+    <span class="n">dog</span> <span class="o">=</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Fido"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"Dalmation"</span><span class="p">)</span>
+
+    <span class="n">assert_instance_of</span> <span class="no">Dog</span><span class="p">,</span> <span class="n">dog</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">ruby test/dog_test.rb</code></li>
+</ol>
+
+<h4 id="iteration-23-commit-our-test">Iteration 2.3: Commit Our Test</h4>
+
+<p>Still in the terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git add test/dog_test.rb</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git commit -m "Create test for dog class"</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">ruby test/dog_test.rb</code></li>
+</ol>
+
+<h4 id="iteration-24-make-our-test-pass">Iteration 2.4: Make Our Test Pass</h4>
+
+<p>Back in Atom:</p>
+
+<ol>
+  <li>Make the test pass by entering the following code into your <code class="highlighter-rouge">./lib/dog.rb</code> file.</li>
+</ol>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Dog</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">breed</span><span class="p">)</span>
+    <span class="vi">@name</span>  <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@age</span>   <span class="o">=</span> <span class="n">age</span>
+    <span class="vi">@breed</span> <span class="o">=</span> <span class="n">breed</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">ruby test/dog_test.rb</code></li>
+</ol>
+
+<h4 id="iteration-25-commit-our-work">Iteration 2.5: Commit Our Work</h4>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git add lib/dog.rb</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git commit -m "Create dog class"</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+</ol>
+
+<h4 id="iteration-26-push-to-github">Iteration 2.6: Push to GitHub</h4>
+
+<ol>
+  <li><code class="highlighter-rouge">git push origin create_dog_class</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+</ol>
+
+<h4 id="iteration-27-merge-to-master-on-github">Iteration 2.7: Merge to Master on GitHub</h4>
+
+<p>On GitHub</p>
+
+<ol>
+  <li>Reload the page that has your <code class="highlighter-rouge">dog_party</code> repo (where you copied the command to add the link to your repo)</li>
+  <li>Click on the green button in the yellow box that says ‘Compare &amp; pull request’</li>
+  <li>In the text box that says <code class="highlighter-rouge">write</code> above it add the following:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Create test for dog class with name, age, and breed attributes.
+* Create dog class.
+</code></pre></div></div>
+
+<ol>
+  <li>Review the files that you changed below the text box - it should only include <code class="highlighter-rouge">dog.rb</code> and <code class="highlighter-rouge">dog_test.rb</code></li>
+  <li>Click on the green button that says <code class="highlighter-rouge">Create pull request</code></li>
+  <li>Click on the tab that says <code class="highlighter-rouge">Files changed</code></li>
+  <li>Confirm that this only includes your <code class="highlighter-rouge">dog.rb</code> and <code class="highlighter-rouge">dog_test.rb</code> files and that it includes the code provided in earlier steps</li>
+  <li>Click on the tab that says <code class="highlighter-rouge">Conversation</code></li>
+  <li>Click on the green button that says <code class="highlighter-rouge">Merge pull request</code></li>
+  <li>Click on the green button that says <code class="highlighter-rouge">Confirm merge</code></li>
+  <li>At the top of the page click on the tab that says <code class="highlighter-rouge">&lt;&gt; Code</code></li>
+  <li>Confirm that you are on the <code class="highlighter-rouge">master</code> branch in the dropdown 1/3 of the way down the site on the left-hand side</li>
+  <li>Review the code in your <code class="highlighter-rouge">lib</code> and <code class="highlighter-rouge">test</code> directories on GitHub to confirm that you have successfully pushed and merged your code to master</li>
+  <li>Click on <code class="highlighter-rouge">&lt;&gt; Code</code> to return to the main page for your <code class="highlighter-rouge">dog_party</code> repository</li>
+</ol>
+
+<h4 id="iteration-28-get-the-code-from-github-master-to-our-local-master">Iteration 2.8: Get the Code from GitHub Master to Our Local Master</h4>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git checkout master</code></li>
+</ol>
+
+<p>In Atom:</p>
+
+<ol>
+  <li>Review your code. Your <code class="highlighter-rouge">test/dog_test.rb</code> and <code class="highlighter-rouge">lib/dog.rb</code> files should both be blank.</li>
+</ol>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git pull origin master</code></li>
+</ol>
+
+<p>In Atom:</p>
+
+<ol>
+  <li>Review your code. Your <code class="highlighter-rouge">test/dog_test.rb</code> and <code class="highlighter-rouge">lib/dog.rb</code> files should both be populated.</li>
+</ol>
+
+<h3 id="iteration-30">Iteration 3.0</h3>
+
+<p>Here we’re going to repeat the process from iteration 2.0 to add some more code to our project.</p>
+
+<h4 id="iteration-31-check-out-a-new-branch">Iteration 3.1: Check Out a New Branch</h4>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git branch add_attr_readers</code></li>
+  <li><code class="highlighter-rouge">git checkout add_attr_readers</code></li>
+  <li>Notice that we pulled to master, but are checking out a new branch before we do any additional work.</li>
+  <li>Additionally, the branch is named for the work we are planning on doing.</li>
+</ol>
+
+<h4 id="iteration-32-add-tests-for-attributes">Iteration 3.2: Add Tests for Attributes</h4>
+
+<p>In Atom:</p>
+
+<ol>
+  <li>Add the tests below to your existing <code class="highlighter-rouge">test/dog_test.rb</code> file (some of the existing code is not repeated here, but referenced for brevity)</li>
+</ol>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># existing require statements</span>
+
+<span class="k">class</span> <span class="nc">DogTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="c1"># existing test that Dog exists</span>
+
+  <span class="k">def</span> <span class="nf">test_it_has_a_name</span>
+    <span class="n">dog</span> <span class="o">=</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Fido"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"Dalmation"</span><span class="p">)</span>
+
+    <span class="n">expected</span> <span class="o">=</span> <span class="s2">"Fido"</span>
+    <span class="n">actual</span>   <span class="o">=</span> <span class="n">dog</span><span class="p">.</span><span class="nf">name</span>
+
+    <span class="n">assert_equal</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_it_has_an_age</span>
+    <span class="n">dog</span> <span class="o">=</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Fido"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"Dalmation"</span><span class="p">)</span>
+
+    <span class="n">expected</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">actual</span>   <span class="o">=</span> <span class="n">dog</span><span class="p">.</span><span class="nf">age</span>
+
+    <span class="n">assert_equal</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_it_has_a_breed</span>
+    <span class="n">dog</span> <span class="o">=</span> <span class="no">Dog</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Fido"</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"Dalmation"</span><span class="p">)</span>
+
+    <span class="n">expected</span> <span class="o">=</span> <span class="s2">"Dalmation"</span>
+    <span class="n">actual</span>   <span class="o">=</span> <span class="n">dog</span><span class="p">.</span><span class="nf">breed</span>
+
+    <span class="n">assert_equal</span> <span class="n">expected</span><span class="p">,</span> <span class="n">actual</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">ruby test/dog_test.rb</code></li>
+</ol>
+
+<h4 id="iteration-32-commit-our-work">Iteration 3.2: Commit Our Work</h4>
+
+<p>Still in the terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git add test/dog_test.rb</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git commit -m "Create test for attributes"</code></li>
+</ol>
+
+<h4 id="iteration-33-add-attributes">Iteration 3.3: Add Attributes</h4>
+
+<p>In Atom:</p>
+
+<ol>
+  <li>Add <code class="highlighter-rouge">attr_reader</code>s to your existing Dog code so that your final Dog class looks like the one below.</li>
+</ol>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Dog</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span>
+              <span class="ss">:age</span><span class="p">,</span>
+              <span class="ss">:breed</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">breed</span><span class="p">)</span>
+    <span class="vi">@name</span>  <span class="o">=</span> <span class="nb">name</span>
+    <span class="vi">@age</span>   <span class="o">=</span> <span class="n">age</span>
+    <span class="vi">@breed</span> <span class="o">=</span> <span class="n">breed</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="iteration-34-commit-our-work">Iteration 3.4: Commit Our Work</h4>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git add lib/dog.rb</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git commit -m "Add attribute methods"</code></li>
+</ol>
+
+<h4 id="iteration-35-push-our-branch-to-github">Iteration 3.5: Push Our Branch to GitHub</h4>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git push origin add_attr_readers</code></li>
+</ol>
+
+<h4 id="iteration-36-create-a-pull-request">Iteration 3.6: Create a Pull Request</h4>
+
+<p>On GitHub</p>
+
+<ol>
+  <li>Click on the green button in the yellow box that says ‘Compare &amp; pull request’</li>
+  <li>In the text box that says <code class="highlighter-rouge">write</code> above it add the following:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Create tests for Dog attributes.
+* Add `attr_reader`s to Dog
+</code></pre></div></div>
+
+<ol>
+  <li>Review the files that you changed below the text box - it should include both <code class="highlighter-rouge">dog.rb</code> and <code class="highlighter-rouge">dog_test.rb</code></li>
+  <li>Click on the green button that says <code class="highlighter-rouge">Create pull request</code></li>
+</ol>
+
+<h4 id="iteration-37-merge-our-pull-request">Iteration 3.7: Merge Our Pull Request</h4>
+
+<ol>
+  <li>Click on the tab that says <code class="highlighter-rouge">Files changed</code></li>
+  <li>Confirm that this includes your <code class="highlighter-rouge">dog.rb</code> and <code class="highlighter-rouge">dog_test.rb</code> files and that it includes the code provided in earlier steps</li>
+  <li>Click on the tab that says <code class="highlighter-rouge">Conversation</code></li>
+  <li>Click on the green button that says <code class="highlighter-rouge">Merge pull request</code></li>
+  <li>Click on the green button that says <code class="highlighter-rouge">Confirm merge</code></li>
+  <li>At the top of the page click on the tab that says <code class="highlighter-rouge">&lt;&gt; Code</code></li>
+  <li>Confirm that you are on the <code class="highlighter-rouge">master</code> branch in the dropdown 1/3 of the way down the site on the left-hand side</li>
+  <li>Review the code in your <code class="highlighter-rouge">lib</code> and <code class="highlighter-rouge">test</code> directories on GitHub to confirm that you have successfully pushed and merged your code to master</li>
+  <li>Click on <code class="highlighter-rouge">&lt;&gt; Code</code> to return to the main page for your <code class="highlighter-rouge">dog_party</code> repository</li>
+</ol>
+
+<h4 id="iteration-38-pull-our-work-to-our-local-master-branch">Iteration 3.8: Pull Our Work to Our Local Master Branch</h4>
+
+<p>In your terminal:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git checkout master</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git pull origin master</code></li>
+  <li><code class="highlighter-rouge">ruby test/dog_test.rb</code></li>
+</ol>
+
+<h3 id="iteration-40">Iteration 4.0</h3>
+
+<p>Use the examples above to add some additional code to your project:</p>
+
+<ol>
+  <li>Create and check out a branch called <code class="highlighter-rouge">add_bark_method</code>.</li>
+  <li>Add a test for a method called <code class="highlighter-rouge">bark</code> that returns the string “Woof!”</li>
+  <li>Commit your test with a commit message that describes the work you did.</li>
+  <li>Add a method called <code class="highlighter-rouge">bark</code> to your Dog class.</li>
+  <li>Commit your test with a commit message that describes the work you did.</li>
+  <li>Push your work to GitHub.</li>
+  <li>Merge your work.</li>
+  <li>Check out your <code class="highlighter-rouge">master</code> branch locally.</li>
+  <li>Pull your work from GitHub to your local <code class="highlighter-rouge">master</code> branch.</li>
+</ol>
+
+<h3 id="iteration-50">Iteration 5.0</h3>
+
+<p>Same as before, but add a <code class="highlighter-rouge">summary</code> method that returns the string:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Name: Fido
+Age: 2
+Breed: Dalmation
+</code></pre></div></div>
+
+<p>Don’t use <code class="highlighter-rouge">puts</code>!</p>
+
+<h3 id="questions">Questions</h3>
+
+<ul>
+  <li>In your own words, what are the high level steps for adding work to your project using a branching workflow?</li>
+  <li>How do you decide what to name a branch in Git?</li>
+  <li>Why would you work on a branch other than the master branch?</li>
+  <li>When you’ve merged a branch to master on GitHub, how do you get that code to your local master branch?</li>
+</ul>
+:ET

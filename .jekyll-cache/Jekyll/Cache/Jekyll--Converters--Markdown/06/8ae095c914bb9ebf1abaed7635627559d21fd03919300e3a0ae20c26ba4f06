@@ -1,0 +1,146 @@
+I"�<h2 id="standards">Standards</h2>
+
+<h4 id="pairing">Pairing</h4>
+<ul>
+  <li>explain the purpose of pairing</li>
+  <li>demonstrate the roles of driver and navigator while pairing</li>
+  <li>give contextual, actionable, relevant, encouraging, and specific feedback to pair</li>
+</ul>
+
+<h4 id="tdd">TDD</h4>
+<ul>
+  <li>install a Ruby gem</li>
+  <li>create and run a minitest test suite</li>
+  <li>write assertions using minitest</li>
+  <li>read error messages</li>
+  <li>fix error messages</li>
+  <li>read test failures</li>
+  <li>fix failing assertions</li>
+  <li>explain and demonstrate the TDD workflow</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+<ul>
+  <li>15 - Introduction to pairing (lecture)</li>
+  <li>15 - Practice pairing away from code (pairs)</li>
+  <li>5 - Pair feedback and recap (group)</li>
+  <li>15 - Introduction to TDD (lecture)</li>
+  <li>20 - TDD code-along</li>
+  <li>5 - Questions about TDD</li>
+  <li>5 - Break</li>
+  <li>85 - TDD tutorial (pairs)</li>
+  <li>5 - Standards check/wrapup (group)</li>
+</ul>
+
+<h2 id="introduction-to-pairing-lecture">Introduction to Pairing (lecture)</h2>
+
+<h4 id="what-is-it">What is it?</h4>
+<ul>
+  <li>Share out ideas about what pair programming is/isn’t</li>
+  <li>Introduce standards for session</li>
+  <li>Define pair programming</li>
+  <li>Purpose of pairing</li>
+</ul>
+
+<h4 id="roles-and-process">Roles and Process</h4>
+<ul>
+  <li>Roles: driver and navigator</li>
+  <li>Responsibilities of both roles</li>
+  <li>Read this <a href="http://www.wikihow.com/Pair-Program">description</a> of the pair programming process</li>
+</ul>
+
+<h4 id="pairing-at-turing">Pairing at Turing</h4>
+<ul>
+  <li>Pairing at Turing: varying levels, don’t be afraid to fail or be wrong</li>
+  <li>Tools: external monitors, keyboards, mice</li>
+  <li>Giving feedback: contextual, actionable, relevant, encouraging, specific</li>
+</ul>
+
+<h2 id="practice-pairing-away-from-code-pairs">Practice Pairing Away from Code (pairs)</h2>
+
+<p>Use <a href="https://www.manhattanlsat.com/Logic-Game-Example.cfm">this example LSAT game</a> to practice pairing.</p>
+<ul>
+  <li>Pair for 12 minutes to solve problem(s)</li>
+  <li>Three minutes for feedback</li>
+  <li>Gather back together as group to recap</li>
+</ul>
+
+<h2 id="introduction-to-tdd-lecture">Introduction to TDD (lecture)</h2>
+
+<h4 id="what-is-it-1">What is it?</h4>
+
+<ul>
+  <li>Share out ideas about what TDD is/isn’t</li>
+  <li>Introduce standards for session</li>
+  <li>Definition of TDD</li>
+  <li>Why TDD?</li>
+</ul>
+
+<h2 id="tdd-code-along">TDD Code-Along</h2>
+
+<h4 id="file-structure">File Structure</h4>
+<ul>
+  <li>One project folder</li>
+  <li>One file for test code</li>
+  <li>One file for implementation code</li>
+</ul>
+
+<h4 id="specifications-for-code-along">Specifications for Code-Along</h4>
+
+<ul>
+  <li>Students should have names</li>
+  <li>Students should have laptops. The laptop is usually an Apple, but it can be any brand</li>
+  <li>Students can bring various flavors of cookies to their instructors</li>
+</ul>
+
+<h4 id="code-along">Code-Along</h4>
+
+<ul>
+  <li>Demonstrate setting up folder and files, students do the same</li>
+  <li>Prepare test file with gem, require <code class="highlighter-rouge">minitest/autorun</code> and <code class="highlighter-rouge">minitest/pride</code></li>
+  <li>Tests in Minitest start with <code class="highlighter-rouge">def test_something</code>..</li>
+  <li>Create class StudentTest that inherits from minitest</li>
+  <li>Write test for first specification (students should have names):</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_student_has_a_name</span>
+  <span class="n">stu</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Stu"</span><span class="p">)</span>
+  <span class="n">assert_equal</span> <span class="s2">"Stu"</span><span class="p">,</span> <span class="n">stu</span><span class="p">.</span><span class="nf">name</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<ul>
+  <li>Run test, read error message, and fix</li>
+  <li>Write implementation code to make test pass</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<ul>
+  <li>Repeat process for remaining specifications</li>
+</ul>
+
+<h4 id="questions-misunderstandings">Questions? Misunderstandings?</h4>
+
+<h2 id="tdd-tutorial-pairs">TDD Tutorial (pairs)</h2>
+
+<p>Practice TDD and pairing with this <a href="http://tutorials.jumpstartlab.com/topics/testing/intro-to-tdd.html">tutorial</a>.</p>
+
+<h2 id="wrapup">Wrapup</h2>
+
+<p>Return to standards and check progress.</p>
+<ul>
+  <li>What was easy?</li>
+  <li>What was challenging?</li>
+  <li>What made sense?</li>
+  <li>What didn’t make sense?</li>
+</ul>
+
+<h2 id="corrections--improvements-for-next-time">Corrections &amp; Improvements for Next Time</h2>
+
+<h3 id="taught-by-rachel-on-99">Taught by Rachel on 9/9</h3>
+:ET

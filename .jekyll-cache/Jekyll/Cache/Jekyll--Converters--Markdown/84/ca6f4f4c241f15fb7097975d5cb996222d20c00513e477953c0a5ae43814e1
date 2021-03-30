@@ -1,0 +1,55 @@
+I"<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>15 - Kickoff</li>
+  <li>155 - Work Time</li>
+  <li>10 - Wrap Up</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="http://tutorials.jumpstartlab.com/projects/monsterporium/extract_notification_service.html">Extracting a Notification Service Tutorial</a></li>
+  <li><a href="http://tutorials.jumpstartlab.com/projects/monsterporium/setup.html">Monsterporium Installation Instructions</a></li>
+  <li><a href="https://github.com/JumpstartLab/store_demo">Monsterporium Repository</a></li>
+</ul>
+
+<h2 id="kickoff">Kickoff</h2>
+
+<ul>
+  <li>Frank’s Monsterporium is a Dinner Dash (née Store Engine) example project.</li>
+  <li>It sends out emails when a user creates an account or places an order.</li>
+  <li>As it stands, the email is sent as a blocking action in the controller.</li>
+  <li>We’re going to abstract it out to a service using Redis for pub/sub.</li>
+  <li>Instead of sending the email from the control (and blocking our HTTP response to the user), we’ll send a message to our notifications service via Redis, which will send out the email.</li>
+</ul>
+
+<p>At the end of the first, we’re going to have two applications:</p>
+
+<ol>
+  <li>Our original Rails application
+    <ul>
+      <li>The request comes in from the user</li>
+      <li>The resource is created</li>
+      <li>A message is posted to the message channel (Redis)</li>
+      <li>The creation-successful response is sent back to the user</li>
+    </ul>
+  </li>
+  <li>A secondary application in <code class="highlighter-rouge">lib/notifications.rb</code>
+    <ul>
+      <li>The listener waits until it sees a message on the channel</li>
+      <li>When a message is found, it</li>
+    </ul>
+    <ul>
+      <li>pulls in and parses the data</li>
+      <li>dispatches the email</li>
+    </ul>
+  </li>
+</ol>
+
+<p>After we’ve separated out our email sending functionality, we’ll build a standalone application that fulfills a similar function.</p>
+
+<h2 id="work-time">Work Time</h2>
+
+<p>Work through the tutorial in pairs.</p>
+:ET

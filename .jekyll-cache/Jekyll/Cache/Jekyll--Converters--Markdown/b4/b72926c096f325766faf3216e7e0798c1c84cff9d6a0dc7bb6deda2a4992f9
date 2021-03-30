@@ -1,0 +1,100 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>describe an object</li>
+  <li>access information from one object in another object</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+<p>5 min - Warm Up<br />
+20 min - What is an object?
+5 min - Break<br />
+20 min - Objects upon Objects upon Objects
+5 min - Wrap Up</p>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Object</li>
+  <li>Instance Methods</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>What is an object?</li>
+  <li>How do you access the state of an object?</li>
+  <li>How do you access an object from within another object?</li>
+</ul>
+
+<h2 id="what-is-an-object">What is an Object</h2>
+<h4 id="abstraction">Abstraction</h4>
+<p>How we represent real world things and processes using code.</p>
+
+<h4 id="classes">Classes</h4>
+<p>We build objects by using classes. A class can be thought of as an object blueprint.</p>
+
+<h3 id="independent-practice">Independent Practice</h3>
+<p>Make a table class that takes two arguments - type &amp; material 
+Create 3 different table objects</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dining_table</span> <span class="o">=</span> <span class="no">Table</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"dining"</span><span class="p">,</span> <span class="s2">"wood"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Make a seat class that takes two arguments - type &amp; material<br />
+Create 3 different table objects</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">armchair</span> <span class="o">=</span> <span class="no">Seat</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"stool"</span><span class="p">,</span> <span class="s2">"metal"</span><span class="p">)</span>
+</code></pre></div></div>
+<h4 id="turn--talk">Turn &amp; Talk</h4>
+<p>How did you make objects? What charactertistics does your table object have? What characteristics does your seat object have?</p>
+
+<p>** break **</p>
+
+<h2 id="objects-upon-objects-upon-objects">Objects upon Objects upon Objects</h2>
+<h3 id="sets-of-objects">Sets of Objects</h3>
+<p>You’ve made table and seat classes. How do we interact with them? Let’s build out a furniture class.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">furniture</span> <span class="o">=</span> <span class="no">Furniture</span><span class="p">.</span><span class="nf">new</span>
+</code></pre></div></div>
+
+<p>Now I want to make it so my furniture holds a collection of table objects and can give us information about them.</p>
+
+<ul>
+  <li>What are our options for holding collections?</li>
+  <li>How can we add a table to that collection?</li>
+  <li>What if we want to return a collection of types of tables?</li>
+</ul>
+
+<h3 id="independent-practice-1">Independent Practice</h3>
+<p>Lets add the same functionality from above using seats.</p>
+
+<p>We want our furniture to hold a collection of seat objects.</p>
+
+<ul>
+  <li>Create a collector to hold your seats</li>
+  <li>Build a method that adds a seat to that collection</li>
+  <li>Build a method that returns a collection of the materials of our seats.</li>
+</ul>
+
+<p>Extra Challenges:</p>
+
+<ul>
+  <li>Make it so our material collection returns without any duplicates</li>
+  <li>Build a method that returns the most common type of seat</li>
+  <li>Build a method that sorts the seat materials alphabetically</li>
+</ul>
+
+<h4 id="turn--talk-1">Turn &amp; Talk</h4>
+<p>Code Share: Share your implementation.</p>
+
+<ul>
+  <li>What methods did you build?</li>
+  <li>What were they named?</li>
+  <li>How did they work?</li>
+</ul>
+
+<h2 id="wrap-up">Wrap Up</h2>
+<ul>
+  <li>What is an object?</li>
+  <li>How do you access an object from within another object?</li>
+  <li>Why might you want to access an object from within another object?</li>
+</ul>
+
+:ET

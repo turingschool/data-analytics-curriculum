@@ -1,0 +1,50 @@
+I"<h1 id="extensions">Extensions</h1>
+
+<h3 id="1-validating-beats">1. Validating Beats</h3>
+
+<p>There are a lot of words which aren’t going to work for beats. Like <code class="highlighter-rouge">Mississippi</code>.</p>
+
+<p>Add validation to your program such that the input beats must be members of your
+defined list. Insertion of a beat not in the list is rejected. Like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">jb</span> <span class="o">=</span> <span class="no">JungleBeat</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"deep"</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s2">"Mississippi"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="mi">0</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">all</span>
+<span class="o">=&gt;</span> <span class="s2">"deep"</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="s2">"tee tee tee Mississippi"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="mi">3</span> <span class="c1"># number of beats successfully inserted</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">all</span>
+<span class="o">=&gt;</span> <span class="s2">"tee tee tee deep"</span>
+</code></pre></div></div>
+
+<p>Here’s a starter list of valid beats, but add more if you like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tee dee deep bop boop la na
+</code></pre></div></div>
+
+<h3 id="2-speed--voice">2. Speed &amp; Voice</h3>
+
+<p>Let’s make it so the user can control the voice and speed of playback. Originally
+we showed you to use <code class="highlighter-rouge">say -r 500 -v Boing</code> where <code class="highlighter-rouge">r</code> is the rate and <code class="highlighter-rouge">v</code> is the
+voice. Let’s setup a usage like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">jb</span> <span class="o">=</span> <span class="no">JungleBeat</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"deep dop dop deep"</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">play</span>
+<span class="o">=&gt;</span> <span class="mi">4</span> <span class="c1"># plays the four sounds normal speed with Boing voice</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">rate</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="o">=&gt;</span> <span class="mi">100</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">play</span>
+<span class="o">=&gt;</span> <span class="mi">4</span> <span class="c1"># plays the four sounds slower with Boing voice</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">voice</span> <span class="o">=</span> <span class="s2">"Alice"</span>
+<span class="o">=&gt;</span> <span class="s2">"Alice"</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">play</span>
+<span class="o">=&gt;</span> <span class="mi">4</span> <span class="c1"># plays the four sounds slower with Alice voice</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">reset_rate</span>
+<span class="o">=&gt;</span> <span class="mi">500</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">reset_voice</span>
+<span class="o">=&gt;</span> <span class="s2">"Boing"</span>
+<span class="o">&gt;</span> <span class="n">jb</span><span class="p">.</span><span class="nf">play</span>
+<span class="o">=&gt;</span> <span class="mi">4</span> <span class="c1"># plays the four sounds normal speed with Boing voice</span>
+</code></pre></div></div>
+:ET

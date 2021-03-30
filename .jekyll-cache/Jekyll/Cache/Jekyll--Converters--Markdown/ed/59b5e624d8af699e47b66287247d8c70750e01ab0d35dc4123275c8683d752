@@ -1,0 +1,61 @@
+I"8	<p><em><a href="../index">Back to Futbol Home</a></em></p>
+
+<p>Each of the methods described below and in future iterations should be implemented as instance methods on <code class="highlighter-rouge">StatTracker</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+      <th>Return Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">highest_total_score</code></td>
+      <td>Highest sum of the winning and losing teams’ scores</td>
+      <td>Integer</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">lowest_total_score</code></td>
+      <td>Lowest sum of the winning and losing teams’ scores</td>
+      <td>Integer</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">biggest_blowout</code></td>
+      <td>Highest difference between winner and loser</td>
+      <td>Integer</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">percentage_home_wins</code></td>
+      <td>Percentage of games that a home team has won (rounded to the nearest 100th)</td>
+      <td>Float</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">percentage_visitor_wins</code></td>
+      <td>Percentage of games that a visitor has won (rounded to the nearest 100th)</td>
+      <td>Float</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">percentage_ties</code></td>
+      <td>Percentage of games that has resulted in a tie (rounded to the nearest 100th)</td>
+      <td>Float</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">count_of_games_by_season</code></td>
+      <td>A hash with season names (e.g. 20122013) as keys and counts of games as values</td>
+      <td>Hash</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">average_goals_per_game</code></td>
+      <td>Average number of goals scored in a game across all seasons including both home and away goals (rounded to the nearest 100th)</td>
+      <td>Float</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">average_goals_by_season</code></td>
+      <td>Average number of goals scored in a game organized in a hash with season names (e.g. 20122013) as keys and a float representing the average number of goals in a game for that season as a key (rounded to the nearest 100th)</td>
+      <td>Hash</td>
+    </tr>
+  </tbody>
+</table>
+:ET

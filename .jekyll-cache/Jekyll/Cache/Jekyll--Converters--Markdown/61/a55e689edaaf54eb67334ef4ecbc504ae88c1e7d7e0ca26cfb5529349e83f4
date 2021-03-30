@@ -1,0 +1,453 @@
+I"��<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Build a small app in React</li>
+  <li>Explain the difference between stateful and presentational components</li>
+  <li>Explain why, when, and how we import and export files</li>
+</ul>
+
+<h2 id="brainstorm---how-would-we-build-quantified-self-in-react">Brainstorm - How would we build Quantified Self in React?</h2>
+
+<ul>
+  <li>For the foods page, what components might we need?</li>
+  <li>What would those parent/child relationships be?</li>
+</ul>
+
+<h2 id="getting-started-with-a-react-app">Getting Started with a React App</h2>
+
+<p>Let’s start by cloning down a repo so we can all problem solve through the same thing together. Once we get a feel for it, you’ll have time to map out your plan for your React capstone (or help your friends do so if you aren’t using React😊)</p>
+
+<p><a href="https://github.com/ameseee/react-sandbox">Fork/clone this repo</a>, then run in your terminal:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install
+</span>npm start
+</code></pre></div></div>
+
+<p>Make sure the project is up and running in your browser.</p>
+
+<p>Check out the file structure - what is similar/different from yesterday’s project?</p>
+
+<h3 id="imports-and-exports">Imports and Exports</h3>
+
+<p>Now that we’ve mapped out our app and have our initial file structure, let’s go ahead and import/export everything we need for today.</p>
+
+<h3 id="appjs">App.js</h3>
+
+<p>Like we talked about yesterday, App is our parent-of-all-parent components. This is just convention! It will render all the other components, and hold our biggest piece of data - foods! Because it’s hold our data, it needs to be <strong>stateful</strong> - this means it needs to extend the React.Component and have a <code class="highlighter-rouge">constructor</code> and <code class="highlighter-rouge">render</code> function. Lifecycle methods are also available to stateful components - we’ll get to those soon. Let’s set up the basics.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//App.js</span>
+<span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>   <span class="c1">// so we can use React</span>
+<span class="k">import</span> <span class="dl">'</span><span class="s1">./styles/App.css</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>     <span class="c1">// we MUST call super here</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>    
+      <span class="na">foods</span><span class="p">:</span> <span class="p">[]</span>       <span class="c1">// we will call our API to get the array of foods (later)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>           <span class="c1">//render functions ONLY live in stateful components. It's a must have.</span>
+    <span class="k">return</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">app</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="k">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span>   <span class="c1">// this is necessary for our index.js to find this file</span>
+</code></pre></div></div>
+
+<p>Now we need to GET our foods! Check out the util/requests file - we already have the fetch requests! Let’s use <code class="highlighter-rouge">componentDidMount()</code> to make that call.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//App.js</span>
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>    
+      <span class="na">foods</span><span class="p">:</span> <span class="p">[]</span>       <span class="c1">// this won't be empty for long!</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">getFoods</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">foods</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">foods</span><span class="p">:</span> <span class="nx">foods</span> <span class="p">}))</span>
+      <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">({</span> <span class="nx">error</span> <span class="p">}))</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">app</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Let’s break down what just happened here. We brought in our fetch call, and called it in <code class="highlighter-rouge">componentDidMount()</code> - this is a <a href="https://reactjs.org/docs/react-component.html"><strong>Lifecycle Method</strong></a> that is built into React - it is the most commonly used. Every time the component re-renders (mounts), this function will fire. It will be your best friend. Once we resolved that promise, we are setting that array into our App’s <code class="highlighter-rouge">state</code> - we can now pass it down as a prop to any children components.</p>
+
+<h4 id="pause-and-check-in">PAUSE and Check In</h4>
+
+<ul>
+  <li>Is App a stateful or presentational component? Why?</li>
+  <li>What are the two things we should always see in a stateful component?</li>
+  <li>Where did we make our fetch call, and why?</li>
+</ul>
+
+<p>Now, let’s render our FoodList and FoodForm!</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//App.js</span>
+<span class="kd">class</span> <span class="nx">App</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>    
+      <span class="na">foods</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">componentDidMount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">getFoods</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">foods</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">foods</span><span class="p">:</span> <span class="nx">foods</span> <span class="p">}))</span>
+      <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">({</span> <span class="nx">error</span> <span class="p">}))</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">app</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">FoodList</span> <span class="nx">foods</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">foods</span> <span class="p">}</span><span class="sr">/&gt; /</span><span class="o">/</span> <span class="nx">passing</span> <span class="nx">prop</span> <span class="dl">"</span><span class="s2">foods</span><span class="dl">"</span>
+        <span class="o">&lt;</span><span class="nx">Food</span> <span class="nx">Form</span> <span class="o">/&gt;</span>                          <span class="c1">// no props, for now</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Check your browser - you should see a lot of red.</p>
+
+<p>We have brought in FoodList, but there isn’t much in that file right now.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//FoodList.js</span>
+<span class="kd">class</span> <span class="nx">FoodList</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">)</span>   <span class="c1">//make sure we have foods as expected</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-list</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">I</span> <span class="nx">AM</span> <span class="nx">THE</span> <span class="nx">LIST</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>We should now see that FoodList has the array of foods! Great. Each food will have it’s own card component, so we now need to map over all our foods.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">FoodList</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">foods</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">foods</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">mappedFoods</span> <span class="o">=</span> <span class="nx">foods</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">food</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">food</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>    <span class="c1">// just to check!</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+        <span class="nx">I</span> <span class="nx">AM</span> <span class="nx">THE</span> <span class="nx">FOOD</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-list</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="nx">I</span> <span class="nx">AM</span> <span class="nx">THE</span> <span class="nx">LIST</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Now that we know we are grabbing each food, let’s write some JSX to make this look a little nicer.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">FoodList</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">foods</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">foods</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">mappedFoods</span> <span class="o">=</span> <span class="nx">foods</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">food</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-row</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-name</span><span class="dl">"</span><span class="o">&gt;</span><span class="p">{</span> <span class="nx">food</span><span class="p">.</span><span class="nx">name</span> <span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-calories</span><span class="dl">"</span><span class="o">&gt;</span><span class="p">{</span> <span class="nx">food</span><span class="p">.</span><span class="nx">calories</span> <span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-list</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-row title-row</span><span class="dl">"</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-name title</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">Food</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-calories title</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">Calories</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>        <span class="p">{</span> <span class="nx">mappedFoods</span> <span class="p">}</span> <span class="c1">/////////////////////////////////////////</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>What is happening with <code class="highlighter-rouge">{ mappedFoods }</code>? JSX, this syntax extension to JavaScript, is allowing us to render the return value of the variable <code class="highlighter-rouge">mappedFoods</code> in the middle of that HTML-like code. This makes conditional rendering possible!</p>
+
+<p>We are SO close! We talked about this <code class="highlighter-rouge">&lt;Card /&gt;</code> component, but aren’t using it yet. Instead of rendering all those lines of JSX in the map, let’s abstract that out into a re-usable card.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">FoodList</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">foods</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">foods</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">mappedFoods</span> <span class="o">=</span> <span class="nx">foods</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">food</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">FoodCard</span> <span class="nx">food</span><span class="o">=</span><span class="p">{</span> <span class="nx">food</span> <span class="p">}</span><span class="sr">/</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">})</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-list</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-row title-row</span><span class="dl">"</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-name title</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">Food</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-calories title</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">Calories</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>        <span class="p">{</span> <span class="nx">mappedFoods</span> <span class="p">}</span> <span class="c1">/////////////////////////////////////////</span>
+      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>..now we have to make a FoodCard. This one is easy!</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">FoodCard</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">food</span><span class="p">,</span> <span class="nx">deleteFood</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span>
+      <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-row</span><span class="dl">"</span>
+      <span class="nx">key</span><span class="o">=</span><span class="p">{</span> <span class="nx">food</span><span class="p">.</span><span class="nx">id</span> <span class="p">}</span>
+    <span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-name</span><span class="dl">"</span><span class="o">&gt;</span><span class="p">{</span> <span class="nx">food</span><span class="p">.</span><span class="nx">name</span> <span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-calories</span><span class="dl">"</span><span class="o">&gt;</span><span class="p">{</span> <span class="nx">food</span><span class="p">.</span><span class="nx">calories</span> <span class="p">}</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="pause-and-check-in-1">PAUSE and Check In</h4>
+
+<ul>
+  <li>Is FoodList a stateful or presentational component? Why?</li>
+  <li>Is FoodCard a stateful or presentational component? Why?</li>
+</ul>
+
+<p>Now that we realize we don’t need state in FoodList, we really should do the right thing and re-factor it into a presentational component. You’ll see this done differently - many folks choose to start all components out as stateful; if they need to add in state, they don’t need to change much. You can always come back at the end of a project and make things with no state, presentational. This isn’t a must-do, BUT it will hopefully illustrate the difference for you.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">createFoodCards</span> <span class="o">=</span> <span class="p">(</span><span class="nx">foods</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">foods</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">food</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">FoodCard</span>
+        <span class="nx">key</span><span class="o">=</span><span class="p">{</span> <span class="nx">food</span><span class="p">.</span><span class="nx">id</span> <span class="p">}</span>
+        <span class="nx">food</span><span class="o">=</span><span class="p">{</span> <span class="nx">food</span> <span class="p">}</span><span class="sr">/</span><span class="err">&gt;
+</span>    <span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">FoodList</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">foods</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-list</span><span class="dl">"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-row title-row</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-name title</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">Food</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">p</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-calories title</span><span class="dl">"</span><span class="o">&gt;</span><span class="nx">Calories</span><span class="o">&lt;</span><span class="sr">/p</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>      <span class="p">{</span> <span class="nx">createFoodCards</span><span class="p">(</span><span class="nx">foods</span><span class="p">)</span> <span class="p">}</span>
+    <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="pause-and-check-in-2">PAUSE and Check In</h4>
+
+<ul>
+  <li>Partner 1: Explain every line of code in FoodList to your partner.</li>
+  <li>Partner 2: Explain every line of code in FoodCard to your partner.</li>
+</ul>
+
+<p>YOU MUST USE THESE WORDS:
+import, props, render, key, stateful/presentational, export, single return value</p>
+
+<h3 id="controlled-components---partner-work-time"><a href="https://reactjs.org/docs/forms.html">Controlled Components</a> - Partner Work Time</h3>
+
+<p>We haven’t really been able to see the power of state in anything but our App yet. React can control an input form element, and this is called a ‘controlled component’. React does this by combining the fact that <code class="highlighter-rouge">&lt;input&gt;</code>, <code class="highlighter-rouge">&lt;textarea&gt;</code>, and <code class="highlighter-rouge">&lt;select&gt;</code> typically maintain their own state and that React state is mutable.</p>
+
+<p>Knowing the very basics of a controlled component, should FoodForm be stateful or presentational?</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">FoodForm</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="c1">// the things we want to keep track of from our form</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-form</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Add</span> <span class="nx">A</span> <span class="nx">Food</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">form</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">add-food-form</span><span class="dl">"</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">input</span>
+            <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span>
+            <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">text</span><span class="dl">"</span>
+            <span class="nx">placeholder</span><span class="o">=</span><span class="dl">"</span><span class="s2">Food Name</span><span class="dl">"</span>
+          <span class="o">/&gt;</span>
+          <span class="o">&lt;</span><span class="nx">input</span>
+            <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span>
+            <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">number</span><span class="dl">"</span>
+            <span class="nx">placeholder</span><span class="o">=</span><span class="dl">"</span><span class="s2">Calories</span><span class="dl">"</span>
+          <span class="o">/&gt;</span>
+          <span class="o">&lt;</span><span class="nx">button</span>
+            <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">add-food-btn</span><span class="dl">"</span>
+          <span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/form</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We already have our form set up, but we need to listen for changes on the input and a click of the button. On those events, let’s call a method that lives in the component.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">FoodForm</span> <span class="kd">extends</span> <span class="nx">Component</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">food</span><span class="p">:</span> <span class="dl">''</span><span class="p">,</span>
+      <span class="na">calories</span><span class="p">:</span> <span class="dl">''</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">updateFood</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// set the food and calories to state</span>
+  <span class="p">}</span>
+
+  <span class="nx">addFood</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// get the current food and calories out of stateful</span>
+    <span class="c1">// post to DB</span>
+  <span class="p">}</span>
+
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">food-form</span><span class="dl">"</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h2</span><span class="o">&gt;</span><span class="nx">Add</span> <span class="nx">A</span> <span class="nx">Food</span><span class="o">&lt;</span><span class="sr">/h2</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="nx">form</span> <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">add-food-form</span><span class="dl">"</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">input</span>
+            <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span>
+            <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">text</span><span class="dl">"</span>
+            <span class="nx">placeholder</span><span class="o">=</span><span class="dl">"</span><span class="s2">Food Name</span><span class="dl">"</span>
+            <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFood</span> <span class="p">}</span> <span class="c1">// onChange handler</span>
+          <span class="sr">/</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">input</span>
+            <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span>
+            <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">number</span><span class="dl">"</span>
+            <span class="nx">placeholder</span><span class="o">=</span><span class="dl">"</span><span class="s2">Calories</span><span class="dl">"</span>
+            <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFood</span> <span class="p">}</span> <span class="c1">// onChange handler</span>
+          <span class="sr">/</span><span class="err">&gt;
+</span>          <span class="o">&lt;</span><span class="nx">button</span>
+            <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">add-food-btn</span><span class="dl">"</span>
+            <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">addFood</span> <span class="p">}</span> <span class="c1">//onClick handler</span>
+          <span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>        <span class="o">&lt;</span><span class="sr">/form</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we throw a <code class="highlighter-rouge">console.log</code> in those methods, we should see we are getting into them. Now, comes a lot of the logic we already know!</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nx">updateFood</span> <span class="o">=</span> <span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>  <span class="c1">// key is the 'food' or 'calories' passed in</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="p">[</span><span class="nx">key</span><span class="p">]:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span> <span class="p">})</span>
+    <span class="c1">// this allows us to re-use the same function for both keys to set state</span>
+  <span class="p">}</span>
+
+  <span class="o">&lt;</span><span class="nx">input</span>
+    <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span>
+    <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">text</span><span class="dl">"</span>
+    <span class="nx">placeholder</span><span class="o">=</span><span class="dl">"</span><span class="s2">Food Name</span><span class="dl">"</span>
+    <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFood</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="dl">'</span><span class="s1">food</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>   
+    <span class="c1">// bind creates a new function, bound to THIS context, with the key of food</span>
+  <span class="sr">/</span><span class="err">&gt;
+</span>  <span class="o">&lt;</span><span class="nx">input</span>
+    <span class="nx">className</span><span class="o">=</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span>
+    <span class="nx">type</span><span class="o">=</span><span class="dl">"</span><span class="s2">number</span><span class="dl">"</span>
+    <span class="nx">placeholder</span><span class="o">=</span><span class="dl">"</span><span class="s2">Calories</span><span class="dl">"</span>
+    <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFood</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="dl">'</span><span class="s1">calories</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+    <span class="c1">// bind creates a new function, bound to THIS context, with the key of cal</span>
+  <span class="sr">/</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>Now that state is sent, let’s get this new food into the database!</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">addFood</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+  <span class="kd">let</span> <span class="nx">food</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">food</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">calories</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">calores</span><span class="p">;</span>
+
+  <span class="nx">addFoods</span><span class="p">(</span><span class="nx">food</span><span class="p">,</span> <span class="nx">calories</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">//call a function that will send this food up to App's state of all foods, then re-render so user can see</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">({</span> <span class="nx">error</span> <span class="p">}))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We need to send this action UP to App - so let’s get back into App and add a method, which we will then pass down as a prop to FoodForm.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//App.js</span>
+<span class="nx">updateFoods</span> <span class="o">=</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">calories</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">({</span> <span class="na">foods</span><span class="p">:</span> <span class="p">[...</span><span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">foods</span><span class="p">,</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="nx">calories</span> <span class="p">}]})</span>
+<span class="p">}</span>
+
+<span class="c1">//in render return statement, update &lt;FoodForm /&gt; to:</span>
+  <span class="o">&lt;</span><span class="nx">FoodForm</span> <span class="nx">updateFoods</span><span class="o">=</span><span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">updateFoods</span> <span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>Now we can go back into FoodForm and call that function that was passed as a prop:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//FoodForm.js</span>
+  <span class="nx">addFoods</span><span class="p">(</span><span class="nx">food</span><span class="p">,</span> <span class="nx">calories</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">updateFoods</span><span class="p">(</span><span class="nx">food</span><span class="p">,</span> <span class="nx">calories</span><span class="p">))</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">({</span> <span class="nx">error</span> <span class="p">}))</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="pause-and-check-in-3">PAUSE and Check In</h4>
+
+<ul>
+  <li>Is FoodForm a stateful or presentational component? Why?</li>
+  <li>Why were we able to re-use the <code class="highlighter-rouge">updateFoodInfo()</code> function for both inputs?</li>
+  <li>How did FoodForm have access to the <code class="highlighter-rouge">updateFoods()</code> function?</li>
+</ul>
+
+<h2 id="partner-time">Partner Time</h2>
+
+<p>If you are building your capstone in React, cool. If you are not, you get to pair up with someone who is!</p>
+<ul>
+  <li>Draw out your project (user view) like we did for Quantified Self at the start of class</li>
+  <li>Label components on that drawing</li>
+  <li>Map out parent/child relationships of those components, start thinking about what props you’ll need to pass</li>
+</ul>
+
+<h2 id="cfuinterview-questions">CFU/Interview Questions</h2>
+
+<ul>
+  <li>What is the difference between a stateful and presentational component? Explain a use case for each.</li>
+  <li>When do you have to import a React component into another file? When do you need to export something?</li>
+  <li>Which Dev Tools are used while building a React App? What is the purpose of each?</li>
+  <li>How does a component ‘get’ props, and what can props be?</li>
+  <li>What are the advantages and disadvantages of React?</li>
+</ul>
+:ET

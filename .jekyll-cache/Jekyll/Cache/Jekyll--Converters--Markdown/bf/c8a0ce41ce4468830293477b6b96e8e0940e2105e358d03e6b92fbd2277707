@@ -1,0 +1,96 @@
+I"Z<h2 id="iteration-1-building-site-files">Iteration 1: Building Site Files</h2>
+
+<h3 id="interface">Interface</h3>
+
+<p>A user will build their site by running <code class="highlighter-rouge">hyde</code> with the subcommand <code class="highlighter-rouge">build</code> and providing the path to the Hyde project they’d like to build. For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/hyde build ~/my-sweet-blog
+</code></pre></div></div>
+
+<h3 id="build-process">Build Process</h3>
+
+<p>Building the site requires processing each file and directory inside of <code class="highlighter-rouge">source</code> and generating a corresponding output file in the appropriate place under <code class="highlighter-rouge">_output</code>. For starters, the only files we’ll apply any special processing to are <code class="highlighter-rouge">.markdown</code> (or <code class="highlighter-rouge">.md</code>) files. Other files (<code class="highlighter-rouge">.css</code>, <code class="highlighter-rouge">.jpg</code>, etc) will simply be copied as is.</p>
+
+<p>Our processing algorithm looks something like:</p>
+
+<ol>
+  <li>Iterate through all the files and directories in the <code class="highlighter-rouge">source</code> directory</li>
+  <li>If an element is a Markdown file, convert it to html and copy it to the appropriate place inside
+of <code class="highlighter-rouge">_output</code></li>
+  <li>If an element is any other type of File, simply copy it to the appropriate place inside <code class="highlighter-rouge">_output</code></li>
+  <li>If an element is directory, create a matching subdirectory inside the <code class="highlighter-rouge">_output</code> directory, then repeat
+this process for any files or folders within it.</li>
+</ol>
+
+<h3 id="why-markdown">Why Markdown?</h3>
+
+<p>If this is your first time encountering Markdown, you might ask yourself “Why go to all this trouble to avoid HTML?”</p>
+
+<p>According to John Gruber, the creator of <a href="https://daringfireball.net/projects/markdown/">Markdown</a>:</p>
+
+<blockquote>
+  <p>Markdown is a text-to-HTML conversion tool for web writers. Markdown allows you to write using an easy-to-read, easy-to-write plain text format, then convert it to structurally valid XHTML (or HTML). […] Tihe overriding design goal for Markdown’s formatting syntax is to make it as readable as possible. The idea is that a Markdown-formatted document should be publishable as-is, as plain text, without looking like it’s been marked up with tags or formatting instructions.</p>
+</blockquote>
+
+<p>HTML is the dominant method for transmitting formatted textual content over the web. As far as computer languages go, HTML is fairly straightforward. Unfortunately HTML is still fundamentally designed to be read by machines, not humans. This makes things especially difficult when working with hand-written text – formatting our content as HTML adds a layer of complex syntax which obscures the original content. Markdown is an attempt to allow us to generate HTML automatically while still keeping our content readable (for humans).</p>
+
+<h3 id="converting-markdown-to-html">Converting Markdown to HTML</h3>
+
+<p>How do we actually convert markdown (our source files) to HTML (our output files)? Fortunately there are numerous tools out there to make this process work. We’ll recommend using the <a href="http://kramdown.gettalong.org/index.html">kramdown</a> gem for this job. Here are some examples of how to use it.</p>
+
+<p><strong>From the Command Line:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$  gem install kramdown
+Successfully installed kramdown-1.9.0
+1 gem installed
+$  echo -e "# Some Markdown\n\n* a list\n* another item" &gt; sample.markdown
+$  kramdown sample.markdown
+&lt;h1 id="some-markdown"&gt;Some Markdown&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;a list&lt;/li&gt;
+  &lt;li&gt;another item&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre></div></div>
+
+<p><strong>From Ruby / Pry:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$  gem install kramdown
+Successfully installed kramdown-1.9.0
+1 gem installed
+$  pry
+[1] pry(main)&gt; require "kramdown"
+=&gt; true
+[2] pry(main)&gt; markdown = "# Some Markdown\n\n* a list\n* another item"
+=&gt; "# Some Markdown\n\n* a list\n* another item"
+[3] pry(main)&gt; Kramdown::Document.new(markdown).to_html
+=&gt; "&lt;h1 id=\"some-markdown\"&gt;Some Markdown&lt;/h1&gt;\n\n&lt;ul&gt;\n  &lt;li&gt;a list&lt;/li&gt;\n  &lt;li&gt;another item&lt;/li&gt;\n&lt;/ul&gt;\n"
+[4] pry(main)&gt;
+</code></pre></div></div>
+
+<h3 id="building-a-hyde-project--full-example">Building a Hyde Project – Full Example</h3>
+
+<p>As a high level example, if we built the Hyde project that we looked at in the previous step, we would end up with this resulting project structure:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worace @ hyde_sample ➸  tree .
+.
+├── _output
+│   ├── css
+│   │   └── main.css
+│   ├── index.html
+│   ├── pages
+│   │   └── about.html
+│   └── posts
+│       └── 2016-02-20-welcome-to-hyde.html
+└── source
+    ├── css
+    │   └── main.css
+    ├── index.markdown
+    ├── pages
+    │   └── about.markdown
+    └── posts
+        └── 2016-02-20-welcome-to-hyde.markdown
+</code></pre></div></div>
+
+<p>Notice that each directory and file under <code class="highlighter-rouge">source</code> gets translated into the corresponding place under <code class="highlighter-rouge">_output</code>.</p>
+:ET

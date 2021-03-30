@@ -1,0 +1,175 @@
+I"B2<h2 id="goals">Goals</h2>
+
+<p>By the end of this lesson, you will:</p>
+
+<ul>
+  <li>Understand when and why to use Express.js in the back-end of an application</li>
+  <li>Know how Express.js abstracts difficult server-side logic and makes it easier to write endpoints</li>
+  <li>Create a simple Express app that serves static pages</li>
+</ul>
+
+<p>An example repository of the completed example can be found <a href="https://github.com/turingschool-examples/secret-box-revisited">here</a>.</p>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/intro_to_express">here</a></p>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Using the internet:</p>
+
+<ul>
+  <li>What is Node.js?</li>
+  <li>What is Express?</li>
+</ul>
+
+<h2 id="what-is-node">What is Node?</h2>
+
+<p>Node is an open-source, cross platform, runtime environment that allows developers to create all kinds of server side tools and applications in JavaScript. It is intended for use outside of a browser context so the environment omits browser-specific JavaScript APIs and adds support for more traditional OS APIs including HTTP and file system libraries.</p>
+
+<h2 id="what-is-express">What is Express?</h2>
+
+<p>Express is a lightweight, unopinionated web framework built on top of the server functionality provided by Node.js. It helps to simplify and organize the server-side functionality of your application by providing abstractions over the more confusing parts of Node.js, and adding helpful utilities and features. It provides mechanisms to:</p>
+<ul>
+  <li>Write handlers for requests with different HTTP verbs at different URL paths (routes).</li>
+  <li>Integrate with “view” rendering engines in order to generate responses by inserting data into templates.</li>
+  <li>Set common web application settings like the port to use for connecting, and the location of templates that are used for rendering the response.</li>
+  <li>Add additional request processing “middleware” at any point within the request handling pipeline.</li>
+</ul>
+
+<h2 id="why-do-we-use-express">Why do we use Express?</h2>
+
+<p>Think about how and why we use jQuery on the front-end. Vanilla JavaScript can be verbose and difficult to read. jQuery came along to give developers a nicer-looking syntax to perform the same operations. It was a library built to abstract the trickier parts of JavaScript and make them easier to write and work with. Express was built for very similar reasons.</p>
+
+<p>Just like browser-based JavaScript, the syntax for using plain Node.js isn’t the friendliest. Node gives you enough low-level features to build the back-end of an application, but Express is a light layer built on top of Node to make these low-level features a little easier to read and write.</p>
+
+<h2 id="advantages-of-express">Advantages of Express</h2>
+
+<p>While Node.js provides us with all of the functionality we need for our back-ends, writing this logic without Express is more difficult to make sense of and maintain. The two biggest advantages of Express are:</p>
+
+<ol>
+  <li>the collection of helpful utilities and conveniences that abstract away the Node.js complexity. (e.g. sending a single image file in raw Node.js is quite complex, but can be done in just one line with express)</li>
+  <li>the ability to refactor request handlers into smaller pieces that are more modular and maintainable. (Node.js, by default, requires you to create one large request handler, which makes your logic more rigid and difficult to refactor)</li>
+</ol>
+
+<h2 id="request-flow">Request Flow</h2>
+
+<p>When we are just using Node.js, the flow of a single request might look like this:</p>
+
+<p><img src="https://raw.githubusercontent.com/turingschool/front-end-curriculum/gh-pages/assets/images/lessons/express/node-only-flow.png" alt="node only" /></p>
+
+<p>When we add Express, there a couple of additional steps added to the flow of a request:</p>
+
+<p><img src="https://raw.githubusercontent.com/turingschool/front-end-curriculum/gh-pages/assets/images/lessons/express/express-flow.png" alt="express flow" /></p>
+
+<p>While the Express flow might look more complex, it actually makes the developer’s job a lot easier. In this flow, the developer is only responsible for the ‘Middleware’ part of the process. This replaces the single request handler function that you would write without Express. Writing middleware for Express is a lot easier to write and more maintainable because of the ‘Express’ step that abstracts the complex logic for us.</p>
+
+<h2 id="routing--middleware">Routing &amp; Middleware</h2>
+
+<p>Earlier we mentioned that with plain Node.js, you would create a single function to handle requests. This single function can get large and unwieldy as your application grows in complexity. Express provides routing methods(<code class="highlighter-rouge">.get</code>, <code class="highlighter-rouge">.post</code>, etc.) that allow you to break this single function into many smaller functions that only handle one thing at a time.</p>
+
+<p>Express is a routing and middleware web framework that has minimal functionality of its own: An Express application is essentially a series of middleware function calls. Our code will be concerned with responding to client requests to different URLs with different methods (GET, POST, etc).</p>
+
+<p>Let’s pick apart the structure of how we define an Express route:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">response</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>In the above example, our express app (denoted by <code class="highlighter-rouge">app</code>), is handling a <code class="highlighter-rouge">GET</code> request to <code class="highlighter-rouge">'/'</code>. The second parameter in this call is our callback that defines how we’re actually going to handle what happens when a user makes a <code class="highlighter-rouge">GET</code> request to <code class="highlighter-rouge">'/'</code>. The callback takes two parameters: the request (<code class="highlighter-rouge">request</code>) and the response (<code class="highlighter-rouge">response</code>). In this example, our hander is simply sending back a response (<code class="highlighter-rouge">response.send</code>) with the text ‘Hello World!’.</p>
+
+<p>This pattern is exactly how we can define and handle any routes in an Express application. There are four main pieces to this code:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">app</code> - the instance of our Express application</li>
+  <li>a METHOD - the method specified when the request is made from the client. (e.g. <code class="highlighter-rouge">GET</code>, <code class="highlighter-rouge">POST</code>, <code class="highlighter-rouge">PUT</code>, <code class="highlighter-rouge">DELETE</code>)</li>
+  <li>a PATH - the endpoint that we are requesting</li>
+  <li>a HANDLER - the function we write that contains the logic for how the request should be dealt with, and what kind of response it should return</li>
+</ul>
+
+<h2 id="express-generator">Express Generator</h2>
+
+<p>While it’s possible to build an Express app from scratch, we’re going to use the generator that Express provides to createe our application. We’re going to install it globally so that we can use it from the command line.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install express-generator -g
+</code></pre></div></div>
+
+<p>Using the generator itself, check to see options that you can use when generating a new application:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ express -h
+</code></pre></div></div>
+
+<p>Discuss with a partner and share.</p>
+
+<h2 id="create-and-explore-new-express-app">Create and Explore: New Express App</h2>
+
+<p>Create a new application from the command line using the generator that we installed:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ express --view ejs --css sass --git secret-box
+</code></pre></div></div>
+
+<p>The generator will prompt you to run two additional commands:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd project-name &amp;&amp; npm install
+$ DEBUG=express-practice:* npm start
+</code></pre></div></div>
+
+<p>Run each of those commands and visit <code class="highlighter-rouge">localhost:3000</code> to see that you’ve properly generated a new site. You should see a site with the message <code class="highlighter-rouge">Welcome to Express</code>.</p>
+
+<p>If you don’t have nodemon installed globally, now might be a useful time to do that. Nodemon will auto-restart your server for you any time you make changes to your server file. When starting an app with node, you would have to manually shut your server down and spin it up again to see your most recent changes reflected.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install nodemon -g
+$ nodemon bin/www
+</code></pre></div></div>
+
+<p>With a partner, review the files that Express generates. Answer the following questions:</p>
+
+<ul>
+  <li>What does it seem like each file does?</li>
+  <li>Can you create a new route?</li>
+  <li>Can you create a new template and serve that from your new route?</li>
+</ul>
+
+<p>Share out. <code class="highlighter-rouge">app.js</code> in particular includes a ton of information:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">require</code> statements at the top bringing in dependencies including <code class="highlighter-rouge">express</code> itself.</li>
+  <li><code class="highlighter-rouge">require</code> statements for different routes files that the express generator created.</li>
+  <li>Configurations set by the generator using <code class="highlighter-rouge">app.set</code>.</li>
+  <li>Middleware that provides the app some additional functionality set using <code class="highlighter-rouge">app.use</code>.</li>
+  <li>Middleware that tells the application what to use for routing to <code class="highlighter-rouge">/</code> and to <code class="highlighter-rouge">/users</code></li>
+  <li>Middleware that tells the app how to handle a 404.</li>
+  <li>Middleware that tells the app how to handle 500 level errors.</li>
+  <li>A final statement that exports the app itself, which gets required by <code class="highlighter-rouge">bin/www</code>, which is the entry point for the app (see <code class="highlighter-rouge">package.json</code>).</li>
+</ul>
+
+<p>In order to create new routes:</p>
+
+<ul>
+  <li>Create a new file within the <code class="highlighter-rouge">routes</code> directory.</li>
+  <li>Within that file:
+    <ul>
+      <li><code class="highlighter-rouge">var express = require('express');</code></li>
+      <li><code class="highlighter-rouge">var router  = express.Router();</code></li>
+    </ul>
+  </li>
+  <li>Require the newly created file in your <code class="highlighter-rouge">app.js</code> file.</li>
+  <li>Tell your app to use that newly created file to respond to requests to a particular URL</li>
+  <li>Note: you can further specify endpoints in your routes file, e.g.
+    <ul>
+      <li>Assume you tell <code class="highlighter-rouge">app.js</code> to use a particular routes file to respond to requests to <code class="highlighter-rouge">/muffins</code>.</li>
+      <li>In your muffins router, you can then handle requests to <code class="highlighter-rouge">/</code>, <code class="highlighter-rouge">/:id</code>, <code class="highlighter-rouge">/new</code>, <code class="highlighter-rouge">/:id/edit</code>, etc.</li>
+    </ul>
+  </li>
+  <li>Create a view for any new route that you’ve created that requires one.</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>You’ve built your first Express app!!!</p>
+
+<p>There are other frameworks and tools built on top of Express that make it easier to build complicated applications. If this is something you’re interested in, check out <a href="http://endpointsjs.com/">Endpoints</a>.</p>
+
+<p>If you’d like another tutorial walk through of using Express, check out the <a href="https://github.com/turingschool/backend-curriculum-site/blob/gh-pages/module4/lessons/express_tutorial.md">Express Train</a></p>
+:ET

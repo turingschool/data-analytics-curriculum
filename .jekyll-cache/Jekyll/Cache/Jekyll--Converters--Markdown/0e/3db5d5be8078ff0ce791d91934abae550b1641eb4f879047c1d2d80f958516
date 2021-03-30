@@ -1,0 +1,31 @@
+I"<h2 id="iteration-6---supporting-feature-2">Iteration 6 - Supporting Feature #2</h2>
+
+<p>Choose one of the following supporting features to add. Additional features will be considered extensions.</p>
+
+<h3 id="supporting-more-file-types">Supporting more file types</h3>
+
+<p>Choose one of the following translations to add</p>
+
+<ul>
+  <li><a href="http://haml.info/">Haml</a> =&gt; HTML</li>
+  <li><a href="http://sass-lang.com/">Sass</a> =&gt; CSS</li>
+</ul>
+
+<h3 id="publish-to-github-pages">Publish to github pages</h3>
+
+<p>Create a publish script that will publish your website to <a href="https://pages.github.com/">https://pages.github.com/</a></p>
+
+<p>Running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/hyde publish
+</code></pre></div></div>
+
+<p>will build and publish that build to github pages. Then you should be able to visit your site index from the browser at a URL kind of like this one:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github_username.github.io/hyde
+</code></pre></div></div>
+
+<p>Ensure your <code class="highlighter-rouge">index.md</code> has relative links to your posts and pages so you can view them.</p>
+
+<p>Your source files should not be viewable on your github pages site</p>
+:ET

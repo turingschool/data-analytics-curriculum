@@ -1,0 +1,145 @@
+I"<h1 id="mix-master-getting-started">Mix Master: Getting Started</h1>
+
+<p>Welcome to Mix Master! We’ll create an app where we keep track of songs, artists, and playlists. Maybe we’ll even add in some user ownership. Who knows! It will be an adventure.</p>
+
+<h3 id="goals">Goals</h3>
+
+<p>By the end of this tutorial, you will know/be able to:</p>
+
+<ul>
+  <li>deploy an app to Heroku</li>
+  <li>write model tests using RSpec</li>
+  <li>write feature tests using RSpec and Capybara</li>
+  <li>use branches and commits to develop git workflow</li>
+  <li>model one-to-many data relationships</li>
+  <li>model many-to-many data relationships</li>
+  <li>use factories to create objects to use in tests</li>
+</ul>
+
+<!-- Depending on if/when the rest of the tutorial gets written, you may also know/be able to:
+
+* use partials and helpers to tidy up views
+* model one-to-one data relationships
+* use polymorphic associations to associate an object with one of several other models
+* implement authentication using Twitter OAuth
+* write controller and view specs -->
+
+<h3 id="iterations">Iterations:</h3>
+
+<ul>
+  <li><a href="1_getting_started.markdown">1 Getting Started</a></li>
+  <li><a href="2_implementing_artists.markdown">2 Implementing artists</a></li>
+  <li><a href="3_implementing_songs.markdown">3 Implementing songs</a></li>
+  <li><a href="3_optional_additional_song_features.markdown">3.1 Optional Additional Song Features</a></li>
+  <li><a href="4_implementing_playlists.markdown">4 Implementing Playlists</a></li>
+  <li><a href="5_refactoring.markdown">5 Refactoring</a></li>
+  <li><a href="6_controller_tests.markdown">6 Controller Tests</a></li>
+  <li><a href="7_implementing_users.markdown">7 Implementing users</a></li>
+  <li><a href="wip-image-upload.markdown">7.1 Extensions</a></li>
+</ul>
+
+<h3 id="getting-started">Getting Started</h3>
+
+<p>Check that you have Rails installed. From your terminal, type:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rails -v
+Rails 5.1.1
+</code></pre></div></div>
+
+<p>Create a new Rails project:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rails new mix_master -d postgresql -T
+</code></pre></div></div>
+
+<p>What do these things do?</p>
+
+<ul>
+  <li><code class="highlighter-rouge">-d postgresql</code> will give us a Rails project that already has Postgresql configured</li>
+  <li><code class="highlighter-rouge">-T</code> will not create MiniTest files for you by default (MiniTest comes with Rails by default)</li>
+</ul>
+
+<h3 id="using-rspec-in-rails">Using RSpec in Rails</h3>
+
+<p>So far, we’ve done a lot with <a href="https://github.com/rspec/rspec-rails">RSpec</a> and we’re going to continue using it for this tutorial. You should be comfortable with both MiniTest and RSpec. There are a few steps we’ll take to configure RSpec for our Rails project.</p>
+
+<p>1) Add RSpec as a dependency in the Gemfile. The <code class="highlighter-rouge">group :development, :test...</code> probably already exists in the Gemfile. You’ll just need to add <code class="highlighter-rouge">gem 'rspec-rails'</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'rspec-rails'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>2) Install this dependency:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundle install
+</code></pre></div></div>
+
+<p>(<code class="highlighter-rouge">install</code> is the default for Bundler, so <code class="highlighter-rouge">bundle install</code> and <code class="highlighter-rouge">bundle</code> will get you the same behavior)</p>
+
+<p>3) Run the generator to create initial RSpec setup:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rails generate rspec:install
+      create  .rspec
+      create  spec
+      create  spec/spec_helper.rb
+      create  spec/rails_helper.rb
+</code></pre></div></div>
+
+<p>This created a <a href="https://www.relishapp.com/rspec/rspec-core/v/2-0/docs/configuration/read-command-line-configuration-options-from-files"><code class="highlighter-rouge">.rspec</code> file</a>, a <a href="https://www.relishapp.com/rspec/rspec-rails/docs/directory-structure"><code class="highlighter-rouge">spec</code> directory</a> (this is equivalent to the <code class="highlighter-rouge">test</code> directory if we were using Test::Unit), and <a href="https://relishapp.com/rspec/rspec-rails/docs/upgrade">two helper files</a>.</p>
+
+<h3 id="git-setup">Git Setup</h3>
+
+<p>Make sure your project is git initialized. If you’re on Rails 5+, this should be done automatically for you. If not:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git init
+</code></pre></div></div>
+
+<p>Then add and commit:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git add .
+$ git commit -m 'Initial commit.'
+</code></pre></div></div>
+
+<h3 id="shipping-to-heroku">Shipping to Heroku</h3>
+
+<p>We want to host our Rails application on the internet using the popular <a href="https://www.heroku.com/">Heroku</a> service.</p>
+
+<p>If you don’t already have one, you’ll need to create a <a href="https://signup.heroku.com/www-header">Heroku account</a>. After creating your account download and install the <a href="https://toolbelt.heroku.com/">Heroku Toolbelt</a>.</p>
+
+<p>Heroku requires applications to use a PostgresSQL database and not a Sqlite database. Good thing we generated our Rails project with a Postgres database! Some people may choose to use Sqlite locally when running in test and development and PostgresSQL only on Heroku. This configuration is indeed possible; however, it’s important to remember that these databases have slightly different behaviors, so something that works with Sqlite may not work with Postgres, and vice versa.</p>
+
+<p>Now, let’s ship to Heroku! This next command will only work if you installed the Heroku Toolbelt.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ heroku create
+Creating adjective-noun-number... done, stack is cedar-14
+https://adjective-noun-number.herokuapp.com/ | https://git.heroku.com/adjective-noun-number.git
+Git remote heroku added
+</code></pre></div></div>
+
+<p>The toolbelt will ask for your username and password the first time you run the create, but after that you’ll be using an SSH key for authentication.</p>
+
+<p>After running the create command, you’ll get back the URL where the app is accessible. Try loading the URL in your browser and you’ll see the generic Heroku splash screen. This is because we haven’t actually pushed our code to Heroku. All we did was create the remote.</p>
+
+<p>Now push to Heroku:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git push heroku master
+...
+...lots and lots of output
+...
+remote: -----&gt; Launching... done, v5
+remote:        https://adjective-noun-number.herokuapp.com/ deployed to Heroku
+</code></pre></div></div>
+
+<p>Now navigate to your Heroku URL and <strong>you should see an error</strong>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The page you were looking for doesn't exist.
+
+You may have mistyped the address or the page may have moved.
+
+If you are the application owner check the logs for more information.
+</code></pre></div></div>
+
+<p>Don’t worry! Everything is fine. The reason we see this is because we haven’t written any code yet.</p>
+
+<h3 id="on-to-mix-master-part-2-implementing-artists">On to <a href="2_implementing_artists.markdown">Mix Master Part 2: Implementing Artists</a></h3>
+:ET

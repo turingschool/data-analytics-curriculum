@@ -1,0 +1,199 @@
+I"h,<h2 id="goals">Goals:</h2>
+
+<ol>
+  <li>Fully TDD a new feature with Capybara</li>
+  <li>Set up capybara for a Rails project</li>
+  <li>Conceptually understand what capybara is doing</li>
+</ol>
+
+<h2 id="getting-started-with-rspec">Getting Started with RSpec</h2>
+
+<h3 id="rspec-setting-things-up">RSpec: Setting things up</h3>
+
+<ul>
+  <li>First we want to set up RSpec in our project. Jump into the Gemfile and add rspec and rspec-rails to the development and test groups. I also like to add pry for debugging.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'byebug'</span>
+  <span class="n">gem</span> <span class="s1">'rspec'</span>
+  <span class="n">gem</span> <span class="s1">'rspec-rails'</span>
+  <span class="n">gem</span> <span class="s1">'pry-rails'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>next run <code class="highlighter-rouge">bundle</code></p>
+
+<ul>
+  <li>Now we’ll run the CLI command to generate what we need to write RSpec tests</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails generate rspec:install
+</code></pre></div></div>
+
+<p>This command will generate all your RSpec files for you.</p>
+
+<h3 id="setting-up-your-rails-project-for-feature-testing-with-rspec">Setting up your Rails project for Feature testing with RSpec</h3>
+
+<ul>
+  <li><a href="https://github.com/jnicklas/capybara#using-capybara-with-rspec">Capybara Docs</a></li>
+  <li>First we want to add Capybara and Launchy to our Gemfile in the development and test groups</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'byebug'</span>
+  <span class="n">gem</span> <span class="s1">'rspec'</span>
+  <span class="n">gem</span> <span class="s1">'rspec-rails'</span>
+  <span class="n">gem</span> <span class="s1">'pry-rails'</span>
+  <span class="n">gem</span> <span class="s1">'capybara'</span>
+  <span class="n">gem</span> <span class="s1">'launchy'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>now <code class="highlighter-rouge">bundle</code></p>
+  </li>
+  <li>now go to the rails_helper.rb and add <code class="highlighter-rouge">require "capybara/rspec"</code></li>
+  <li>
+    <p>Capybara specs need to be in the <code class="highlighter-rouge">spec/features</code> directory. If they are not they you’ll need to tag them with <code class="highlighter-rouge">:type =&gt; feature</code></p>
+  </li>
+  <li>example of feature tag. Include tag in the describe block:</li>
+</ul>
+
+<p><code class="highlighter-rouge">describe "the new tool process", :type =&gt; :feature do</code></p>
+
+<ul>
+  <li>let’s make our feature directory <code class="highlighter-rouge">mkdir spec/features</code></li>
+  <li>make sure you include the <code class="highlighter-rouge">require 'rails_helper'</code> in the top of you _spec.rb files.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"rails_helper"</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">feature</span> <span class="s2">"Tool management"</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="ss">:feature</span> <span class="k">do</span>
+  <span class="n">scenario</span> <span class="s2">"User creates a new widget"</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="n">new_tool_path</span>
+    <span class="c1"># same as: visit "/tools/new"</span>
+
+    <span class="n">fill_in</span> <span class="s2">"Name"</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="s2">"Screwdriver"</span>
+    <span class="n">click_button</span> <span class="s2">"Create Tool"</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">".tool_info"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Screwdriver"</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>to run your specs you can use the following rake command:</p>
+
+<p><code class="highlighter-rouge">rspec</code></p>
+
+<h2 id="getting-started-with-minitest">Getting Started with MiniTest</h2>
+
+<ul>
+  <li><a href="https://github.com/jnicklas/capybara#using-capybara-with-testunit">Capybara with Test::Unit</a></li>
+</ul>
+
+<p>In your Gemfile:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'capybara'</span>
+  <span class="n">gem</span> <span class="s1">'launchy'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">bundle install</code>.</p>
+
+<p><strong>Check for understanding:</strong></p>
+
+<ul>
+  <li>What does the launchy gem do for our tests?</li>
+  <li>Why do we put these gems only in the development and test groups?</li>
+</ul>
+
+<p>In the <code class="highlighter-rouge">test_helper.rb</code> make sure you add the following line:</p>
+
+<p><code class="highlighter-rouge">require 'capybara/rails'</code></p>
+
+<h3 id="test-directory-structure"><strong>Test Directory Structure</strong></h3>
+
+<p>All feature tests will go within <code class="highlighter-rouge">test/features</code>. If you start to see a pattern emerging for these tests, like separating them by user type <code class="highlighter-rouge">user_can_*_test.rb</code> and <code class="highlighter-rouge">admin_user_can_*_test.rb</code> you can organize them as sub-directories within the test/features/directory. Something like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|_test
+    |
+    features
+      |_user
+      |_admin
+</code></pre></div></div>
+
+<h3 id="minitest-setting-things-up"><strong>Minitest: Setting Things Up</strong></h3>
+
+<p>In the <code class="highlighter-rouge">test_helper.rb</code> file make sure you include <code class="highlighter-rouge">Capybara::DSL </code> within ActionDispatch IntegrationTest</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ActionDispatch::IntegrationTest</span>
+  <span class="c1"># Make the Capybara DSL available in all integration tests</span>
+  <span class="kp">include</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">DSL</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Next we can start to write our feature test. First <code class="highlighter-rouge">mkdir test/features</code> then touch a new file. <code class="highlighter-rouge">touch test/features/tool_creation_test.rb</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"test_helper"</span>
+
+<span class="k">class</span> <span class="nc">ToolCreationTest</span> <span class="o">&lt;</span> <span class="no">ActionDispatch</span><span class="o">::</span><span class="no">IntegrationTest</span>
+
+  <span class="nb">test</span> <span class="s2">"user can create a tool"</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="n">new_tool_path</span>
+
+    <span class="n">fill_in</span> <span class="s2">"Name"</span><span class="p">,</span> <span class="ss">with: </span><span class="s2">"Screwdriver"</span>
+    <span class="n">fill_in</span> <span class="s2">"Price"</span><span class="p">,</span> <span class="ss">with: </span><span class="s2">"1099"</span>
+    <span class="n">fill_in</span> <span class="s2">"Quantity"</span><span class="p">,</span> <span class="ss">with: </span><span class="s2">"10"</span>
+    <span class="n">click_link_or_button</span> <span class="s2">"Create Tool"</span>
+
+    <span class="n">assert_equal</span> <span class="n">current_path</span><span class="p">,</span> <span class="n">tool_path</span><span class="p">(</span><span class="no">Tool</span><span class="p">.</span><span class="nf">last</span><span class="p">)</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">".tool_info"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">assert</span> <span class="n">page</span><span class="p">.</span><span class="nf">has_content?</span><span class="p">(</span><span class="s2">"Screwdriver"</span><span class="p">)</span>
+      <span class="n">assert</span> <span class="n">page</span><span class="p">.</span><span class="nf">has_content?</span><span class="p">(</span><span class="s2">"10.99"</span><span class="p">)</span>
+      <span class="n">assert</span> <span class="n">page</span><span class="p">.</span><span class="nf">has_content?</span><span class="p">(</span><span class="s2">"10"</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>to run the test suite use the rake command:
+<code class="highlighter-rouge">rake test</code></p>
+
+<p><strong>Check for Understanding:</strong></p>
+<ul>
+  <li>How do we connect/link Capybara and get access to those methods within our tests?</li>
+  <li>Where do we put feature tests? (how can we further organize this structure?)</li>
+</ul>
+
+<h2 id="lets-write-some-feature-tests">Let’s write some feature tests!</h2>
+
+<ul>
+  <li>First, together, let’s write a feature test for editing a tool.</li>
+  <li>Now, by yourself, write feature tests for:
+    <ul>
+      <li>viewing all tools</li>
+      <li>viewing a single tool</li>
+      <li>deleting a tool</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="additional-resources">Additional Resources</h3>
+
+<ul>
+  <li><a href="https://robots.thoughtbot.com/how-we-test-rails-applications">ThoughtBot RSpec feature testing</a></li>
+  <li><a href="http://guides.rubyonrails.org/testing.html">Rails Guide on Testing</a></li>
+  <li><a href="http://www.getlaura.com/testing-unit-vs-integration-vs-regression-vs-acceptance/">A Quick Read about Different types of Tests</a></li>
+  <li><a href="https://github.com/thoughtbot/factory_girl">FactoryGirl - if you’re feeling adventurous</a></li>
+  <li><a href="http://guides.rubyonrails.org/testing.html">Guide to Testing Rails Applications</a></li>
+  <li><a href="https://learn.thoughtbot.com/test-driven-rails-resources/capybara.pdf">Thoughtbot’s Capybara Cheat Sheet</a></li>
+  <li><a href="https://gist.github.com/zhengjia/428105">Zhengjia capybara cheat sheet gist</a></li>
+</ul>
+:ET

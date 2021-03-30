@@ -1,0 +1,644 @@
+I"��<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>represent a cart using a PORO in Rails
+    <ul>
+      <li>Start thinking about opportunities for using POROs to extract logic from the controller.</li>
+    </ul>
+  </li>
+  <li>use a <code class="highlighter-rouge">flash</code> to send messages to the view</li>
+  <li>load an object to be used throughout the app using a <code class="highlighter-rouge">before_action</code> filter in the ApplicationController</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>Warm Up</li>
+  <li>Code-along</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Session</li>
+  <li>PORO</li>
+</ul>
+
+<h2 id="video">Video</h2>
+
+<ul>
+  <li><a href="https://vimeo.com/126190416">Cart and Order Lifecycle</a></li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>How do we make a class in Ruby?</li>
+  <li>How do we make an instance of a class?</li>
+  <li>Where does plain old Ruby data (like a class instance) “live”?</li>
+</ul>
+
+<h2 id="intro">Intro</h2>
+
+<p>We’ll build out an app where a user should be able to add songs to their cart. The added songs are not saved to the database until the user has decided so.</p>
+
+<h2 id="code-along">Code-Along</h2>
+
+<p>We are going to use the <code class="highlighter-rouge">SetList</code> project for this example.</p>
+
+<h3 id="writing-a-test">Writing a Test</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/features/cart/add_song_spec.rb</span>
+
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="s2">"When a user adds songs to their cart"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"displays a message"</span> <span class="k">do</span>
+    <span class="n">artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Rick Astley'</span><span class="p">)</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Never Gonna Give You Up'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">250</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1000000</span><span class="p">)</span>
+
+    <span class="n">visit</span> <span class="s2">"/songs"</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"You now have 1 copy of </span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="creating-a-cart-and-adding-a-flash-message">Creating a Cart and Adding a Flash Message</h3>
+
+<p>Run the test and it complains about not finding the css with the song id. Inside of <code class="highlighter-rouge">views/songs/index.html.erb</code>, wrap each song in a section with that id:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>All Songs<span class="nt">&lt;/h1&gt;</span>
+
+<span class="cp">&lt;%</span> <span class="vi">@songs</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">song</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;ul&gt;</span>
+    <span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">"song-</span><span class="cp">&lt;%=</span> <span class="n">song</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;li&gt;</span>
+        <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="p">,</span> <span class="s2">"/songs/</span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span> <span class="cp">%&gt;</span>
+        Play Count: <span class="cp">&lt;%=</span> <span class="n">song</span><span class="p">.</span><span class="nf">play_count</span> <span class="cp">%&gt;</span>
+      <span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/section&gt;</span>
+  <span class="nt">&lt;/ul&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Now the test isn’t finding the button. Let’s add a button inside our section:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">"Add Song"</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Our error now is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>No route matches [POST] "/songs"
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">button_to</code>, by default, will send a <code class="highlighter-rouge">POST</code> request, and since we haven’t specified the path, it uses the current path which is <code class="highlighter-rouge">/songs</code>.</p>
+
+<p>So we need a route to handle adding a song, but what route should it be? We aren’t going to store Carts in our database, so there’s no ReSTful routing convention to follow in this case. Let’s try to make our route look as ReSTful as possible. If you think about every user having an empty cart by default, what we want to do is update that cart, so it would make sense to use a <code class="highlighter-rouge">PATCH</code> verb. Since we are updating the cart, it also makes sense that our path includes <code class="highlighter-rouge">/cart</code>. Finally, we need to know what song we are putting in the cart, so we’ll include a <code class="highlighter-rouge">:song_id</code> parameter in our route. Putting this all together, we’ll use the route:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>patch '/cart/:song_id'
+</code></pre></div></div>
+
+<p>Our route will also need a controller and action to route to. Since we’re updating the cart, it makes sense to create a new <code class="highlighter-rouge">cart</code> controller with an <code class="highlighter-rouge">update</code> action. Add this to your routes file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>patch '/cart/:song_id', to: 'cart#update'
+</code></pre></div></div>
+
+<p>As always, run <code class="highlighter-rouge">rake routes</code> and make sure your new route is there.</p>
+
+<p>Now that we have a route, let’s  make our button go to this route:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= button_to "Add Song", "/cart/#{song.id}", method: :patch %&gt;
+</code></pre></div></div>
+
+<p>Now we get a new error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionController::RoutingError:
+     uninitialized constant CartController
+</code></pre></div></div>
+
+<p>Make a controller: <code class="highlighter-rouge">touch app/controllers/cart_controller.rb</code> and add the <code class="highlighter-rouge">CartController class</code>. If you run the test again, it will complain about missing the action <code class="highlighter-rouge">update</code>. So, inside of the controller file:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">update</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And now our error is funky, harder to decipher:</p>
+
+<div class="language-terminal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">Unable to find visible xpath "/html"
+</span></code></pre></div></div>
+
+<p>This is because we are sending this action nowhere; Capybara cannot see any HTML to parse. There is no direct view that corresponds with <code class="highlighter-rouge">update</code> so we need to redirect it somewhere. Let’s bring the user back to the songs index.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">update</span>
+    <span class="n">redirect_to</span> <span class="s1">'/songs'</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Does it work? Start up your server, visit the songs index page, and click the “Add Song” button. Does it redirect you back to the same page? Good.</p>
+
+<p>When you run the test, it fails looking for the content “You now have 1 of #{@song.title} in your cart.” This should be a flash message. Let’s update our action to find the requested song and display the message</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">update</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:song_id</span><span class="p">])</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"You now have 1 copy of </span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span>
+    <span class="n">redirect_to</span> <span class="s1">'/songs'</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If you don’t already have something to render flash messages, you will need to add one. In the <code class="highlighter-rouge">/app/views/layouts/application.html.erb</code> file, add this code right before the <code class="highlighter-rouge">yield</code> tag.</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%</span> <span class="n">flash</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">type</span><span class="p">,</span> <span class="n">message</span><span class="o">|</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;section</span> <span class="na">class=</span><span class="cp">&lt;%=</span> <span class="n">type</span> <span class="cp">%&gt;</span><span class="err">&gt;
+      </span><span class="s">&lt;p</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">message</span> <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/section&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Because we put this code in <code class="highlighter-rouge">application.html.erb</code>, we can put a flash message in any controller action and it will appear in any view!</p>
+
+<p>Great! That test is passing. But what happens if we add two songs?</p>
+
+<h3 id="adding-multiple-songs-and-updating-our-flash">Adding Multiple Songs and Updating Our Flash</h3>
+
+<p>Let’s update our test to check and see.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#spec/features/cart/add_song_spec.rb</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="s2">"When a user adds songs to their cart"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"displays a message"</span> <span class="k">do</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s2">"the message correctly increments for multiple songs"</span> <span class="k">do</span>
+    <span class="n">artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Rick Astley'</span><span class="p">)</span>
+    <span class="n">song_1</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Never Gonna Give You Up'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">250</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1000000</span><span class="p">)</span>
+    <span class="n">song_2</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Don't Stop Believin'"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">300</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">visit</span> <span class="s1">'/songs'</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song_1</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song_2</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song_1</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"You now have 2 copies of </span><span class="si">#{</span><span class="n">song_1</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>If we run this now it fails because even though we’ve added two songs, our flash message will always say that we have one song. We need a way to store information about how many songs have been added.</p>
+
+<p>Thinking through this a little bit, we could store something in the database every time someone adds a songs to their cart, but there are a few drawbacks to that approach:</p>
+
+<ul>
+  <li>It would require multiple updates (and potentially deletions) while someone makes up their mind about what to actually keep in their cart. That’s a lot of extra database work.
+    <ul>
+      <li>It would also require the user to log in before they could add anything to their cart so that we could create that association in our database anyway.</li>
+    </ul>
+  </li>
+  <li>It could potentially result in some abandoned database records if a user decides not to finalize their cart contents.</li>
+</ul>
+
+<p>Instead, we need to find a way to store the state of a cart (which songs have been added to our cart and how many of each type). Can we store data in a session?</p>
+
+<p>Let’s go back into the CartController:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">update</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:song_id</span><span class="p">])</span>
+    <span class="n">song_id_str</span> <span class="o">=</span> <span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="p">.</span><span class="nf">to_s</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">]</span> <span class="o">||=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">||=</span> <span class="mi">0</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"You now have </span><span class="si">#{</span><span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span><span class="si">}</span><span class="s2"> copy of </span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span>
+    <span class="n">redirect_to</span> <span class="s2">"/songs"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="slight-detour">Slight Detour</h4>
+<p>You might be wondering why we’re converting the song’s integer ID to a string, and initializing it to 0 even though we’re telling <code class="highlighter-rouge">Hash</code> to initialize all <code class="highlighter-rouge">new</code> keys with a value of 0. While our code could certainly process the song ID as an integer in memory, when the session is packed up as one big string to store in the client cookie, and read back again after the next request, the song ID is no longer an integer. Also, the <code class="highlighter-rouge">Hash.new(0)</code> functionality is also lost when we read a cart from the cookie, since <code class="highlighter-rouge">[:cart]</code> now exists, so on subsequent requests, <code class="highlighter-rouge">Hash.new(0)</code> is never run.</p>
+
+<h4 id="back-to-our-code-">Back to our code …</h4>
+
+<p>This is close. Our test will still fail, but it looks like our number is incrementing correctly. Our error likely looks something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  1) User adds a song to their cart the message correctly increments for multiple songs
+     Failure/Error: expect(page).to have_content("You now have 2 copies of Song 1 in your cart.")
+       expected to find text "You now have 2 copies of #{song.title} in your cart." in ""You now have 2 copy of #{song.title} in your cart.""
+     # ./spec/features/user_adds_song_to_cart_spec.rb:25:in `block (2 levels) in &lt;top (required)&gt;'
+</code></pre></div></div>
+
+<p>It’s the plural of “copy/copies” that’s giving us a hard time. Luckily we have a tool for that with <code class="highlighter-rouge">#pluralize</code>. This is a view helper method, so in order to use it here in our controller to set a flash message, we’ll need to include <code class="highlighter-rouge">ActionView::Helpers::TextHelper</code> explicitly in our controller.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="kp">include</span> <span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
+
+  <span class="k">def</span> <span class="nf">update</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:song_id</span><span class="p">])</span>
+    <span class="n">song_id_str</span> <span class="o">=</span> <span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="p">.</span><span class="nf">to_s</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">]</span> <span class="o">||=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">||=</span> <span class="mi">0</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"You now have </span><span class="si">#{</span><span class="n">pluralize</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="s2">"copy"</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span>
+    <span class="n">redirect_to</span> <span class="s2">"/songs"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And there we have another passing test.</p>
+
+<p>That’s nice, but wouldn’t it be better to see how many songs total we have in our cart? Yes. Yes it would.</p>
+
+<h3 id="adding-a-cart-tracker">Adding a Cart Tracker</h3>
+
+<p>First, let’s update our feature test.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">feature</span> <span class="s2">"When a user adds songs to their cart"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"displays a message"</span> <span class="k">do</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s2">"the message correctly increments for multiple songs"</span> <span class="k">do</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s2">"displays the total number of songs in the cart"</span> <span class="k">do</span>
+    <span class="n">artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Rick Astley'</span><span class="p">)</span>
+    <span class="n">song_1</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Never Gonna Give You Up'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">250</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1000000</span><span class="p">)</span>
+    <span class="n">song_2</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Don't Stop Believin'"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">300</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">visit</span> <span class="s2">"/songs"</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Cart: 0"</span><span class="p">)</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song_1</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Cart: 1"</span><span class="p">)</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song_2</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Cart: 2"</span><span class="p">)</span>
+
+    <span class="n">within</span><span class="p">(</span><span class="s2">"#song-</span><span class="si">#{</span><span class="n">song_1</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">click_button</span> <span class="s2">"Add Song"</span>
+    <span class="k">end</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Cart: 3"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If we run our test now, we’ll see that we have not included “Cart: 0” in our view or main app layout. It’s easy enough to get past that error. Let’s open the <code class="highlighter-rouge">app/views/layouts/application.html.erb</code> file and add a paragraph tag with the cart information just below our flash message. For now let’s hardcode it so that we can see what happens, then think through how we want to implement this permanently.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;p&gt;</span>Cart: 0<span class="nt">&lt;/p&gt;</span>
+</code></pre></div></div>
+
+<p>Sure enough, that gets us to a new error where now our test is looking for “Cart: 1” and not finding it on our page (because we’re still displaying “Cart: 0” since it’s hard-coded in our view).</p>
+
+<p>We could potentially pass in a count specifically to use in that slot, but it’s starting to feel like we’re doing a LOT of logic with this cart. More than should probably just be handled in the controller.</p>
+
+<p>What we <em>really</em> want to do here is to have some sort of an object that I can call <code class="highlighter-rouge">#total</code> on to get the number of objects in the cart. I don’t have a model to use since we’re not saving the cart in the database, but that doesn’t stop me from creating a <code class="highlighter-rouge">Cart</code> class that doesn’t interact with the database. We call these types of classes “POROS” (Plain Old Ruby Objects). The question becomes where to start, and what to refactor.</p>
+
+<p>Since we’re thinking of implementing this here in the view, let’s start there with how we’d <em>like</em> this object to behave. Change the new line that we added to the view to the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;p&gt;Cart: &lt;%= @cart.total_count %&gt;&lt;/p&gt;
+</code></pre></div></div>
+
+<p>Run our test, and … we’ve broken everything!!!</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  3) User adds a song to their cart the total number of items in the cart increments
+     Failure/Error: &lt;p&gt;Cart: &lt;%= @cart.total_count %&gt;&lt;/p&gt;
+
+     ActionView::Template::Error:
+       undefined method `total_count' for nil:NilClass`
+</code></pre></div></div>
+
+<p>That’s okay! We can fix this!!</p>
+
+<p>In our SongsController, let’s go ahead and add the instance variable <code class="highlighter-rouge">@cart</code>. Let’s also assume that we’ll need to pass it the contents currently sitting in our session to make it work.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@songs</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">all</span>
+    <span class="vi">@cart</span> <span class="o">=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">])</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>When we run our tests again, we see another failing test telling us that we don’t have a Cart class:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      Failure/Error: @cart = Cart.new(session[:cart])
+
+      NameError:
+        uninitialized constant SongsController::Cart
+</code></pre></div></div>
+
+<p>At this point, we’re going to have to create our PORO, so let’s start with a model test.</p>
+
+<h3 id="creating-our-cart-poro">Creating Our Cart PORO</h3>
+
+<p>In our <code class="highlighter-rouge">spec/models</code> folder, add a new test for our Cart class: <code class="highlighter-rouge">spec/models/cart_spec.rb</code>. Within our new test file, add the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Cart</span> <span class="k">do</span>
+
+  <span class="n">describe</span> <span class="s2">"#total_count"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">"can calculate the total number of items it holds"</span> <span class="k">do</span>
+      <span class="n">cart</span> <span class="o">=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+        <span class="s1">'1'</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># two copies of song 1</span>
+        <span class="s1">'2'</span> <span class="o">=&gt;</span> <span class="mi">3</span>   <span class="c1"># three copies of song 2</span>
+      <span class="p">})</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">cart</span><span class="p">.</span><span class="nf">total_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run that test using <code class="highlighter-rouge">rspec spec/models</code> so we can avoid the distraction of all of our feature tests failing.</p>
+
+<p>And now we see the error that we need to actually go create our Cart class:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NameError:
+  uninitialized constant Cart
+</code></pre></div></div>
+
+<p>In our <code class="highlighter-rouge">app/models</code> folder, add <code class="highlighter-rouge">cart.rb</code> and insert the following code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Cart</span>
+  <span class="nb">attr_reader</span> <span class="ss">:contents</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">initial_contents</span><span class="p">)</span>
+    <span class="vi">@contents</span> <span class="o">=</span> <span class="n">initial_contents</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total_count</span>
+    <span class="vi">@contents</span><span class="p">.</span><span class="nf">values</span><span class="p">.</span><span class="nf">sum</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="side-note">Side note</h4>
+
+<p>Our PORO does not inherit from ApplicationRecord (or ActiveRecord::Base) because we don’t store PORO’s in our database. They’re used “in transit” for one request/response life cycle and then discarded.</p>
+
+<h4 id="back-to-code">Back to code…</h4>
+
+<p>And that makes our model test pass!</p>
+
+<p>Unfortunately, our feature tests still don’t pass for us.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  3) User adds a song to their cart the total number of songs in the cart increments
+     Failure/Error: contents.values.sum
+
+     ActionView::Template::Error:
+       undefined method `values' for nil:NilClass`
+</code></pre></div></div>
+
+<p>We’re trying to call <code class="highlighter-rouge">#values</code> on our initial contents, but the first time that we render our <code class="highlighter-rouge">index</code> our session hasn’t been set, so <code class="highlighter-rouge">initial_contents</code> evaluates to <code class="highlighter-rouge">nil</code>. Let’s fix that by adding some code to ensure that <code class="highlighter-rouge">@contents</code> is always defined as a hash. In your Cart class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Cart</span>
+  <span class="nb">attr_reader</span> <span class="ss">:contents</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">initial_contents</span><span class="p">)</span>
+    <span class="vi">@contents</span> <span class="o">=</span> <span class="n">initial_contents</span> <span class="o">||</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total_count</span>
+    <span class="vi">@contents</span><span class="p">.</span><span class="nf">values</span><span class="p">.</span><span class="nf">sum</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And now, our newest test passes, but we have more refactoring and cleanup to do so every other test can pass.</p>
+
+<h3 id="refactoring-cartcontroller">Refactoring CartController</h3>
+
+<p>Let’s take another look at the current status of our CartController</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="kp">include</span> <span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
+
+  <span class="k">def</span> <span class="nf">update</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:song_id</span><span class="p">])</span>
+    <span class="n">song_id_str</span> <span class="o">=</span> <span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="p">.</span><span class="nf">to_s</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">]</span> <span class="o">||=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">||=</span> <span class="mi">0</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">][</span><span class="n">song_id_str</span><span class="p">]</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"You now have </span><span class="si">#{</span><span class="n">pluralize</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="s2">"copy"</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span>
+    <span class="n">redirect_to</span> <span class="s2">"/songs"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>Currently we’re doing a lot of work in this controller with our cart. Now that we have a Cart PORO, it seems like we could refactor this to have the PORO take on some of that load.</p>
+
+<p>Let’s refactor the CartController so that it looks like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CartController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="kp">include</span> <span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
+
+  <span class="k">def</span> <span class="nf">update</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:song_id</span><span class="p">])</span>
+    <span class="vi">@cart</span> <span class="o">=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">])</span>
+    <span class="vi">@cart</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">]</span> <span class="o">=</span> <span class="vi">@cart</span><span class="p">.</span><span class="nf">contents</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="vi">@cart</span><span class="p">.</span><span class="nf">count_of</span><span class="p">(</span><span class="n">song</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+    <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"You now have </span><span class="si">#{</span><span class="n">pluralize</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="s2">"copy"</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">#{</span><span class="n">song</span><span class="p">.</span><span class="nf">title</span><span class="si">}</span><span class="s2"> in your cart."</span>
+    <span class="n">redirect_to</span> <span class="n">songs_path</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We’re still letting the controller handle getting and setting the session, but we’re putting our PORO in charge of managing the hash that we’re storing there: both 1) adding songs to it, and 2) reporting on how many of a particular song we have.</p>
+
+<p>Since we’ve added these methods to our controller, we now have a missing method error when we run our test. Let’s add both methods to our model test to see that they do what we expect them to. The <code class="highlighter-rouge">subject</code> syntax is a nice RSpec feature to use if you’re using a similar setup in many tests. In this case, we abstract the logic for creating a <code class="highlighter-rouge">Cart</code> instance, and can call that return value with <code class="highlighter-rouge">subject</code>. I like how this reads, but feel free to forego this pattern if you don’t like it as much.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Cart</span> <span class="k">do</span>
+  <span class="n">subject</span> <span class="p">{</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span><span class="s1">'1'</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'2'</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">})</span> <span class="p">}</span>
+
+  <span class="n">describe</span> <span class="s2">"#total_count"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">"calculates the total number of songs it holds"</span> <span class="k">do</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">subject</span><span class="p">.</span><span class="nf">total_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="n">describe</span> <span class="s2">"#add_song"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">"adds a song to its contents"</span> <span class="k">do</span>
+      <span class="n">cart</span> <span class="o">=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+        <span class="s1">'1'</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># two copies of song 1</span>
+        <span class="s1">'2'</span> <span class="o">=&gt;</span> <span class="mi">3</span>   <span class="c1"># three copies of song 2</span>
+      <span class="p">})</span>
+      <span class="n">subject</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="n">subject</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">subject</span><span class="p">.</span><span class="nf">contents</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">({</span><span class="s1">'1'</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'2'</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">})</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In order to get the Cart PORO tests to pass, add the following method to our Cart PORO.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add_song</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+  <span class="vi">@contents</span><span class="p">[</span><span class="nb">id</span><span class="p">.</span><span class="nf">to_s</span><span class="p">]</span> <span class="o">=</span> <span class="vi">@contents</span><span class="p">[</span><span class="nb">id</span><span class="p">.</span><span class="nf">to_s</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What if we ask for the count of a non-existent song? Let’s add a test:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">describe</span> <span class="s2">"#count_of"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"returns the count of all songs in the cart"</span> <span class="k">do</span>
+    <span class="n">cart</span> <span class="o">=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">({})</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">cart</span><span class="p">.</span><span class="nf">count_of</span><span class="p">(</span><span class="mi">5</span><span class="p">)).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s add a <code class="highlighter-rouge">count_of</code> method that <strong>coerces</strong> <code class="highlighter-rouge">nil</code> values to <code class="highlighter-rouge">0</code> with <code class="highlighter-rouge">#to_i</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Cart</span>
+
+<span class="o">...</span>
+
+  <span class="k">def</span> <span class="nf">count_of</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="vi">@contents</span><span class="p">[</span><span class="nb">id</span><span class="p">.</span><span class="nf">to_s</span><span class="p">].</span><span class="nf">to_i</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>What if we want to add a song that hasn’t been added yet?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">describe</span> <span class="s2">"#add_song"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"adds a song to its contents"</span> <span class="k">do</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s2">"adds a song that hasn't been added yet"</span> <span class="k">do</span>
+    <span class="n">subject</span><span class="p">.</span><span class="nf">add_song</span><span class="p">(</span><span class="s1">'3'</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">subject</span><span class="p">.</span><span class="nf">contents</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">({</span><span class="s1">'1'</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'2'</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'3'</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">})</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We need this test for the case when a user has added some songs and tries to add a new song. Remember, when we initialize a new Cart, we pass it the contents of <code class="highlighter-rouge">session[:cart]</code>, which acts like a Hash, but it doesn’t have a default value. The default value gets lost in translation between our app and the client’s cookies.</p>
+
+<p>This test is giving us an <code class="highlighter-rouge">undefined method '+' for nil:NilClass</code> error because <code class="highlighter-rouge">@contents[id.to_s]</code> is coming back as nil when a song hasn’t been set yet.  Let’s use our handy new <code class="highlighter-rouge">count_of</code> method that coerces <code class="highlighter-rouge">nil</code>s to 0 to fix this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add_song</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+  <span class="vi">@contents</span><span class="p">[</span><span class="nb">id</span><span class="p">.</span><span class="nf">to_s</span><span class="p">]</span> <span class="o">=</span> <span class="n">count_of</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And our PORO tests are all passing!</p>
+
+<h3 id="controller-cleanup">Controller Cleanup</h3>
+
+<p>Our feature tests are still in bad shape. Our newest test should pass, but if you run all the tests you’ll see a lot of failures. It’s from the line in our <code class="highlighter-rouge">application.html.erb</code> where we call <code class="highlighter-rouge">@cart.total_count</code>. <code class="highlighter-rouge">@cart</code> is nil because, although we set it in our <code class="highlighter-rouge">SongsController#index</code> and <code class="highlighter-rouge">CartController#update</code>, we didn’t set it in every action. We <em>could</em> go through every action and add the line <code class="highlighter-rouge">@cart = Cart.new(session[:cart])</code> to each one, but that wouldn’t be very DRY. Instead, let’s do some refactoring.</p>
+
+<p>Instead of creating an <code class="highlighter-rouge">@cart</code> all over the place, we’ll make a method on our <code class="highlighter-rouge">ApplicationController</code> that will handle creating the <code class="highlighter-rouge">Cart</code> object:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">helper_method</span> <span class="ss">:cart</span>
+
+  <span class="k">def</span> <span class="nf">cart</span>
+    <span class="vi">@cart</span> <span class="o">||=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">])</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>If for some reason we access the cart more than once in a given request/response cycle, the cart object is memoized with <code class="highlighter-rouge">||=</code>.</p>
+
+<p>We make this new method a helper_method so that we can access it in the views.</p>
+
+<p>Now we can delete the following line from both the SongsController and CartController:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="vi">@cart</span> <span class="o">=</span> <span class="no">Cart</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>And now change all the references from <code class="highlighter-rouge">@cart</code> to <code class="highlighter-rouge">cart</code>.</p>
+
+<p>Double check to see that our tests are still passing, and we should be in good shape!</p>
+
+<h2 id="checkin-and-review">Checkin and Review</h2>
+
+<ul>
+  <li>Why fuss with all of this PORO business?</li>
+  <li>“Where” does PORO data live?</li>
+  <li>How do I add a flash message to a view?</li>
+</ul>
+
+<h2 id="extensions">Extensions</h2>
+
+<h4 id="showing-the-cart">Showing the cart</h4>
+
+<p>Let’s say that you wanted users to be able to click on “View Cart” (similar to “View Cart” on an e-commerce site).</p>
+
+<ul>
+  <li>Which controller?</li>
+  <li>What does the view look like?</li>
+  <li>How can we make the cart have access to Cart objects instead of just iterating through a hash of keys and values?</li>
+</ul>
+
+<h4 id="ending-and-saving-the-cart-contents">Ending and saving the cart contents</h4>
+
+<p>What about allowing users to save their cart songs as a package? You might approach it something like this:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Cart: <span class="cp">&lt;%=</span> <span class="n">cart</span><span class="p">.</span><span class="nf">total_count</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%=</span> <span class="n">button_to</span> <span class="s2">"Save Package"</span><span class="p">,</span> <span class="n">packages_path</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>In your routes:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">resources</span> <span class="ss">:packages</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:create</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Make a Packages Controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PackagesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="kp">include</span> <span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="c1"># the four lines below probably would be best delegated to a PackageCreator PORO</span>
+    <span class="n">package</span> <span class="o">=</span> <span class="no">Package</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">user_name: </span><span class="s2">"Rachel"</span><span class="p">)</span>
+    <span class="n">cart</span><span class="p">.</span><span class="nf">contents</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">song_id</span><span class="p">,</span> <span class="n">quantity</span><span class="o">|</span>
+      <span class="n">package</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">song_id: </span><span class="n">song_id</span><span class="p">,</span> <span class="ss">quantity: </span><span class="n">quantity</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">package</span><span class="p">.</span><span class="nf">save</span>
+      <span class="n">session</span><span class="p">[</span><span class="ss">:cart</span><span class="p">]</span> <span class="o">=</span> <span class="kp">nil</span>
+      <span class="n">flash</span><span class="p">[</span><span class="ss">:notice</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Your bag is packed! You packed </span><span class="si">#{</span><span class="n">package</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">count</span><span class="si">}</span><span class="s2"> songs."</span>
+      <span class="n">redirect_to</span> <span class="n">songs_path</span>
+    <span class="k">else</span>
+      <span class="c1"># implement if you have validations</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+:ET

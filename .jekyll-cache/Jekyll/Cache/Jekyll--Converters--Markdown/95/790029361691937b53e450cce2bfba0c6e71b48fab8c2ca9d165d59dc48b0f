@@ -1,0 +1,94 @@
+I"¹<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>Define CORS</li>
+  <li>Understand why CORS is used</li>
+  <li>Know how to set up an Express project with CORS</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+<ul>
+  <li>CORS</li>
+  <li>SOP</li>
+  <li>Origin</li>
+  <li>Pre-flight Request</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>Have you included external resources <em>(fonts, images, etc.)</em> in your projects? How did you include them?</li>
+  <li>Define the parts of a HTTP request and response?</li>
+  <li>Define the parts of this URL <code class="highlighter-rouge">http://www.example.com/cats</code></li>
+</ul>
+
+<h2 id="what-and-why">What and Why?</h2>
+
+<p>Letâ€™s start by defining  <strong>origin</strong>. An origin is made up of three parts: a protocol, a host, and a port. Compare the url below to each in the list and determine if they have the same origin, and if not why.
+<em>Hint: The defualt port for <code class="highlighter-rouge">http</code> is port 80</em></p>
+
+<p><code class="highlighter-rouge">http://www.crafts.com/index.html</code></p>
+
+<ol>
+  <li><code class="highlighter-rouge">https://www.crafts.com/index.html</code></li>
+  <li><code class="highlighter-rouge">http://www.crafts.com/how-to-build-a-table.html</code></li>
+  <li><code class="highlighter-rouge">http://www.books.com/index.html</code></li>
+  <li><code class="highlighter-rouge">http://www.crafts.com:443/index.html</code></li>
+  <li><code class="highlighter-rouge">http://www.crafts.com/paper/how-to-make-an-oragmi-flower</code></li>
+</ol>
+
+<p>Web browsers have policies in place to help with built-in security.</p>
+
+<p>One such policy is the <strong>Same-Origin Policy</strong>, also known as <strong>SOP</strong>. As the name suggests, it means that resources can be used on your web page only if it is requested from the same origin. For example, you can include a font, front-end JavaScript file, AJAX call, image, etc, only if the request for that resource also comes from your own server.</p>
+
+<p>This policy is used to help protect requests to your site, similar to how Cross Site Request Forgery <em>(CSRF)</em> would protect your form inputs. The font, images, and all of your content would have to be stored on the same server as your web application. In order to share resources, the Cross Origin Resource Sharing <strong>CORS</strong> standard was created. As we develop APIs that interact with independent frontend applications it is necessary to consider who and how those applications are accessing the information.</p>
+
+<p><strong>Technically speaking, implementing CORS will <em>relax</em> the security of your resources</strong>, allowing other sites to access your content. The default behavior is to ONLY allow same-origin requests.</p>
+
+<p>The server will need to be set up to handle requests coming from different origins. To do this, CORS introduced new headers that can be passed as part of the HTTP request. The two that we are going to focus on are <code class="highlighter-rouge">Access-Control-Allow-Origin</code> and <code class="highlighter-rouge">Access-Control-Allow-Methods</code>. Within the backend of a project it is necessary to specify what origins and what methods will be allowed from cross origin requests. Below is an example of an Express app that is using a CORS package to handle requests.</p>
+
+<p><img src="../lessons/assets/Express_CORS.png" alt="Express CORS Example" /></p>
+
+<p>In this example, <code class="highlighter-rouge">res.header('Access-Control-Allow-Origin', '*')</code>, the access control is open to any origin because it is set to <code class="highlighter-rouge">'*'</code>, which means <em>any</em> origin is acceptable. To be more secure, the <code class="highlighter-rouge">Access-Control-Allow-Origin</code> should be set to only accept requests from trusted domains. You can provide a list of domains if there are more than one.</p>
+
+<p>On the next line, <code class="highlighter-rouge">res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');</code>, the accepted request methods are being defined. It is possible to restrict to as few or as many methods as you want to allow.</p>
+
+<p>Generally speaking, you only want to expose resources to domains you explicitly trust.</p>
+
+<h2 id="preflight-requests">Preflight Requests</h2>
+
+<p>GET methods are usually acceptable because each request is only <em>retrieving</em> information. But what about requests that potentially alter data? These requests have an extra step in place to automatically check whether the request will be accepted or not. This extra step is a <strong>preflight request</strong>. It is made before the original request is sent to determine whether the original request will be acceptable. A good analogy would be calling a restaurant before driving there to make sure they were open.</p>
+
+<p>A preflight request is triggered if the request includes the following HTTP verbs (methods) : <code class="highlighter-rouge">PUT, PATCH, DELETE, CONNECT, OPTIONS, TRACE</code>. If we were to make a <code class="highlighter-rouge">PUT</code> request the sequence of requests and repsonses might look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># preflight request
+
+OPTIONS: /path HTTP 1.1
+Origin: http://www.somewebsite.com
+Acces-Control-Request-Method: PUT
+
+                                                                           # response
+
+                                                                      HTTP 1.1 200 OK
+                              Access-Control-Allow-Origin: http://www.somewebsite.com
+                                Access-Control-Allow-Methods: GET, PUT, POST, OPTIONS
+
+# original request
+
+PUT /path HTTP 1.1
+Origin: http://www.somewebsite.com
+Acces-Control-Request-Method: PUT
+
+                                                                           # response
+
+                                                                      HTTP 1.1 200 OK
+                              Access-Control-Allow-Origin: http://www.somewebsite.com
+
+
+</code></pre></div></div>
+
+<h2 id="wrap-up">Wrap Up</h2>
+<ul>
+  <li>Implement CORS in your pair project in a way that another pair project could load your resources</li>
+  <li>Write a summary of what is CORS and why it is necessary.</li>
+</ul>
+:ET

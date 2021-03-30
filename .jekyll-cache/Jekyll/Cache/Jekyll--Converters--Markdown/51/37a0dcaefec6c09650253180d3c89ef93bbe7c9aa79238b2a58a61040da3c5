@@ -1,0 +1,334 @@
+I"fi<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>set up RSpec within a Sinatra web app</li>
+  <li>test model methods and validations using best practices in RSpec</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+<ul>
+  <li>RSpec</li>
+  <li>Model Testing</li>
+</ul>
+
+<h2 id="repository">Repository</h2>
+
+<p>We will continue to use the <a href="https://github.com/turingschool-examples/set-list">Set List repository</a> that we used in the Intro to ActiveRecord lesson.</p>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>1) Read <a href="https://robots.thoughtbot.com/four-phase-test">this</a> Thoughtbot article about the four-phase test design.
+2) Thinking about what you just read, what did this look like in Minitest?</p>
+
+<h2 id="lecture">Lecture</h2>
+
+<h3 id="intro-to-rspec">Intro to RSpec</h3>
+
+<ul>
+  <li>Slightly different than Minitest, but not by much.
+    <ul>
+      <li><code class="highlighter-rouge">describe</code> blocks as an outside wrapper to group related tests: use for <em>things</em></li>
+      <li><code class="highlighter-rouge">context</code> blocks to add… context (but technically the same method as <code class="highlighter-rouge">describe</code>): use for <em>states</em></li>
+      <li><code class="highlighter-rouge">it</code> blocks to indicate an outcome (something to test)</li>
+      <li><code class="highlighter-rouge">scenario</code> blocks to indicate an outcome (something to test)</li>
+      <li><code class="highlighter-rouge">expect</code> instead of assert</li>
+    </ul>
+  </li>
+  <li>Model testing describes our “bottom-up” design, and shows other developers how our model code should work within our application.</li>
+</ul>
+
+<h2 id="code-along">Code-Along</h2>
+
+<h3 id="setting-up-model-tests">Setting up Model Tests</h3>
+
+<p><strong>STEP 1</strong>: Install <code class="highlighter-rouge">rspec</code></p>
+
+<p>Add the following line to the block labeled <code class="highlighter-rouge">group :development, :test</code> in your <code class="highlighter-rouge">Gemfile</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s1">'rspec'</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">bundle</code>.</p>
+
+<p>Next, make sure you are in the root folder of your app.</p>
+
+<p><strong>STEP 2</strong>: Configurations in .rspec file</p>
+
+<ul>
+  <li><code class="highlighter-rouge">touch .rspec</code></li>
+</ul>
+
+<p>Your <code class="highlighter-rouge">.rspec</code> file can contain certain flags that are helpful when you run your tests.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--require spec_helper
+--format=documentation
+--order=random
+</code></pre></div></div>
+
+<p><em>Note</em>: <code class="highlighter-rouge">rspec</code> can take command-line flags also take some flags to change its output. For a full list run <code class="highlighter-rouge">rspec --help | less</code>. These flags can be stored within this <code class="highlighter-rouge">.rspec</code> file to be used each time.</p>
+
+<p>See <a href="http://stackoverflow.com/questions/1819614/how-do-i-globally-configure-rspec-to-keep-the-color-and-format-specdoc-o">this</a> Stack Overflow answer for additional details.</p>
+
+<p><strong>STEP 3</strong>: Set up the <code class="highlighter-rouge">spec_helper.rb</code> file:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">mkdir spec</code></li>
+  <li><code class="highlighter-rouge">touch spec/spec_helper.rb</code></li>
+</ul>
+
+<p>Add the following to your <code class="highlighter-rouge">spec_helper.rb</code> file:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'bundler'</span>
+<span class="no">Bundler</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:default</span><span class="p">,</span> <span class="ss">:test</span><span class="p">)</span>
+<span class="nb">require</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s1">'../../config/environment.rb'</span><span class="p">,</span> <span class="kp">__FILE__</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>First this will require the <code class="highlighter-rouge">bundler</code> gem, then use that gem to require the other gems we have loaded in the <code class="highlighter-rouge">default</code> and <code class="highlighter-rouge">test</code> groups in our Gemfile.</p>
+
+<p>Finally, we require the <code class="highlighter-rouge">environment.rb</code> file, which loads up the rest of our application so that we can use it in our tests.</p>
+
+<h3 id="create-a-model-spec">Create a Model Spec</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">mkdir spec/models</code></li>
+  <li><code class="highlighter-rouge">touch spec/models/song_spec.rb</code></li>
+</ul>
+
+<p>In <code class="highlighter-rouge">spec/models/song_spec.rb</code>:</p>
+
+<p>There are many ways we could choose to use RSpec <code class="highlighter-rouge">describe</code> and <code class="highlighter-rouge">context</code> blocks to organize our tests, but for our purposes today, we’re going to use the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Song</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">"Class Methods"</span> <span class="k">do</span>
+    <span class="n">describe</span> <span class="s2">".total_play_count"</span> <span class="k">do</span>
+      <span class="n">it</span> <span class="s2">"returns total play counts for all songs"</span> <span class="k">do</span>
+        <span class="no">Song</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Song 1"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">180</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">3</span><span class="p">)</span>
+        <span class="no">Song</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Song 2"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">220</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">4</span><span class="p">)</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="no">Song</span><span class="p">.</span><span class="nf">total_play_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s discuss:</p>
+
+<ul>
+  <li>the dot in <code class="highlighter-rouge">.total_play_count</code>: check out <a href="http://www.betterspecs.org/#describe">this best practice</a></li>
+  <li>the space between the created songs and the expectation</li>
+</ul>
+
+<p>At this point you should be able to run your tests from the command line using the command <code class="highlighter-rouge">rspec</code>.</p>
+
+<h3 id="make-it-pass">Make it Pass</h3>
+
+<p>What do we get? Errors! Great. We can follow errors. These errors are a bit different from Minitest Errors. Let’s take a look:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Randomized</span> <span class="n">with</span> <span class="n">seed</span> <span class="mi">28022</span>
+
+<span class="no">Song</span>
+  <span class="no">Class</span> <span class="no">Methods</span>
+    <span class="p">.</span><span class="nf">total_play_count</span>
+      <span class="n">returns</span> <span class="n">total</span> <span class="n">play</span> <span class="n">counts</span> <span class="k">for</span> <span class="n">all</span> <span class="n">songs</span> <span class="p">(</span><span class="no">FAILED</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="no">Failures</span><span class="p">:</span>
+
+  <span class="mi">1</span><span class="p">)</span> <span class="no">Song</span> <span class="no">Class</span> <span class="no">Methods</span> <span class="p">.</span><span class="nf">total_play_count</span> <span class="n">returns</span> <span class="n">total</span> <span class="n">play</span> <span class="n">counts</span> <span class="k">for</span> <span class="n">all</span> <span class="n">songs</span>
+     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">expect</span><span class="p">(</span><span class="no">Song</span><span class="p">.</span><span class="nf">total_play_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+
+     <span class="no">NoMethodError</span><span class="p">:</span>
+       <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`total_play_count' for #&lt;Class:0x007fea2ab582d8&gt;
+     # /Users/ian/.rvm/gems/ruby-2.4.0/gems/activerecord-5.1.4/lib/active_record/dynamic_matchers.rb:22:in `</span><span class="nb">method_missing</span><span class="s1">'
+     # ./spec/models/song_spec.rb:9:in `block (4 levels) in &lt;top (required)&gt;'</span>
+
+<span class="no">Finished</span> <span class="k">in</span> <span class="mf">0.02851</span> <span class="n">seconds</span> <span class="p">(</span><span class="n">files</span> <span class="n">took</span> <span class="mf">0.80607</span> <span class="n">seconds</span> <span class="n">to</span> <span class="nb">load</span><span class="p">)</span>
+<span class="mi">1</span> <span class="n">example</span><span class="p">,</span> <span class="mi">1</span> <span class="n">failure</span>
+
+<span class="no">Failed</span> <span class="ss">examples:
+
+</span><span class="n">rspec</span> <span class="p">.</span><span class="nf">/</span><span class="n">spec</span><span class="o">/</span><span class="n">models</span><span class="o">/</span><span class="n">song_spec</span><span class="p">.</span><span class="nf">rb</span><span class="p">:</span><span class="mi">5</span> <span class="c1"># Song Class Methods .total_play_count returns total play counts for all songs</span>
+
+<span class="no">Randomized</span> <span class="n">with</span> <span class="n">seed</span> <span class="mi">28022</span>
+</code></pre></div></div>
+<p>First we see the Randomized seed, which is a record of the random order the tests were run this time around.</p>
+
+<p>Next we see the descriptors from our describe, context, and it blocks. Now we see a failure which should be a bit more familiar to you:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">NoMethodError</span><span class="p">:</span>
+       <span class="n">undefined</span> <span class="nb">method</span> <span class="sb">`total_play_count' for #&lt;Class:0x007fea2ab582d8&gt;
+</span></code></pre></div></div>
+
+<p>Add that method into our Song model.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/song.rb</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">total_play_count</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Run our spec again and it tells us:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mi">1</span><span class="p">)</span> <span class="no">Song</span> <span class="no">Class</span> <span class="no">Methods</span> <span class="p">.</span><span class="nf">total_play_count</span> <span class="n">returns</span> <span class="n">total</span> <span class="n">play</span> <span class="n">counts</span> <span class="k">for</span> <span class="n">all</span> <span class="n">songs</span>
+     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">expect</span><span class="p">(</span><span class="no">Song</span><span class="p">.</span><span class="nf">total_play_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+
+       <span class="ss">expected: </span><span class="mi">7</span>
+            <span class="ss">got: </span><span class="kp">nil</span>
+
+       <span class="p">(</span><span class="n">compared</span> <span class="n">using</span> <span class="o">==</span><span class="p">)</span>
+     <span class="c1"># ./spec/models/song_spec.rb:9:in `block (4 levels) in &lt;top (required)&gt;'</span>
+</code></pre></div></div>
+
+<p>The error we see now should be pretty familiar. What is causing our method to return <code class="highlighter-rouge">nil</code> instead of 7?
+We need to populate it with something – the sum of the play_count for each Song in the database.</p>
+
+<p>ActiveRecord has just what we need:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/song.rb</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">total_play_count</span>
+  <span class="n">sum</span><span class="p">(</span><span class="ss">:play_count</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What’s happening here? Well, <code class="highlighter-rouge">sum</code> is an ActiveRecord method that will sum a particular column of values in a single table within our database (it can’t sum things across different tables). How does it know which column? We pass it the column name as an argument using ‘symbol notation’.</p>
+
+<p>How does it know that we’re trying to call this method on our <code class="highlighter-rouge">songs</code> table? The implicit receiver of the <code class="highlighter-rouge">sum</code> method is <code class="highlighter-rouge">self</code> in the method definition, which in this case is the class Song.</p>
+
+<p><strong>This is an example of a Class Method – ActiveRecord calls on the entire class are usually used for performing work on EVERY row in the Class’ table</strong></p>
+
+<p>Great! Run our tests again, and we still get an error.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mi">1</span><span class="p">)</span> <span class="no">Song</span> <span class="no">Class</span> <span class="no">Methods</span> <span class="p">.</span><span class="nf">total_play_count</span> <span class="n">returns</span> <span class="n">total</span> <span class="n">play</span> <span class="n">counts</span> <span class="k">for</span> <span class="n">all</span> <span class="n">songs</span>
+     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">expect</span><span class="p">(</span><span class="no">Song</span><span class="p">.</span><span class="nf">total_play_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+
+       <span class="ss">expected: </span><span class="mi">7</span>
+            <span class="ss">got: </span><span class="mi">1972034</span>
+</code></pre></div></div>
+
+<p>What’s going on here?</p>
+
+<p>It looks like the total that’s being reported by our test is the full total of our all the songs currently in our database.</p>
+
+<p>Run it one more time to check. Notice that the actual value that we’re getting increased? So, not only are we not testing with only the data we’re providing in the test, but on top of that, every time we run the test we’re adding new songs to our development database.</p>
+
+<p>This is not the behavior we want. We’re “polluting” the database that we’re using when we browse the site locally. Wouldn’t it be better if we could run our test suite without making these changes?</p>
+
+<p>Every time we run our tests, we want to start with a fresh slate with no existing data in our test database. Because of this, we need to have two different databases: one for testing purposes and one for development purposes. This way, we will still have access to all of our existing data when we run shotgun and look at our app in the browser, but we won’t have to worry about those pieces interfering with our tests because they’ll be in a separate database.</p>
+
+<p>How will our app know which environment – test or dev – we want to use at any moment? By default (like when we start the server with shotgun), we will be in development. If we want to run something in the test environment, we need an indicator. We’ll use an environment variable: <code class="highlighter-rouge">ENV["RACK_ENV"]</code>.</p>
+
+<p>We’re going to set an environment variable in our spec helper file and then use that variable to determine which database to use. In <code class="highlighter-rouge">spec_helper.rb</code> add the following <strong>above</strong> all the <code class="highlighter-rouge">require</code> lines:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ENV</span><span class="p">[</span><span class="s2">"RACK_ENV"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"test"</span>
+</code></pre></div></div>
+
+<p>It’s very important that this line comes before you require the environment. If you want to trace why, take a look first at line 14 in your <code class="highlighter-rouge">config/environment.rb</code> file, which should lead you to the <code class="highlighter-rouge">config/database.rb</code> file. In that file, you’ll see that the database name gets set based on the current environment.</p>
+
+<p>One more step and then we should be in good shape. From the command line:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake db:test:prepare
+</code></pre></div></div>
+
+<p>This should both create and run the migrations for a test database (you should be able to see the new file in your <code class="highlighter-rouge">db</code> directory).</p>
+
+<p>Now run your test again from the command line using <code class="highlighter-rouge">rspec</code>. Passing test? Great!</p>
+
+<p>Run the test again a few times. Failing test! Hmm.</p>
+
+<p>What’s happening here? Before we were saving new songs to our development database every time we ran our test suite. Now we’re doing the same thing to our test database. What we’d like to do is to clear out our database after each test. We could create these methods in each one of our tests, but there’s a tool that will help us here: <a href="https://github.com/DatabaseCleaner/database_cleaner">Database Cleaner</a>.</p>
+
+<p>In the test/development section of your Gemfile add the following line:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">gem</span> <span class="s1">'database_cleaner'</span>
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">bundle install</code></p>
+
+<p>Then in your <code class="highlighter-rouge">spec_helper.rb</code>, add the following after your current <code class="highlighter-rouge">require</code> lines:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">strategy</span> <span class="o">=</span> <span class="ss">:truncation</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">before</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+  <span class="k">end</span>
+  <span class="n">c</span><span class="p">.</span><span class="nf">after</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">DatabaseCleaner</span><span class="p">.</span><span class="nf">clean</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This will clean the database before all tests and after each test. This ensures that if we stop our test suite at any point before it finishes, we will still have a clean database.</p>
+
+<p>Save and run your tests again from the command line. Passing test? Great! Run it one more time to double check.</p>
+
+<h3 id="testing-validations">Testing Validations</h3>
+
+<p>One thing we haven’t really worried about up to this point was whether or not a new Song had all of its pieces in place when we were saving it to the database. We want to make sure that when someone tries to save a song that they’re providing us with ALL the information our app needs. We don’t want to have someone save a song with, for example, no title.</p>
+
+<p>Add the following test to your <code class="highlighter-rouge">song_spec</code> within the main <code class="highlighter-rouge">describe Song</code> block, but outside of your existing <code class="highlighter-rouge">describe 'Class Methods'</code> block.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">describe</span> <span class="s2">"Validations"</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"is invalid without a title"</span> <span class="k">do</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">length: </span><span class="mi">207</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">song</span><span class="p">).</span><span class="nf">to_not</span> <span class="n">be_valid</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run your test suite from the command line with <code class="highlighter-rouge">rspec</code> and look for the new failure.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mi">1</span><span class="p">)</span> <span class="no">Song</span> <span class="no">Validations</span> <span class="n">is</span> <span class="n">invalid</span> <span class="n">without</span> <span class="n">a</span> <span class="n">title</span>
+     <span class="no">Failure</span><span class="o">/</span><span class="no">Error</span><span class="p">:</span> <span class="n">expect</span><span class="p">(</span><span class="n">song</span><span class="p">).</span><span class="nf">to_not</span> <span class="n">be_valid</span>
+       <span class="n">expected</span> <span class="sb">`#&lt;Song id: nil, title: nil, year: 207, play_count: 2, created_at: nil, updated_at: nil&gt;.valid?`</span> <span class="n">to</span> <span class="k">return</span> <span class="kp">false</span><span class="p">,</span> <span class="n">got</span> <span class="kp">true</span>
+     <span class="c1"># ./spec/models/song_spec.rb:7:in `block (3 levels) in &lt;top (required)&gt;'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Under Song, Class Methods, .total_play_count you should see a green <code class="highlighter-rouge">returns total play counts for all songs</code>. That is our old test still passing.</li>
+  <li>Under Song, Validations, you should see a red <code class="highlighter-rouge">is invalid without a title (FAILED -1)</code></li>
+</ul>
+
+<p>The output of this error is telling us that it expected <code class="highlighter-rouge">.valid?</code> to return <code class="highlighter-rouge">false</code> when called on our new song, and instead got <code class="highlighter-rouge">true</code>.</p>
+
+<p>Great! It seems like this is testing what we want, but how can we actually make this test pass?</p>
+
+<h3 id="writing-validations">Writing Validations</h3>
+
+<p>ActiveRecord actually helps us out here by providing a <code class="highlighter-rouge">validates</code> method which we’ll pass the column name in the form of a symbol, and an options hash <code class="highlighter-rouge">{presence: true}</code>. The convention we use is the following format:</p>
+
+<p>Go into the <code class="highlighter-rouge">app/models/song.rb</code> model and add the following line:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">validates</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span>
+</code></pre></div></div>
+
+<p>Alternatively, you can write this as: <code class="highlighter-rouge">validates_presence_of :title</code>. This is nice if you want to validate the presence of multiple columns.</p>
+
+<p>Run your tests again, and… passing. Great news.</p>
+
+<h2 id="worktime">Worktime</h2>
+
+<ul>
+  <li>In pairs, add the following tests and make each one pass:
+    <ul>
+      <li>a test for an <code class="highlighter-rouge">.average_play_count</code> class method</li>
+      <li>tests that a song cannot be created without a <code class="highlighter-rouge">title</code> or <code class="highlighter-rouge">length</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Remember to use your four phases of testing!</p>
+
+<h2 id="finished">Finished?</h2>
+
+<ul>
+  <li>Take a look at the <a href="http://www.betterspecs.org/">BetterSpecs</a> community guidelines.</li>
+  <li>Check out the <a href="http://rspec.info/documentation/">RSpec Documentation</a>: For now you’ll likely be most interested in the <code class="highlighter-rouge">rspec-core</code>, and <code class="highlighter-rouge">rspec-expectations</code> links.</li>
+</ul>
+
+<h2 id="recap">Recap</h2>
+
+<ul>
+  <li>What goes into your spec_helper in a Sintra app? What does each piece do?</li>
+  <li>Create a Venn Diagram comparing MiniTest &amp; RSpec. Think about set up of methods and how you check expected outcomes.</li>
+</ul>
+:ET

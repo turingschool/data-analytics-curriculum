@@ -1,0 +1,227 @@
+I"M%<h2 id="graduation-requirements">Graduation Requirements</h2>
+
+<p>In order to graduate from Module 2, students must complete each of the following:</p>
+
+<h3 id="follow-the-guidelines-and-expectations">Follow the <a href="./guidelines_and_expectations">Guidelines and Expectations</a></h3>
+
+<h2 id="deliverables-and-assessments">Deliverables and Assessments</h2>
+
+<p>The following items are evaluated and assessed by instructors as part of consideration to promote you on to Module 3:</p>
+
+<ul>
+  <li>Successful completion of the following deliverables:
+    <ul>
+      <li><a href="../intermission_work">Intermission Pre-Work</a> Submission instructions are included in the pre-work.</li>
+      <li>Weekly Checks for Understanding (CFUs)</li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/turingschool-projects/laugh_tracks">Laugh Tracks</a>, solo project, week 1
+    <ul>
+      <li>does NOT count toward promotion</li>
+    </ul>
+  </li>
+  <li>One or more of the following projects must be fully completed and given a “passing” grade
+    <ul>
+      <li><a href="https://github.com/turingschool-projects/BookClub">Book Club</a>, paired project, week 2 and 3</li>
+      <li><a href="https://github.com/turingschool-projects/little_shop_v2">Little Shop</a>, group project, week 4 and 5</li>
+    </ul>
+  </li>
+  <li>
+    <p><a href="https://github.com/turingschool-projects/little_shop_v2/blob/master/extensions.md">Little Shop Extensions</a>, solo project, week 6, must be completed and given a “passing” grade</p>
+  </li>
+  <li><a href="./#blog-post">Write a technical blog post</a>, due by week 2</li>
+  <li><a href="../misc/active_record_obstacle_course">ActiveRecord Obstacle Course</a>, due by week 6</li>
+  <li>Mid-Mod Evaluation, does NOT count toward promotion</li>
+  <li>Final Coding Assessment must be given a “passing” grade, or a retake must be successfully completed</li>
+  <li>Final Technical Communication Assessment</li>
+</ul>
+
+<h3 id="assessments-and-final-project">Assessments and Final Project</h3>
+
+<p>Students are expected to satisfactorily complete all written and timed assessments.</p>
+
+<p>Each student will be required to complete a final solo project which will is a major determining factor for promotion to Module 3.</p>
+
+<h3 id="class-participation">Class Participation</h3>
+
+<p>Students are expected to follow Turing’s Code of Conduct and be respectful in class with regards to timeliness, paying attention to instructors, and contributing well in class for turn-and-talk sessions, journaling and note-taking, and answering prompted questions.</p>
+
+<h3 id="group-projects">Group Projects</h3>
+
+<p>Students are expected to be a contributing team member in all group projects in Module 2. Students are expected to complete the checklists provided for each project and provide feedback for one another.</p>
+
+<h3 id="blog-post">Blog Post</h3>
+
+<p>Write a minimum of 1 technical blog post about a topic of your choice, must include screenshots or visuals, and should be about some aspect of coding or software development. Post it to Medium or your personal blog site.</p>
+
+<h3 id="professional-development">Professional Development</h3>
+
+<p>Students are expected to contribute during the Professional Development session and submit deliverables from that session (see goals below).</p>
+
+<hr />
+
+<h2 id="skills-and-topics">Skills and Topics</h2>
+
+<h3 id="skill-proficiencies">Skill Proficiencies</h3>
+
+<p>In addition to the above, academic success in Module 2 means that students demonstrate proficiency and comfort with the concepts below.
+The expected mastery level can be understood with the following scale:</p>
+
+<ul>
+  <li><strong>Mastery</strong>: student is able to explain and implement the concept independently or with light reference</li>
+  <li><strong>Functional</strong>: student recognizes when to use the concept and can implement it with the support of documentation and/or a collaborator</li>
+  <li><strong>Familiarity</strong>: student can recognize and describe the concept when needed/appropriate, but is not able to implement the technology/technique</li>
+</ul>
+
+<hr />
+
+<h2 id="mastery-in-the-following-skills">Mastery in the following skills</h2>
+
+<h5 id="mastery-in-the-following-skills-1">Mastery in the following skills</h5>
+
+<ul>
+  <li>Diagram and explain the MVC model</li>
+</ul>
+
+<h5 id="functional-in-the-following-skills">Functional in the following skills</h5>
+
+<ul>
+  <li>Be able to implement authentication and authorization within a Rails application</li>
+  <li>Make use of flash messages</li>
+</ul>
+
+<h2 id="models">Models</h2>
+
+<h5 id="mastery-in-the-following-skills-2">Mastery in the following skills</h5>
+
+<ul>
+  <li>Differences and use cases between a model that inherits from ActiveRecord vs a PORO</li>
+  <li>Class methods vs. instance methods</li>
+</ul>
+
+<h2 id="views">Views</h2>
+
+<h5 id="mastery-in-the-following-skills-3">Mastery in the following skills</h5>
+
+<ul>
+  <li>Template a view in Rails using a templating language (eg, <code class="highlighter-rouge">erb</code>)</li>
+  <li>How to create a form in a view using Rails, including a form using nested resources.</li>
+</ul>
+
+<h2 id="controllers">Controllers</h2>
+
+<h5 id="mastery-in-the-following-skills-4">Mastery in the following skills</h5>
+
+<ul>
+  <li>Understand the controller’s role as a dispatcher between client and server</li>
+  <li>Be able to build RESTful CRUD actions: <code class="highlighter-rouge">index</code>, <code class="highlighter-rouge">show</code>, <code class="highlighter-rouge">new</code>, <code class="highlighter-rouge">create</code>, <code class="highlighter-rouge">edit</code>, <code class="highlighter-rouge">update</code>, <code class="highlighter-rouge">destroy</code></li>
+</ul>
+
+<h2 id="routing">Routing</h2>
+
+<h5 id="mastery-in-the-following-skills-5">Mastery in the following skills</h5>
+
+<ul>
+  <li>Understand best use of route helpers and path helpers</li>
+</ul>
+
+<h5 id="functional-in-the-following-skills-1">Functional in the following skills</h5>
+
+<ul>
+  <li>Implement RESTful routes for resources</li>
+  <li>Implement and understand namespace and nested routes</li>
+</ul>
+
+<h2 id="http">HTTP</h2>
+
+<h5 id="mastery-in-the-following-skills-6">Mastery in the following skills</h5>
+
+<ul>
+  <li>Diagram and explain the HTTP request/response cycle</li>
+</ul>
+
+<h5 id="functional-in-the-following-skills-2">Functional in the following skills</h5>
+
+<ul>
+  <li>Understand the different segments of a URL (protocol, host, path, query params)</li>
+  <li>Understand application state and sessions</li>
+</ul>
+
+<h5 id="familiarity-in-the-following-skills">Familiarity in the following skills</h5>
+
+<ul>
+  <li>
+    <p>Understand what headers, body and status codes are in this context</p>
+  </li>
+  <li>Have deep understanding ActiveRecord query methods, including differences between <code class="highlighter-rouge">find</code> <code class="highlighter-rouge">find_by</code> and <code class="highlighter-rouge">where</code></li>
+  <li>Understand how to CRUD resources with ActiveRecord</li>
+  <li>Create relationships between resources using ActiveRecord</li>
+</ul>
+
+<h5 id="mastery-in-the-following-skills-7">Mastery in the following skills</h5>
+
+<ul>
+  <li>Model testing with RSpec including validations, and class and instance methods</li>
+  <li>Feature testing with RSpec / Capybara</li>
+</ul>
+
+<h2 id="sql-and-database-planning">SQL and Database Planning</h2>
+
+<h5 id="mastery-in-the-following-skills-8">Mastery in the following skills</h5>
+
+<ul>
+  <li>Articulately speak to one-to-one, one-to-many, many-to-many relationships</li>
+</ul>
+
+<h2 id="activerecord">ActiveRecord</h2>
+
+<h5 id="mastery-in-the-following-skills-9">Mastery in the following skills</h5>
+
+<ul>
+  <li>Have deep understanding ActiveRecord query methods, including differences between <code class="highlighter-rouge">find</code> <code class="highlighter-rouge">find_by</code> and <code class="highlighter-rouge">where</code></li>
+  <li>Understand how to CRUD resources with ActiveRecord</li>
+  <li>Create relationships between resources using ActiveRecord</li>
+</ul>
+
+<h2 id="html-css">HTML, CSS</h2>
+
+<h5 id="functional-in-the-following-skills-3">Functional in the following skills</h5>
+
+<ul>
+  <li>Understand basic HTML tabs, elements, nodes</li>
+  <li>Target specific HTML content with CSS selectors</li>
+</ul>
+
+<h5 id="familiarity-in-the-following-skills-1">Familiarity in the following skills</h5>
+
+<ul>
+  <li>Basic use and understanding of modern CSS grid systems</li>
+</ul>
+
+<h2 id="sql-and-database-planning-1">SQL and Database Planning</h2>
+
+<h5 id="functional-in-the-following-skills-4">Functional in the following skills</h5>
+
+<ul>
+  <li>Be able to design database schemas that represent relationships between resources</li>
+</ul>
+
+<h5 id="familiarity-in-the-following-skills-2">Familiarity in the following skills</h5>
+
+<ul>
+  <li>Writing and executing ‘raw’ SQL statements that insert, select, calculate, join, order and group</li>
+</ul>
+
+<hr />
+
+<h4 id="career-development"><a href="https://github.com/turingschool/career-development-curriculum/tree/master/module_two">Career Development</a></h4>
+
+<ul>
+  <li>Cultivate empathy when working with others</li>
+  <li>Building teamwork competencies using agile practices</li>
+  <li>Applying personal strengths to a teamwork setting</li>
+  <li>Building professional relationships both with cohortmates and mentors</li>
+  <li>Conduct conversations around feedback</li>
+  <li>Use feedback from teammates to improve own practices</li>
+</ul>
+:ET

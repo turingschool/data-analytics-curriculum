@@ -1,0 +1,318 @@
+I"Ep<h2 id="learning-goals">Learning Goals</h2>
+
+<p>By the end of this lesson you should…</p>
+
+<ul>
+  <li>be able to apply OO patterns to JavaScript functions <em>(mastery)</em></li>
+  <li>explain the difference between OOP and JavaScript’s Prototypal Inheritance <em>(functional)</em></li>
+  <li>better understand and make use of <code class="highlighter-rouge">this</code> in multiple contexts <em>(functional)</em></li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ol>
+  <li>What are the main components of Object Oriented Programming?</li>
+  <li>What do you like/dislike about OOP?</li>
+  <li>What’s one way to create a new object in JavaScript?</li>
+  <li>What’s your experience in making your JavaScript object-oriented thus far?</li>
+</ol>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Object Oriented Programming</li>
+  <li>Classical Inheritance</li>
+  <li>constructor functions</li>
+  <li>prototype</li>
+  <li>Prototypal Inheritance</li>
+  <li><code class="highlighter-rouge">this</code></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>JavaScript can behave as an object-oriented programming language, but it follows a slightly different approach than what we know from Ruby. Instead of creating classes, constructor functions can be used to construct new objects in JavaScript.</p>
+
+<p>It’s not a rule baked into the language, but — by convention — most JavaScript developers capitalize the names of functions that they intend on using as object constructors.</p>
+
+<h2 id="constructors"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor">Constructors</a></h2>
+
+<p>A <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/constructor">constructor function or object constructor</a> can be thought of as a blueprint (similar to classes), or—better yet—as a casting mold from which new objects are minted. The constructor function includes basic information about the properties of an object and uses a special syntax that allows us to build new objects quickly using the template defined by the constructor.</p>
+
+<p>Object constructors can be called using the <code class="highlighter-rouge">new</code> keyword.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">sodie</code> in the example above will be a new object — albeit, a very simple one.</p>
+
+<p>Let’s add to our <code class="highlighter-rouge">Dog()</code> constructor.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">legs</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sodie</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">oscar</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oscar</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// 'Sodie'</span>
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">legs</span><span class="p">;</span> <span class="c1">// 4</span>
+<span class="nx">oscar</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span> <span class="c1">// 'Oscar'</span>
+</code></pre></div></div>
+
+<h2 id="functions-and-this-revisited">Functions and <code class="highlighter-rouge">this</code> revisited</h2>
+
+<p>You may have noticed that we’re using <code class="highlighter-rouge">this</code> in our function and that it isn’t bound to the global object, like it ought to be.</p>
+
+<p><code class="highlighter-rouge">Dog</code> is just a regular function. But, we call it a little differently than we did in previous section on functions. If you recall, there are a few ways we can call a function:</p>
+
+<ul>
+  <li>Using a pair of parenthesis as the end of the functions name (e.g. <code class="highlighter-rouge">someFunction()</code>).</li>
+  <li>Using the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call"><code class="highlighter-rouge">call()</code></a> method (e.g. <code class="highlighter-rouge">someFunction.call()</code>).</li>
+  <li>Using the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply"><code class="highlighter-rouge">apply()</code></a> method (e.g. <code class="highlighter-rouge">someFunction.apply()</code>).</li>
+</ul>
+
+<p>When we are writing object-oriented JavaScript, we have a fourth way of invoking a function: the <code class="highlighter-rouge">new</code> keyword. The <code class="highlighter-rouge">new</code> keyword invokes the function <em>as a constructor</em>, which causes it to behave in a fundamentally different way.</p>
+
+<p>When we use the <code class="highlighter-rouge">new</code> keyword to call our function as a constructor, a few things happen under the scenes:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">this</code> is set to a new empty object</li>
+  <li>The prototype property of the constructor function (<code class="highlighter-rouge">Dog.prototype</code> in the example above) is set as the prototype of the new object, which was set to <code class="highlighter-rouge">this</code> in the first step</li>
+  <li>the body of our function is run</li>
+  <li>our new object, <code class="highlighter-rouge">this</code>, is returned from the constructor</li>
+</ol>
+
+<h2 id="the-prototype-property">The <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype"><code class="highlighter-rouge">prototype</code></a> Property</h2>
+
+<p>Let’s take a look at <code class="highlighter-rouge">this</code> in the context of our <code class="highlighter-rouge">Dog()</code> constructor:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// `this` is set to a new object</span>
+  <span class="c1">// the prototype is set to `Dog.prototype`</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">legs</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="c1">// return this;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">"</span><span class="s2">Sodie</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>What is <code class="highlighter-rouge">Dog.prototype</code> and where does it come from? Functions are objects and all functions in JavaScript have a <code class="highlighter-rouge">prototype</code> property.</p>
+
+<p>This property is set to an empty object — <code class="highlighter-rouge">{}</code> — by default.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">()</span> <span class="p">{}</span>
+<span class="kd">function</span> <span class="nx">Cat</span><span class="p">()</span> <span class="p">{}</span>
+
+<span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span> <span class="c1">// {}</span>
+<span class="nx">Cat</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span> <span class="c1">// {}</span>
+</code></pre></div></div>
+
+<p>With regular functions, we generally don’t use the <code class="highlighter-rouge">prototype</code> property — it’s like an appendix. But, this special little object comes in to play when we use the function as a constructor.</p>
+
+<p>You may have heard that JavaScript has something called <em>prototypal inheritance</em>. This is a very complicated term for a relatively simple concept.</p>
+
+<p><strong>Classical Inheritance v. JS Prototypal Inheritance Whiteboard Activity</strong></p>
+
+<p>When we call a property on an object (e.g. <code class="highlighter-rouge">sodie.name</code>), JavaScript checks the object to see if it has a <code class="highlighter-rouge">name</code> property. If it does, then it hands us that property. If not, then it checks the object’s prototype. If the object’s prototype doesn’t have that property, then it check’s the prototype’s prototype, and so on. It continues this process until it reaches the top of the chain. If it still hasn’t defined this property, then it returns <code class="highlighter-rouge">undefined</code>.</p>
+
+<p>By default, all objects inherit from <code class="highlighter-rouge">Object</code>, which has a few methods on it. One of these methods is <code class="highlighter-rouge">toString()</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">legs</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sodie</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">legs</span><span class="p">;</span> <span class="c1">// 4</span>
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span> <span class="c1">// [object Object]</span>
+</code></pre></div></div>
+
+<p>When we call <code class="highlighter-rouge">sodie.legs</code> in the example above, JavaScript checks <code class="highlighter-rouge">sodie</code> to see if it has a <code class="highlighter-rouge">legs</code> property. It does, so JavaScript returns the value, <code class="highlighter-rouge">4</code>. In the next line, we call <code class="highlighter-rouge">toString()</code>.</p>
+
+<p>Well, <code class="highlighter-rouge">sodie</code> doesn’t have a <code class="highlighter-rouge">toString</code> property, so we check <code class="highlighter-rouge">sodie</code>’s prototype, which is <code class="highlighter-rouge">Dog.prototype</code>. That’s an empty object, so it certainly doesn’t have that property.</p>
+
+<p>Eventually, we work our way up to <code class="highlighter-rouge">Object.prototype</code>, which has a to <code class="highlighter-rouge">toString</code> property set to a built-in function. JavaScript calls the <code class="highlighter-rouge">toString()</code> method that it found up the chain, which returns <code class="highlighter-rouge">[object Object]</code>.</p>
+
+<p>We could, however, set our own <code class="highlighter-rouge">toString()</code> method that would return something a little more helpful.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Fido</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">[Dog: </span><span class="dl">'</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">]</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span> <span class="c1">// [Dog: Fido]</span>
+</code></pre></div></div>
+
+<p>JavaScript finds the <code class="highlighter-rouge">toString</code> property immediately and doesn’t have to look up the chain of prototypes. But, only <code class="highlighter-rouge">sodie</code> has this fancy new <code class="highlighter-rouge">toString</code> property. It would be nice if all dogs could share this new functionality.</p>
+
+<blockquote>
+  <p>Side note: our custom <code class="highlighter-rouge">toString()</code> function is an example of the <a href="https://en.wikipedia.org/wiki/Template_method_pattern">Template Method Pattern</a> in practice</p>
+</blockquote>
+
+<p>Each dog constructed by the <code class="highlighter-rouge">Dog()</code> constructor has <code class="highlighter-rouge">Dog.prototype</code> set as its prototype. This means that each dog looks immediately to <code class="highlighter-rouge">Dog.prototype</code> if we ask for a property that it doesn’t have.</p>
+
+<p>Consider the following:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">[Dog: </span><span class="dl">'</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">]</span><span class="dl">'</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sodie</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">oscar</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oscar</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span> <span class="c1">// [Dog: Sodie]</span>
+<span class="nx">oscar</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span> <span class="c1">// [Dog: Oscar]</span>
+</code></pre></div></div>
+
+<p>Prototypes are a great way to share functionality between related objects. We can define any properties we want on <code class="highlighter-rouge">Dog.prototype</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">Dog</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Dog</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">sayHello</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="dl">'</span><span class="s1">Hello, my name is </span><span class="dl">'</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">.</span><span class="dl">'</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">sodie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Sodie</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">oscar</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oscar</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">sodie</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">();</span> <span class="c1">// Hello, my name is Sodie.</span>
+<span class="nx">oscar</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">();</span> <span class="c1">// Hello, my name is Oscar.</span>
+</code></pre></div></div>
+
+<h2 id="es6-class-syntax">ES6 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class"><code class="highlighter-rouge">class</code></a> Syntax</h2>
+
+<p>The ES6 <code class="highlighter-rouge">class</code> keyword has gotten a lot of excitement from newer JS devs, but there are a lot of critics out there. Some things to know:</p>
+<ul>
+  <li>syntax looks a lot more like a class system; it is still bound by the prototype system</li>
+  <li>classes pretend that copying is going on - it’s <em>not</em>.</li>
+  <li>use the <code class="highlighter-rouge">extends</code> keyword to inherit</li>
+  <li><code class="highlighter-rouge">super</code> keyword allows you to go up prototype chain (relative polymorphism)</li>
+  <li><code class="highlighter-rouge">static</code> keyword (the only thing that’s not just syntactic sugar) - adds to class, not just instance.</li>
+</ul>
+
+<p>Here is the same implementation in ES6 syntax:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Dog</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span>
+  <span class="p">}</span>
+
+  <span class="nx">sayHello</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">`Hello, my name is </span><span class="p">${</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">.`</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">fido</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Fido</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">spot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dog</span><span class="p">(</span><span class="dl">'</span><span class="s1">Spot</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">fido</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">()</span> <span class="c1">// Hello, my name is Fido.</span>
+<span class="nx">spot</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">()</span> <span class="c1">// Hello, my name is Spot.</span>
+</code></pre></div></div>
+
+<p>Don’t let the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class"><code class="highlighter-rouge">class</code></a> keyword fool you <strong>too</strong> much. It still compiles down to a <code class="highlighter-rouge">Dog.prototype</code> object, it’s just wrapped in a container so the syntax is more familiar to other OO languages.</p>
+
+<p>A couple of it’s limitations:</p>
+<ul>
+  <li>An object cannot be extended</li>
+  <li>Classes and Objects cannot be mixed</li>
+  <li><strong>all</strong> classes or <strong>no</strong> classes</li>
+  <li>Classes cannot just be called like functions, they can only be used with <code class="highlighter-rouge">new</code> keyword</li>
+  <li><code class="highlighter-rouge">this</code> context can be changed with <code class="highlighter-rouge">.call</code> or <code class="highlighter-rouge">.apply</code>, but super is static. (This was done for performance, but really messes people up)</li>
+</ul>
+
+<blockquote>
+  <p>Pro tip: shortcuts in code, such as this <code class="highlighter-rouge">class</code> syntax is often referred to as <strong>syntactic sugar</strong></p>
+</blockquote>
+
+<h3 id="a-oo-jquery-example">A OO jQuery Example</h3>
+
+<p>You are now familiar with the classic <code class="highlighter-rouge">$(document).ready(() =&gt; ... )</code> setup, which tells the browser to wait for the DOM to load before running your scripts.  Perhaps you’ve also ended up with a big ol’ list of functions in and out of this <code class="highlighter-rouge">ready</code> block, not really organized in any object-oriented way.</p>
+
+<p>A potential solution for organizing your jQuery setup looks like this:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// some higher-level .js file</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">new</span> <span class="nx">EventHandler</span><span class="p">()</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// in a separate "eventHandler.js" file:</span>
+
+<span class="c1">// ES5</span>
+<span class="kd">function</span> <span class="nx">EventHandler</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">button</span><span class="dl">"</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">"</span><span class="s2">click</span><span class="dl">"</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">doSomething</span><span class="p">)</span> <span class="c1">// this is "listening" upon its construction</span>
+<span class="p">}</span>
+
+<span class="nx">EventHandler</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">doSomething</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Handled!</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// ES6</span>
+<span class="kd">class</span> <span class="nx">EventHandler</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">button</span><span class="dl">"</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">"</span><span class="s2">click</span><span class="dl">"</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">doSomething</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+  <span class="p">}</span>
+
+  <span class="nx">doSomething</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Handled!</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="your-turn-mod-1-final-returns">Your Turn: Mod 1 Final Returns!</h2>
+
+<p>Go to <a href="https://github.com/turingschool-examples/bon_appetit_js">this repo</a> and follow the instructions to get set up. Let’s take thirty minutes to implement (some of) the Mod 1 final using object-oriented JavaScript.</p>
+
+<h2 id="prototypes-vs-classes">Prototypes vs. Classes</h2>
+
+<p>This is a topic that has been hashed out to great length on the internet. In some ways there are a lot of similarities between classes in a language like Ruby and prototypes in a language like JavaScript:</p>
+
+<ul>
+  <li>Both allow child instances of their type to access their methods and behavior</li>
+  <li>Both use a “chain” mechanism to continue searching for requested properties in their parent</li>
+  <li>Both can be used (via constructor invocation) to “set up” new objects when they are created</li>
+</ul>
+
+<p>However, there are also some major differences:</p>
+
+<ul>
+  <li>Prototypes don’t really provide a mechanism for encapsulation of state, which is one of the major principles of most OO languages.</li>
+  <li>JavaScript doesn’t provide an OO-style mechanism for “private” functions (although we can achieve something similar with closures).</li>
+  <li>Prototypes don’t distinguish between their own methods and the methods provided to their children (i.e. class methods vs. instance methods).</li>
+  <li>We don’t have relative polymorphism like we do in OOP - it’s always absolute to the bottom of the chain. You cannot override a function with the prototype system.</li>
+</ul>
+
+<h2 id="closing">Closing</h2>
+
+<p>In your notebook, answer the following:</p>
+<ul>
+  <li>What happens when the <code class="highlighter-rouge">new</code> keyword is used?</li>
+  <li>How would describe the differences between “OO” in JavaScript and OO in Ruby?</li>
+  <li>What’s your definition for each of our vocab words for this lesson?
+    <ul>
+      <li>Object Oriented Programming</li>
+      <li>Classical Inheritance</li>
+      <li>constructor functions (JS)</li>
+      <li>prototype (JS)</li>
+      <li>Prototypal Inheritance (JS)</li>
+      <li><code class="highlighter-rouge">this</code> (JS)</li>
+    </ul>
+  </li>
+</ul>
+:ET

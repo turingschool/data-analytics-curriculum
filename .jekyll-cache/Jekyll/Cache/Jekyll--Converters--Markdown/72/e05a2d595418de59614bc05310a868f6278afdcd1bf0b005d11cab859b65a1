@@ -1,0 +1,251 @@
+I"�><h2 id="goals">Goals</h2>
+
+<ul>
+  <li>authorize users based on roles</li>
+  <li>write a feature test that uses a stubbing library</li>
+  <li>use namespacing for routes</li>
+  <li>use a before action to protect admin controllers</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<h2 id="video">Video</h2>
+
+<h2 id="repository">Repository</h2>
+
+<p>Use the <code class="highlighter-rouge">authentication-finished</code> branch of the <a href="https://github.com/turingschool-examples/authentication-authorization">authentication-authorization repo</a>.</p>
+
+<h2 id="lecture">Lecture</h2>
+
+<h2 id="code-along">Code-Along</h2>
+
+<p>Let’s start by refactoring. We’ll add login and logout links in application.html.erb. Remove any references to <code class="highlighter-rouge">flash</code> and any login/logout links from individual views. Your <code class="highlighter-rouge">application.html.erb</code> should look like this:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user</span> <span class="cp">%&gt;</span>
+    Welcome, <span class="cp">&lt;%=</span> <span class="n">current_user</span><span class="p">.</span><span class="nf">username</span> <span class="cp">%&gt;</span>.
+    <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"Logout"</span><span class="p">,</span> <span class="n">logout_path</span><span class="p">,</span> <span class="ss">method: :delete</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">"Login"</span><span class="p">,</span> <span class="n">login_path</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+
+  <span class="cp">&lt;%</span> <span class="n">flash</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="p">,</span> <span class="n">msg</span><span class="o">|</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">content_tag</span> <span class="ss">:div</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="s2">"flash_</span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span> <span class="cp">%&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>We’ll also quickly add a few flash messages in the sessions controller and users controller so that you can see how the content tag is dynamic:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># users controller</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">save</span>
+      <span class="n">session</span><span class="p">[</span><span class="ss">:user_id</span><span class="p">]</span> <span class="o">=</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">id</span>
+      <span class="n">redirect_to</span> <span class="vi">@user</span> <span class="c1"># user_path(@user)</span>
+    <span class="k">else</span>
+      <span class="n">flash</span><span class="p">.</span><span class="nf">now</span><span class="p">[</span><span class="ss">:error</span><span class="p">]</span> <span class="o">=</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">errors</span><span class="p">.</span><span class="nf">full_messages</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">", "</span><span class="p">)</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>We’ll also add a validation on the User model:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">validates</span> <span class="ss">:username</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span><span class="p">,</span>
+                       <span class="ss">uniqueness: </span><span class="kp">true</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Ok. Let’s start with a test for admin functionality. Our client has asked for categories in this application, and only an admin should be able to access the category index. Let’s start with a test.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch test/integration/admin_categories_test.rb
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"test_helper"</span>
+
+<span class="k">class</span> <span class="nc">AdminCategoriesTest</span> <span class="o">&lt;</span> <span class="no">ActionDispatch</span><span class="o">::</span><span class="no">IntegrationTest</span>
+
+  <span class="nb">test</span> <span class="s1">'logged in admin sees categories index'</span> <span class="k">do</span>
+    <span class="n">admin</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">username: </span><span class="s2">"admin"</span><span class="p">,</span>
+                        <span class="ss">password: </span><span class="s2">"password"</span><span class="p">,</span>
+                        <span class="ss">role: </span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="no">ApplicationController</span><span class="p">.</span><span class="nf">any_instance</span><span class="p">.</span><span class="nf">stubs</span><span class="p">(</span><span class="ss">:current_user</span><span class="p">).</span><span class="nf">returns</span><span class="p">(</span><span class="n">admin</span><span class="p">)</span>
+    <span class="n">visit</span> <span class="n">admin_categories_path</span>
+    <span class="n">assert</span> <span class="n">page</span><span class="p">.</span><span class="nf">has_content?</span><span class="p">(</span><span class="s2">"All Categories"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>migration to add “role:integer” to user table, default 0</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AddRoleToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">5.1</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:role</span><span class="p">,</span> <span class="ss">:integer</span><span class="p">,</span> <span class="ss">default: </span><span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>migrate</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rake db:migrate
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Run your tests: <code class="highlighter-rouge">rake test</code>. You should get an error about undefined method <code class="highlighter-rouge">any_instance</code>. This is a stubbing method that comes from the Mocha library. To fix this, add <code class="highlighter-rouge">gem 'mocha'</code> to our Gemfile and bundle, then <code class="highlighter-rouge">require 'mocha/mini_test'</code> in the test helper.</p>
+  </li>
+  <li>
+    <p>add roles enum to model</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">has_secure_password</span>
+  <span class="n">validates</span> <span class="ss">:username</span><span class="p">,</span> <span class="ss">presence: </span><span class="kp">true</span><span class="p">,</span>
+                       <span class="ss">uniqueness: </span><span class="kp">true</span>
+
+  <span class="n">enum</span> <span class="ss">role: </span><span class="sx">%w(default admin)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>routes for admin</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">namespace</span> <span class="ss">:admin</span> <span class="k">do</span>
+    <span class="n">resources</span> <span class="ss">:categories</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>run <code class="highlighter-rouge">rake routes</code>:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>             Prefix Verb   URI Pattern                          Controller#Action
+              users POST   /users(.:format)                     users#create
+           new_user GET    /users/new(.:format)                 users#new
+               user GET    /users/:id(.:format)                 users#show
+   admin_categories GET    /admin/categories(.:format)          admin/categories#index
+                    POST   /admin/categories(.:format)          admin/categories#create
+ new_admin_category GET    /admin/categories/new(.:format)      admin/categories#new
+edit_admin_category GET    /admin/categories/:id/edit(.:format) admin/categories#edit
+     admin_category GET    /admin/categories/:id(.:format)      admin/categories#show
+                    PATCH  /admin/categories/:id(.:format)      admin/categories#update
+                    PUT    /admin/categories/:id(.:format)      admin/categories#update
+                    DELETE /admin/categories/:id(.:format)      admin/categories#destroy
+              login GET    /login(.:format)                     sessions#new
+                    POST   /login(.:format)                     sessions#create
+             logout DELETE /logout(.:format)                    sessions#destroy
+</code></pre></div></div>
+
+<ul>
+  <li>folder for admin namespaced controllers</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mkdir app/controllers/admin
+</code></pre></div></div>
+
+<ul>
+  <li>base controller for admin</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch app/controllers/admin/base_controller.rb
+</code></pre></div></div>
+
+<ul>
+  <li>Inside of that file:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::BaseController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="n">before_action</span> <span class="ss">:require_admin</span>
+
+  <span class="k">def</span> <span class="nf">require_admin</span>
+    <span class="n">render</span> <span class="ss">file: </span><span class="s2">"/public/404"</span> <span class="k">unless</span> <span class="n">current_admin?</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>define current_admin? in the application controller</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">current_admin?</span>
+    <span class="n">current_user</span> <span class="o">&amp;&amp;</span> <span class="n">current_user</span><span class="p">.</span><span class="nf">admin?</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>make admin categories controller:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch app/controllers/admin/categories_controller.rb
+</code></pre></div></div>
+
+<ul>
+  <li>Inside of that file:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Admin::CategoriesController</span> <span class="o">&lt;</span> <span class="no">Admin</span><span class="o">::</span><span class="no">BaseController</span>
+  <span class="k">def</span> <span class="nf">index</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Create a views folder for admin/categories:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mkdir app/views/admin
+$ mkdir app/views/admin/categories
+$ touch app/views/admin/categories/index.html.erb
+</code></pre></div></div>
+
+<ul>
+  <li>add text for what you’re testing:</li>
+</ul>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>All Categories<span class="nt">&lt;/h1&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>We can also add a test to make sure a default user does not see admin categories index:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">test</span> <span class="s1">'default user does not see admin categories index'</span> <span class="k">do</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">username: </span><span class="s2">"default_user"</span><span class="p">,</span>
+                        <span class="ss">password: </span><span class="s2">"password"</span><span class="p">,</span>
+                        <span class="ss">role: </span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="no">ApplicationController</span><span class="p">.</span><span class="nf">any_instance</span><span class="p">.</span><span class="nf">stubs</span><span class="p">(</span><span class="ss">:current_user</span><span class="p">).</span><span class="nf">returns</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">visit</span> <span class="n">admin_categories_path</span>
+    <span class="n">refute</span> <span class="n">page</span><span class="p">.</span><span class="nf">has_content?</span><span class="p">(</span><span class="s2">"All Categories"</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="n">page</span><span class="p">.</span><span class="nf">has_content?</span><span class="p">(</span><span class="s2">"The page you were looking for doesn't exist."</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="work-time">Work Time</h2>
+
+<h3 id="user">User:</h3>
+<ul>
+  <li>can view index and show page for tools that belong to self</li>
+  <li>cannot update users besides self</li>
+  <li>cannot create see or update other users tools</li>
+</ul>
+
+<h3 id="admin">Admin:</h3>
+<ul>
+  <li>can create, update, read, and delete tools</li>
+  <li>cannot update users besides self</li>
+  <li>can CRUD categories</li>
+</ul>
+
+<h2 id="other-resources">Other Resources:</h2>
+:ET

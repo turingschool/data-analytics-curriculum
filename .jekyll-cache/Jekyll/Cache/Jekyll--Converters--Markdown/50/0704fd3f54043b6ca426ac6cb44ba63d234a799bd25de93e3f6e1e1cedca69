@@ -1,0 +1,66 @@
+I"T<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand how to use <code class="highlighter-rouge">max</code>, <code class="highlighter-rouge">max_by,</code> their opposites, and <code class="highlighter-rouge">sort_by</code> appropriately.</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<p>5 min - Warm up/  Move to groups
+5-10 min - Introduce topic
+20 min - Recreate with <code class="highlighter-rouge">.each</code>
+5 min - Break
+25 min - Work on Presentation
+5 min - Break
+25 min - Presentations
+5 min - Break
+25 min - Instructor recap</p>
+
+<h3 id="min--max">min / max</h3>
+
+<p>What would we do if we wanted to take the smallest thing out of an array?</p>
+
+<p>Let’s think about how we would do that with .each.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">array</span><span class="p">.</span><span class="nf">first</span>
+    <span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">num</span> <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="n">result</span>
+
+    <span class="k">end</span>
+
+    <span class="n">result</span>
+  <span class="k">end</span>
+
+  <span class="n">max</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+
+
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">].</span><span class="nf">max</span>
+</code></pre></div></div>
+
+<h3 id="max_by--min_by">max_by / min_by</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">max_by</span><span class="p">(</span><span class="n">people</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">people</span><span class="p">.</span><span class="nf">first</span>
+    <span class="n">people</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">person</span><span class="o">|</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">person</span> <span class="k">if</span> <span class="n">person</span><span class="p">.</span><span class="nf">age</span> <span class="o">&gt;</span> <span class="n">result</span><span class="p">.</span><span class="nf">age</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+
+  <span class="n">people</span><span class="p">.</span><span class="nf">max_by</span> <span class="k">do</span> <span class="o">|</span><span class="n">person</span><span class="o">|</span>
+    <span class="n">person</span><span class="p">.</span><span class="nf">age</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="sort_by">sort_by</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">].</span><span class="nf">sort_by</span> <span class="k">do</span> <span class="o">|</span><span class="n">num</span><span class="o">|</span>
+    <span class="n">num</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="other-enumerables">Other Enumerables</h3>
+
+<p>#all? #none? #one? #any?</p>
+:ET

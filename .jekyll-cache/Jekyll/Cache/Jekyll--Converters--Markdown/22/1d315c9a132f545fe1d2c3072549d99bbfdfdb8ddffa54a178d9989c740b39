@@ -1,0 +1,271 @@
+I"�<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>use a schema designer to outline attributes of tables and relationships between tables</li>
+  <li>use TDD to set up models and migrations for one-to-many and many-to-many relationships</li>
+  <li>diagram complex relationships between multiple tables</li>
+</ul>
+
+<h2 id="review-15-minutes">Review (15 minutes)</h2>
+
+<h3 id="one-to-many">One-to-Many</h3>
+
+<p>People</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>first_name</th>
+      <th>last_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>rachel</td>
+      <td>warbelow</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>josh</td>
+      <td>mejia</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>jorge</td>
+      <td>tellez</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>the primary key id is stored on the other table as a foreign key:</li>
+</ul>
+
+<p>Pets</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>type</th>
+      <th>owner_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>bobby</td>
+      <td>turtle</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>goldie</td>
+      <td>fish</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>dino</td>
+      <td>tiger</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="many-to-many">Many-to-Many</h3>
+
+<ul>
+  <li>need to have a join table to keep track of the unique associations between one table and the other</li>
+</ul>
+
+<p>Let’s use a <a href="http://ondras.zarovi.cz/sql/demo/">Schema Designer</a> to create a schema for this situation:</p>
+
+<p>Articles</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>title</th>
+      <th>body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>oatmeal is delicious</td>
+      <td>insert text here</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>removing crumbs from your keyboard</td>
+      <td>insert text here</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>how to create a fantasy football app</td>
+      <td>insert text here</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Tags</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>tag_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>food</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>computers</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>sports</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>ArticleTags</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>article_id</th>
+      <th>tag_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="models">Models</h3>
+
+<p>When setting up related tables…</p>
+
+<ul>
+  <li>the table with the foreign key gets the <code class="highlighter-rouge">:belongs_to</code></li>
+  <li>the table(s) without a foreign key gets the <code class="highlighter-rouge">:has_many</code></li>
+  <li>this rule applies with a one-to-many or a many-to-many relationship</li>
+  <li>remember, when going through a join table, you’ll use <code class="highlighter-rouge">:has_many, through: :join_table</code> replacing <code class="highlighter-rouge">:join_table</code> with the name of your actual join table.</li>
+</ul>
+
+<h2 id="warmup-50-minutes">Warmup (50 minutes)</h2>
+
+<p>Use TDD to set up the migrations and models for two very basic Rails apps.</p>
+
+<p>1) A photo sharing app with two tables: users and photos (one-to-many)</p>
+
+<p>2) A favorite places app with three tables: users, places, and user_places (many-to-many)</p>
+
+<p>If you need a refresher on unit testing, see the <a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_02-web_applications_with_ruby/unit_testing_in_rails.markdown">Unit Testing in Rails</a> lesson plan.</p>
+
+<h2 id="diagramming-complex-schemas-50-minutes">Diagramming Complex Schemas (50 minutes)</h2>
+
+<h3 id="key-points">Key Points</h3>
+
+<ul>
+  <li>non-normalized: repeated data is stored in every record</li>
+  <li>can lead to inconsitencies; errors</li>
+  <li>avoid data duplication by normalizing the database</li>
+  <li>each table should describe one thing</li>
+  <li>if a table contains information about a sub-topic, break it out to a separate table</li>
+</ul>
+
+<p>Let’s use the schema designer to create an app to track students, courses, assignments, and submissions.</p>
+
+<h3 id="practice-in-small-groups">Practice in Small Groups</h3>
+
+<p>1) City Library System</p>
+<ul>
+  <li>a user can check out books</li>
+  <li>books have one or more authors</li>
+  <li>books belong to a library branch</li>
+  <li>a book can be reserved by a user</li>
+</ul>
+
+<p>2) Movie Showtimes</p>
+<ul>
+  <li>a movie has many showtimes at various theaters</li>
+  <li>a theater has many showtimes for various movies</li>
+  <li>a user can purchase a ticket for a specific showtime</li>
+</ul>
+
+<p>3) Flash Cards</p>
+<ul>
+  <li>a deck has many cards</li>
+  <li>a user can play a round</li>
+  <li>a user has a response to each card</li>
+  <li>a user can see his/her score for each round played</li>
+</ul>
+
+<p>4) Social Media App</p>
+<ul>
+  <li>a user can post statuses</li>
+  <li>a user can post pictures</li>
+  <li>a user can comment on statuses</li>
+  <li>a user can comment on pictures</li>
+  <li>a user can have many friends (need help with <a href="http://railscasts.com/episodes/163-self-referential-association?view=asciicast">self-referential association</a>?<a href="http://andrewcarmer.com/active-record-self_joins/">or this blog post</a>)</li>
+</ul>
+
+<p>5) Survey App</p>
+<ul>
+  <li>a user can create one or more surveys</li>
+  <li>a survey has many questions</li>
+  <li>each question has many choices</li>
+  <li>a user can take a survey</li>
+  <li>a user can choose a response to a question</li>
+</ul>
+
+<h3 id="migrations">Migrations</h3>
+
+<ul>
+  <li>You don’t necessarily need to get your schema exactly right before you start coding. That’s what migrations are for.</li>
+  <li>add tables, add columns, remove columns, drop tables, etc.</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="http://quickleft.com/blog/introduction-to-database-design-on-rails">Introduction to Database Design in Rails</a></li>
+  <li><a href="http://dan.chak.org/enterprise-rails/chapter-5-building-a-solid-data-model/">Building a Data Model</a></li>
+</ul>
+:ET

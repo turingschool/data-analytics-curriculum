@@ -1,0 +1,84 @@
+I""<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Explain why we restrict access to parts of classes</li>
+  <li>Explain what tools can be used to expose state and hide behavior</li>
+  <li>Understand that encapsulation involves intentionally exposing only certain beahvior/state</li>
+</ul>
+
+<h3 id="structure">Structure</h3>
+
+<ul>
+  <li>5 - WarmUp</li>
+  <li>10 - Encapsulation</li>
+  <li>15 - Private Methods</li>
+  <li>10 - Indepent Practice</li>
+  <li>15 - Paired Implementation</li>
+  <li>5 - WrapUp</li>
+</ul>
+
+<h3 id="vocabulary">Vocabulary</h3>
+<ul>
+  <li>Encapsulation</li>
+  <li>Private Method</li>
+</ul>
+
+<h3 id="warm-up">Warm Up</h3>
+<ul>
+  <li>Why might we hide things in a class?</li>
+  <li>What tools do you use to expose/hide information in an object?</li>
+</ul>
+
+<h2 id="encapsulation">Encapsulation</h2>
+<p>A language mechanism for restricting direct access to some of the object’s components. - Making a capsule/bubble</p>
+
+<p><strong>Turn &amp; Talk</strong><br />
+<code class="highlighter-rouge">attr_reader</code>, <code class="highlighter-rouge">attr_accessor</code>, <code class="highlighter-rouge">attr_writer</code><br />
+When should you use them? What is a good thought process for this decision?</p>
+
+<h2 id="private-methods">Private Methods</h2>
+<h3 id="intro-to-private-methods">Intro to Private Methods</h3>
+<p>A way to organize your code, so only the necessary methods are exposed to outside use.</p>
+
+<p>Let’s take a look at this <a href="https://github.com/AliSchlereth/reunion">reunion repo</a>. What methods does the interaction pattern expected to be called from the outside?</p>
+
+<p>The methods not called from the outside, the helper methods, can be moved to be private methods. We do this by putting the keyword <code class="highlighter-rouge">private</code> once above all the methods we want to be hidden.</p>
+
+<h3 id="testing--private-methods">Testing &amp; Private Methods</h3>
+<p>When we move these methods to private, how does this impact our test suite?</p>
+
+<p>You may be tempted to skip the units test for these methods from the get go. <em>HOWEVER</em> TDD each of your methods, once you’re sure it is all built nicely and working properly delete your unit tests for the now private methods.</p>
+
+<h3 id="independent-practice">Independent Practice</h3>
+<p>Clone down this <a href="https://github.com/AliSchlereth/morning_exercises/tree/master/allergy_codes">Allergen Evaluator</a> exercise.<br />
+Refactor this code to use private methods.</p>
+
+<p><strong>Turn &amp; Talk</strong> <br />
+Compare implementations</p>
+
+<h3 id="paired-implementation">Paired Implementation</h3>
+<p>Get together with your current project pair. Analyze your project. Are there any places where you could implement private methods?</p>
+
+<h3 id="final-notes">Final Notes</h3>
+<ul>
+  <li>
+    <p>While making methods private restricts access to them, it is important to note that there are tools for getting around the private setting such as using .send(). Just know that something from the outside may still access this functionality - so be careful. Also note, that if you are using someone else’s code and there are private methods it is your job to respect the intention of those methods not being used from the outside.</p>
+  </li>
+  <li>
+    <p>Often times you will see a pattern emerging where the private methods clump together and achieve similar type goals. When we see this happening in our code, it should make us consider (at least) extracting them to another object.</p>
+  </li>
+</ul>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<p>Here are some questions to check your understanding of encapsulation:</p>
+
+<ul>
+  <li>What is ecapsulation? Why do we use it?</li>
+  <li>When should you use <code class="highlighter-rouge">attr_readers</code>, <code class="highlighter-rouge">attr_accessors</code>, <code class="highlighter-rouge">attr_writers</code>, and <code class="highlighter-rouge">private</code> methods?</li>
+</ul>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p>Sandi Metz’s Talk <a href="https://www.youtube.com/watch?v=URSWYvyc42M">The Magic Tricks of Testing</a></p>
+:ET

@@ -1,0 +1,47 @@
+I"	<p>On Thursday of each sprint, we’ll use this rubric to evaluate and give feedback on your project progress.</p>
+
+<h3 id="1-project-management">1. Project Management</h3>
+
+<ul>
+  <li>4: Tracker also documents feature related discussions</li>
+  <li>3: Team is using well formatted user stories and moving cards through each status in realtime</li>
+  <li>2: Team has used Tracker as a respository of information</li>
+  <li>1: Tracker shows little to no use</li>
+</ul>
+
+<h3 id="2-completion--pace">2. Completion &amp; Pace</h3>
+
+<ul>
+  <li>4: Team is proactive in understanding scope and is able to commit to stories before starting the sprint</li>
+  <li>3: Team is able to set and update expectations so that there are no surprises on the last day of the sprint</li>
+  <li>2: Team does not have agreed upon stories completed at the end of the sprint, but has a plan to get them done</li>
+  <li>1: Team does not have agreed upon stories completed, and has no plan to complete them</li>
+</ul>
+
+<h3 id="3-implementation-quality">3. Implementation Quality</h3>
+
+<ul>
+  <li>4: Project demonstrates exceptionally well factored code.</li>
+  <li>3: Project exhibits maintainable well divided code. Developers are able to speak to architecture and implementation decisions.</li>
+  <li>2: Project demonstrates some gaps in code quality and/or developers cannot defend their decisions.</li>
+  <li>1: Project demonstrates poor factoring and/or understanding of MVC.</li>
+</ul>
+
+<h3 id="4-application-of-techniques">4. Application of Techniques</h3>
+
+<ul>
+  <li>4: Project has implemented two or more major techniques that were new this week.</li>
+  <li>3: Project has implemented one major technique that was new this week.</li>
+  <li>2: Project has a implementation in progress of one major technique that has not been previously attempted.</li>
+  <li>1: Project does not implement new techniques.</li>
+</ul>
+
+<h3 id="5-documentation">5. Documentation</h3>
+
+<ul>
+  <li>4: Project also features a screencast, tutorial or other wow factor</li>
+  <li>3: Project features easy to navigate documentation showing how to setup and contribute to the application</li>
+  <li>2: Project features barebones documentation showing how to get the dev environment up and running</li>
+  <li>1: Project has insufficient documentation</li>
+</ul>
+:ET

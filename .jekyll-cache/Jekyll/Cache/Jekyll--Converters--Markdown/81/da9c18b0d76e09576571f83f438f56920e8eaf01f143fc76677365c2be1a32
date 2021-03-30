@@ -1,0 +1,374 @@
+I"�N<h2 id="prework-the-night-before">Prework (the Night Before)</h2>
+
+<p>Set up your ssh keys on github according to <a href="https://help.github.com/articles/generating-ssh-keys/">these instructions</a></p>
+
+<h2 id="standards">Standards</h2>
+
+<p>After this lesson, students should be able to:</p>
+
+<h4 id="git">Git</h4>
+
+<ul>
+  <li>explain the purpose of Git</li>
+  <li>manipulate git configuration in the .gitconfig file</li>
+  <li>initialize a new git repository</li>
+  <li>add files to git staging area</li>
+  <li>commit files and directories</li>
+  <li>check the status of the working directory and staging area and interpret the output</li>
+  <li>view previous commits</li>
+  <li>create and checkout a new branch</li>
+  <li>switch between branches</li>
+  <li>merge local branches to local master</li>
+  <li>access earlier commits</li>
+  <li>examine the difference between current state of a file and the last commit</li>
+</ul>
+
+<h4 id="github">Github</h4>
+
+<ul>
+  <li>explain the purpose of Github</li>
+  <li>create a remote on Github</li>
+  <li>push a repository to Github from the command line</li>
+  <li>clone a repository from Github</li>
+  <li>git log, show, merge</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>Introduction to Git (40 min)</li>
+  <li>A Basic Git Workflow (25 min)</li>
+  <li>Github (25 min)</li>
+  <li>Independent Git Practice (80 min)</li>
+  <li>Wrapup (10 min)</li>
+</ul>
+
+<h2 id="introduction-to-git-lecture">Introduction to Git (lecture)</h2>
+
+<h3 id="what-is-git">What is Git?</h3>
+
+<ul>
+  <li>Version control system</li>
+  <li>Provides “multiple save points”</li>
+  <li>Solving the problem of <code class="highlighter-rouge">some_docV1.doc</code>, <code class="highlighter-rouge">some_docV2.doc</code>, <code class="highlighter-rouge">some_docFinal.doc</code>, <code class="highlighter-rouge">some_docREALLYFINAL.doc</code>, etc.</li>
+  <li>Specifically: <strong>Distributed</strong> Version Control System; contrasts with traditional centralized VCS (journalism, architecture, engineering)</li>
+  <li>Git’s philosophy: never lose anything</li>
+</ul>
+
+<h3 id="git-branches-and-commits-the-mortar-and-bricks-of-a-git-repository">Git Branches and Commits: The Mortar and Bricks of a Git Repository</h3>
+<ul>
+  <li>User <code class="highlighter-rouge">commits</code> take snapshots of your code and store them as <em>changes</em> since the last <code class="highlighter-rouge">commit</code>.</li>
+  <li>Git <code class="highlighter-rouge">commits</code> combine to create a replayable log of all changes made to the repository over time</li>
+  <li>Contents of a <code class="highlighter-rouge">commit</code>
+    <ul>
+      <li>Author (who)</li>
+      <li>Date (when)</li>
+      <li>Message (why)</li>
+      <li>Contents (what)</li>
+      <li>Parent Hash (where)</li>
+      <li>Hash (auto-generated fingerprint tagging the contents of the commit) uniquely id’s the commit</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">Branches</code> document lineage of commit history and splits</li>
+</ul>
+
+<h3 id="navigating-branches-and-commits">Navigating Branches and Commits</h3>
+<ul>
+  <li><code class="highlighter-rouge">Branches</code>: Git actually allows us to have multiple histories, each on its own <em>branch</em>;
+by default git creates a standard branch called <em>master</em></li>
+  <li><code class="highlighter-rouge">Head</code>: Reference for “Where am I now?”
+    <ul>
+      <li>By default this is the “tip” of the current branch you’re on, the latest commit on a given branch</li>
+      <li>If you manually jump to another commit, <code class="highlighter-rouge">head</code> will represent the state of your code when that commit was the most recent change.</li>
+      <li>When new commit is made on a branch, <code class="highlighter-rouge">head</code> moves to that new commit</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">Working Directory</code> represents the current view of files, what we see as opposed to the various changes and alternative views git stores in its history</li>
+</ul>
+
+<h3 id="git-conceptual-arts--crafts-demo">Git Conceptual Arts &amp; Crafts Demo</h3>
+
+<p>Instructor should demonstrate going through a basic git flow using a hypothetical scenario.
+Students should follow along using Wiki Stix and Index Cards to represent commits and the connections between them.</p>
+
+<ul>
+  <li>Make a directory</li>
+  <li>Init a git repository</li>
+  <li>Make a file</li>
+  <li>Add changes to file</li>
+  <li>Stage changes</li>
+  <li>Commit changes</li>
+  <li>Repeat x 2-3</li>
+  <li>Create a branch (moving HEAD)</li>
+  <li>Repeat changes / Commits</li>
+  <li>Checkout master (moving HEAD)</li>
+  <li>Merging branch (moving HEAD)</li>
+</ul>
+
+<h3 id="check-for-understanding">Check for Understanding</h3>
+<p>Write on the following questions to synthesize what’s been covered.</p>
+<ul>
+  <li>How do commits and branches serve as the bricks and mortar of a git repository?</li>
+  <li>What <em>is</em> a commit and how does git use it to reconstruct the history of your code?</li>
+</ul>
+
+<p>When you’re finished, post your answers in Slack.</p>
+
+<h2 id="a-basic-git-workflow">A Basic Git Workflow</h2>
+
+<p>Git contains many features. Fortunately, in 99% of cases we don’t have to
+know or use most of them. Instead, we can rely on a very simple and straightforward workflow:</p>
+
+<ol>
+  <li>Create a new git repository within your project directory (<code class="highlighter-rouge">git init</code>)</li>
+  <li>Do work / Change files</li>
+  <li>“Stage” changes using <code class="highlighter-rouge">git add</code></li>
+  <li>“Commit” your changes using <code class="highlighter-rouge">git commit</code></li>
+  <li>Repeat steps 2-5 until done</li>
+</ol>
+
+<h3 id="preliminary-gitconfig-setup">Preliminary <code class="highlighter-rouge">gitconfig</code> Setup</h3>
+
+<ul>
+  <li>Git stores a special configuration file at <code class="highlighter-rouge">~/.gitconfig</code></li>
+  <li>You can put a ton of options here but for now we just care about basics</li>
+  <li><code class="highlighter-rouge">git config --global user.email "you@example.com"</code></li>
+  <li><code class="highlighter-rouge">git config --global user.name "Your Name"</code></li>
+  <li>You can also double check what values are currently set by running <code class="highlighter-rouge">git config -l</code> at the command line</li>
+</ul>
+
+<h3 id="basic-workflow-in-practice">Basic Workflow in Practice</h3>
+
+<p>Let’s go through a more concrete example all together.</p>
+
+<p>First, create and navigate into an empty directory to simulate a new project
+we might be working on:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir intro_git &amp;&amp; cd intro_git
+</code></pre></div></div>
+
+<p>Next, let’s create an empty file to simulate some code changes we
+might have made:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch Readme.md
+</code></pre></div></div>
+
+<p>Now we need to tell git to create a new, empty “repository” within the directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git init
+</code></pre></div></div>
+
+<p>We sometimes use the terms <code class="highlighter-rouge">repository</code> and <code class="highlighter-rouge">directory</code> interchangeably in the context of git, but technically they are separate things. The directory contains all our working files, as well as the hidden files used by git to track all of our work. The repository is composed of files and directories within the hidden <code class="highlighter-rouge">.git</code> directory where git does its magic.</p>
+
+<p>Now that we have a repository and git knows to track this directory, let’s check our commit history:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log
+</code></pre></div></div>
+
+<p>It shows we currently have no commits. Let’s also check git <code class="highlighter-rouge">status</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git status
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">status</code> command shows us git’s perspective on the current state of our repository. We’ll see changes in 3 possible states here:</p>
+
+<ol>
+  <li><strong>Unstaged</strong> (we have made changes but not told git that we would like to commit them)</li>
+  <li><strong>Staged</strong> (we have made changes and told git that we are getting ready to commit them)</li>
+  <li><strong>Committed</strong> (we have committed our changes to the repository’s log of commits)</li>
+</ol>
+
+<p>Our <code class="highlighter-rouge">Readme.md</code> file will be showing as Unstaged at this point, so let’s add it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add Readme.md
+</code></pre></div></div>
+
+<p>We can verify the <code class="highlighter-rouge">add</code> worked by using the status command again:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git status
+</code></pre></div></div>
+
+<p>We’ll now see that <code class="highlighter-rouge">Readme.md</code> (and the changes we made to it) have moved to the “staging” area – they are ready to be committed.</p>
+
+<p>Finally, let’s make a commit!</p>
+
+<p>We use the <code class="highlighter-rouge">git commit</code> command for this. One key component of every commit is a “message” describing what the commit does. We can provide this message from the command line using the <code class="highlighter-rouge">-m</code> flag, like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -m "initial commit -- added Readme"
+</code></pre></div></div>
+
+<p>Run <code class="highlighter-rouge">git status</code> one more time. Since we committed all of our changes,
+our working directory is now “clean”.</p>
+
+<p>Check <code class="highlighter-rouge">git log</code> once more. We will now see one commit documented in our log.</p>
+
+<p>This cycle – make changes, stage changes (<code class="highlighter-rouge">git add</code>), and commit changes –
+is the backbone of a standard git workflow.</p>
+
+<p>You should use these steps frequently as you’re working on a project.</p>
+
+<h3 id="practice">Practice</h3>
+
+<p>Work through the process again at least 2 more times. Create a new file called <code class="highlighter-rouge">file1.txt</code> in your directory, add some text to it, stage it, and commit it. Then repeat the process with another file called <code class="highlighter-rouge">file2.txt</code></p>
+
+<h3 id="check-for-understanding-1">Check for Understanding</h3>
+<p>Write on the following questions to synthesize what’s been covered.</p>
+<ul>
+  <li>What’s the difference between unstaged, staged, and committed changes?</li>
+  <li>How do these states (unstaged, staged, committed) help git keep track of the history of your code?</li>
+  <li>How are <code class="highlighter-rouge">git status</code> and <code class="highlighter-rouge">git log</code> used to review the status of our code? How are they different?</li>
+</ul>
+
+<p>When you’re finished, post your answers in Slack.</p>
+
+<h2 id="github-1">Github</h2>
+
+<p>Github is a platform for hosting git repositories online. Before github, developers or companies configured and ran their own independent git servers, and things were much more fragmented. Now Github has become the de facto community standard for hosting and sharing repositories.</p>
+
+<p>You certainly don’t need Github to use git, but its popularity and dominance, especially within the open source community, have made the 2 somewhat synonymous for many users.</p>
+
+<p>As you progress through becoming a more practiced git user, don’t forget that these 2 are really distinct things – <code class="highlighter-rouge">git</code> provides the core technology for tracking and managing source control changes, while GitHub provides a shared location for hosting git projects.</p>
+
+<h3 id="basic-workflow-for-using-github">Basic Workflow for Using GitHub</h3>
+
+<p>There are a few things we’ll need to do to use GitHub to host our newly-created repository:</p>
+
+<ol>
+  <li>Create a new repo on GitHub</li>
+  <li>Add the online repo as a “remote” for our local repository</li>
+  <li><code class="highlighter-rouge">push</code> changes from our local repository to the remote copy that Github is tracking for us</li>
+</ol>
+
+<h3 id="creating-a-repository-with-hub">Creating a Repository with <a href="https://github.com/github/hub">Hub</a></h3>
+
+<p>We can create a repository via the GitHub web interface, but fortunately there’s also a very handy command line utility called <code class="highlighter-rouge">Hub</code> that makes this even easier.</p>
+
+<p>Let’s install it using homebrew:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install hub
+</code></pre></div></div>
+
+<p>Hub provides a command-line interface to streamline many of the common interactions we have with GitHub. It uses GitHub’s API to do things like creating repositories, opening issues, etc.</p>
+
+<p>You can read more about the commands available in Hub’s <a href="https://github.com/github/hub#commands">documentation</a>, but for now we’re going to be using the <code class="highlighter-rouge">create</code> command.</p>
+
+<p>Hub will help us create a relationship to our remote repository. Before we do that, though, let’s check whether we currently have any remote relationships defined.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote -v
+</code></pre></div></div>
+
+<p>We should see no results when we run this command. Now let’s add the relationship.</p>
+
+<p>Make sure you’re in the <code class="highlighter-rouge">intro_git</code> directory we created earlier, and create a new (GitHub) repository to host this content online. Use Hub’s <code class="highlighter-rouge">create</code> command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hub create
+</code></pre></div></div>
+
+<p>If this is your first time using Hub, you’ll be prompted for your github username and password. After that, hub will do 2 things:</p>
+
+<ol>
+  <li>Create the repository on GitHub</li>
+  <li>Add that repository as a “remote” within our local repository (on our machine)</li>
+</ol>
+
+<p>Check <code class="highlighter-rouge">git remote -v</code> and we’ll see that origin has been set to our remote repo address: <code class="highlighter-rouge">origin git@github.com:username/repo_name.git</code></p>
+
+<h3 id="pushing-changes-to-our-new-remote">Pushing changes to our new remote</h3>
+
+<p><strong>Discussion:</strong> Remote vs. Local Copies of Repo</p>
+
+<p>Thanks to hub, we have a remote available to push to. We’ll do this with the <code class="highlighter-rouge">git push</code> command, which takes <strong>2 arguments</strong>:</p>
+
+<ol>
+  <li>A “remote” to push to (most often this will be <code class="highlighter-rouge">origin</code>)</li>
+  <li>The “branch” we’d like to push to (for now this will usually be <code class="highlighter-rouge">master</code>)</li>
+</ol>
+
+<p>So we can push our code so far like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin master
+</code></pre></div></div>
+
+<p>Now let’s use Hub to go to our repo page on github and view our changes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hub browse
+</code></pre></div></div>
+
+<h3 id="check-for-understanding-2">Check for Understanding</h3>
+<p>Write on the following questions to synthesize what’s been covered.</p>
+<ul>
+  <li>How is Github different from Git?</li>
+  <li>What does Hub help us with?</li>
+  <li>What relationship does a <code class="highlighter-rouge">remote</code> repository have with our <code class="highlighter-rouge">local</code> repository?</li>
+  <li>What does pushing to a remote branch do for us?</li>
+</ul>
+
+<p>When you’re finished, post your answers in Slack.</p>
+
+<h2 id="additional-git-commands">Additional Git Commands</h2>
+
+<h3 id="reviewing-diffs">Reviewing Diffs</h3>
+
+<p>Git contains a handy “diffing” tool that is useful for examining changes you’ve made.</p>
+
+<p>Open your <code class="highlighter-rouge">Readme.md</code> and add some text to it. Use <code class="highlighter-rouge">git status</code> to verify that git is detecting changes in this file.</p>
+
+<p>Then use <code class="highlighter-rouge">git diff Readme.md</code> to get a more explicit view of the difference between the current state of the Readme.md file and the last committed version.</p>
+
+<h3 id="working-on-branches-now-optional">Working on Branches (NOW OPTIONAL)</h3>
+<p>Branches are helpful when working on teams and developing new functionality. <a href="http://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging">This link</a> shows some helpful visuals related to git branches.</p>
+
+<p>Let’s create a new branch to experiment with branches and diff: <code class="highlighter-rouge">git checkout -b feature1</code>. Edit all three files, now execute the following commands.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git diff file1.txt</code></li>
+  <li><code class="highlighter-rouge">git add file1.txt</code></li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git diff file2.txt</code></li>
+  <li><code class="highlighter-rouge">git checkout file2.txt</code> to discard changes (explain this checkout is different from checking out a branch)</li>
+  <li><code class="highlighter-rouge">git status</code></li>
+  <li><code class="highlighter-rouge">git diff Readme.md</code></li>
+  <li><code class="highlighter-rouge">git add Readme.md</code></li>
+  <li><code class="highlighter-rouge">git commit -m '(message about changing two files)'</code></li>
+</ul>
+
+<h3 id="merging-branches">Merging Branches</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">git checkout master</code></li>
+  <li>Take a look at the files in your editor. All of the changes are gone! (well, not really – they’re just in our other branch)</li>
+  <li><code class="highlighter-rouge">git merge feature1</code> will merge your commits from feature1 branch into master</li>
+</ul>
+
+<h3 id="looking-back-at-previous-versions">Looking back at previous versions</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">git log</code></li>
+  <li><code class="highlighter-rouge">git show SHA:path/to/file.rb</code> shows the file at that point in time</li>
+  <li>press return to scroll through a long output</li>
+  <li>type <code class="highlighter-rouge">q</code> to get back to command prompt when looking at a long output</li>
+  <li><code class="highlighter-rouge">git show SHA</code> shows the diff to that file at that specific commit</li>
+</ul>
+
+<h3 id="cloning-a-repository-from-github">Cloning a Repository from Github</h3>
+
+<p>Use <code class="highlighter-rouge">git clone git@github.com:username/repo_name.git</code> to create a local copy of a remote repo.</p>
+
+<h2 id="independent-practice">Independent Practice</h2>
+
+<p>If you’re brand new to git, start with <a href="https://try.github.io/levels/1/challenges/1">Try Github</a>.</p>
+
+<p>If you’ve used git before (or if you complete try.github), work through <a href="http://gitimmersion.com/">Git Immersion</a>. Atlassian also has a helpful <a href="https://www.atlassian.com/git/tutorials/setting-up-a-repository">Git Tutorial</a>.</p>
+
+<p>And, if you just can’t get enough Git, check out the <a href="http://git-scm.com/book">Pro Git book</a>.</p>
+
+<h2 id="wrapup">Wrapup</h2>
+<p>Return to standards and check progress.</p>
+<ul>
+  <li>What was easy?</li>
+  <li>What was challenging?</li>
+  <li>What made sense?</li>
+  <li>What didn’t make sense?</li>
+</ul>
+:ET

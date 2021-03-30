@@ -1,0 +1,107 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Use Rails controller tests to test JSON apis</li>
+  <li>Use ActiveModel::Serializers to customize JSON responses</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>25 - Warm Up and Discussion</li>
+  <li>5 - Break</li>
+  <li>25 - API TDD Codealong (Articles#show)</li>
+  <li>5 - Break</li>
+  <li>25 - Your Turn - students add Articles#index</li>
+</ul>
+
+<h2 id="warm-up">Warm-Up</h2>
+
+<p><strong>JSON Serialization in Rails</strong></p>
+
+<ul>
+  <li><code class="highlighter-rouge">ActiveRecord#to_json</code> – Rails’ default serialization technique – What are its limitations?</li>
+  <li>Alternatives – ActiveModel::Serializers, Jbuilder, Rabl, Draper –
+what do these do?</li>
+  <li>ActiveModel::Serializers – Advantages: Easy Ember integeration; ease
+of use; maintains “object-oriented” approach to generating JSON</li>
+</ul>
+
+<p><strong>Testing Rails APIs</strong></p>
+
+<ul>
+  <li>Integration tests vs. Controller tests – pros / cons (controller
+tests lighter, less “full-stack”; integration tests generally more
+robust, but also slower and more complicated)</li>
+  <li>needs for testing a JSON API – no “UI” <em>per se</em>, so we have less need
+for a full “integration” test</li>
+</ul>
+
+<h2 id="tutorial">Tutorial</h2>
+
+<p>Let’s get familiar with these techniques by TDD’ing a simple API for the
+Blogger project.</p>
+
+<ol>
+  <li>Project setup – you and blogger are old friends by now; clone the
+project, bundle, setup, etc:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/JumpstartLab/blogger_advanced.git
+cd blogger_advanced
+bundle
+rake db:drop db:create db:migrate db:seed
+</code></pre></div></div>
+
+<p>Let’s work through adding a simple API to expose article data.</p>
+
+<p>For now our API can be read-only, so let’s add a simple <code class="highlighter-rouge">#show</code>
+and <code class="highlighter-rouge">#index</code> endpoint.</p>
+
+<p>We’ll serve both endpoints under the <code class="highlighter-rouge">api/v1/articles</code> route
+namespace.</p>
+
+<p>For the Articles#show, endpoint, we’ll retrieve the article
+by its id, and expose these pieces of information:</p>
+
+<ul>
+  <li>id</li>
+  <li>title</li>
+  <li>body</li>
+  <li>Author’s name</li>
+</ul>
+
+<p><strong>Code-A-Long</strong> – follow along as we TDD an implementation
+of the Article#show endpoint to expose these data. We’ll use
+controller tests to verify the behavior of our API and
+ActiveModel::Serializers to generate the JSON.</p>
+
+<p>cheatsheet</p>
+
+<p><strong>intstalling activemodels serializers</strong>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'active_model_serializers'
+rails g serializer article
+</code></pre></div></div>
+
+<p><strong>Your Turn</strong> – following the example we just did, add an additional
+endpoint for Articles#index</p>
+
+<p>Remember that this should be served at the <code class="highlighter-rouge">api/v1/articles</code> route.</p>
+
+<p>For the index, expose the following data for each article:</p>
+
+<ul>
+  <li>id</li>
+  <li>title</li>
+  <li>tag names (remember that articles have many tags via taggings)</li>
+  <li>number of comments</li>
+</ul>
+
+<p>(Hint: you can always add a second serializer for this endpoint if
+necessary)</p>
+
+<p><strong>If we get here…</strong> – If we finish all that, let’s look and endpoints
+that accept or modify data. For starters, let’s add an endpoint to
+create an article.</p>
+:ET

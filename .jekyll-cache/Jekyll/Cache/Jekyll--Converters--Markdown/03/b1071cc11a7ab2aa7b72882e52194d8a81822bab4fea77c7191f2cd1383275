@@ -1,0 +1,35 @@
+I"�<h2 id="structure">Structure</h2>
+
+<h2 id="overview">Overview</h2>
+
+<p>In this session, we’ll be looking at a collection of JS Array prototype functions
+that deal with iterating and manipulating Arrays. The functions we’ll examine are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">forEach()</code></li>
+  <li><code class="highlighter-rouge">map()</code></li>
+  <li><code class="highlighter-rouge">filter()</code></li>
+  <li><code class="highlighter-rouge">reduce()</code></li>
+  <li><code class="highlighter-rouge">sort()</code></li>
+</ul>
+
+<p>The capabilities provided by these functions are somewhat analogous to the
+capability provided by the <code class="highlighter-rouge">Enumerable</code> module in Ruby.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>For this lesson, we’ll be walking through a tutorial from Mozilla’s Advanced
+JS Fundamentals series. As we go, you should follow along with the main outline <a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/01-array-prototype-methods/README.md">here</a>.</p>
+
+<p>Additionally, we’ll be working on a few exercises, which are included in the repository
+under the <code class="highlighter-rouge">demos</code> directory.</p>
+
+<p>Get set up with this by cloning the repository and changing to the appropriate directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/stevekinney/advanced-js-fundamentals-ck.git
+cd advanced-js-fundamentals-ck/demos/array-prototype-methods/
+</code></pre></div></div>
+
+<p>During the tutorial, we’ll periodically refer to the exercises contained in the various
+subdirectories of this directory.</p>
+:ET

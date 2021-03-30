@@ -1,0 +1,292 @@
+I"O<h2 id="goals">Goals</h2>
+
+<p>By the end of this lesson, you will know/be able to:</p>
+
+<ul>
+  <li>identify use cases for Sinatra</li>
+  <li>define routes</li>
+  <li>pass local and instance variables to the view</li>
+  <li>access form data through params</li>
+</ul>
+
+<h2 id="prework">Prework</h2>
+
+<p>Before this lesson, students should already have completed <a href="http://tutorials.jumpstartlab.com/projects/web_guesser.html">WebGuesser</a> and <a href="https://github.com/s-espinosa/task_manager_redux">Task Manager</a>.</p>
+
+<h2 id="sinatra-questions-from-intermission-prework">Sinatra Questions from Intermission Prework?</h2>
+
+<p>Let’s jot these down on an Etherpad.</p>
+
+<h2 id="sinatra-use-cases">Sinatra Use Cases</h2>
+
+<p>Biggest use case? You want to serve a Ruby application with some sort of user interface, fast! Sinatra is lightweight, meaning it doesn’t add too many files/too much complexity on top of raw Ruby.</p>
+
+<h2 id="modular-sinatra-setup"><a href="http://www.sinatrarb.com/intro.html#Modular%20vs.%20Classic%20Style">Modular Sinatra Setup</a></h2>
+
+<p>It’s almost always the case that we want to use Modular vs Classic Sinatra (except for the case of teeny applications like Web Guesser).</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Gemfile</span>
+
+<span class="n">source</span> <span class="s1">'https://rubygems.org'</span>
+
+<span class="n">gem</span> <span class="s1">'sinatra'</span><span class="p">,</span> <span class="ss">require: </span><span class="s1">'sinatra/base'</span>
+<span class="n">gem</span> <span class="s1">'shotgun'</span>
+<span class="n">gem</span> <span class="s1">'sqlite3'</span>
+<span class="n">gem</span> <span class="s1">'pry'</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># config.ru</span>
+
+<span class="nb">require</span> <span class="s1">'bundler'</span>
+<span class="no">Bundler</span><span class="p">.</span><span class="nf">require</span>
+
+<span class="vg">$LOAD_PATH</span><span class="p">.</span><span class="nf">unshift</span><span class="p">(</span><span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s2">"app"</span><span class="p">,</span> <span class="n">__dir__</span><span class="p">))</span>
+
+<span class="nb">require</span> <span class="s1">'controllers/task_manager_app'</span>
+
+<span class="n">run</span> <span class="no">TaskManagerApp</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/controllers/task_manager_app.rb</span>
+
+<span class="k">class</span> <span class="nc">TaskManagerApp</span> <span class="o">&lt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">set</span> <span class="ss">:root</span><span class="p">,</span> <span class="no">File</span><span class="p">.</span><span class="nf">expand_path</span><span class="p">(</span><span class="s2">".."</span><span class="p">,</span> <span class="n">__dir__</span><span class="p">)</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Once that’s set, it’s just a matter of:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install
+</span>bundle <span class="nb">exec </span>shotgun
+</code></pre></div></div>
+
+<h2 id="crud--http-verbs--client-vs-server">CRUD / HTTP Verbs &amp;&amp; Client vs. Server</h2>
+
+<p>We’re going to do some experiments with our task manager, so let’s first checkout a new branch:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout -b playground
+</code></pre></div></div>
+
+<p>Let’s step back from Sinatra for a moment to talk generally about the web.</p>
+
+<h2 id="routes"><a href="http://www.sinatrarb.com/intro.html#Routes">Routes</a></h2>
+
+<p>Routes in Sinatra are defined as part of its DSL (Domain Specific Language).</p>
+
+<p>These routes should look similar to other <code class="highlighter-rouge">do</code>/<code class="highlighter-rouge">end</code> blocks you’re used to from Ruby.</p>
+
+<p>The first keyword of these routes corresponds with the <strong>HTTP verb</strong> the request is making to the route.</p>
+
+<p>The param this keyword takes is a string version of the <strong>path</strong> the request is being made to.</p>
+
+<p>Inside the block, we tell Sinatra how to handle the request.</p>
+
+<h3 id="how-do-we-handle-route-requests">How Do We Handle Route Requests?</h3>
+
+<p>Most likely with one of the following:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">erb</code></li>
+  <li><code class="highlighter-rouge">redirect</code></li>
+</ul>
+
+<h3 id="experiment-test-your-understanding-of-routes">Experiment: Test Your Understanding of Routes</h3>
+
+<p>Try these two things:</p>
+
+<p>1) Add a new route and view so that the user can successfully visit “localhost:9393/easteregg” and see a new view of your choice. 
+2) Add a new route so that the user can go to “localhost:9393/showmethetasks” and be redirected to all of the tasks. NOTE: You should not have to create a new view, nor should you use the <code class="highlighter-rouge">erb</code> method.</p>
+
+<p>Let’s also quickly talk about why the 2nd path isn’t a good idea.</p>
+
+<h2 id="instance-variables-local-variables-and-the-view">Instance Variables, Local Variables, and the View</h2>
+
+<h3 id="experiment-locals-vs-instance-variables">Experiment: Locals vs. Instance Variables</h3>
+
+<p>Try this out:</p>
+
+<p>1) Go to your controller, and change your <code class="highlighter-rouge">get '/tasks' do...</code> route to say this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/tasks'</span> <span class="k">do</span>
+  <span class="n">tasks</span> <span class="o">=</span> <span class="no">Task</span><span class="p">.</span><span class="nf">all</span>
+  <span class="n">erb</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:locals</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:tasks</span> <span class="o">=&gt;</span> <span class="n">tasks</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>2) Go to your <code class="highlighter-rouge">index.erb</code> view and remove the <code class="highlighter-rouge">@</code> from <code class="highlighter-rouge">@tasks</code>. It should now just say <code class="highlighter-rouge">tasks.each do...</code>. Does it work? Can you think of pros and cons for this versus the way we originally had it?</p>
+
+<h3 id="notes-locals-vs-instance-variables">Notes: Locals vs. Instance Variables</h3>
+
+<p>With Sinatra, we’re allowed to pass variables to rendered views with the <code class="highlighter-rouge">:locals</code> option. This is handy, but adds more overhead than is necessary.</p>
+
+<p>Sinatra allows us to access instance variables defined in a particular route within that route’s corresponding rendered view. Not only does this save us a little bit of code to write, this is very in line with how things work in Rails! For that reason alone, let’s get into this habit, rather than use <code class="highlighter-rouge">:locals</code>.</p>
+
+<p>To test out how well you understand what pieces were affected by our changes, go ahead and switch back to using the instance variable instead of the locals hash.</p>
+
+<h2 id="views">Views</h2>
+
+<p>Let’s always save our views to a <code class="highlighter-rouge">views/</code> directory within project root. This is where Sinatra loads them from by default. <a href="http://www.sinatrarb.com/configuration.html">It is possible to change where Sinatra looks for the views</a>.</p>
+
+<p>In Sinatra, we’re rendering views using <code class="highlighter-rouge">erb</code> files. This stands for Embedded Ruby. Essentially, we’ve got all the freedom we need to write HTML, but are able to interpolate Ruby when needed.</p>
+
+<p><code class="highlighter-rouge">&lt;%= %&gt;</code> allows us to interpolate variables.</p>
+
+<p>We can also embed blocks with <code class="highlighter-rouge">erb</code>. Here’s an example using <code class="highlighter-rouge">if</code>/<code class="highlighter-rouge">else</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="sx">% if </span><span class="vi">@tasks</span> <span class="o">%&gt;</span>
+  <span class="c1"># do something</span>
+<span class="o">&lt;</span><span class="sx">% end </span><span class="o">%&gt;</span>
+</code></pre></div></div>
+
+<h3 id="experiment-view-templating">Experiment: View Templating</h3>
+
+<p>1) Comment out your <code class="highlighter-rouge">erb :index</code> in your <code class="highlighter-rouge">/tasks</code> route and add `“Hello, world!” instead. It should look like this now:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/tasks'</span> <span class="k">do</span>
+  <span class="vi">@tasks</span> <span class="o">=</span> <span class="no">Task</span><span class="p">.</span><span class="nf">all</span>
+  <span class="c1"># erb :index</span>
+  <span class="s2">"Hello, world!"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Spin up the server, then refresh <code class="highlighter-rouge">/tasks</code>.</p>
+
+<p>With a partner, discuss these questions:</p>
+
+<p>1) Did this experiment work? What can you assume about the type of data a route needs to return? <em>Not a trick question :)</em> Once you’ve tried it out, take out <code class="highlighter-rouge">"Hello, world!"</code> and uncomment <code class="highlighter-rouge">erb :index</code>. 
+2) Once you’ve determined the type of data that needs to be returned, discuss what you think must be happening step-by-step when <code class="highlighter-rouge">erb :index</code> is called in your controller. 
+3) Check out a popular alternative to ERB: <a href="http://haml.info/">HAML</a> and look at the box that compares erb to haml. What might be the pros and cons of using HAML instead of ERB?</p>
+
+<p>Want to go into depth with ERB? Read <a href="http://www.stuartellis.name/articles/erb/">this article</a> on your own time.</p>
+
+<h2 id="params">Params</h2>
+
+<p>Sinatra is able to collect information from the client to pass to the server.</p>
+
+<p>This information gets bundled up in a hash for us called <code class="highlighter-rouge">params</code>. Another thing Rails also does!</p>
+
+<p>This <code class="highlighter-rouge">params</code> hash is typically populated in one of the following ways:</p>
+
+<h3 id="experiment-url-query-params">Experiment: URL Query Params</h3>
+
+<p>Inside of your <code class="highlighter-rouge">get '/tasks' do...</code> route, add a pry like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>get '/tasks' do
+  require 'pry'; binding.pry
+  @tasks = Task.all
+  erb :index
+end
+</code></pre></div></div>
+
+<p>Then navigate to this URL: <code class="highlighter-rouge">localhost:9393/tasks?location=Denver&amp;institution=Turing%20School</code>. Go back to the terminal and type <code class="highlighter-rouge">params</code> to check out your parameters.</p>
+
+<p>With a partner, discuss these questions:</p>
+
+<p>1) Where did these params come from, and what can you assume about the rules concerning params in a URL? 
+2) How are spaces represented in a URL? 
+3) Modify your <code class="highlighter-rouge">index.erb</code> to dynamically display the location from the URL. For example, if I visit the URL with <code class="highlighter-rouge">location=Denver</code>, then the top of my tasks page should say “You are located in Denver” and then show all of the tasks. Try changing the URL’s location parameter a few times to make sure it’s dynamic.</p>
+
+<h3 id="notes-url-query-params">Notes: URL Query Params</h3>
+
+<p>The <code class="highlighter-rouge">?</code> signals that everything coming after it are params.</p>
+
+<p>Keys are separated from their values by a <code class="highlighter-rouge">=</code>.</p>
+
+<p>Key/value pairs are separated by a <code class="highlighter-rouge">&amp;</code>.</p>
+
+<p>Therefore, our original URL would yield these params:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">location: </span><span class="s2">"Denver"</span><span class="p">,</span>
+  <span class="ss">institution: </span><span class="s2">"Turing School"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Param keys can be accessed either by string (<code class="highlighter-rouge">params["institution"]</code>) or by symbol (<code class="highlighter-rouge">params[:institution]</code>).</p>
+
+<h3 id="forms">Forms</h3>
+
+<p>Creating an HTML form with a <code class="highlighter-rouge">POST</code> request as its action delievers params as well. The difference, however, is that these params are nested within the body of the request, whereas the params from the URL are, well, in the URL.</p>
+
+<p>The keys are defined by the <code class="highlighter-rouge">name</code> attribute of the form, values coming from what the user enters in each field.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="n">form</span> <span class="n">action</span><span class="o">=</span><span class="s2">"/tasks"</span> <span class="nb">method</span><span class="o">=</span><span class="s2">"post"</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span><span class="no">Enter</span> <span class="n">a</span> <span class="n">new</span> <span class="n">task</span><span class="ss">:&lt;</span><span class="o">/</span><span class="nb">p</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">input</span> <span class="n">type</span><span class="o">=</span><span class="s1">'text'</span> <span class="nb">name</span><span class="o">=</span><span class="s1">'task[title]'</span><span class="o">/&gt;&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">textarea</span> <span class="nb">name</span><span class="o">=</span><span class="s1">'task[description]'</span><span class="o">&gt;&lt;</span><span class="sr">/textarea&gt;&lt;br/</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">input</span> <span class="n">type</span><span class="o">=</span><span class="s1">'submit'</span><span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="sr">/form&gt;
+</span></code></pre></div></div>
+
+<p>In the case above, the <code class="highlighter-rouge">name</code> attribute is creating a nested <code class="highlighter-rouge">task</code> hash, so <code class="highlighter-rouge">params</code> would look like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">task: </span><span class="p">{</span>
+    <span class="ss">title: </span><span class="s2">"Whatever title user enters"</span><span class="p">,</span>
+    <span class="ss">description: </span><span class="s2">"Whatever description user enters"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="no-experiment-but-discuss-with-a-partner">No experiment, but discuss with a partner:</h3>
+
+<p>1) What would need to change in this form in order to produce these parameters (non-nested):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">title: </span><span class="s2">"Whatever title user enters"</span><span class="p">,</span>
+  <span class="ss">description: </span><span class="s2">"Whatever description user enters"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>1) Why might you <em>want</em> to nest parameters?</p>
+
+<h2 id="dynamic-parameters-through-the-url">Dynamic Parameters through the URL</h2>
+
+<h3 id="experiment-dynamic-params">Experiment: Dynamic Params</h3>
+
+<p>Put a pry into your <code class="highlighter-rouge">get '/tasks/:id' do...</code> route like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/tasks/:id'</span> <span class="k">do</span>
+  <span class="nb">require</span> <span class="s1">'pry'</span><span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+  <span class="vi">@task</span> <span class="o">=</span> <span class="no">Task</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">erb</span> <span class="ss">:show</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>1) Navigate to <code class="highlighter-rouge">/tasks/marshmallow</code>. Go back to the terminal. What do you expect to see when you type <code class="highlighter-rouge">params</code>? Go ahead and test it out. Then exit out of pry. 
+2) Change <code class="highlighter-rouge">get '/tasks/:id'</code> to <code class="highlighter-rouge">get '/tasks/:name'</code>. Navigate to <code class="highlighter-rouge">/tasks/marshmallow</code>. What do you need to type into pry in order to get “marshmallow” back? 
+3) With a partner, share your observations from these two experiments. What worked? What failed? What can you assume about the <code class="highlighter-rouge">:something</code> notation in a route? 
+4) Put everything back to the way it was (see above code snippet for help, or test your own understanding by doing it by yourself).</p>
+
+<h3 id="notes-dynamic-parameters">Notes: Dynamic Parameters</h3>
+
+<p>Sometimes, you want a user to be able to load things dynamically based on something like an <code class="highlighter-rouge">id</code>.</p>
+
+<p>Sinatra allows you to define routes with dynamic segments. The <code class="highlighter-rouge">:</code> segment of this route denotes a named segment. When the URL is accessed and something is populated in that segment of the URL, the name of the segment defined in your routes becomes the key, the populated segment of the URL becomes the value.</p>
+
+<p>For example, if the following was defined in our routes:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/tasks/:id'</span> <span class="k">do</span>
+  <span class="c1"># do something with params[:id]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If we visited <code class="highlighter-rouge">/tasks/1</code>, <code class="highlighter-rouge">params</code> would look like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">id: </span><span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It’s always a good idea to <code class="highlighter-rouge">pry</code> in and check out <code class="highlighter-rouge">params</code>!</p>
+
+<!-- [Slides](https://www.dropbox.com/s/k9b5ppidhdyw29o/Sinatra-Intro.pdf?dl=0) -->
+
+<h2 id="other-resources">Other Resources</h2>
+
+<ul>
+  <li><a href="http://guides.railsgirls.com/sinatra-app/">Rails Girls Intro to Sinatra Tutorial</a></li>
+  <li><a href="http://www.sinatrarb.com/intro.html">Sinatra Documentation</a></li>
+</ul>
+:ET

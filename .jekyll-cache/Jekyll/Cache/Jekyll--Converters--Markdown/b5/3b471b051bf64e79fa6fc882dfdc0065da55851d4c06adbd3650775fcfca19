@@ -1,0 +1,96 @@
+I"É#<h3 id="iteration-1">Iteration 1</h3>
+<p>Build out an <code class="highlighter-rouge">Employee</code> and <code class="highlighter-rouge">Store</code> class.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">employee</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Rachel"</span><span class="p">,</span> <span class="mi">92836</span><span class="p">,</span> <span class="s2">"$32000"</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Employee...&gt;</span>
+<span class="n">employee</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1"># =&gt; "Rachel"</span>
+<span class="n">employee</span><span class="p">.</span><span class="nf">employee_id</span>
+<span class="c1"># =&gt; 92836</span>
+<span class="n">employee</span><span class="p">.</span><span class="nf">salary</span>
+<span class="c1"># =&gt; 32000</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">store</span> <span class="o">=</span> <span class="no">Store</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Brookstone"</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Store...&gt;</span>
+<span class="n">store</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1"># =&gt; "Brookstone"</span>
+<span class="n">store</span><span class="p">.</span><span class="nf">employees</span>
+<span class="c1"># =&gt; []</span>
+</code></pre></div></div>
+
+<h3 id="iteration-2">Iteration 2</h3>
+
+<p>Continue to build on the <code class="highlighter-rouge">Store</code> class</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">employee</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Rachel"</span><span class="p">,</span> <span class="mi">92836</span><span class="p">,</span> <span class="s2">"$32000"</span><span class="p">)</span>
+
+<span class="n">store</span><span class="p">.</span><span class="nf">hire_employee</span><span class="p">(</span><span class="n">employee</span><span class="p">)</span>
+
+<span class="n">store</span><span class="p">.</span><span class="nf">employees</span>
+<span class="c1"># =&gt; [#&lt;Employee...&gt;]</span>
+<span class="n">store</span><span class="p">.</span><span class="nf">employees</span><span class="p">.</span><span class="nf">count</span>
+<span class="c1"># =&gt; 1</span>
+</code></pre></div></div>
+
+<h3 id="iteration-3">Iteration 3</h3>
+<p>Build out a <code class="highlighter-rouge">Mall</code> class</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mall</span> <span class="o">=</span> <span class="no">Mall</span><span class="p">.</span><span class="nf">new</span>
+<span class="c1"># =&gt; #&lt;Mall...&gt;</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span>
+<span class="c1"># =&gt; []</span>
+
+<span class="n">store</span> <span class="o">=</span> <span class="no">Store</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Brookstone"</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">open_store</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span>
+<span class="c1"># =&gt; [#&lt;Store...&gt;]</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">count</span>
+<span class="c1"># =&gt; 1</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">first</span>
+<span class="c1"># =&gt; #&lt;Store...&gt;</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">first</span><span class="p">.</span><span class="nf">employees</span>
+<span class="c1"># =&gt; []</span>
+
+<span class="n">employee_1</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Rachel"</span><span class="p">,</span> <span class="mi">92836</span><span class="p">,</span> <span class="s2">"$32000"</span><span class="p">)</span>
+<span class="n">employee_2</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Sid"</span><span class="p">,</span> <span class="mi">17638</span><span class="p">,</span> <span class="s2">"$30000"</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">first</span><span class="p">.</span><span class="nf">hire_employee</span><span class="p">(</span><span class="n">employee_1</span><span class="p">)</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">first</span><span class="p">.</span><span class="nf">hire_employee</span><span class="p">(</span><span class="n">employee_2</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">first</span><span class="p">.</span><span class="nf">employees</span>
+<span class="c1"># =&gt; [#&lt;Employee...&gt;, #&lt;Employee...&gt;]</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">stores</span><span class="p">.</span><span class="nf">first</span><span class="p">.</span><span class="nf">employees</span><span class="p">.</span><span class="nf">count</span>
+<span class="c1"># =&gt; 2</span>
+</code></pre></div></div>
+
+<h3 id="iteration-4">Iteration 4</h3>
+
+<p>Continue to build on the <code class="highlighter-rouge">Mall</code> class</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">store_1</span> <span class="o">=</span> <span class="no">Store</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Brookstone"</span><span class="p">)</span>
+<span class="n">store_2</span> <span class="o">=</span> <span class="no">Store</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Sharper Image"</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">open_store</span><span class="p">(</span><span class="n">store_1</span><span class="p">)</span>
+<span class="n">mall</span><span class="p">.</span><span class="nf">open_store</span><span class="p">(</span><span class="n">store_2</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">store_names</span>
+<span class="c1"># =&gt; ["Brookstone", "Sharper Image"]</span>
+
+<span class="n">employee_1</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Rachel"</span><span class="p">,</span> <span class="mi">92836</span><span class="p">,</span> <span class="s2">"$32000"</span><span class="p">)</span>
+<span class="n">employee_2</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Sid"</span><span class="p">,</span> <span class="mi">17638</span><span class="p">,</span> <span class="s2">"$30000"</span><span class="p">)</span>
+<span class="n">employee_3</span> <span class="o">=</span> <span class="no">Employee</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Jim"</span><span class="p">,</span> <span class="mi">41737</span><span class="p">,</span> <span class="s2">"$13000"</span><span class="p">)</span>
+
+<span class="n">store_1</span><span class="p">.</span><span class="nf">hire_employee</span><span class="p">(</span><span class="n">employee_1</span><span class="p">)</span>
+<span class="n">store_1</span><span class="p">.</span><span class="nf">hire_employee</span><span class="p">(</span><span class="n">employee_3</span><span class="p">)</span>
+<span class="n">store_2</span><span class="p">.</span><span class="nf">hire_employee</span><span class="p">(</span><span class="n">employee_2</span><span class="p">)</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">all_employees</span>
+<span class="c1"># =&gt; [#&lt;Employee...&gt;, #&lt;Employee...&gt;, #&lt;Employee...&gt;]</span>
+
+<span class="n">mall</span><span class="p">.</span><span class="nf">count_all_employees</span>
+<span class="c1"># =&gt; 3</span>
+</code></pre></div></div>
+:ET

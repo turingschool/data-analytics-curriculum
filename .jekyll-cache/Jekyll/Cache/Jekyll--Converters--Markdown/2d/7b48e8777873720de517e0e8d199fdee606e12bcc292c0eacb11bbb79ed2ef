@@ -1,0 +1,265 @@
+I"*7<h2 id="learning-goals">Learning Goals</h2>
+
+<p>After this lesson, students should be able to:</p>
+<ul>
+  <li>Explain that git is local and github is remote</li>
+  <li>Configure their local git to access their remote GitHub account via the command line</li>
+  <li>Configure global .gitignore files</li>
+  <li>Personalize Slack profiles with GitHub information</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Git</li>
+  <li>Github</li>
+  <li>Version Control System</li>
+  <li>Distributed Version Control System</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>Has anyone heard of git before?  Thumbs Up/Down have you used it all during pre-work?</li>
+  <li>What do you know about GitHub? How have you used it so far?</li>
+</ul>
+
+<h2 id="introduction-to-git">Introduction to Git</h2>
+
+<h3 id="what-is-git">What is Git?</h3>
+
+<ul>
+  <li>Version control system</li>
+  <li>Provides “multiple save points”</li>
+  <li>Solving the problem of <code class="highlighter-rouge">some_docV1.doc</code>, <code class="highlighter-rouge">some_docV2.doc</code>, <code class="highlighter-rouge">some_docFinal.doc</code>, <code class="highlighter-rouge">some_docREALLYFINAL.doc</code>, etc.</li>
+  <li>Specifically: <strong>Distributed</strong> Version Control System; contrasts with traditional centralized VCS (journalism, architecture, engineering)</li>
+  <li>Git’s philosophy: never lose anything</li>
+</ul>
+
+<h3 id="preliminary-gitconfig-setup">Preliminary <code class="highlighter-rouge">gitconfig</code> Setup</h3>
+
+<p>First, let’s install <code class="highlighter-rouge">git</code> via <code class="highlighter-rouge">brew</code>:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>git
+<span class="o">==&gt;</span> Downloading http://git-core.googlecode.com/files/git-1.8.3.4.tar.gz
+<span class="c">########################################################### 100.0%</span>
+</code></pre></div></div>
+
+<p>Git stores a special configuration file at <code class="highlighter-rouge">~/.gitconfig</code></p>
+
+<ul>
+  <li>Let’s colorize git in the command line</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git config <span class="nt">--global</span> color.ui <span class="nb">true</span>
+</code></pre></div></div>
+
+<ul>
+  <li>And set up our GitHub credentials:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git config <span class="nt">--global</span> user.email <span class="s2">"you@example.com"</span>
+<span class="nv">$ </span>git config <span class="nt">--global</span> user.name <span class="s2">"YourUsername"</span>
+</code></pre></div></div>
+
+<p>You can also double check what values are currently set by running <code class="highlighter-rouge">git config -l</code> at the command line</p>
+
+<h2 id="github">Github</h2>
+
+<p>GitHub is a platform for hosting git repositories online. Before GitHub, developers or companies configured and ran their own independent git servers, and things were much more fragmented. Now GitHub has become the de facto community standard for hosting and sharing repositories.</p>
+
+<p>You certainly don’t need GitHub to use git, but its popularity and dominance, especially within the open source community, have intertwined the 2 for many users.</p>
+
+<p>As you progress through becoming a more practiced git user, don’t forget that these 2 are really distinct things – <code class="highlighter-rouge">git</code> provides the core technology for tracking and managing source control changes, while <code class="highlighter-rouge">GitHub</code> provides a shared location for hosting git projects.</p>
+
+<p>Currently, our local git configurations knows of our GitHub credentials - GitHub needs to know where we’ll be pushing our code from. To do this, we’ll generate an SSH key that they’ll each know of.</p>
+
+<ul>
+  <li>Generate a new key by running</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-C</span> <span class="s2">"you@example.com"</span>
+</code></pre></div></div>
+
+<p>When you’re prompted to “Enter a file in which to save the key,” press Enter. This accepts the default file location.
+You may enter a secure passphrase if you’d like, but it’s not necessary. To move ahead, continue pressing “Enter”.</p>
+
+<ul>
+  <li>Add this new key to your system by running:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-add ~/.ssh/id_rsa
+</code></pre></div></div>
+
+<ul>
+  <li>Copy the new key to your clipboard (shortcut for OSX below):</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pbcopy &lt; ~/.ssh/id_rsa.pub
+</code></pre></div></div>
+
+<ul>
+  <li>Let’s tell GitHub about this key.</li>
+</ul>
+
+<p>Go to <a href="https://github.com/settings/ssh">https://github.com/settings/ssh</a>,
+and paste in the whole SSH key.</p>
+
+<ul>
+  <li>To test that our key is configured, type the following into the command line:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-T</span> git@github.com
+</code></pre></div></div>
+
+<ul>
+  <li>If you get this prompt:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">=&gt;</span> The authenticity of host <span class="s1">'github.com (xxx.xxx.xxx.xxx)'</span>... can<span class="se">\'</span>t be established.
+RSA key fingerprint is XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX.
+Are you sure you want to <span class="k">continue </span>connecting <span class="o">(</span><span class="nb">yes</span>/no<span class="o">)</span>?
+</code></pre></div></div>
+
+<ul>
+  <li>Type ‘yes’</li>
+  <li>If everything’s working, you’ll see the the following:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">=&gt;</span> Hi YourUsername! You<span class="se">\'</span>ve successfully authenticated, but GitHub does not provide shell access.
+</code></pre></div></div>
+
+<h2 id="global-gitignore">Global <code class="highlighter-rouge">.gitignore</code></h2>
+<p>GitIgnore is a dot file used for making sure that certain types of files and directories do not get pushed up to GitHub. This may include any code with sensitive information that you do not wish to be public, or files and directories that do not need to be included with your shared public repository. There are a number of things below that just become noise as they contain many files but do not add anything for collaboration sake.</p>
+
+<p>From Terminal run:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch ~/.gitignore
+$ git config --global core.excludesfile ~/.gitignore
+</code></pre></div></div>
+
+<p>Then open <code class="highlighter-rouge">~/.gitignore</code> with your text editor(i.e. atom ~/.gitignore), paste, and save the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Git #</span>
+<span class="c1">########</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">orig</span>
+
+<span class="c1"># macOS #</span>
+<span class="c1">#########</span>
+<span class="o">*.</span><span class="no">DS_Store</span>
+<span class="o">.</span><span class="no">DS_Store</span><span class="p">?</span>
+<span class="o">.</span><span class="no">AppleDouble</span>
+<span class="o">.</span><span class="no">LSOverride</span>
+<span class="o">.</span><span class="no">Spotlight</span><span class="o">-</span><span class="no">V100</span>
+<span class="o">.</span><span class="no">Trashes</span>
+<span class="n">ehthumbs</span><span class="p">.</span><span class="nf">db</span>
+<span class="no">Thumbs</span><span class="p">.</span><span class="nf">db</span>
+
+<span class="c1"># Ignore Spring Files #</span>
+<span class="c1">#######################</span>
+<span class="sr">/spring/</span><span class="o">*</span><span class="p">.</span><span class="nf">pid</span>
+
+<span class="c1"># Ignore RubyMine Files #</span>
+<span class="c1">#######################</span>
+<span class="p">.</span><span class="nf">idea</span><span class="o">/</span>
+
+<span class="c1"># Rails #</span>
+<span class="c1">#########</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">rbc</span>
+<span class="n">capybara</span><span class="o">-*</span><span class="p">.</span><span class="nf">html</span>
+<span class="p">.</span><span class="nf">rspec</span>
+<span class="sr">/public/s</span><span class="n">ystem</span>
+<span class="o">*</span><span class="sr">/coverage/</span>
+<span class="sr">/spec/</span><span class="n">tmp</span>
+<span class="o">**</span><span class="p">.</span><span class="nf">orig</span>
+<span class="n">rerun</span><span class="p">.</span><span class="nf">txt</span>
+<span class="n">pickle</span><span class="o">-</span><span class="n">email</span><span class="o">-*</span><span class="p">.</span><span class="nf">html</span>
+<span class="p">.</span><span class="nf">env</span>
+
+<span class="c1"># Logs and Databases #</span>
+<span class="c1">######################</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">log</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">sql</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">sqlite</span>
+<span class="sr">/log
+/</span><span class="n">tmp</span>
+<span class="sr">/db/</span><span class="o">*</span><span class="p">.</span><span class="nf">sqlite3</span>
+<span class="sr">/db/</span><span class="o">*</span><span class="p">.</span><span class="nf">sqlite3</span><span class="o">-</span><span class="n">journal</span>
+
+<span class="c1"># Environment normalization #</span>
+<span class="c1">#############################</span>
+<span class="sr">/.bundle
+/</span><span class="n">vendor</span><span class="o">/</span><span class="n">bundle</span>
+<span class="p">.</span><span class="nf">powenv</span>
+
+<span class="c1"># if using bower-rails ignore default bower_components path bower.json files</span>
+<span class="sr">/vendor/</span><span class="n">assets</span><span class="o">/</span><span class="n">bower_components</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">bowerrc</span>
+<span class="n">bower</span><span class="p">.</span><span class="nf">json</span>
+
+<span class="c1"># Ruby #</span>
+<span class="c1">########</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">gem</span>
+<span class="sr">/.config
+/</span><span class="no">InstalledFiles</span>
+<span class="sr">/pkg/</span>
+<span class="sr">/spec/</span><span class="n">reports</span><span class="o">/</span>
+<span class="sr">/spec/ex</span><span class="n">amples</span><span class="p">.</span><span class="nf">txt</span>
+<span class="sr">/test/</span><span class="n">tmp</span><span class="o">/</span>
+<span class="sr">/test/</span><span class="n">version_tmp</span><span class="o">/</span>
+<span class="sr">/tmp/</span>
+<span class="p">.</span><span class="nf">rvmrc</span>
+
+<span class="c1"># Ignore Byebug command history file.</span>
+<span class="p">.</span><span class="nf">byebug_history</span>
+
+<span class="c1"># Documentation cache and generated files #</span>
+<span class="c1">###########################################</span>
+<span class="sr">/.yardoc/</span>
+<span class="sr">/_yardoc/</span>
+<span class="sr">/doc/</span>
+<span class="sr">/rdoc/</span>
+
+<span class="c1"># Environment normalization #</span>
+<span class="c1">#############################</span>
+<span class="sr">/.bundle/</span>
+<span class="sr">/lib/</span><span class="n">bundler</span><span class="o">/</span><span class="n">man</span><span class="o">/</span>
+
+<span class="c1"># Compiled source #</span>
+<span class="c1">###################</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">com</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">class</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">dll</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">exe</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">o</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">so</span>
+
+<span class="c1"># Packages #</span>
+<span class="c1">############</span>
+<span class="o">*.</span><span class="mi">7</span><span class="n">z</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">dmg</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">gz</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">iso</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">jar</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">rar</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">tar</span>
+<span class="o">*</span><span class="p">.</span><span class="nf">zip</span>
+</code></pre></div></div>
+
+<h2 id="slack-and-further-customizations">Slack and Further Customizations</h2>
+
+<p>If you’ve verified the above is complete, please work through the following:</p>
+
+<ul>
+  <li>Customize your Slack profile (name and/or profile picture help your team identify you)</li>
+  <li>Add your GitHub username/profile link to your Slack profile</li>
+  <li>Customize your terminal - colors/themes, default directory, aliases, etc.</li>
+</ul>
+
+<h2 id="wrap-up">Wrap Up</h2>
+
+<ul>
+  <li>What is git? Why do we use it?</li>
+  <li>What is GitHub? Why is it helpful?</li>
+  <li>What types of things go in a .gitignore?</li>
+</ul>
+:ET

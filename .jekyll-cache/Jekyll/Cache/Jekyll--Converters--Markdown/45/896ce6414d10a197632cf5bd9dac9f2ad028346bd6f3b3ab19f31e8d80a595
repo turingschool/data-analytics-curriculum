@@ -1,0 +1,214 @@
+I"f0<h1 id="exploring-each--debugging-with-pry">Exploring <code class="highlighter-rouge">.each</code> &amp; Debugging with Pry</h1>
+
+<hr />
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Recognize &amp; demonstrate use of inline and multi-line <code class="highlighter-rouge">each</code></li>
+  <li>Name various debuggers for Ruby</li>
+  <li>Employ pry to pause &amp; interact with running code</li>
+</ul>
+
+<!-- * Learn how to use a debugger to pause and interact with running code
+* Understand how to use single-line and multi-line each -->
+
+<!-- [slides](../slides/debugging_with_pry) -->
+<hr />
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Enumerable</li>
+  <li>Block</li>
+  <li>Debugger</li>
+  <li>Pry</li>
+</ul>
+
+<hr />
+
+<h2 id="enumerable-methods">Enumerable Methods</h2>
+
+<p>Enumerables are methods that can be used on collections (arrays and hashes) to iterate over each element.
+These can be used to:</p>
+
+<ul>
+  <li>create something based on the original collection</li>
+  <li>search for elements or an element within that collection</li>
+  <li>change the original collection</li>
+</ul>
+
+<h3 id="what-is-each">What is <code class="highlighter-rouge">.each</code>?</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">.each</code> allows you to traverse a collection and access each of its elements</li>
+  <li><code class="highlighter-rouge">.each</code> <strong>returns the original collection</strong></li>
+  <li><code class="highlighter-rouge">.each</code> is the base for all enumerable methods</li>
+</ul>
+
+<h3 id="what-is-the-syntax-for-writing-enumerable-methods">What is the syntax for writing enumerable methods?</h3>
+
+<ul>
+  <li>A <strong>block</strong> exists between <code class="highlighter-rouge">do...end</code> or between <code class="highlighter-rouge">{...}</code></li>
+  <li>A <strong>block parameter</strong> goes between the pipes <code class="highlighter-rouge">||</code> &amp; is the variable you use within the block itself</li>
+</ul>
+
+<h4 id="multi-line-block">Multi-Line Block</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">element</span><span class="o">|</span>
+  <span class="n">element</span><span class="p">.</span><span class="nf">do_something</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="inline-single-line-block">Inline (Single-Line) Block</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">element</span><span class="o">|</span> <span class="n">element</span><span class="p">.</span><span class="nf">do_something</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="basic-use-of-each">Basic use of .each</h3>
+
+<p>Let’s say we have an array of names <code class="highlighter-rouge">names = ["alice", "bob", "eva"]</code> and we want to print out to the screen
+each word in the array, but in all capitalized letters.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">names</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="nb">name</span><span class="p">.</span><span class="nf">capitalize</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This can also be written:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">names</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="nb">name</span><span class="o">|</span> <span class="nb">puts</span> <span class="nb">name</span><span class="p">.</span><span class="nf">capitalize</span> <span class="p">}</span>
+</code></pre></div></div>
+<h3 id="turn--talk">Turn &amp; Talk</h3>
+
+<p>What do you think these should return?</p>
+
+<p>Remember that there is a difference between what gets <em>output to a screen</em> and what a bit of <em>code returns</em>.</p>
+
+<hr />
+
+<h2 id="debuggers">Debuggers</h2>
+
+<h3 id="turn--talk-1">Turn &amp; Talk</h3>
+
+<p>Discuss one instance (during your prework or homework) where you faced a problem and had to run the entire file over and over again until you got the correct result.</p>
+
+<h3 id="shorten-the-development-feedback-loop">Shorten the Development Feedback Loop!</h3>
+
+<p>Consider the feedback loop in programming: we assume our code should do something, we’re wrong, we change it until we get working code. Shortening the loop will make us faster &amp; more efficient developers. <strong>Debuggers</strong> provide effective tools for evaluating our assumptions.</p>
+
+<ul>
+  <li>Debugger: a computer program that assists in the detection and correction of errors (bugs) in other programs.</li>
+</ul>
+
+<p>Debuggers help you see what your code is actually doing. The most common debuggers in Ruby are <code class="highlighter-rouge">Byebug</code> and <code class="highlighter-rouge">Pry</code>. You can pick whichever you prefer. For this exercise we will use <code class="highlighter-rouge">Pry</code>.</p>
+
+<h3 id="pry">Pry</h3>
+
+<p>Language shells, like IRB (interactive Ruby), are REPLs (Read-Eval-Print-Loop) that take user input, evaluate it &amp; return the result.</p>
+
+<p>“Pry is a powerful alternative to the standard IRB (interactive ruby) shell for Ruby. It features syntax highlighting, a flexible plugin architecture, runtime invocation and source and documentation browsing.” (Straight from the horse’s mouth: <a href="http://pryrepl.org/">http://pryrepl.org/</a>)</p>
+
+<p>The <strong>syntax highlighting</strong> &amp; <strong>runtime invocation</strong> are most useful &amp; relevant to us.</p>
+
+<h3 id="using-pry">Using Pry</h3>
+
+<p>Install Pry from the command line:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install pry
+</code></pre></div></div>
+
+<p>You can enter a Pry session from your CLI by simply typing <code class="highlighter-rouge">pry</code></p>
+
+<p><code class="highlighter-rouge">binding.pry</code> is the standard way to invoke Pry at runtime</p>
+
+<ul>
+  <li>You can think of a binding like a “snapshot” of everything available at the moment of instantiation: current value of “self”, local variables, methods, instance variables and more.</li>
+  <li>It also causes the whereami command to be invoked automatically - and so the surounding context of the session (a few lines either side of the invocation line) are displayed for the user.</li>
+</ul>
+
+<h3 id="pry-playground">Pry Playground</h3>
+
+<p>Then, let’s create a <code class="highlighter-rouge">debugging_with_pry.rb</code> file within your classwork directory.</p>
+
+<p>You need to require Pry at the top of your Ruby file. Then you can use it wherever you’d like your program to pause.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s2">"pry"</span>
+
+<span class="k">def</span> <span class="nf">favorite_things</span><span class="p">(</span><span class="n">things</span><span class="p">)</span>
+  <span class="n">things</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">thing</span><span class="o">|</span>
+    <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+    <span class="nb">puts</span> <span class="n">thing</span><span class="p">.</span><span class="nf">capitalize</span>
+    <span class="n">thing</span><span class="p">.</span><span class="nf">upcase</span>
+  <span class="k">end</span>
+  <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+<span class="k">end</span>
+
+<span class="n">a_few_of_my_favorites</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"crisp apple strudels"</span><span class="p">,</span> <span class="s2">"schnitzel with noodles"</span><span class="p">,</span> <span class="s2">"wild geese that fly with the moon on their wings"</span><span class="p">]</span>
+<span class="n">favorite_things</span><span class="p">(</span><span class="n">a_few_of_my_favorites</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We’re going to use our new debugger to explore <code class="highlighter-rouge">.each</code> with the challenges below.</p>
+
+<!-- Let's use [this gist](https://gist.github.com/jmejia/04924190362f64fc49ab) as a guide. -->
+
+<hr />
+
+<h3 id="important-commands-for-pry-sessions">Important Commands for Pry Sessions</h3>
+
+<ul>
+  <li>To fully exit any pry session, enter <code class="highlighter-rouge">!!!</code>, <code class="highlighter-rouge">exit!</code>, or type <code class="highlighter-rouge">ctrl-\</code></li>
+  <li>During runtime invocation:
+    <ul>
+      <li>To proceed to the next pry (within your loop or not), enter <code class="highlighter-rouge">exit</code> (this will exit your pry session if you were on the last pry)</li>
+      <li>If your pry session is too large for your CLI (e.g. it will show <code class="highlighter-rouge">:</code> on the bottom instead of <code class="highlighter-rouge">[1] pry(#&lt;ClassName&gt;)&gt;</code>), type <code class="highlighter-rouge">q</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="exercises">Exercises</h2>
+
+<p>Work through the following using <code class="highlighter-rouge">Pry</code>. We’ll start with the first two together.</p>
+
+<ul>
+  <li>Given an array of numbers, <code class="highlighter-rouge">[1,2,3,4,5,6]</code>, how do you print out the
+doubles of each number? Triples?
+    <ul>
+      <li>Given the same array, how would you only print out the even numbers?
+What about the odd numbers?</li>
+      <li>Given the same array, how could you create a new array which contains each number multipled by 2?</li>
+    </ul>
+  </li>
+  <li>Given an array of first and last names, e.g. <code class="highlighter-rouge">["Victoria Vasys", "Ali Schlereth", "Nate Allen"]</code>, how would you print out only first names?
+    <ul>
+      <li>How would you print out only last names?</li>
+      <li>How could you print out only the initials?</li>
+      <li>How can you print out the last name and how many characters are in it?</li>
+      <li>How can you create an integer which represents the total number of characters in all the names?</li>
+    </ul>
+  </li>
+  <li>Say you had an array of nested arrays: <code class="highlighter-rouge">[['Victoria', 'Vasys'], ['Ali', 'Schlereth'], ['Mike', 'Dao']]</code>. Each nested array has two elements, a first name and a last name. How would you print out each nested array’s full name?</li>
+</ul>
+
+<h2 id="recap">Recap</h2>
+
+<ul>
+  <li>What do enumerable methods do? Give an example.</li>
+  <li>What is the syntax for an inline <code class="highlighter-rouge">each</code>? Multi-line <code class="highlighter-rouge">each</code>?</li>
+  <li>List 3 debugging tools/techniques for Ruby</li>
+  <li>What is the syntax for adding <code class="highlighter-rouge">Pry</code> to your code? Where do you add these?
+<!-- * What can you access in a runtime-invoked pry session? --></li>
+  <li>How do you proceed to the next <code class="highlighter-rouge">binding.pry</code> (could be the next iteration of a loop)?</li>
+  <li>How do you exit a pry session completely?</li>
+</ul>
+
+<hr />
+
+<h2 id="further-learning">Further Learning</h2>
+
+<p>Explore <a href="http://pryrepl.org/">http://pryrepl.org/</a></p>
+
+<p>Check out this video for a more in-depth intro to Pry: <a href="https://vimeo.com/26391171">Pry Screencast</a></p>
+
+<p>Fun fact- you can invoke “pry” on almost any Ruby object. That’s possible because it is defined on Object, the ancestor of every Ruby class.</p>
+
+<p>Finally, we are not limited to remaining in the scope where the binding.pry call was invoked - using Pry’s state navigation abilities we can navigate to any part of the program we wish and examine the state there (see <a href="https://vimeo.com/23634437">Pry at runtime demonstration</a>)</p>
+:ET

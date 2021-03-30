@@ -1,0 +1,105 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>Students will be able to explain the difference between state and behavior and how these concepts are implemented in Ruby</li>
+  <li>Students will be able to explain the Single Responsibility and DRY principles</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>State</li>
+  <li>Behavior</li>
+  <li>Object Oriented Programming</li>
+  <li>Refactoring</li>
+  <li>Single Responsibility Principle</li>
+  <li>DRY principle</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+<ul>
+  <li>Why is it important to write methods under 7 lines?</li>
+  <li>Why is it important to write lines of code under 80 characters?</li>
+</ul>
+
+<p>OOP</p>
+<ul>
+  <li>Why is it helpful?
+    <ul>
+      <li>Helps organize code into logical components
+DRY</li>
+    </ul>
+  </li>
+  <li>Only have to change code in one place</li>
+  <li>Makes code shorter and thus more readable
+Single Responsibility</li>
+  <li>Part of SOLID</li>
+  <li>applies to classes and methods</li>
+  <li>Flexibility
+    <ul>
+      <li>If things do one thing, changing it shouldn’t break other things</li>
+      <li>Avoids GOD class</li>
+    </ul>
+  </li>
+  <li>Readability
+    <ul>
+      <li>Only have to figure out one thing this class is doing.</li>
+    </ul>
+  </li>
+  <li>Lines of code less than 80</li>
+  <li>Methods less than 7</li>
+  <li>SRP</li>
+  <li>DRY</li>
+  <li>Encapsulation</li>
+  <li>Abstraction</li>
+</ul>
+
+<h2 id="solid-design-principles">SOLID Design Principles</h2>
+
+<p>SOLID is an acronym for 5 design principles that help software developers write better code. They are:</p>
+
+<ul>
+  <li>Single responsibility principle</li>
+  <li>Open/closed principle</li>
+  <li>Liskov substitution principle</li>
+  <li>Interface segregation principle</li>
+  <li>Dependency inversion principle</li>
+</ul>
+
+<p>In module 1, we will focus on the first of those principles.</p>
+
+<h3 id="single-responsibility-principle">Single Responsibility Principle</h3>
+
+<p><a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">Single Responsibility Principle Wikipedia Page</a></p>
+
+<p>The Single Responsibility Principle (SRP) states that every class and method should have responsibility over a single part of the functionality provided by the software. Put more simply, each class and method should do one thing.</p>
+
+<p>So far, we have seen classes and methods as tools we can use to organize our code into logical chunks. When we write those classes and methods, we want to ensure that they follow SRP. There are two main reasons we would want to do this:</p>
+
+<ol>
+  <li>To make our code readable</li>
+  <li>To make our code maintainable</li>
+</ol>
+
+<h3 id="dry">DRY</h3>
+
+<p>DRY stands for Don’t Repeat Yourself. Just like SRP, DRY makes our code both more readable and maintainable. Reasons we would do this:</p>
+
+<h3 id="independent-practice">Independent Practice</h3>
+
+<h4 id="turn--talk">Turn &amp; Talk</h4>
+
+<p>** break **</p>
+
+<h2 id="high-level-section">High Level Section</h2>
+<h3 id="sub-sections">Sub Sections</h3>
+
+<h3 id="independent-practice-1">Independent Practice</h3>
+
+<h4 id="turn--talk-1">Turn &amp; Talk</h4>
+
+<h2 id="wrap-up">Wrap Up</h2>
+<p>*
+*
+*</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+:ET

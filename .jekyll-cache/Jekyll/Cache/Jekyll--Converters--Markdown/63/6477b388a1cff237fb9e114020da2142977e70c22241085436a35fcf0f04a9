@@ -1,0 +1,122 @@
+I""'<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand why we validate data in our applications</li>
+  <li>Become familiar with common validation helpers in rails</li>
+  <li>Become familiar with common testing matchers from ShouldaMatchers</li>
+</ul>
+
+<h2 id="set-up">Set Up</h2>
+
+<p>This lesson begins on the <code class="highlighter-rouge">validations</code> branch of our <a href="https://github.com/turingschool-examples/set_list/tree/validations">set list repo</a></p>
+
+<h1 id="lesson">Lesson</h1>
+
+<h3 id="consider-this">Consider This</h3>
+
+<ul>
+  <li>Have you begun validating your data in your projects? Why or why not?</li>
+  <li>What kind of real world scenarios can you imagine an app needing to validate?</li>
+  <li>Why do we need to validate data on the backend if we use form helpers to disallow input on the frontend?</li>
+</ul>
+
+<p><a href="https://www.loom.com/share/8e4e5b831dd74a2885a5b403b7f494d9">FE form validation limitations screencast 5 minutes</a></p>
+
+<p><a href="https://edgeguides.rubyonrails.org/active_record_validations.html">From the Rails Guides:</a></p>
+
+<p>1.1 Why Use Validations?</p>
+
+<p>Validations are used to ensure that only valid data is saved into your database. For example, it may be important to your application to ensure that every user provides a valid email address and mailing address. Model-level validations are the best way to ensure that only valid data is saved into your database. They are database agnostic, cannot be bypassed by end users, and are convenient to test and maintain. Rails provides built-in helpers for common needs, and allows you to create your own validation methods as well.</p>
+
+<p>There are several other ways to validate data before it is saved into your database, including native database constraints, client-side validations and controller-level validations. Here’s a summary of the pros and cons:</p>
+
+<ul>
+  <li>Database constraints and/or stored procedures make the validation mechanisms database-dependent and can make testing and maintenance more difficult. However, if your database is used by other applications, it may be a good idea to use some constraints at the database level. Additionally, database-level validations can safely handle some things (such as uniqueness in heavily-used tables) that can be difficult to implement otherwise.</li>
+  <li>Client-side validations can be useful, but are generally unreliable if used alone. If they are implemented using JavaScript, they may be bypassed if JavaScript is turned off in the user’s browser. However, if combined with other techniques, client-side validation can be a convenient way to provide users with immediate feedback as they use your site.</li>
+  <li>Controller-level validations can be tempting to use, but often become unwieldy and difficult to test and maintain. Whenever possible, it’s a good idea to keep your controllers skinny, as it will make your application a pleasure to work within the long run.</li>
+</ul>
+
+<p>Choose these in certain, specific cases. It’s the opinion of the Rails team that model-level validations are the most appropriate in most circumstances.</p>
+
+<p>There are two kinds of Active Record objects: those that correspond to a row inside your database and those that do not. When you create a fresh object, for example using the new method, that object does not belong to the database yet. Once you call save upon that object it will be saved into the appropriate database table. Active Record uses the new_record? instance method to determine whether an object is already in the database or not.</p>
+
+<p>Consider your Artist Model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">order_by_creation_time</span>
+    <span class="n">order</span><span class="p">(</span><span class="s1">'created_at ASC'</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In the rails console:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">irb</span><span class="o">&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Beach House"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Artist</span> <span class="ss">id: </span><span class="kp">nil</span><span class="p">,</span> <span class="ss">name: </span><span class="s2">"Beach House"</span><span class="p">,</span> <span class="ss">created_at: </span><span class="kp">nil</span><span class="p">,</span> <span class="ss">updated_at: </span><span class="kp">nil</span><span class="o">&gt;</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">.</span><span class="nf">new_record?</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="c1"># Not saved to the database yet, no validations have run. Notice the nil values.</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">.</span><span class="nf">save</span>
+<span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="c1"># Validations were checked as part of the process for inserting a new record into the database.</span>
+<span class="c1"># Looking at our object now:</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">a</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Artist</span> <span class="ss">id: </span><span class="mi">9</span><span class="p">,</span> <span class="ss">name: </span><span class="s2">"Beach House"</span><span class="p">,</span> <span class="ss">created_at: </span><span class="s2">"2020-12-14 17:38:50"</span><span class="p">,</span> <span class="ss">updated_at: </span><span class="s2">"2020-12-14 17:38:50"</span><span class="o">&gt;</span>
+<span class="n">irb</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">.</span><span class="nf">new_record?</span>
+<span class="o">=&gt;</span> <span class="kp">false</span>
+<span class="c1"># This object now corresponds with a row in the database</span>
+</code></pre></div></div>
+
+<p>Creating and saving a new record will send an SQL INSERT operation to the database. Updating an existing record will send an SQL UPDATE operation instead. <strong>Validations are typically run before these commands are sent to the database.</strong> If any validations fail, the object will be marked as invalid and Active Record will not perform the INSERT or UPDATE operation. This avoids storing an invalid object in the database. You can choose to have specific validations run when an object is created, saved, or updated with the <code class="highlighter-rouge">:on</code> option.</p>
+
+<p>The following methods trigger validations, and will save the object to the database only if the object is valid:</p>
+
+<ul>
+  <li>create</li>
+  <li>create!</li>
+  <li>save</li>
+  <li>save!</li>
+  <li>update</li>
+  <li>update!</li>
+</ul>
+
+<p><strong>The bang versions (e.g. save!) raise an exception if the record is invalid. The non-bang versions don’t: save and update return false, and create returns the object.</strong></p>
+
+<h3 id="try-it">Try It</h3>
+
+<p>Use <a href="https://github.com/thoughtbot/shoulda-matchers/blob/master/lib/shoulda/matchers/active_record/validate_uniqueness_of_matcher.rb">ShouldaMatchers</a> and <a href="https://edgeguides.rubyonrails.org/active_record_validations.html">validation helpers</a> to accomplish the following:</p>
+
+<ul>
+  <li>Add a validation that validates the uniqueness of an Artist’s name</li>
+  <li>Add a validation that validates the presence of a Playlist’s name</li>
+  <li>Access validation errors when a validation fails on a model in your console</li>
+  <li>Access validation errors for a specific attribute when a validation fails on a model in your console</li>
+  <li>Add a validation that adds a max length for a Song title</li>
+  <li>Add a validation for the play_count column that validates numericality</li>
+  <li>Add a new column to the playlists table that has a validation that only runs on an <code class="highlighter-rouge">update</code></li>
+  <li>Add a custom validation method to assign a default length attribute for a Song when none is provided</li>
+</ul>
+
+<h3 id="boolean-got-ya">Boolean Got Ya</h3>
+
+<p>Since false.blank? is true, if you want to validate the presence of a boolean field you should use one of the following validations:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">validates</span> <span class="ss">:boolean_field_name</span><span class="p">,</span> <span class="ss">inclusion: </span><span class="p">[</span><span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">]</span>
+<span class="n">validates</span> <span class="ss">:boolean_field_name</span><span class="p">,</span> <span class="ss">exclusion: </span><span class="p">[</span><span class="kp">nil</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>By using one of these validations, you will ensure the value will NOT be nil which would result in a NULL value in most cases.</p>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>Why do we use validations?</li>
+  <li>What are some common validation helpers?</li>
+  <li>When do validations happen?</li>
+  <li>Where do validations happen? (DB, Rails application, FE, etc)</li>
+</ul>
+:ET

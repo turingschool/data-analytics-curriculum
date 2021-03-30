@@ -1,0 +1,194 @@
+I"�P<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Develop Strategies for file structure within the <code class="highlighter-rouge">spec</code> directory</li>
+  <li>Use capybara DSL to target specific elements on a page</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">within</code></li>
+  <li>CSS class and id</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>In your notebook, list all the methods you have used in your spec files - see if you can categorize them by capybara, shoulda-matchers, and what just comes with rails.</li>
+</ul>
+
+<h2 id="organizing-files-and-running-your-test-suite">Organizing Files and Running Your Test Suite.</h2>
+
+<h3 id="file-structure">File Structure</h3>
+
+<p>There is a strong convention to  group model tests in a directory called <code class="highlighter-rouge">spec/models</code> and to group feature tests in a directory called <code class="highlighter-rouge">spec/features</code>.  Using this convention will allow you to take advantage of RSpec’s built in assumptions that all tests in <code class="highlighter-rouge">/features</code> are feature tests, and all tests in <code class="highlighter-rouge">/models</code> are model tests.  Without this assumption, you would need to declare a type for each test, like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="s1">'this is a feature test'</span><span class="p">,</span> <span class="ss">type: :feature</span> <span class="k">do</span>
+  <span class="c1"># If you do not use the 'features' and 'models' file structure, you will need to declare a type.</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Model</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+  <span class="c1"># If you do not use the 'features' and 'models' file structure, you will need to declare a type.</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Keeping with the convention of <code class="highlighter-rouge">spec/features</code> and <code class="highlighter-rouge">spec/models</code>, you can start your tests without the type declaration:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/features/some_feature_spec.rb</span>
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="s1">'this is a feature test'</span> <span class="k">do</span>
+  <span class="c1"># If you use the 'features' and 'models' file structure, you will not need to declare a type.</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/some_model_spec.rb</span>
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Model</span> <span class="k">do</span>
+  <span class="c1"># If you use the 'features' and 'models' file structure, you will not need to declare a type.</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="spec-file-names">Spec File Names</h3>
+
+<p>When it comes to creating your test files in RSpec, there is really only one hard and fast rule: your test files must end with <code class="highlighter-rouge">_spec.rb</code>. If they do not end this way, when you run <code class="highlighter-rouge">rspec</code>, they will not be recognized as tests.  Since there are no rules for naming your spec files, you will see a lot of variety as you review other people’s code.</p>
+
+<p>From a Model perspective, the convention is to name your spec files in your model folder after the model it is testing.  For example: <code class="highlighter-rouge">models/song_spec.rb</code>.</p>
+
+<p>Unlike Model tests, there is no strong convention for naming your Feature test files. The ideal would be for the names of your tests to help build documentation for your application - when someone steps in to your application, they should be able to review the tests to understand what your application is capable of.  If you want some guidance, or a starting place, there are two strategies that you will see used frequently at Turing.</p>
+
+<p>One option would be to name your spec files to match with the headline of a user story; that could look like this: <code class="highlighter-rouge">featuers/visitor_visits_song_index_spec.rb</code>.  This test file would then include any tests that revolve around a visitor visiting the songs index - what they see, what they can click on, etc.</p>
+
+<p>A second option is to structure your feature tests in the same way we structure our view folders.  In this option, your features directory might look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- features
+    -- songs
+        index_spec.rb
+        show_spec.rb
+    -- artists
+        new_spec.rb
+</code></pre></div></div>
+
+<h2 id="before-each">Before :each</h2>
+
+<p>Up to this point, you have likely been creating the ‘setup’ portion of your tests over and over, using similar or identical setup for each test.  RSpec gives you a little help with this repetition with <code class="highlighter-rouge">before :each</code>.  <code class="highlighter-rouge">before :each</code> is a block that will run before every test (every <code class="highlighter-rouge">it</code> block).  You can use it to create setup for many tests and DRY up your test files.  It works in much the same way as the <code class="highlighter-rouge">setup</code> method in Minitest:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="s2">"songs index page"</span><span class="p">,</span> <span class="ss">type: :feature</span> <span class="k">do</span>
+  <span class="n">before</span> <span class="ss">:each</span> <span class="k">do</span>
+    <span class="vi">@artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'1903'</span><span class="p">)</span>
+    <span class="vi">@song_1</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Don't stop belivin'"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">303</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">12345</span><span class="p">)</span>
+    <span class="vi">@song_2</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s2">"Bohemian Rhapsody"</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">540</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">67829348</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s2">"shows all songs"</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="s1">'/songs'</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="vi">@song_1</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Play Count: </span><span class="si">#{</span><span class="vi">@song_1</span><span class="p">.</span><span class="nf">play_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="vi">@song_2</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"Play Count: </span><span class="si">#{</span><span class="vi">@song_2</span><span class="p">.</span><span class="nf">play_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">it</span> <span class="s1">'has links to song show pages'</span> <span class="k">do</span>
+    <span class="n">visit</span> <span class="s1">'/songs'</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_link</span><span class="p">(</span><span class="vi">@song_1</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+
+    <span class="n">click_link</span> <span class="vi">@song_1</span><span class="p">.</span><span class="nf">title</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">current_path</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"/songs/</span><span class="si">#{</span><span class="vi">@song_1</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="vi">@song_1</span><span class="p">.</span><span class="nf">title</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="specific-expectations">Specific Expectations</h2>
+
+<p>A lot of our expectations will make use of the <code class="highlighter-rouge">have_content</code> method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">'some content'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>On its own, this is not a very specific expectation since this is checking that some content appears <strong>anywhere</strong> on a page. We always want our expectations to be as specific as possible so that our tests catch any possible errors that may arise in our code.</p>
+
+<h3 id="have_content">have_content</h3>
+
+<p>One way to make your tests more specific is by using something other than <code class="highlighter-rouge">have_content</code>.  The following methods could be interchanged to indicate a more specific content type:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">have_button</code> - is there a button with a particular label</li>
+  <li><code class="highlighter-rouge">have_link</code> - is there a link with a particular label</li>
+  <li><code class="highlighter-rouge">have_css</code> - is there a particular css selector (often used to verify images)</li>
+</ul>
+
+<h3 id="click_on">click_on</h3>
+
+<p>Similar to <code class="highlighter-rouge">have_content</code>, we often will want to click on something and expect some result.  When we use <code class="highlighter-rouge">click_on('label')</code>, capybara will look for a link <strong>or</strong> button with a matching label. To be more specific, you can use <code class="highlighter-rouge">click_button</code> and <code class="highlighter-rouge">click_link</code>.</p>
+
+<h3 id="targeting-elements-with-css-selectors">Targeting Elements with CSS Selectors</h3>
+
+<p>Capybara gives us the ability to use <a href="https://www.w3schools.com/cssref/css_selectors.asp">CSS Selectors</a> in our tests. This gives us the ability to target specific elements just like we do when styling. We can use this in several capybara methods to make our test expectations more specific.</p>
+
+<h4 id="within">within</h4>
+
+<p>Let’s say we are looking at an index page that includes information about dozens of songs.  We want to expect that a song’s information is showing on the page but not just anywhere on the page - we want it grouped together with the other information about that song.  In effect, we want all information for each song to be grouped together on the page.  To test for this, we use the Capybara method <code class="highlighter-rouge">within</code>.</p>
+
+<p><code class="highlighter-rouge">within</code> allows us to use CSS Selectors to select elements and then write expectations just for that area of the page. For example,</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">within</span><span class="p">(</span><span class="s1">'#artist-13'</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">'content about this artist'</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In this example, the <code class="highlighter-rouge">within</code> method will look for the HTML element with an id <code class="highlighter-rouge">artist-13</code> and run any expectation only for the elements nested under that element.  We can also use <code class="highlighter-rouge">within</code> to target css classes or regular elements (like a <code class="highlighter-rouge">&lt;p&gt;</code>tag) just like we do when styling. Most often, we see <code class="highlighter-rouge">within</code> used with css ids and classes.</p>
+
+<h4 id="find-and-all"><code class="highlighter-rouge">find</code> and <code class="highlighter-rouge">all</code></h4>
+
+<p>Capybara also gives us the <code class="highlighter-rouge">find</code> and <code class="highlighter-rouge">all</code> methods. <code class="highlighter-rouge">find</code> will return a single element that matches a css selector, and <code class="highlighter-rouge">all</code> with return an array of all elements that match a css selector:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">page</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'#song-14'</span><span class="p">)</span>
+<span class="c1"># =&gt; Capybara::Node::Element object. Represents HTML element with id of "song-14"</span>
+<span class="n">page</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s1">'.song'</span><span class="p">)</span>
+<span class="c1"># =&gt; Array of Capybara::Node::Element objects. Represents all HTML elements with a class of "song"</span>
+</code></pre></div></div>
+
+<p>Notice that HTML elements are represented in Ruby as <code class="highlighter-rouge">Capybara::Node::Element</code> objects. Now that we have access to these elements, we can check for content within those elements with:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">song_14</span> <span class="o">=</span> <span class="n">page</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'#song-14'</span><span class="p">)</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">song_14</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">'Raspberry Beret'</span><span class="p">)</span>
+
+<span class="n">all_songs</span> <span class="o">=</span> <span class="n">page</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s1">'.song'</span><span class="p">)</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">all_songs</span><span class="p">[</span><span class="mi">2</span><span class="p">]).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">'Purple Rain'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="testing-for-sorted-elements">Testing for sorted elements</h2>
+
+<p>One of the more challenging things for beginning web developers to test is the order that things are appearing on a page. If you need to have options for a user to sort an index page, you will also need to test for that!</p>
+
+<p>There are several ways to test this, but the one we will show you here makes use of the Capybara <code class="highlighter-rouge">all</code> method and css selectors. <code class="highlighter-rouge">page.all</code> will return an array of the elements on the page that match that css selector, and we can use array methods to verify a specific order of those elements like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">within</span> <span class="s1">'#best-users'</span> <span class="k">do</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s1">'.user'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"megan"</span><span class="p">)</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s1">'.user'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"brian"</span><span class="p">)</span>
+  <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s1">'.user'</span><span class="p">)[</span><span class="mi">2</span><span class="p">]).</span><span class="nf">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s2">"sal"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In this example, we are verifying that within a tag with a css id of <code class="highlighter-rouge">best-users</code>, the first element with a class of <code class="highlighter-rouge">user</code> has the content <code class="highlighter-rouge">'megan'</code>, the second element with a class of <code class="highlighter-rouge">user</code> has the content <code class="highlighter-rouge">'brian'</code>, etc.</p>
+
+<h2 id="practice">Practice</h2>
+
+<p>In SetList:</p>
+
+<ol>
+  <li>Update your songs index test to use within blocks to test that the song information appears in a specific place on the page. Then, make the test pass. You will most likely need to update your view for your tests to work.</li>
+  <li>Write a new test for the songs index that tests that songs are shown in reverse alphabetical order. Then, make the test pass.</li>
+  <li>Create a <code class="highlighter-rouge">before :each</code> block to share setup between those two tests</li>
+</ol>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>How do you tell <code class="highlighter-rouge">within</code> to look for either a class or id?</li>
+  <li>What capybara method will help you test for sorted items on a page?</li>
+</ul>
+:ET

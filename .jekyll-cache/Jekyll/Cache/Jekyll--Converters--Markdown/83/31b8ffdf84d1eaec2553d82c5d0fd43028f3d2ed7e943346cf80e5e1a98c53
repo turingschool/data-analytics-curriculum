@@ -1,0 +1,87 @@
+I"�<p><em><a href="./index">Back to Enigma Home</a></em></p>
+
+<p>The encryption is based on the Caesar Cipher. The idea is that we can translate a character by shifting it a certain number of places down the alphabet. For more on the Caesar cipher, See <a href="http://practicalcryptography.com/ciphers/caesar-cipher/">This Description</a> or the <a href="https://en.wikipedia.org/wiki/Caesar_cipher">Wikipedia Page</a></p>
+
+<p>However, instead of using the same shift for every character, our algorithm will use 4 different shifts known as the A, B, C, and D shifts. Every fourth character will be shifted by the same amount, so the 1st, 5th, and 9th characters will be shifted with the A shift, the 2nd, 6th, and 10th characters will be shifted with the B shift, etc.</p>
+
+<p>Additionally, our algorithm will use the standard lowercase alphabet, plus a space, so 27 characters in total. You can use the following code snippet to create the character set:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="s2">"a"</span><span class="o">..</span><span class="s2">"z"</span><span class="p">).</span><span class="nf">to_a</span> <span class="o">&lt;&lt;</span> <span class="s2">" "</span>
+</code></pre></div></div>
+
+<h3 id="finding-the-shifts">Finding the Shifts</h3>
+
+<p>Each shift will be the sum of two other shifts known as the Keys and the Offsets. So the A shift will be the A key plus the A offset, the B shift will be the B key plus the B offset, etc.</p>
+
+<h4 id="the-keys">The Keys</h4>
+
+<p>The keys are created by generating a random five digit number, like 02715, and splitting it up like so:</p>
+
+<ul>
+  <li>A key: first two digits (02)</li>
+  <li>B key: second and third digits (27)</li>
+  <li>C key: third and fourth digits (71)</li>
+  <li>D key: fourth and fifth digits (15)</li>
+</ul>
+
+<h4 id="the-offsets">The Offsets</h4>
+
+<p>The offsets are found using the date of transmission.</p>
+
+<ul>
+  <li>Consider the date formatted as a number, DDMMYY. If the date is August 4, 1995, it would be represented as 040895.</li>
+  <li>Square the numeric form (1672401025)</li>
+  <li>Take the last four digits (1025)</li>
+  <li>A offset: The first digit (1)</li>
+  <li>B offset: The second digit (0)</li>
+  <li>C offset: The third digit (2)</li>
+  <li>D offset: The fourth digit (5)</li>
+</ul>
+
+<h3 id="encrypting-a-message">Encrypting a Message</h3>
+
+<p>Let’s say we are trying to encrypt the message <code class="highlighter-rouge">"hello world"</code>.</p>
+
+<p>Using the previous examples, the keys are 02, 27, 71, 15 and the offsets are 1, 0, 2, 5. So the final shifts would be:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: 3
+B: 27
+C: 73
+D: 20
+</code></pre></div></div>
+
+<p>Our character set is the alphabet and a space like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">,</span> <span class="s2">"g"</span><span class="p">,</span> <span class="s2">"h"</span><span class="p">,</span> <span class="s2">"i"</span><span class="p">,</span> <span class="s2">"j"</span><span class="p">,</span> <span class="s2">"k"</span><span class="p">,</span> <span class="s2">"l"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"n"</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"q"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"s"</span><span class="p">,</span> <span class="s2">"t"</span><span class="p">,</span> <span class="s2">"u"</span><span class="p">,</span> <span class="s2">"v"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>If we are trying to encrypt “hello world”, the first character (“h”) is shifted by the A shift (3). So “h” becomes “k”.</p>
+
+<p>The second character (“e”) is shifted by the B shift (27). Since there are 27 characters in our set, shifting by 27 gets us back to where we started, so “e” becomes “e”.</p>
+
+<p>The third character (“l”) is shifted by the C shift (73). “l” becomes “d”.</p>
+
+<p>The fourth character (“l”) is shifted by the D shift (20). “l” becomes “e”.</p>
+
+<p>When we get to the 5th character (“o”), we cycle back through the shifts, so “o” is shifted by the A shift (3) and becomes “r”. The sixth character (“ “) is shifted by the B shift (27) and becomes “ “.</p>
+
+<p>The final translation for this example would be:</p>
+
+<p>“hello world” =&gt; “keder ohulw”</p>
+
+<h4 id="other-notes-on-encryption">Other notes on Encryption</h4>
+
+<ul>
+  <li>You should be able to generate random numbers with leading zeros. In the example shown, the random number was 2715, so it should be zero padded to make it a five digit number (02715)</li>
+  <li>Your translation should only translate using lowercase letters. If a letter is uppercase, it should use the lowercase translation, so in the example above, “HELLO WORLD” would still translate to “keder ohulw”</li>
+  <li>If you encounter a character not in the character set, it should be translated as itself. Using the example above, “hello world!” should be translated as “keder ohulw!”</li>
+</ul>
+
+<h4 id="decrypting-a-message">Decrypting a Message</h4>
+
+<p>In order to decrypt a message, we need to know the key and date that were used for encryption. We can find the total shifts using the same methods as above. Then each character is shifted backwards instead of forwards.</p>
+
+<h4 id="cracking-a-key">Cracking a Key</h4>
+
+<p>When the key is not known, we can crack the encryption using just the date of transmission. We believe that each enemy message ends with the characters <code class="highlighter-rouge">" end"</code>. Use this to crack the encryption.</p>
+:ET

@@ -1,0 +1,265 @@
+I"�\<h2 id="learning-goals">Learning Goals</h2>
+
+<p>By the end of this lesson, you will:</p>
+
+<ul>
+  <li>Understand how and when to use specific debugging tools</li>
+  <li>Be able to debug errors in HTML, CSS and JavaScript</li>
+  <li>Know where to look for and how to isolate JavaScript errors</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>dev tools</li>
+  <li>debugger</li>
+  <li>elements</li>
+  <li>console</li>
+  <li>network</li>
+  <li>sources</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>What debugging tools do you use in Rails? To what extent do you think they are helpful? What is your favorite, and why?</li>
+  <li>What debugging tools have you used in JavaScript so far? To what extent do you think they are helpful? What is your favorite, and why?</li>
+</ul>
+
+<h2 id="debugging-the-front-end-with-devtools">Debugging the Front-End with DevTools</h2>
+
+<p>Debugging your front-end code can be an intimidating part of the development process, but it’s also one of the most powerful skills you can acquire. Developers of all levels spend a significant amount of time troubleshooting code, but the more comfortable you are with debugging tools, the easier it will be to isolate, identify and fix broken code.</p>
+
+<p>The front-end languages (HTML, CSS and JavaScript) are run entirely in the browser, so the technique for troubleshooting broken code can happen in many places. Luckily, modern browsers are aware of this and give us a collection of advanced tools to help us debug.</p>
+
+<h3 id="developer-tools">Developer Tools</h3>
+<p>One of the first tools you should familiarize yourself with when doing front-end development are the built-in browser <a href="https://developer.chrome.com/devtools">DevTools</a>, which can be used to explore any webpage.</p>
+
+<h4 id="accessing-devtools">Accessing DevTools</h4>
+<p>First, open up your favorite website - preferably something that you imagine has a lot of traffic and/or is making a lot of requests (NYTimes and CNN are great for this exercise if you don’t have a favorite).</p>
+
+<p>To open developer tools in Chrome:</p>
+<ul>
+  <li>Mac: <code class="highlighter-rouge">Cmd</code> + <code class="highlighter-rouge">Opt</code> + <code class="highlighter-rouge">i</code></li>
+  <li>(or) Right click on the browser window and select <code class="highlighter-rouge">inspect</code></li>
+  <li>(or) Select <code class="highlighter-rouge">View</code> in the navbar, then <code class="highlighter-rouge">Developer</code>, then <code class="highlighter-rouge">Developer Tools</code></li>
+</ul>
+
+<p>Personally I find that pinning the dev tools to the upper right is the most convenient. (You can also expand them into their own window.)</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/devtools-window.gif" alt="devtools window" /></p>
+
+<h4 id="the-panels">The Panels</h4>
+<p>Once you have your DevTools window open, you’ll notice a toolbar across the top with several different tabs. Clicking on these tabs will bring you to different debugging panels, each built to help troubleshoot specific areas of your front-end code.</p>
+
+<p>As mentioned earlier, there are a lot of places on the front-end where code can go wrong. This means the first and most important step in solving a bug is <strong>isolating the problem</strong>. DevTools has already done some of this step for us by categorizing the most commmon areas where developers run into problems, and providing us with specific debugging panels for each.</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/devtools-toolbar.png" alt="devtools toolbar" /></p>
+
+<p>For now, we’re only going to focus on the first four panels: Elements, Console, Sources and Network. These are the primary panels you’ll be working with most often.</p>
+
+<p><em>More information about the other panels can be found in <a href="http://discover-devtools.codeschool.com/">Code School’s Discover-DevTools Tutorial.</a></em></p>
+
+<hr />
+
+<h3 id="the-elements-panel-debugging-html-css--dom-events">The Elements Panel: Debugging HTML, CSS &amp; DOM Events</h3>
+
+<h5 id="helpful-for">HELPFUL FOR:</h5>
+<ul>
+  <li>debugging layout and styling issues</li>
+  <li>checking DOM events</li>
+</ul>
+
+<p>The elements panel lets you view the entire HTML source of the current page you are viewing. From here, you can edit, add or remove content and elements directly on the page. Though your changes won’t be saved (any changes made here will be lost upon refreshing the page), sometimes it’s helpful to make tweaks directly in this panel so you can see what effect the changes will have on your application before you implement them.</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/elements-panel.png" alt="Elements Panel" /></p>
+
+<h4 id="selecting-elements-to-work-with">Selecting Elements to work with</h4>
+<p>You’ll notice hovering over an HTML element in the devtools panel will also highlight that element on the page. This makes it easier to find and select the content you’d like to work with.</p>
+
+<p>You can also select elements directly on the page by clicking the <img src="http://i.imgur.com/ODylyUu.png" alt="Square Arrow" /> icon in the toolbar, then hovering over the element on the page. This will automatically bring you to the corresponding code for that element in the devtools panel.</p>
+
+<p><strong>TRY IT:</strong> Click on an element on your favorite website, then look at the HTML in the DevTools.</p>
+
+<p>If you’re having trouble finding the element you’d like to work with, you can search through the entire HTML with <code class="highlighter-rouge">Cmd + F</code>. You’ll notice a searchbar appear at the bottom of the panel where you can enter any string to find a match. This is useful if you’d like to search for an element by a known ID or class.</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/find-in-html.gif" alt="Find in HTML" /></p>
+
+<h4 id="editing-elements-and-content">Editing Elements and Content</h4>
+<p>Directly from the elements panel, we can edit the HTML and see the changes reflected immediately. (Again, these changes won’t be saved to your codebase, but sometimes it helps to see the tweaks as you make them before committing to them.)</p>
+
+<p>Let’s say we want to edit the title of a headline from some garbage about Trump to some good news. We can find that heading in the elements panel, double-click on it, and edit the text:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/editing-text.gif" alt="Editing Text" /></p>
+
+<p>Now let’s say we want to make just one word in the title bold. If we wrap a <code class="highlighter-rouge">&lt;b&gt;</code> tag around that word, and hit the <code class="highlighter-rouge">enter</code> key to save the change, look what happens:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/cant-parse-html.gif" alt="Cant Parse HTML" /></p>
+
+<p>The browser didn’t recognize that we wanted the <code class="highlighter-rouge">&lt;b&gt;</code> tag to be considered HTML, and it rendered it as plain text. In order to edit in HTML-mode, we must right-click on the element and select ‘Edit as HTML’. Now we can wrap the word in <code class="highlighter-rouge">&lt;b&gt;</code> tags and it will render it bold:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/edit-as-html.gif" alt="Edit as HTML" /></p>
+
+<p>There are a lot of other options in the menu that appears when you right-click on an element.</p>
+
+<p><strong>TRY IT:</strong> Play around with each of the options on your favorite website to see what else can be done!</p>
+
+<h4 id="editing-css">Editing CSS</h4>
+<p>To the right of the HTML pane, there’s a small sidebar (Styles is selected by default) that gives us styling information for the currently selected element. Similar to the HTML pane, we can add or remove styles and adjust CSS property values from this pane. You can click on any style property associated with the selected element and change its value. You can also use the blue checkbox to toggle the style on or off.</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/editing-css.png" alt="Editing CSS" /></p>
+
+<h4 id="inspecting-dom-events">Inspecting DOM Events</h4>
+<p>In this sidebar, you will also find a tab labeled ‘Event Listeners’. This is an important one for debugging user interactions on your application. In the gif below, this arrow/send button provides a dropdown with a menu of options to like or retweet the article. When one is clicked on, another window will open to the respective social media website.</p>
+
+<p>We can verify that this event listener has been attached to its corresponding DOM node by selecting the <code class="highlighter-rouge">button</code> in the elements panel, and navigating to the ‘Event Listeners’ tab in the sidebar:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/event-listeners.gif" alt="Event Listeners" /></p>
+
+<p><strong>TRY IT:</strong> Select an element that you would expect to have an event listener and try to locate it in the tools. Warning: if this is a site with a lot going on, you’ll see A LOT of listeners! Dig into some of those and try to figure out what they may be doing.</p>
+
+<hr />
+
+<h3 id="the-console-examining-javascript-errors--logging-information">The Console: Examining JavaScript Errors &amp; Logging Information</h3>
+<p>Many of the front-end bugs you encounter will be caused by the JavaScript in your application rather than your HTML or CSS. Tracking down these kinds of bugs can be tricky, but we can get a lot of information about the nature of a JavaScript error by using the console panel.</p>
+
+<h5 id="helpful-for-1">HELPFUL FOR:</h5>
+<ul>
+  <li>finding additional context about a JavaScript error</li>
+  <li>tracing a JavaScript error to the exact line that caused it</li>
+  <li>logging information about your code as it runs</li>
+</ul>
+
+<h4 id="exploring-javascript-errors-in-the-console">Exploring JavaScript Errors in the console</h4>
+<p>By default, the console panel will log any errors or warnings that it detects in your application. Warnings will be highlighted in yellow, and errors will be red. If you’re following along with the expense tracker application, you’ll notice we already have some errors in our console:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/console-error.png" alt="Console Error" /></p>
+
+<p>Each error in the console will provide you with the following information:</p>
+
+<p><strong>A description of the error</strong><br />
+We seem to have a Reference Error to an undefined variable called <code class="highlighter-rouge">loadExpenses</code></p>
+
+<p><strong>The file name and line number where the error occurred</strong><br />
+On the right-hand side of the panel, it tells us the error is coming from a file called ‘jquery-3.1.0.min.js’ on line 2. But that doesn’t seem right, because we didn’t write that code and jQuery never has bugs! This is where the <strong>stack trace</strong> comes in.</p>
+
+<p><strong>The stack trace allows you to follow the bug directly to where it originated</strong><br />
+If you click the little triangle arrow next to the error in the console, you’ll see some additional information expand. This is the line-by-line path of the bug that caused the code to throw an error. It’s now much easier to see that the bug originated in our <code class="highlighter-rouge">script.js</code> file, on line 39.</p>
+
+<h4 id="logging-values-with-consolelog">Logging values with <code class="highlighter-rouge">console.log()</code></h4>
+<p>Occassionally, you may want want to log custom information about the state of your code to the console. The console panel comes with a built-in <code class="highlighter-rouge">log</code> method that allows you to print any values you might be interested in seeing. You can think of the <code class="highlighter-rouge">console.log()</code> method as the equivalent of <code class="highlighter-rouge">puts</code> in Ruby.</p>
+
+<p>Now that we’ve fixed the first JavaScript error we encountered, we can actually see one of our custom logging messages in in the console. Logging this success message was just a single line of code in our <code class="highlighter-rouge">getExpenses</code> function:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">getExpenses</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/expenses</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Expenses returned successfully!</span><span class="dl">'</span><span class="p">))</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">There was some kind of error.</span><span class="dl">'</span><span class="p">))</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>It’s nice to know that we have made a successful fetch call, but what if we want to log the data from our fetch response? Let’s include the <code class="highlighter-rouge">data</code> argument from our success callback into our <code class="highlighter-rouge">console.log()</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Expenses returned successfully: </span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>You should now see the success message along with the array of expenses that were returned from that fetch request. This is a common way for developers to confirm the value of a variable or clarify what is being returned from a function.</p>
+
+<p>However, there are a couple of downsides to this method:</p>
+
+<ul>
+  <li><strong>it encourages debugging by ‘trial-and-error’</strong> - you have to guess where in your code you should put the logging, and what values you need to log</li>
+  <li><strong>logged data is stale</strong> - your code continues to run even after the values have been logged, so you can’t actually <em>do</em> anything with them</li>
+  <li><strong>we tend to forget about them</strong> - they’ll sit around in our codebase and eventually get pushed to production</li>
+</ul>
+
+<p>Luckily, there are alternative debugging strategies we can use that are a bit more powerful and efficient. We’ll explore these further in the next section.</p>
+
+<hr />
+
+<h3 id="the-sources-panel-live-debugging-of-javascript-errors">The Sources Panel: Live-Debugging of JavaScript Errors</h3>
+<p>The sources panel gives us an overview of all the files we have loaded into our application. We can examine our entire front-end codebase simply by clicking through the files in the left-hand sidebar. Being able to see our code line-by-line will help us isolate JavaScript errors and pinpoint exactly where our code is broken.</p>
+
+<h5 id="helpful-for-2">HELPFUL FOR:</h5>
+<ul>
+  <li>examining the files loaded into your application</li>
+  <li>live-debugging JavaScript errors</li>
+  <li>monitoring the values of application variables</li>
+</ul>
+
+<p><strong>TRY IT:</strong> Look through the files on the far left, as well as all the <code class="highlighter-rouge">.js</code> files (along the horizontal tab) - what might those all be responsible for?</p>
+
+<h4 id="pausing-code-execution-with-debugger">Pausing Code Execution with <code class="highlighter-rouge">debugger</code></h4>
+<p>Similar to the <code class="highlighter-rouge">console.log()</code> method we just learned about, we can also use <code class="highlighter-rouge">debugger</code> statements in our code to get feedback about our application’s JavaScript.</p>
+
+<p>The <code class="highlighter-rouge">debugger</code> statement is a bit more robust than <code class="highlighter-rouge">console.log()</code> because it will stop your app in its tracks whenever the browser reaches the line you placed it on. For example, you can place a <code class="highlighter-rouge">debugger</code> within a function to pause the browser from running the script when it hits that portion of your code. This gives you time to explore your code in the console, giving you access to any information your program has at that point in time.</p>
+
+<p><em>NOTE - The console must be open for debugger to catch, otherwise the app will look normal and you won’t get any error messages - if you get stuck, refresh your page while the console is open and go from there.</em></p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/debugger-pause.png" alt="debugger-pause" /></p>
+
+<p>Pay special attention to the sidebar on the right of the DevTool panel. Underneath the ‘scope’ section, you can explore all the variables that exist within your scope at the time of this pause. You’ll notice the variable called <code class="highlighter-rouge">expense</code> will change as we iterate through each loop, because we are appending a new expense object to the DOM every time we pause our code.</p>
+
+<h4 id="setting-breakpoints">Setting Breakpoints</h4>
+<p>As mentioned, the <code class="highlighter-rouge">debugger</code> strategy has some advantages over using <code class="highlighter-rouge">console.log()</code>. The only setback with using <code class="highlighter-rouge">debugger</code> statements is that we have to continually toggle between our codebase and the browser, adding and removing debuggers from our code. The sources panel actually provides a way for us to streamline this debugging process a little bit.</p>
+
+<p>When we want to set a <code class="highlighter-rouge">debugger</code> statement in a particular JavaScript file, we can simply open that file in the source panel by clicking on its name in the left-sidebar. Once we’re viewing the code, we can set ‘breakpoints’ (essentially, these are debugger statements) by clicking on the line numbers where we want to pause code execution. This makes it easy and fast for us to add and remove as many breakpoints as we want.</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/breakpoint-pause.png" alt="breakpoint-pause" /></p>
+
+<h4 id="watching-variables">Watching Variables</h4>
+<p>Another way we can inspect the state of our application is by using watch expressions. In the sidebar above the ‘scope’ section we just explored, there is also a ‘watch’ section. In here, we can add the name of any variable in our application, and the panel will continuously monitor and display its value, no matter how many times it changes.</p>
+
+<p>With our breakpoints still in place, let’s add the variable <code class="highlighter-rouge">expense</code> to the watch section by clicking on the plus sign and typing ‘expense’ into the textbox that appears:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/add-watch.png" alt="Add watch expression" /></p>
+
+<p>Now when we refresh our page and our code is paused on each loop, we should notice the <code class="highlighter-rouge">expense</code> variable in our watch expression updating with every loop:</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/watch-expressions.png" alt="Watch Expressions" /></p>
+
+<hr />
+
+<h3 id="the-network-panel-debugging-communication-with-apis">The Network Panel: Debugging Communication with APIs</h3>
+
+<h5 id="helpful-for-3">HELPFUL FOR:</h5>
+<ul>
+  <li>examining network requests and responses</li>
+  <li>debugging issues with sending or receiving API data</li>
+</ul>
+
+<p>The network tab shows you information about all the server requests that were made when loading or interacting with your application. Specifically, you can view the response and status code of each request and how long it took to make the trip to the server and back. This panel is most helpful when you are debugging data that is being sent to and received from an API.</p>
+
+<p><img src="/assets/images/lessons/debugging-with-devtools/network-panel.png" alt="Network Panel" /></p>
+
+<p>One thing you’ll notice about the network panel is that it won’t automatically record any network requests unless you have the panel open at the time they’re made. Additionally, the request list will refresh every time you navigate to a new page. You can change this functionality by selecting <strong>Preserve Log</strong> at the top of the panel.</p>
+
+<h4 id="http-status-codes">HTTP Status Codes</h4>
+
+<p>The network panel is only useful if you understand what types of responses you can get back from a server. Familiarize yourself with all the different <a href="http://www.restapitutorial.com/httpstatuscodes.html">status codes</a> you might receive from a network request. These status codes give you information about what happened during your request - was it successful? Did it fail? Why did it fail?</p>
+
+<p>Lucky for us, the network panel automatically highlights any failed requests in red:</p>
+
+<p><img src="https://i.imgur.com/Tx5cJ8i.png" alt="Network Panel Error" /></p>
+
+<p>When we’re trying to debug a network request and we see that it is highlighted in red in the network panel, we can click on the request under the ‘Name’ column to view more details about it. Here we’ll be able to see more information about why it failed and what data was sent with the request:</p>
+
+<p><img src="https://i.imgur.com/R156Ed9.png" alt="Request Details" /></p>
+
+<p>The most important tabs in this view are the HEADERS tab and the RESPONSE tab. The Headers tab will give you detailed information about what was sent in the request. The response tab will show you what you actually received back from the server. This could be the JSON data you requested, an error message, or even an entire HTML file.</p>
+
+<p><strong>TRY IT:</strong> Before your explore - what status codes do you expect to see on your favorite website? Now, check it out. What status codes do you see? Do you see any red? If so, click on it and investigate the headers and response tabs associated with it.</p>
+
+<hr />
+
+<h3 id="practice">Practice</h3>
+
+<p>Let’s put this information into practice by trying to solve a couple of bugs in our expense application.</p>
+
+<p>You can clone the application <a href="https://github.com/turingschool-examples/debugging-with-devtools">here</a>, and follow the installation instructions in the README to get set up. The application has some pre-made bugs for us to solve as we go through the lesson. Read through the first buggy scenario <a href="https://github.com/turingschool-examples/debugging-with-devtools/tree/category-highlighting">here</a> and checkout the <code class="highlighter-rouge">category-highlighting</code> branch to get started fixing
+that code.</p>
+
+<hr />
+
+<p>For more details and information about other ways to dig into your js, check out the <a href="https://developer.chrome.com/devtools/docs/javascript-debugging">Chrome Documentation</a>.</p>
+:ET

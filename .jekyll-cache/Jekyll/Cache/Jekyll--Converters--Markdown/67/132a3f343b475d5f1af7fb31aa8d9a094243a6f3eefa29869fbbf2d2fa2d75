@@ -1,0 +1,468 @@
+I"Ѿ<h2 id="vocabulary">Vocabulary</h2>
+
+<p>Refactor:</p>
+<ul>
+  <li>to change code in a way that the end functionality still works as intended, but reorganizes it in a way to make it easier to maintain, easier to test, etc</li>
+</ul>
+
+<p>SRP:</p>
+<ul>
+  <li>Single Responsibility Principle; the ideal that a piece of code should be responsible for one kind of task
+    <ul>
+      <li>this can be at a class level, a method level, etc.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Design Pattern:</p>
+<ul>
+  <li>an implementation of code which follows as much “industry standard” as possible to achieve clean organization of our code</li>
+</ul>
+
+<p>MVC:</p>
+<ul>
+  <li>Model, View, Controller design pattern; a way of organizing our code into logical portions where our “business logic” is managed by the Controller, the “data logic” is managed by the Models, and the “presentation logic” is managed by the Views</li>
+</ul>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<p>By the end of this class, a student should be able to:</p>
+
+<ul>
+  <li>Refactor code that reaches an API from the controller
+    <ul>
+      <li>Refactoring will include the Facade design pattern, the Service design pattern</li>
+    </ul>
+  </li>
+  <li>Utilize two of the pillars of object oriented programming, abstraction and encapsulation, to guide their refactoring.</li>
+</ul>
+
+<h3 id="declarative-programming">Declarative Programming</h3>
+
+<p>Throughout this refactor, we will use a technique called <a href="https://vimeo.com/131588133">Declarative Programming</a>. This is also referred to as dream driven development. Simply put, we write the code we wish existed and worry about implementation details later.</p>
+
+<p>We use this strategy in life all the time. A statement such as “I need to travel to New York City.” is an example. There is no mention of <em>how</em> we plan to get there. We could take a train, car, plane, bicycle, or some combination but those are details we will worry about later. Depending on your origin different strategies make more sense than others.</p>
+
+<p>It’s less likely, although perhaps more exciting, to select a means of travel without knowing the final destination. “I’d like to ride a train for 12 hours, a bus for 3 hours, and a boat for 2 hours. Where can I go?” There’s a good chance you won’t end up in NYC.</p>
+
+<p>Writing code this way makes it more likely that we’ll end up with abstractions that aren’t vulnerable to breaking if implementation changes.</p>
+
+<p>For example, currently we are using Propublica to retrieve this data but this data used to be provided by an API called The Sunlight Foundation. Google also makes some of this data available through their Civic API. By deciding how we want to interface with these objects and classes (picking our destination) prior to implementing API calls (how we are going to get there) we make this view more robust and less brittle. Imagine if we were parsing hashes here instead of objects. If the API changes, the keys of that hash likely change and this view suddenly stops working. We want to minimize the number of layers that need to change if we switch out our API.</p>
+
+<h3 id="red-green-refactor">Red, Green, Refactor</h3>
+
+<p>We will also be using the Red, Green, Refactor technique. Red refers to a failing test, green refers to a passing test, and refactoring refers to making changes to improve code. We want to start with a failing test and then make it pass (red to green). We already did that step in the previous lesson. Then we make a refactor to improve the code. As we make that refactor, our test will most likely break, so our goal is for that refactor to end with our tests passing again. This way, we can use our tests to check our work every step along the way. We want to try to keep our refactors small and get back to green as often as possible to maintain our functionality.</p>
+
+<h3 id="member-objects">Member Objects</h3>
+
+<p>Right now, our app does what it’s supposed to do but there’s a good chance that it doesn’t “feel” right. Specifically, our <code class="highlighter-rouge">index</code> action in the controller is long, violates SRP and MVC, isn’t very abstract, the data isn’t well encapsulated, and the logic that lives in it isn’t reusable. Time to refactor.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="ss">:state</span><span class="p">]</span>
+
+    <span class="n">conn</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s2">"https://api.propublica.org"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s2">"X-API-KEY"</span><span class="p">]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="no">YOUR</span> <span class="no">API</span> <span class="no">KEY</span><span class="o">&gt;</span>
+    <span class="k">end</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="ss">:results</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The first thing we’ll tackle is the last line in the controller, <code class="highlighter-rouge">@members = json[:results]</code>. We are passing an Array of Hashes to the view via <code class="highlighter-rouge">@members</code>. Let’s take a look at the view:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span><span class="vi">@members</span><span class="p">.</span><span class="nf">size</span><span class="cp">%&gt;</span> Results <span class="nt">&lt;/h1&gt;</span>
+<span class="cp">&lt;%</span> <span class="vi">@members</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">member</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"members"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"name"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">[</span><span class="ss">:name</span><span class="p">]</span><span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"role"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">[</span><span class="ss">:role</span><span class="p">]</span><span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"party"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">[</span><span class="ss">:party</span><span class="p">]</span><span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"district"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">[</span><span class="ss">:district</span><span class="p">]</span><span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>This code is not very abstract since all the implementation details of how to dig through that Hash are exposed. It’s also not very encapsulated since all of the data is combined into this one giant array called <code class="highlighter-rouge">@members</code> rather than organized into logical containers.</p>
+
+<p>So, what we want to do is create objects that will encapsulate that data and abstract away the details of how to interact with that data.</p>
+
+<p>Let’s declare the code we wish existed:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="ss">:state</span><span class="p">]</span>
+
+    <span class="n">conn</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s2">"https://api.propublica.org"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s2">"X-API-KEY"</span><span class="p">]</span> <span class="o">=</span> <span class="o">&lt;</span><span class="no">YOUR</span> <span class="no">API</span> <span class="no">KEY</span><span class="o">&gt;</span>
+    <span class="k">end</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="ss">:results</span><span class="p">].</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">member_data</span><span class="o">|</span>
+      <span class="no">Member</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">member_data</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Here, we are imagining that we can map our Array of Hashes to an Array of Member objects.</p>
+
+<p>When we run the tests, it complains that <code class="highlighter-rouge">Member</code> does’t exist, so let’s go make it. We’re going to create this as a Plain Old Ruby Object (PORO), and not as a Model, since we don’t intend to store this data in our database:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/poros/member.rb</span>
+
+<span class="k">class</span> <span class="nc">Member</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now our tests says wrong number of arguments for initialize. We need to accept our hash of attributes:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Member</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now our view is complaining about undefined method <code class="highlighter-rouge">[]</code> for a <code class="highlighter-rouge">Member</code> object. In our view, we are still treating the <code class="highlighter-rouge">@members</code> variable as an Array of Hashes, but now it is an Array of objects that we can call methods on:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span><span class="vi">@members</span><span class="p">.</span><span class="nf">size</span><span class="cp">%&gt;</span> Results <span class="nt">&lt;/h1&gt;</span>
+<span class="cp">&lt;%</span> <span class="vi">@members</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">member</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">"members"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"name"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">.</span><span class="nf">name</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"role"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">.</span><span class="nf">role</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"party"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">.</span><span class="nf">party</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">"district"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">member</span><span class="p">.</span><span class="nf">district</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>Now we get undefined method <code class="highlighter-rouge">name</code> for our Member objects. All that’s left to do is expose that data through <code class="highlighter-rouge">attr_readers</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/poros/member.rb</span>
+
+<span class="k">class</span> <span class="nc">Member</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span><span class="p">,</span>
+              <span class="ss">:role</span><span class="p">,</span>
+              <span class="ss">:party</span><span class="p">,</span>
+              <span class="ss">:district</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
+    <span class="vi">@name</span>       <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="ss">:name</span><span class="p">]</span>
+    <span class="vi">@role</span>       <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="ss">:role</span><span class="p">]</span>
+    <span class="vi">@party</span>      <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="ss">:party</span><span class="p">]</span>
+    <span class="vi">@district</span>   <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="ss">:district</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We should now be back to green! That’s a successful refactor. It would also be a good idea to add a test for the Member class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/poros/member_spec.rb</span>
+
+<span class="nb">require</span> <span class="s2">"rails_helper"</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Member</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">"exists"</span> <span class="k">do</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="ss">name: </span><span class="s2">"Leslie Knope"</span><span class="p">,</span>
+      <span class="ss">district: </span><span class="s2">"1"</span><span class="p">,</span>
+      <span class="ss">role: </span><span class="s2">"Representative"</span><span class="p">,</span>
+      <span class="ss">party: </span><span class="s2">"Pizza"</span>
+    <span class="p">}</span>
+
+    <span class="n">member</span> <span class="o">=</span> <span class="no">Member</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">member</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_a</span> <span class="no">Member</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">member</span><span class="p">.</span><span class="nf">name</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Leslie Knope"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">member</span><span class="p">.</span><span class="nf">role</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Representative"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">member</span><span class="p">.</span><span class="nf">party</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Pizza"</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">member</span><span class="p">.</span><span class="nf">district</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"1"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="searchfacade-object">SearchFacade Object</h3>
+
+<p>Let’s look at our Controller in it’s current state:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="ss">:state</span><span class="p">]</span>
+
+    <span class="n">conn</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s1">'https://api.propublica.org'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'X-API-Key'</span><span class="p">]</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"PROPUBLICA_API_KEY"</span><span class="p">]</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">adapter</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">default_adapter</span>
+    <span class="k">end</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="ss">:results</span><span class="p">].</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">member_data</span><span class="o">|</span>
+      <span class="no">Member</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">member_data</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>It’s still pretty long, violating SRP, and not abstract. A common refrain when developing rails apps is “Skinny Controllers”. Ideally, the controller doesn’t do any work itself but rather just coordinates between other parts of the application. Think of it as a CEO: it doesn’t actually do anything, it just tells others what to do.</p>
+
+<p>Let’s declare what this might look like:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="no">SearchFacade</span><span class="p">.</span><span class="nf">members</span>
+
+    <span class="c1"># state = params[:state]</span>
+    <span class="c1">#</span>
+    <span class="c1"># conn = Faraday.new(url: 'https://api.propublica.org') do |faraday|</span>
+    <span class="c1">#   faraday.headers['X-API-Key'] = ENV["PROPUBLICA_API_KEY"]</span>
+    <span class="c1">#   faraday.adapter Faraday.default_adapter</span>
+    <span class="c1"># end</span>
+    <span class="c1">#</span>
+    <span class="c1"># response = conn.get("/congress/v1/members/house/#{state}/current.json")</span>
+    <span class="c1"># json = JSON.parse(response.body, symbolize_names: true)</span>
+    <span class="c1"># @members = json[:results].map do |member_data|</span>
+    <span class="c1">#   Member.new(member_data)</span>
+    <span class="c1"># end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="what-is-a-facade">What is a Facade?</h3>
+
+<p>In construction and architecture, a “facade” is like a “faceplate” or something that covers something more complex underneath. In software design, a Facade is a front-facing interface masking more complex underlying or structural code. To use our CEO and “company structure” analogy, a Facade is like “middle management” who knows who to organize to get a job done.</p>
+
+<p>In our code, our Controllers will generally have one Facade, and the Facade should be named similarly to our Controller. In this case, our SearchController will call our SearchFacade.</p>
+
+<p>When we make Facades, we will generally not need to instantiate them, and instead call class methods within them. (all methods defined in the class will need to be prefixed with “self.” This saves our Ruby interpreter from having to clean up a lot of leftover objects by the time we’re done our code today!</p>
+
+<h3 id="back-to-code">Back to code:</h3>
+
+<p>We are imagining that we have this <code class="highlighter-rouge">SearchFacade</code> object that can give us all of our members through a single class method, <code class="highlighter-rouge">self.members</code>. Notice that we’ve also commented out all the Controller code that we want to abstract away.</p>
+
+<p>When we run the tests, it complains about not finding <code class="highlighter-rouge">SearchFacade</code>, so let’s go make it. First, we’re going to create a new directory <code class="highlighter-rouge">app/facades</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/facades/search_facade.rb</span>
+
+<span class="k">class</span> <span class="nc">SearchFacade</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Rails will automatically load anything in the <code class="highlighter-rouge">app</code> directory. However, you will need to restart your server if any directories created under /app/ are new. After the initial restart any new files placed in those directories will be loaded and you <em>do not need to restart your server</em>.</p>
+
+<p>When we run the tests, it complains about not having a <code class="highlighter-rouge">members</code> method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/facades/search_facades.rb</span>
+
+<span class="k">class</span> <span class="nc">SearchFacade</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now our test says undefined method <code class="highlighter-rouge">size</code> for <code class="highlighter-rouge">nil</code>. This makes sense since our members method is return nothing. We want this method to return all of our members. We can accomplish this by moving all that code we commented out before into this members method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/facades/search_facade.rb</span>
+
+<span class="k">class</span> <span class="nc">SearchFacade</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="ss">:state</span><span class="p">]</span>
+
+    <span class="n">conn</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s1">'https://api.propublica.org'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'X-API-Key'</span><span class="p">]</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"PROPUBLICA_API_KEY"</span><span class="p">]</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">adapter</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">default_adapter</span>
+    <span class="k">end</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="ss">:results</span><span class="p">].</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">member_data</span><span class="o">|</span>
+      <span class="no">Member</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">member_data</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now our tests give us the error <code class="highlighter-rouge">undefined local variable or method 'params'</code> for our SearchFacade object. This is a Rails specific error: params are only accessible from the controller. So rather than trying to access them from inside this PORO, let’s pass the parameter we want as an argument:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="no">SearchFacade</span><span class="p">.</span><span class="nf">members</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:state</span><span class="p">])</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/facades/search_facade.rb</span>
+
+<span class="k">class</span> <span class="nc">SearchFacade</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s1">'https://api.propublica.org'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'X-API-Key'</span><span class="p">]</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"PROPUBLICA_API_KEY"</span><span class="p">]</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">adapter</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">default_adapter</span>
+    <span class="k">end</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+    <span class="vi">@members</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="ss">:results</span><span class="p">].</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">member_data</span><span class="o">|</span>
+      <span class="no">Member</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">member_data</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Our tests are back to green! Another refactor down. Our controller is now quite skinny and is truly acting as that CEO.</p>
+
+<p>We’re not going to unit test our <code class="highlighter-rouge">SearchFacade</code> in this lesson, but it would be a really good idea to do so! Since it is a standalone class method which takes a string of input and returns a payload of data, it is very straightforward on how to write this kind of test and set expectations on what our data should look like. The good news is that if you unit test everything that the Facade interacts with, your Facade test can be quite short – when I call a class method with this input, I expect to get back, in this case, an array of Member objects.</p>
+
+<h3 id="service-objects">Service Objects</h3>
+
+<p>Looking at our <code class="highlighter-rouge">.members</code> method, we can see that it is still quite long, violating SRP because it’s also creating Member objects, and not very abstract. Let’s separate the responsibility of interacting with the API into a separate class. Let’s use declarative programming again:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/facades/search_facade.rb</span>
+
+<span class="k">class</span> <span class="nc">SearchFacade</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="c1"># conn = Faraday.new(url: 'https://api.propublica.org') do |faraday|</span>
+    <span class="c1">#   faraday.headers['X-API-Key'] = ENV["PROPUBLICA_API_KEY"]</span>
+    <span class="c1">#   faraday.adapter Faraday.default_adapter</span>
+    <span class="c1"># end</span>
+    <span class="c1">#</span>
+    <span class="c1"># response = conn.get("/congress/v1/members/house/#{state}/current.json")</span>
+    <span class="c1"># json = JSON.parse(response.body, symbolize_names: true)</span>
+    <span class="n">json</span> <span class="o">=</span> <span class="no">PropublicaService</span><span class="p">.</span><span class="nf">members_of_house</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="vi">@members</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="ss">:results</span><span class="p">].</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">member_data</span><span class="o">|</span>
+      <span class="no">Member</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">member_data</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We’re declaring that we have a <code class="highlighter-rouge">PropublicaService</code> object that has a class method we can call that will give us all the data we need to create our <code class="highlighter-rouge">Member</code> objects. (Again, we don’t have to “new” up an object of our service). That <code class="highlighter-rouge">PropublicaService</code> method will handle all the details of how to interact with the Propublica API, abstracting away those details. It is convention to call these types of objects “Services”.</p>
+
+<p><strong>Note: It’s also good practice to abstract the NAME of the API from which we’re gathering data so anything outside of this class doesn’t even get a hint of how/where we’re getting this data. For example, calling this <code class="highlighter-rouge">GovernmentDataService</code> might be better, because maybe Propublica goes offline, or gets bought by a giant company and shut down, and now we have a ton of refactoring to do to change the name of our service class.</strong></p>
+
+<p>When we run the tests, it doesn’t know what <code class="highlighter-rouge">PropublicaService</code> is, so let’s go make it. First, we will make a new folder <code class="highlighter-rouge">app/services</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/propublica_service.rb</span>
+
+<span class="k">class</span> <span class="nc">PropublicaService</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Next, we need a <code class="highlighter-rouge">members_of_house</code> method, which we’ll make as a class method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/propublica_service.rb</span>
+
+<span class="k">class</span> <span class="nc">PropublicaService</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members_of_house</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And finally, we need the code to actually hit the api, which is the code we commented out before:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/propublica_service.rb</span>
+
+<span class="k">class</span> <span class="nc">PropublicaService</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members_of_house</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s1">'https://api.propublica.org'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'X-API-Key'</span><span class="p">]</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"PROPUBLICA_API_KEY"</span><span class="p">]</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">adapter</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">default_adapter</span>
+    <span class="k">end</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And our test is passing again!</p>
+
+<p>You’ll notice that we didn’t move over the instantiating of the <code class="highlighter-rouge">Member</code> objects. This is because we want the only job of this service to be to talk to Propublica (SRP). Formatting the data is separate responsibility and should be done elsewhere.</p>
+
+<p>Let’s make one more refactor in our service. If we ever need to hit a different Propublica endpoint, for instance, to get members of the Senate, it would be nice if we could reuse that Faraday connection object. This object sets up the base url for the api and the api key, both things that will be consistent across API calls to Propublica, which makes it the perfect candidate to increase reusability. Since our members_of_house method is a class method, our “conn” method will also need to be a class method.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/propublica_service.rb</span>
+
+<span class="k">class</span> <span class="nc">PropublicaService</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">members_of_house</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s2">"/congress/v1/members/house/</span><span class="si">#{</span><span class="n">state</span><span class="si">}</span><span class="s2">/current.json"</span><span class="p">)</span>
+    <span class="n">json</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">conn</span>
+    <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="s1">'https://api.propublica.org'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">faraday</span><span class="o">|</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'X-API-Key'</span><span class="p">]</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"PROPUBLICA_API_KEY"</span><span class="p">]</span>
+      <span class="n">faraday</span><span class="p">.</span><span class="nf">adapter</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">default_adapter</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>It’s also a good idea to unit test the service:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># /spec/services/propublica_service_spec.rb</span>
+
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">PropublicaService</span> <span class="k">do</span>
+  <span class="n">context</span> <span class="s2">"instance methods"</span> <span class="k">do</span>
+    <span class="n">context</span> <span class="s2">"#members_by_state"</span> <span class="k">do</span>
+      <span class="n">it</span> <span class="s2">"returns member data"</span> <span class="k">do</span>
+        <span class="n">search</span> <span class="o">=</span> <span class="no">PropublicaService</span><span class="p">.</span><span class="nf">members_of_house</span><span class="p">(</span><span class="s2">"CO"</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">search</span><span class="p">).</span><span class="nf">to</span> <span class="n">be_a</span> <span class="no">Hash</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">search</span><span class="p">[</span><span class="ss">:results</span><span class="p">]).</span><span class="nf">to</span> <span class="n">be_an</span> <span class="no">Array</span>
+        <span class="n">member_data</span> <span class="o">=</span> <span class="n">search</span><span class="p">[</span><span class="ss">:results</span><span class="p">].</span><span class="nf">first</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_key</span> <span class="ss">:name</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">[</span><span class="ss">:name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">be_a</span><span class="p">(</span><span class="no">String</span><span class="p">)</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_key</span> <span class="ss">:role</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">[</span><span class="ss">:role</span><span class="p">]).</span><span class="nf">to</span> <span class="n">be_a</span><span class="p">(</span><span class="no">String</span><span class="p">)</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_key</span> <span class="ss">:district</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">[</span><span class="ss">:district</span><span class="p">]).</span><span class="nf">to</span> <span class="n">be_a</span><span class="p">(</span><span class="no">String</span><span class="p">)</span>
+
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">).</span><span class="nf">to</span> <span class="n">have_key</span> <span class="ss">:party</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">member_data</span><span class="p">[</span><span class="ss">:party</span><span class="p">]).</span><span class="nf">to</span> <span class="n">be_a</span><span class="p">(</span><span class="no">String</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice how we aren’t expecting specific data from the API such as the names of the representatives. We don’t want our test to be too dependent on an external API where we don’t have full control over what data we’ll get back. But we SHOULD test that the fields of that data match a data type that we expect, such as strings, integers, arrays, etc.</p>
+
+<h3 id="checks-for-understanding">Checks for Understanding</h3>
+
+<ul>
+  <li>What is declarative Programming?</li>
+  <li>What is Red, Green, Refactor?</li>
+  <li>For each file we’ve touched (Controller, SearchFacade, Member, PropublicaService):
+    <ul>
+      <li>Is it Single Responsibility? How would you describe its responsibility?</li>
+      <li>Does it achieve Abstraction?</li>
+      <li>Does it achieve Encapsulation?</li>
+    </ul>
+  </li>
+</ul>
+:ET

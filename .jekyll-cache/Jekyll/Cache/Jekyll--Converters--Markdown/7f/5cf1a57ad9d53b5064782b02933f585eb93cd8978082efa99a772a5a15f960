@@ -1,0 +1,296 @@
+I"�I<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand structure of an HTML page</li>
+  <li>Understand difference between semantic/non-semantic tags</li>
+  <li>Understand difference between block and inline elements</li>
+  <li>Identify different parts of an HTML tag</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>HTML</li>
+  <li>Tag</li>
+  <li>Element</li>
+  <li>Semantic</li>
+  <li>Block</li>
+  <li>Inline</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+<p>Review from Task Manager</p>
+<ul>
+  <li>What file extension did we use for HTML files?</li>
+  <li>What does that file extension stand for?</li>
+  <li>How did we create structure in our HTML?</li>
+</ul>
+
+<h3 id="hyper-text-markup-language">Hyper Text Markup Language</h3>
+
+<p>A Markup Language used for describing the structure/layout of web pages.</p>
+
+<p>Some HTML tags are “containers” for content, and some tags <strong>are</strong> the content.</p>
+
+<h3 id="structure-of-an-html-document">Structure of an HTML Document</h3>
+
+<ul>
+  <li>General Structure:</li>
+</ul>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="cp">&lt;!DOCTYPE html&gt;</span>
+    <span class="nt">&lt;html&gt;</span>
+      <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;title&gt;&lt;/title&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"https://fonts.googleapis.com/css?family=Chonburi|Muli"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">text/css</span> <span class="na">href=</span><span class="s">"../stylesheets/main.css"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"javascript.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+      <span class="nt">&lt;/head&gt;</span>
+      <span class="nt">&lt;body&gt;</span>
+
+      <span class="nt">&lt;/body&gt;</span>
+    <span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<ul>
+  <li>Let’s talk about the specific parts:</li>
+</ul>
+
+<h4 id="type-declaration"><a href="https://www.w3schools.com/tags/tag_doctype.asp">Type Declaration</a></h4>
+
+<ul>
+  <li><code class="highlighter-rouge"><span class="cp">&lt;!DOCTYPE html&gt;</span></code> tells our browsers that our application is using HTML5 (this is NOT an html tag, but rather just an instruction the browser about our HTML version).</li>
+  <li><code class="highlighter-rouge"><span class="nt">&lt;html&gt;</span></code> signals the beginning of our HTML.</li>
+</ul>
+
+<h4 id="head">Head</h4>
+
+<ul>
+  <li>Contains all the metadata (information <em>about</em> the document)</li>
+  <li>The ones we care about right now are:
+    <ul>
+      <li><code class="highlighter-rouge">&lt;title&gt;</code> - The title that will show in the tab of your browser.</li>
+      <li><code class="highlighter-rouge">&lt;link&gt;</code> - How we link to external stylesheets, i.e. our CSS. We want this in the head so it loads first. We could also style right in our html document with a <code class="highlighter-rouge">style</code> tag but DON’T DO THAT.
+It is considered an empty element and only contains attributes.
+Attributes include rel(relationship) type(Internet media type) href (specifies the URL of the page the link goes to)</li>
+      <li><code class="highlighter-rouge">&lt;script&gt;</code> - How we link to our client-side statements (JavaScript).</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="body">Body</h4>
+
+<ul>
+  <li>Contains ALL the elements of the HTML document that we would like to display.</li>
+</ul>
+
+<h4 id="looking-at-layouterb-in-setlist">Looking at layout.erb in SetList</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="o">&lt;!</span><span class="no">DOCTYPE</span> <span class="n">html</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">meta</span> <span class="n">charset</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;&lt;</span><span class="sr">/title&gt;
+      &lt;link rel="stylesheet" href="https:/</span><span class="o">/</span><span class="n">fonts</span><span class="p">.</span><span class="nf">googleapis</span><span class="p">.</span><span class="nf">com</span><span class="o">/</span><span class="n">css?family</span><span class="o">=</span><span class="no">Chonburi</span><span class="o">|</span><span class="no">Muli</span><span class="s2">"&gt;
+      &lt;link rel="</span><span class="n">stylesheet</span><span class="s2">" type=text/css href="</span><span class="o">..</span><span class="sr">/stylesheets/m</span><span class="n">ain</span><span class="p">.</span><span class="nf">css</span><span class="s2">"&gt;
+      &lt;script type="</span><span class="n">text</span><span class="o">/</span><span class="n">javascript</span><span class="s2">" src="</span><span class="n">javascript</span><span class="p">.</span><span class="nf">js</span><span class="s2">"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;%= yield %&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+</span></code></pre></div></div>
+
+<p>What is this <code class="highlighter-rouge">&lt;%= yield %&gt;</code> doing?
+This is used in a ‘layout level template’ to help us ‘DRY’ up our HTML.
+Now instead of needing to repeat the above in every erb/html file we can simply write the html that we want our body to contain.</p>
+
+<h3 id="semantic-vs-non-semantic-tags">Semantic vs Non-Semantic Tags</h3>
+
+<ul>
+  <li>How did you create HTML structure in your Task Manager app? Most everyone uses <code class="highlighter-rouge">&lt;div&gt;</code> tags at first.</li>
+</ul>
+
+<h4 id="non-semantic">Non-Semantic</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">div</code>s - incredibly common but with the introduction of HTML5, there was a move towards semantic tags.</li>
+  <li><code class="highlighter-rouge">div</code>s tell us NOTHING about the content of the element.</li>
+  <li>A good use case for a <code class="highlighter-rouge">div</code> might be creating an element on a page like a solid box.</li>
+</ul>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="cp">&lt;!DOCTYPE html&gt;</span>
+    <span class="nt">&lt;html&gt;</span>
+      <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Our Zoo<span class="nt">&lt;/title&gt;</span>
+      <span class="nt">&lt;/head&gt;</span>
+      <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"nav"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;h1&gt;</span>Welcome to Our Zoo<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"animals"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"otters"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;h2&gt;</span>Cuddly Otters<span class="nt">&lt;/h2&gt;</span>
+            <span class="nt">&lt;p&gt;</span>Come visit our friendly otters and watch them slip and slide.<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"penguins"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;h2&gt;</span>Cute Penguins<span class="nt">&lt;/h2&gt;</span>
+            <span class="nt">&lt;ul&gt;</span>
+              <span class="nt">&lt;li&gt;</span>Emperor Penguins<span class="nt">&lt;/li&gt;</span>
+              <span class="nt">&lt;li&gt;</span>King Penguins<span class="nt">&lt;/li&gt;</span>
+              <span class="nt">&lt;li&gt;</span>African Penguins<span class="nt">&lt;/li&gt;</span>
+            <span class="nt">&lt;/ul&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"exhibits"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"explore-the-shore"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"https://www.denverzoo.org/explore-shore"</span><span class="nt">&gt;</span>Explore the Shore<span class="nt">&lt;/a&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+          <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"lorikeet-advuenture"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;p&gt;</span>Come play with out lorikeets.<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"contact-me"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;p&gt;</span>email me at <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"mailto:dione@turing.io"</span><span class="nt">&gt;&lt;/a&gt;&lt;/p&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/body&gt;</span>
+    <span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<h4 id="semantic-tags">Semantic Tags</h4>
+
+<ul>
+  <li>Can act the same as a <code class="highlighter-rouge">div</code> but have implied meaning.</li>
+  <li>Some examples of semantic tags:
+    <ul>
+      <li><code class="highlighter-rouge">&lt;article&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;aside&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;details&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;figcaption&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;figure&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;footer&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;header&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;main&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;mark&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;nav&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;section&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;summary&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;time&gt;</code></li>
+      <li>See more information about the specific tags <a href="https://www.w3schools.com/html/html5_semantic_elements.asp">here</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Example:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="cp">&lt;!DOCTYPE html&gt;</span>
+    <span class="nt">&lt;html&gt;</span>
+      <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Our Zoo<span class="nt">&lt;/title&gt;</span>
+      <span class="nt">&lt;/head&gt;</span>
+      <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;nav&gt;</span>
+          <span class="nt">&lt;h1&gt;</span>Welcome to Our Zoo<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/nav&gt;</span>
+        <span class="nt">&lt;section</span> <span class="na">class=</span><span class="s">"animals"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;header&gt;</span>
+            <span class="nt">&lt;p&gt;</span>I would like to tell you about our animals<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;/header&gt;</span>
+          <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"otters"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;h2&gt;</span>Otters<span class="nt">&lt;/h2&gt;</span>
+            <span class="nt">&lt;p&gt;</span>Come visit our friendly otters and watch them slip and slide.<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;/article&gt;</span>
+          <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"penguins"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;h2&gt;</span>Cute Penguins<span class="nt">&lt;/h2&gt;</span>
+            <span class="nt">&lt;ul&gt;</span>
+              <span class="nt">&lt;li&gt;</span>Emperor Penguins<span class="nt">&lt;/li&gt;</span>
+              <span class="nt">&lt;li&gt;</span>King Penguins<span class="nt">&lt;/li&gt;</span>
+              <span class="nt">&lt;li&gt;</span>African Penguins<span class="nt">&lt;/li&gt;</span>
+            <span class="nt">&lt;/ul&gt;</span>
+          <span class="nt">&lt;/article&gt;</span>
+        <span class="nt">&lt;/section&gt;</span>
+        <span class="nt">&lt;section</span> <span class="na">class=</span><span class="s">"exhibits"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;header&gt;</span>
+            <span class="nt">&lt;p&gt;</span>Check out our exhibits!<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;/header&gt;</span>
+          <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"explore-the-shore"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"https://www.denverzoo.org/explore-shore"</span><span class="nt">&gt;</span>Explore the Shore<span class="nt">&lt;/a&gt;</span>
+          <span class="nt">&lt;/article&gt;</span>
+          <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"lorikeet-adventure"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;p&gt;</span>Come play with our lorikeets.<span class="nt">&lt;/p&gt;</span>
+          <span class="nt">&lt;/article&gt;</span>
+        <span class="nt">&lt;/section&gt;</span>
+        <span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">"contact-me"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;p&gt;</span>email me at <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"mailto:dione@turing.io"</span><span class="nt">&gt;&lt;/a&gt;&lt;/p&gt;</span>
+        <span class="nt">&lt;/footer&gt;</span>
+      <span class="nt">&lt;/body&gt;</span>
+    <span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<ul>
+  <li>A lot of the tags we use are already semantic such as form, link, etc.</li>
+</ul>
+
+<h3 id="display-properties-block-vs-inline">Display Properties: Block vs. Inline</h3>
+<ul>
+  <li>The default value for all HTML tags is <code class="highlighter-rouge">inline</code>. Most “User Agent stylesheets” (the default styles the browser applies) reset many elements to <code class="highlighter-rouge">block</code></li>
+  <li>The display value can be changed with the CSS property <code class="highlighter-rouge">display</code>.</li>
+</ul>
+
+<h4 id="block">Block</h4>
+<ul>
+  <li>An element with a display of block will take up the entire width of the page, no matter how small the content is within the tag.</li>
+  <li>It will always start on a new line.</li>
+  <li><code class="highlighter-rouge">p</code>, <code class="highlighter-rouge">form</code>, <code class="highlighter-rouge">h1 - h6</code>, <code class="highlighter-rouge">ul</code>, <code class="highlighter-rouge">section</code> and <code class="highlighter-rouge">div</code>s are all block elements</li>
+</ul>
+
+<h4 id="inline">Inline</h4>
+<ul>
+  <li><code class="highlighter-rouge">link</code>, <code class="highlighter-rouge">a</code>, <code class="highlighter-rouge">span</code> are all inline by default.</li>
+  <li>They will only take up as much space as it needs.</li>
+  <li>It will not start on a new line.</li>
+  <li>You can set the margin and padding but it will only adjust horizontally. Will ignore any rules for width or height.</li>
+</ul>
+
+<h4 id="inline-block">Inline-Block</h4>
+<ul>
+  <li>Will situate itself inline, but can set a width and height.</li>
+</ul>
+
+<h3 id="html-tag-attributes---the-break-down">HTML Tag Attributes - The Break Down</h3>
+
+<h4 id="example-1">Example 1</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;section class="tasks" id="all-tasks"&gt;</code>
+    <ul>
+      <li><code class="highlighter-rouge">class</code> - used for several elements.</li>
+      <li><code class="highlighter-rouge">id</code> - used for one element. Takes higher priority in CSS (more on this later).</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="example-2">Example 2</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;input name="task[title]" value="Enter Task Here"&gt;</code>
+    <ul>
+      <li>Seen in our forms.</li>
+      <li>Seen mostly in <code class="highlighter-rouge">input</code> or <code class="highlighter-rouge">button</code>.</li>
+      <li><code class="highlighter-rouge">name</code> - the key the data submitted will have.</li>
+      <li><code class="highlighter-rouge">task[title]</code> - the nested parameter value that maps to the key <code class="highlighter-rouge">name</code>. Typically entered by the user. More on this nested parameter in our “Passing Data” lesson.</li>
+      <li><code class="highlighter-rouge">value</code> - the value we want the <code class="highlighter-rouge">input</code> or <code class="highlighter-rouge">button</code> to have when the page is rendered.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="recap">Recap</h3>
+
+<ul>
+  <li>What type of information belongs in the head of an HTML document?</li>
+  <li>Why would we use semantic vs. non-semantic tags?</li>
+  <li>What is the difference between a block and inline element?</li>
+  <li>When should we use an <code class="highlighter-rouge">id</code> over a <code class="highlighter-rouge">class</code>?</li>
+  <li>How do we use <code class="highlighter-rouge">name</code> and <code class="highlighter-rouge">value</code>?</li>
+</ul>
+:ET

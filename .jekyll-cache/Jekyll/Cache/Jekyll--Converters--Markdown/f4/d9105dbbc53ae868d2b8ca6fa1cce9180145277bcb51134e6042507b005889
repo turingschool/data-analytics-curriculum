@@ -1,0 +1,44 @@
+I"#<p><em><a href="./index">Back to Battleship Home</a></em></p>
+
+<table>
+  <thead>
+    <tr>
+      <th><br /></th>
+      <th><strong>Exceptional</strong></th>
+      <th><strong>Meets Expectations</strong></th>
+      <th><strong>Below Expectations</strong></th>
+      <th><strong>Well Below Expectations</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Functionality</strong></td>
+      <td>2 of the features in Iteration 4 are complete</td>
+      <td>All of the functionality in Iteration 3 is complete</td>
+      <td>Some of the functionality in Iteration 3 is not complete</td>
+      <td>Game cannot execute ship placement or iteration 2 is not complete</td>
+    </tr>
+    <tr>
+      <td><strong>Object Oriented Programming</strong></td>
+      <td>Project includes at least one additional class not outlined in the spec that does no command line input or output, adheres to SRP, and acts as a crucial piece in the function of the program</td>
+      <td>Project includes at least one additional class not outlined in the spec contained in its own file with no executable code outside the class. The correct number of Board, Cell, and Ship objects are created. Very little code is not contained within a class.</td>
+      <td>Project includes at least one additional class not outlined in the spec. Ship, Cell, or Board objects may be created unnecessarily. Code that is crucial to the setup, play, or end of a game may not be contained in a class</td>
+      <td>Project does not include a class not outlined in the spec or does not use Ship, Cell, or Board objects appropriately to accomplish the task</td>
+    </tr>
+    <tr>
+      <td><strong>Test Driven Development</strong></td>
+      <td>Project includes at least one test file in addition to the Board, Ship, and Cell tests that fully tests a class.</td>
+      <td>No more than 2 tests fail to accurately verify expected behavior. All methods that do not rely on CLI are unit and integeration tested.</td>
+      <td>Every method from iteration 1 or 2 does not include a test. More than 2 tests fail to accurately verify expected behavior.</td>
+      <td>Half the methods of either the Ship, Cell, or Board class are not tested or have tests that do not accurately verify expected behavior</td>
+    </tr>
+    <tr>
+      <td><strong>Version Control</strong></td>
+      <td>Project includes at least 10 pull requests that include helpful comments from both partners and were not merged by the author</td>
+      <td>Project includes at least 10 pull requests and 30 commits. Insights show that one partner contributed no more than twice as much as the other in terms of lines of code or commits.</td>
+      <td>Project includes at least 5 pull requests and 20 commits</td>
+      <td>Project has 5 or fewer pull requests or less than 20 commits</td>
+    </tr>
+  </tbody>
+</table>
+:ET

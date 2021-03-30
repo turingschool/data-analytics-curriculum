@@ -1,0 +1,418 @@
+I"�f<p>In this lesson / tutorial we’ll cover various reasons for wanting
+to simulate additional load against an application. We’ll then walk
+through an example using some familiar tools.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the reasons for load testing Rails applications</li>
+  <li>Practice writing scripts to simulate load against an application</li>
+  <li>Understand the differences between elapsed time from the perspective
+of your application’s code as well as from the perspective of the client</li>
+  <li>Understand the concepts of request queueing and server overload</li>
+</ul>
+
+<h2 id="lecture">Lecture</h2>
+
+<h3 id="warmupdiscussion">Warmup/Discussion</h3>
+
+<p>So, what even is load testing?</p>
+
+<p>Dealing with performance issues in our applications can be thorny.
+Most developers will agree that performance is important – but
+how exactly do we know which components of our applications will prove problematic
+from a performance perspective?</p>
+
+<p>Sometimes there are common practices or “rules of thumb” we can fall back on –
+don’t write N+1 queries; don’t write a loop within a loop; add database indices
+on commonly-queried columns; etc. But as our applications get more complex, the
+performance problems we encounter will inevitably become less obvious and more
+challenging to optimize. Two (or more) operations might be totally fine in isolation, but
+create problems when combined.</p>
+
+<p>To make matters worse, many performance problems won’t reveal themselves until
+we reach a certain thresholds of scale. Something which runs snappily on your
+development machine may come to a screeching halt when confronted with a larger
+database or higher request throughput.</p>
+
+<p>It turns out that our best line of defense against problems that only arise
+in a “production” context is…to <em>simulate</em> that context. And this is effectively
+what load testing is about. In this lesson we’ll look at some techniques for simulating
+heavier usage patterns so that we can identify the performance issues that arise from
+these contexts.</p>
+
+<h3 id="usage-patterns-production-vs-development">Usage Patterns: Production vs. Development</h3>
+
+<p>When considering the performance of an application, it’s helpful to think about
+what its usage profile looks like: in what ways is it being used, how frequently,
+by how many people, etc.</p>
+
+<p>Consider the usage profile of an average student application:</p>
+
+<ul>
+  <li>Few users (possibly 1 or 2 at any given time)</li>
+  <li>Sporadic requests (often long gaps between requests)</li>
+  <li>Generally exercising single portions of an application at a time</li>
+  <li>Few or no simultaneous database queries</li>
+</ul>
+
+<p>With this sort of a usage pattern, it will be difficult to reproduce the sort
+of performance issues which will arise in a production, scaled environment.</p>
+
+<p>What sort of characteristics would we expect from a (scaled) production application?</p>
+
+<ul>
+  <li>Many users (10s, 100s, 1000s using the application concurrently)</li>
+  <li>Constant requests (server receives little “down-time”)</li>
+  <li>Exercising full breadth of application (e.g. admin users and “browsers” and “purchasers”
+all using the app at once; perhaps api/native clients as well)</li>
+  <li>Heavy simultaneous database usage (potential query bottlenecks)</li>
+  <li>Potentially “spikey” usage patterns (numerous requests between certain hours, slower at other times)</li>
+</ul>
+
+<h3 id="simulating-load">Simulating Load</h3>
+
+<p>With those ideas in mind, how can we simulate load against our early-stage application
+that might help us anticipate or reproduce problems of scale?</p>
+
+<h4 id="desirable-characteristics-of-a-scale-simulation-tool">Desirable Characteristics of a Scale Simulation Tool</h4>
+
+<p>What would we want out of our ideal load simulation tool? A few ideas come to mind:</p>
+
+<ul>
+  <li>Ease of use (nice API)</li>
+  <li>Ability to simulate multiple, complex user “flows” (signing up, placing an order,
+admin functionalities, data entry, etc)</li>
+  <li>Ability to “scale out” load (i.e. simulate multiple users)</li>
+</ul>
+
+<p>It turns out that there’s a tool you’ve been using for some time which fits these characteristics
+quite well: <strong>Capybara</strong>, everyone’s favorite giant rodent.</p>
+
+<p>We have used capybara to “script” usage of our applications in a test environment,
+but it can script usage of a production or development environment just as well. Using this technique, we will think of our capybara script as a simulated “user” which navigates around our site quickly and repeatedly as we instruct it.</p>
+
+<p>In the following tutorial, we’ll look at:</p>
+
+<ul>
+  <li>Writing Capybara scripts to “load test” the Blogger example application
+in a production environment</li>
+  <li>Using threads to “scale up” the load against our server</li>
+  <li>Using Skylight.io, a production metric service, to monitor how our application
+behaves under load.</li>
+</ul>
+
+<h2 id="code-along">Code Along</h2>
+
+<h3 id="step-1-setup">Step 1: Setup</h3>
+
+<p>To get setup, let’s follow a familiar ritual. Clone, bundle, and setup the blogger_advanced
+application. Note that we’re using a branch of the application configured to use PostgreSQL
+as its database:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git://github.com/JumpstartLab/blogger_advanced.git load_testing_workshop
+<span class="nb">cd </span>load_testing_workshop
+git checkout <span class="nt">-t</span> origin/postgres
+bundle
+rake db:setup
+</code></pre></div></div>
+
+<h4 id="production-setup">Production Setup</h4>
+
+<p>This should get everything setup. To verify, run the tests with <code class="highlighter-rouge">rake</code> before continuing.</p>
+
+<p>Our application should now be good to go in our development environment.
+But remember that we’re interested in monitoring how our application
+performs under load in a <em>production</em> environment.</p>
+
+<p>To that end, let’s set it up to run on Heroku
+(Note: We’re deploying a non-master branch to Heroku in this case):</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku create
+git push heroku postgres:master
+heroku run rake db:migrate db:seed
+</code></pre></div></div>
+
+<p>Verify this worked by opening the app: <code class="highlighter-rouge">heroku open</code>.
+Your eyes should be embraced by the familiar,
+and—frankly—quite lovely, Blogger interface.</p>
+
+<h4 id="metrics-service">Metrics Service</h4>
+
+<p>One more piece of setup remains. In a few moments we’re going to be hurling requests at our
+production instance of JSBlogger. To see how it handles the load, let’s install Skylight.io,
+a production performance metrics service:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>skylight setup
+</code></pre></div></div>
+
+<p>You’ll be prompted for the <strong>email</strong> and <strong>password</strong> associated with your Skylight account. If
+you have not created a Skylight account before, visit <a href="https://www.skylight.io/">https://www.skylight.io/</a>
+to sign up. We’ll be using a free tier of the service, so you won’t have to enter any payment information.</p>
+
+<p>This step creates a new configuration file, <code class="highlighter-rouge">config/skylight.yml</code>, which you’ll need to commit
+and push to Heroku. Don’t forget to push the <code class="highlighter-rouge">postgres</code> branch which we’re using.</p>
+
+<p>If everything went well,
+you should be able to visit <a href="https://www.skylight.io/app/applications">https://www.skylight.io/app/applications</a>
+and see your application. It probably won’t be reporting any traffic yet, but we’ll fix that next.</p>
+
+<h3 id="step-2-fake-users-everywhere">Step 2: Fake Users Everywhere</h3>
+
+<p>Now that we have our application deployed, let’s practice exercising the application
+in an automated fashion. In this section, we’ll see that Capybara is a pretty handy
+tool for navigating the web – and it’s not limited to use in test suites!</p>
+
+<p>Fire up a rails console, and create a new Capybara session:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Loading</span> <span class="n">development</span> <span class="n">environment</span> <span class="p">(</span><span class="no">Rails</span> <span class="mf">4.1</span><span class="o">.</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">session</span> <span class="o">=</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">Session</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:selenium</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;Capybara::Session&gt;</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">00</span><span class="mi">9</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">session</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="o">&lt;</span><span class="no">YOUR</span><span class="o">-</span><span class="no">PRODUCTION</span><span class="o">-</span><span class="no">URL</span><span class="o">-</span><span class="no">HERE</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="s2">""</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">011</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">session</span><span class="p">.</span><span class="nf">first</span><span class="p">(</span><span class="s2">"li.article a"</span><span class="p">).</span><span class="nf">click</span>
+<span class="o">=&gt;</span> <span class="s2">"ok"</span>
+</code></pre></div></div>
+
+<p>Holy automated browser sessions, batman!</p>
+
+<p>If things are working, you should see a browser window (probably Firefox)
+spring into life and start navigating the site. This happens because
+we’re using Capybara’s selenium driver, which is an interface for
+driving a real web browser with Capybara.</p>
+
+<h3 id="step-3-more-scripting">Step 3: More Scripting</h3>
+
+<p>This is starting to get more exciting, but entering commands manually via the
+console is not much better for producing heavy server load than clicking around
+manually via a web browser.</p>
+
+<p>What’s the simplest server load script we could write? How about a loop?</p>
+
+<p>Let’s try it in console:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">session</span> <span class="o">=</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">Session</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:selenium</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="c1">#&lt;Capybara::Session&gt;</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">002</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="kp">loop</span> <span class="k">do</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">003</span><span class="p">:</span><span class="mi">1</span><span class="o">*</span> <span class="n">session</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="o">&lt;</span><span class="no">YOUR</span><span class="o">-</span><span class="no">PRODUCTION</span><span class="o">-</span><span class="no">URL</span><span class="o">-</span><span class="no">HERE</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">004</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">session</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s2">"li.article a"</span><span class="p">).</span><span class="nf">sample</span><span class="p">.</span><span class="nf">click</span>
+<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">005</span><span class="p">:</span><span class="mi">1</span><span class="o">&gt;</span> <span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now, your Firefox session should be going crazy with constant requests.
+This little loop allows us to simulate a single, simple path through
+the application – a user visits the root url, selects a random article,
+then repeats these actions over and over.</p>
+
+<p>Leave the loop running and head back to your Skylight interface. This
+time you should start to see some more robust traffic.</p>
+
+<h3 id="step-4-load-testing-user-scripts">Step 4: Load Testing “User Scripts”</h3>
+
+<p>It turns out that real users don’t just repeatedly loop through
+2 pages on our site. They follow reasonable and varied
+patterns of usage through the application. When load testing, we’ll
+want to anticipate these patterns and try to mirror them so that our
+tests are representative of what the application’s real usage
+patterns look like.</p>
+
+<p>Here are some things to consider when designing a load testing script:</p>
+
+<ul>
+  <li>Are there distinctive “Funnel” flows (e.g. user hits main page, views product, checks out)</li>
+  <li>What are the application “entry points”? Do most users start from a single root
+page? Are they coming in to a large variety of “leaf” pages via search engines?</li>
+  <li>“Hot” pages: which pages generate the most traffic?</li>
+  <li>Important/Priority pages – are there any pages crucial to the
+operation of the business (e.g. order creation, account status, etc)</li>
+  <li>Average session length (how many pages does the average user visit before leaving)?</li>
+</ul>
+
+<h4 id="creating-user-scripts">Creating User Scripts</h4>
+
+<p>With these ideas in mind, take 10 minutes and jot down some ideas
+for good “User Scripts” that might represent an average user’s
+interaction with the Blogger application.</p>
+
+<p>Try to come up with 3-4 ideas for scripts, at least 1 of which involves
+data entry (for example creating a comment or article). A simple example might look like:</p>
+
+<ul>
+  <li>User visits homepage</li>
+  <li>User views an article</li>
+</ul>
+
+<p>It’s ok if some pages are more heavily represented than others, and if
+some flows are longer or more complex than others. For example, one very
+simple flow might include going directly to an article page. While
+a more complicated one might include browsing several articles and
+entering a comment.</p>
+
+<h3 id="step-5-turning-our-simple-loop-into-a-reuseable-script">Step 5: Turning our Simple Loop into a Reuseable Script</h3>
+
+<p>We’d like to be able to load-test our app repeatably and at-will,
+so we’ll want a more persistent interface to doing so. For now,
+let’s use a rake task to hold our script.</p>
+
+<p>Create a rake task for load testing at <code class="highlighter-rouge">lib/tasks/load_test.rake</code>. The
+basic structure for a rake task should look something like this:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">desc</span> <span class="s2">"Simulate load against Blogger application"</span>
+  <span class="n">task</span> <span class="ss">:load_test</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Using this structure, <strong>move the basic loop script from our console session
+earlier into this Rake task</strong>.</p>
+
+<p>Try running it with <code class="highlighter-rouge">rake load_test</code> and verify that you see the same browser
+behavior as before.</p>
+
+<h3 id="step-6-refactoring">Step 6: Refactoring</h3>
+
+<p>Before we continue, take a quick refactoring pass at our script –
+extract the code from our rake task into its own method. The
+only code within the task should then be executing this method.</p>
+
+<h3 id="step-7-more-users-capn">Step 7: More Users, Cap’n!</h3>
+
+<p>You know what’s cooler than an automated user mindlessly
+looping through two URLs on your site? <em>Several</em> mindless automated users.</p>
+
+<p>Let’s use threads to simulate more users. Take the method you extracted
+in the previous step and wrap it in some threads:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">desc</span> <span class="s2">"Simulate load against Blogger application"</span>
+<span class="n">task</span> <span class="ss">:load_test</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+  <span class="mi">4</span><span class="p">.</span><span class="nf">times</span> <span class="p">{</span> <span class="no">Thread</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="n">browse</span> <span class="p">}</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">browse</span>
+  <span class="n">session</span> <span class="o">=</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">Session</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:selenium</span><span class="p">)</span>
+  <span class="kp">loop</span> <span class="k">do</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="s2">"https://evening-temple-1086.herokuapp.com/"</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s2">"li.article a"</span><span class="p">).</span><span class="nf">sample</span><span class="p">.</span><span class="nf">click</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Hmmmm. That wasn’t very effective.</p>
+
+<p>One tricky thing with threads is that since they represent an independent,
+asynchronous execution context, there’s nothing for the main thread
+to do once it has dispatched the other threads. Thus, it exists, and our
+script ends. We need a way to keep the main thread alive, waiting on
+the other threads to finish their work.</p>
+
+<p>A common technique to fix this is using <code class="highlighter-rouge">Thread#join</code> – this tells
+the main thread to “wait” until the joined thread finishes its work.</p>
+
+<p>In our case, the “worker” threads are simply looping, so joining them
+will cause our main thread to hang as well. Let’s try it in our rake task:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">desc</span> <span class="s2">"Simulate load against Blogger application"</span>
+<span class="n">task</span> <span class="ss">:load_test</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+  <span class="mi">4</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="no">Thread</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="n">browse</span> <span class="p">}</span> <span class="p">}.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">browse</span>
+  <span class="n">session</span> <span class="o">=</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">Session</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:selenium</span><span class="p">)</span>
+  <span class="kp">loop</span> <span class="k">do</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">visit</span><span class="p">(</span><span class="s2">"https://evening-temple-1086.herokuapp.com/"</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="s2">"li.article a"</span><span class="p">).</span><span class="nf">sample</span><span class="p">.</span><span class="nf">click</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now <em>that’s</em> a user farm. We’re getting closer to being able to load test
+our application more scalable.</p>
+
+<h3 id="step-8-headless-browsing">Step 8: Headless Browsing</h3>
+
+<p>This swarm of Firefox windows is starting to get a little old,
+and additionally my CPU is approaching meltdown temperature.</p>
+
+<p><a href="http://www.seleniumhq.org/">Selenium</a> is useful for simulating a
+full-fledged browser environment, but for what we need this is a bit
+overkill.</p>
+
+<p><a href="https://github.com/teampoltergeist/poltergeist">Poltergeist</a> is an
+alternative, “headless” driver for Capybara, which means that it
+emulates a full browser environment (including a Javascript runtime)
+but without any of the rendering or graphical overhead.</p>
+
+<p>Let’s get setup with poltergeist.</p>
+
+<p>First install <strong>PhantomJS</strong> using homebrew:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew update
+brew install phantomjs
+</code></pre></div></div>
+<p>(Make sure you get version 2.0+)</p>
+
+<p>Next add <code class="highlighter-rouge">poltergeist</code> to your gemfile in the <code class="highlighter-rouge">development, test</code> group and bundle:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s2">"poltergeist"</span>
+</code></pre></div></div>
+
+<p>Finally, update your script to use poltergeist by changing
+the argument provided to <code class="highlighter-rouge">Capybara::Session.new</code>:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">session</span> <span class="o">=</span> <span class="no">Capybara</span><span class="o">::</span><span class="no">Session</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:poltergeist</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You’ll likely also need to require <code class="highlighter-rouge">capybara/poltergeist</code> at the top
+of your rake task:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'capybara/poltergeist'</span>
+</code></pre></div></div>
+
+<p>Since poltergeist has no graphical interface, its progress through
+the script is less obvious. Try adding some <code class="highlighter-rouge">puts</code> statements in your
+script so you can see what it’s doing (perhaps outputting <code class="highlighter-rouge">session.current_path</code>
+to see what url the script is on).</p>
+
+<p>Now you should see that our task is repeatedly visiting urls, this time
+a lot faster. And without opening a ton of browser windows in our face.</p>
+
+<h3 id="step-9-measuring-throughput">Step 9: Measuring Throughput</h3>
+
+<p>Now that we’ve put together a decent script for simulating load against
+part of the application, let’s checkout Skylight and see how it’s affecting the app.</p>
+
+<p>You should see a decent number of requests coming through.</p>
+
+<h3 id="step-10-your-turn-scripting-more-blogger-interactions">Step 10: Your Turn, Scripting More Blogger Interactions</h3>
+
+<p>Now that you’ve had a tour through some basic scripting and load
+testing interactions, you’re ready to script some more complicated interactions</p>
+
+<p>Return to the list of User Script ideas you drafted in Step 3. Now implement
+them as part of our load-testing task using Capybara. At least one of these
+should involve some sort of data entry (creating a post, creating a comment, editing a post, etc)</p>
+
+<p>A few pointers to consider:</p>
+
+<ul>
+  <li>As your script grows in complexity you’ll want to use more abstractions to
+keep things organized. Classes and methods are your friends.</li>
+  <li>Remember that the full array of Capybara selectors and methods are
+available to you. Check the <a href="https://github.com/jnicklas/capybara#the-dsl">documentation</a> if you get stuck.</li>
+  <li>Consider implementing randomness into your script. Can you define a set of
+standard actions/scripts and have each loop choose randomly among them?</li>
+  <li>As you go, refer back to Skylight to see how your new efforts are affecting
+the application</li>
+</ul>
+
+<hr />
+
+<h2 id="todo">TODO</h2>
+
+<p>A few additional topics that should be worked in:</p>
+
+<ul>
+  <li>discuss other tools for load testing – Apache Bench, Siege, etc.</li>
+  <li>Discuss when / why you would need one of these tools – the amount of load you need to generate with a test is proportional to the size of your infrastructure</li>
+  <li>Single server process can be saturated pretty easy; large server cloud with advanced optimizations and caching will require more load</li>
+</ul>
+:ET

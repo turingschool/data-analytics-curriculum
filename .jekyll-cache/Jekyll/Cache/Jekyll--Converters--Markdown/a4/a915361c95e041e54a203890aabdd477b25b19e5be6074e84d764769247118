@@ -1,0 +1,109 @@
+I"�<h2 id="skill-proficiencies">Skill Proficiencies</h2>
+
+<p>Academic success in B3 means that students demonstrate proficiency and comfort with the concepts below. The expected mastery level can be understood with the following scale:</p>
+
+<ul>
+  <li><strong>Mastery</strong>: student is able to explain and implement the concept independently or with light reference</li>
+  <li><strong>Functional</strong>: student recognizes when to use the concept and can implement it with the support of documentation and/or a collaborator</li>
+  <li><strong>Familiarity</strong>: student can recognize and describe the concept when needed/appropriate, but is not able to implement the technology/technique</li>
+</ul>
+
+<h2 id="mastery">Mastery</h2>
+
+<h3 id="object-oriented-programming">Object Oriented Programming</h3>
+
+<ul>
+  <li>Students are able to use classes and methods to make abstractions that improve code quality</li>
+  <li>Students are able to write classes that demonstrate encapsulation of data</li>
+  <li>Students are able to explain how their code achieves abstraction and encapsulation</li>
+  <li>Students are able to apply MVC principles to separate responsibilities appropriately</li>
+</ul>
+
+<h3 id="apis">APIs</h3>
+
+<ul>
+  <li>Students are able to expose an API.</li>
+  <li>Students are able to consume external APIs</li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<ul>
+  <li>Students are able to test external API consumption</li>
+  <li>Students are able to test API exposure</li>
+</ul>
+
+<h2 id="functional">Functional</h2>
+
+<h3 id="project-management">Project Management</h3>
+
+<ul>
+  <li>Students use pull requests to organize discussion about features.</li>
+  <li>Students communicate with product owners with regard to missing deadlines.</li>
+  <li>Students document intent and usage of their code for effective collaboration.</li>
+  <li>Students translate acceptance requirements into user stories that are ready for work.</li>
+  <li>Students utilize project management tools to communicate across technical teams and stakeholders/clients.</li>
+  <li>Students implement feedback from a code review to improve quality.</li>
+  <li>Students provide feedback in the form of a code review to improve quality and share knowledge.</li>
+  <li>Students are able to understand and build on an existing code base</li>
+</ul>
+
+<h3 id="self-directed-learning">Self-Directed Learning</h3>
+
+<ul>
+  <li>Students formulate questions by synthesizing what was expected vs what was observed.</li>
+  <li>Students find resources online or in print to help them learn new technologies.</li>
+  <li>Students read documentation and implement strategies described.</li>
+  <li>Students ask meaningful questions.
+    <ul>
+      <li>Example: Don’t ask “How do I get this to work?” Instead, mention what has been tried, what happened, what was expected with a goal of understanding where you have made a wrong assumption.</li>
+    </ul>
+  </li>
+  <li>Students utilize mentors and other community members to identify and discuss the merits of various implementations.</li>
+</ul>
+
+<h3 id="apis-1">APIs</h3>
+
+<ul>
+  <li>Students are able to use serializers to format json responses</li>
+  <li>Students are able to authenticate users via OAuth</li>
+  <li>Students are able to access the private resources of an OAuth-authenticated User</li>
+</ul>
+
+<h3 id="advanced-rails">Advanced Rails</h3>
+
+<ul>
+  <li>Students are able to send email from a Rails app.</li>
+</ul>
+
+<h3 id="testing-1">Testing</h3>
+
+<ul>
+  <li>Students are able to mock external HTTP requests using Webmock &amp; VCR</li>
+</ul>
+
+<h3 id="databases">Databases</h3>
+
+<ul>
+  <li>Students compose advanced ActiveRecord queries to analyze information stored in SQL databases.</li>
+  <li>Students write basic SQL statements without the assistance of an ORM.</li>
+</ul>
+
+<h2 id="familiar">Familiar</h2>
+
+<h3 id="optimization">Optimization</h3>
+
+<ul>
+  <li>Students are able to explain when to use caching strategies to improve performance in Rails.</li>
+  <li>Students are able to explain the scenarios that would benefit from using background workers in Rails.</li>
+  <li>Students are able to explain how indexes address slow queries.</li>
+  <li>Students are able to avoid N + 1 queries</li>
+</ul>
+
+<h3 id="front-end-javascript">Front End Javascript</h3>
+
+<ul>
+  <li>Students are able to make API calls using <code class="highlighter-rouge">fetch</code> calls.</li>
+  <li>Students are able to use jQuery to traverse and manipulate the DOM.</li>
+</ul>
+:ET

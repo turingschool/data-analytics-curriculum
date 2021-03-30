@@ -1,0 +1,137 @@
+I"�<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Be able to speak knowledgeably about APIs and Standards</li>
+  <li>Understand the value and trade-off of standards</li>
+  <li>Be able to contribute to planning a new API</li>
+</ul>
+
+<h2 id="why-apis">Why APIs?</h2>
+
+<p>APIs are getting more popular. <a href="http://www.programmableweb.com/category/all/apis">Programmable Web</a> indexed 105 APIs in 2005. That increased to 9,000 in 2013, and they now track over 16,000 web APIs.</p>
+
+<ul>
+  <li>Why have APIs become so popular?</li>
+  <li>What problems do APIs solve?</li>
+</ul>
+
+<h3 id="discussion">Discussion</h3>
+
+<ul>
+  <li>Open Data</li>
+  <li>Microservices</li>
+</ul>
+
+<h2 id="api-problems">API Problems</h2>
+
+<p>What kinds of problems do we face when designing and developing our API?</p>
+
+<p>Problems could be related to:</p>
+
+<ul>
+  <li>Deciding on a structure</li>
+  <li>Documenting that structure before it can be built</li>
+  <li>Documenting how to use the API</li>
+  <li>Getting people to learn your API so they can use it</li>
+</ul>
+
+<h3 id="discussion-1">Discussion</h3>
+
+<ul>
+  <li>What kinds of problems have you run into in the past?</li>
+  <li>Where would you start if you were creating an API from scratch</li>
+</ul>
+
+<h2 id="decisions-decisions">Decisions, decisions</h2>
+
+<p>If you’re going to build your API on top of HTTP, as is quite popular to do with a <em>web</em> service, you have a flexible structure to work with:</p>
+
+<h4 id="the-request">The Request</h4>
+
+<ul>
+  <li>URL</li>
+  <li>Headers</li>
+  <li>Body</li>
+</ul>
+
+<h4 id="the-response">The Response</h4>
+
+<ul>
+  <li>Status code</li>
+  <li>Headers</li>
+  <li>Body</li>
+</ul>
+
+<p>There are some guidelines for using HTTP in the <a href="https://www.w3.org/Protocols/rfc2616/rfc2616.html">HTTP standard</a>, but you still have a lot of flexibility. Your API needs information from the client to know what to serve, but how do you organize that information? What do you put in the URL? What do you put in the headers? Should you put information in the body of the request?</p>
+
+<p>Same for the response? What do the status codes mean? How should you structure the Body? Do the headers describe what’s in the body, or does the body describe itself? Does redundancy add value, or is it wasteful.</p>
+
+<p>And of course, this is just one decision. How do you implement? How do you document? How do you organize your content? How do you format your data?</p>
+
+<h2 id="standards">Standards</h2>
+
+<p>There’s probably a standard for all of those things.</p>
+
+<h4 id="advantages">Advantages</h4>
+
+<ol>
+  <li>Someone else has done the thinking</li>
+  <li>Someone has probably built a framework or tool that will help you implement the standard</li>
+  <li>Someone has probably built a tool to test your implementation</li>
+  <li>More likely that someone on your team knows the standard, or wants to learn it</li>
+</ol>
+
+<h4 id="disadvantages">Disadvantages</h4>
+
+<ol>
+  <li>You’re locked in. A lot of the advantages go away as soon as you want to modify the standard.</li>
+</ol>
+
+<p>Seriously. Almost implementing a standard is the worst. Don’t almost completely implement REST, and then have one non-RESTful interaction that you’ve buried in your documentation somewhere. Don’t send JSON on every response, and then XML for some random old one. I may not know where you live, but I have <a href="https://www.whois.net/">ways</a> of finding out.</p>
+
+<h2 id="what-is-rest">What is REST?</h2>
+
+<p>You learned about REST with respect to Rails in Module 2. Let’s revisit it in the broader programming community.</p>
+
+<p><a href="https://docs.google.com/presentation/d/1KF5ubJmFZWTKULsJYkny6olgSBplAFWwOi0d7wvH9is/edit?usp=sharing">REST Slides</a></p>
+
+<h3 id="rest-integrations">REST integrations</h3>
+
+<h4 id="frameworks">Frameworks</h4>
+
+<ul>
+  <li>Ruby: <a href="https://github.com/ruby-grape/grape">Grape</a></li>
+  <li>Javascript: <a href="http://expressjs.com/">Express</a></li>
+  <li>Python: <a href="https://falconframework.org/">Falcon</a></li>
+  <li>PHP: <a href="http://www.slimframework.com/">Slim</a></li>
+  <li>Elixir: <a href="http://www.phoenixframework.org/">Phoenix</a></li>
+</ul>
+
+<p>And Many More</p>
+
+<h4 id="swagger">Swagger</h4>
+
+<p>http://swagger.io/</p>
+
+<p>Another standard, not technically code, though there are code implementations of the swagger standard.</p>
+
+<h4 id="jsonapi">JSONAPI</h4>
+
+<p><a href="http://jsonapi.org/format/">JSONAPI</a></p>
+
+<p>Designed to be used with REST, but also not</p>
+
+<h2 id="rest-is-dead-long-live-rest">REST is dead. Long live REST.</h2>
+
+<p>REST was designed to work well with the tried and true HTTP standard. GraphQL attempts to decouple APIs from HTTP.</p>
+
+<p><a href="http://graphql.org/">GraphQL</a></p>
+
+<h3 id="graphqls-claims">GraphQL’s claims</h3>
+
+<ul>
+  <li>As long as you only add functionality to your API, you don’t need to version</li>
+  <li>You can get more data with fewer queries</li>
+  <li>REST is dead</li>
+</ul>
+:ET

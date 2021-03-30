@@ -1,0 +1,135 @@
+I"a <h1 id="models-databases-and-relationships">Models, Databases, and Relationships</h1>
+
+<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>create a Rails migration that creates a table or modifies a table</li>
+  <li>set up relationships in a Rails migration with foreign key fields</li>
+  <li>set up relationships between models using ActiveRecord</li>
+</ul>
+
+<h2 id="lesson">Lesson</h2>
+
+<h3 id="warmup-migration-review-15-minutes">Warmup: Migration Review (15 minutes)</h3>
+
+<ul>
+  <li>In your own words, what is a migration?</li>
+  <li>What are some things that we can do with a migration?</li>
+  <li>What is the relationship between a migration, our database, and our schema?</li>
+  <li>What does <code class="highlighter-rouge">rake db:rollback</code> do? When <strong>wouldn’t</strong> I want to use it?</li>
+</ul>
+
+<h3 id="migrations-in-rails">Migrations in Rails</h3>
+
+<h4 id="creating-a-migration-in-rails-15-minutes">Creating a Migration in Rails (15 minutes)</h4>
+
+<p>Similar to our Sinatra apps using ActiveRecord, we’re able to create a migration in Rails using a generator. Unlike our Sinatra app, if we’re careful from the command line we can get all/most of the fields we need pre-populated in our migration. Follow along or watch:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">rails new turing_stables -T --database=postgresql --skip-spring --skip-turbolinks</code>: create a new rails app without minitest, spring, or turbolinks, using a postgres db.</li>
+  <li>Open <code class="highlighter-rouge">database.yml</code> to see what we have.</li>
+  <li><code class="highlighter-rouge">rails g migration CreateHorses name</code>: create a migration to make a <code class="highlighter-rouge">horses</code> table that has a name column. Double check the migration to make sure it has everything that we want.</li>
+  <li><code class="highlighter-rouge">rake db:create</code></li>
+  <li><code class="highlighter-rouge">rake db:migrate</code>: Migrate. Let’s take a look at the schema to see that it has what we expect.</li>
+  <li><code class="highlighter-rouge">rails g migration CreateStables name location</code>: create a migration to make a <code class="highlighter-rouge">stables</code> table.</li>
+  <li><code class="highlighter-rouge">rails c</code>: Check to see what we have available to us in our console. Why can’t we create anything?</li>
+  <li><code class="highlighter-rouge">touch app/models/horse.rb</code></li>
+  <li><code class="highlighter-rouge">touch app/models/stable.rb</code></li>
+  <li><code class="highlighter-rouge">rails c</code>: Create a stable. Create a horse. Why don’t we have any relationship? (yes, we need a <code class="highlighter-rouge">has_many</code>/<code class="highlighter-rouge">belongs_to</code>, but our DB relationship needs to exist first - Try without the migration first to demonstrate)</li>
+  <li><code class="highlighter-rouge">rails g migration AddStableToHorses stable:references</code>: in order to add a foreign key that’s indexed. Check the migration to see what we have.</li>
+  <li><code class="highlighter-rouge">rake db:migrate</code></li>
+  <li><code class="highlighter-rouge">rails c</code>: Try to create a horse using <code class="highlighter-rouge">stable.horses.create(name: "George")</code>. Why aren’t we able to do this? Call <code class="highlighter-rouge">stable.horses</code> to verify.</li>
+  <li>Edit <code class="highlighter-rouge">stable.rb</code> to give us the relationship to horses.</li>
+  <li><code class="highlighter-rouge">rails c</code>: Now try to create a new horse related to the stable we have. Works? Great. Try to call <code class="highlighter-rouge">stable.horses</code>. Works? Great. Find the horse. Try to call <code class="highlighter-rouge">horse.stable</code>. Why doesn’t this work?</li>
+  <li>Edit <code class="highlighter-rouge">horse.rb</code> to give us the relationship to stables.</li>
+  <li><code class="highlighter-rouge">rails c</code>: Can we find our stable if we have an instance of horse? Great!</li>
+</ol>
+
+<p>For a spicier challenge - add model tests to each model.</p>
+
+<h4 id="drafting-a-schema-15-minutes">Drafting a Schema (15 minutes)</h4>
+
+<p>What would happen if we added riders to our application? How would they be related to horses?</p>
+
+<p>With a partner:</p>
+
+<ul>
+  <li>Draw the tables/columns that you would need to add riders and their relationship to horses to our app.</li>
+  <li>Draft a schema that shows this relationship.</li>
+  <li>Write out the commands that I could use to add these tables/relationships to my DB.</li>
+</ul>
+
+<p>Share.</p>
+
+<p>Resource outlining how to create a migration from the command line <a href="http://guides.rubyonrails.org/active_record_migrations.html#creating-a-migration">here</a>. Be careful, the docs point out that you can create a join table with some special properties using AR shortcuts. Don’t do it. Instead, let’s create our join table with references. More information on why not to use has_and_belongs_to_many <a href="http://blog.flatironschool.com/why-you-dont-need-has-and-belongs-to-many/">here</a>.</p>
+
+<h3 id="models">Models</h3>
+
+<h4 id="demonstration-with-article-model">Demonstration with Article model</h4>
+
+<ul>
+  <li>inheriting from ActiveRecord::Base – additional class methods and instance methods</li>
+  <li>naming of database tables (snake_case) vs. models (CamelCase)</li>
+  <li>example ActiveRecord class methods: <code class="highlighter-rouge">all</code>, <code class="highlighter-rouge">count</code>, <code class="highlighter-rouge">find</code>, <code class="highlighter-rouge">find_by</code>, <code class="highlighter-rouge">where</code></li>
+  <li>example ActiveRecord instance methods: <code class="highlighter-rouge">update</code>, <code class="highlighter-rouge">destroy</code>, <code class="highlighter-rouge">save</code>, <code class="highlighter-rouge">attribute?</code>, <code class="highlighter-rouge">new_record?</code></li>
+  <li>you don’t need to use <code class="highlighter-rouge">initialize</code> method</li>
+  <li>click <a href="http://guides.rubyonrails.org/active_record_basics.html">here</a> for more on ActiveRecord basics</li>
+</ul>
+
+<h3 id="associations">Associations</h3>
+
+<h4 id="demonstration-of-one-to-many-relationships-at-the-model-level-articleauthor">Demonstration of One-to-Many Relationships at the Model Level: Article/Author</h4>
+
+<ul>
+  <li>ActiveRecord Associations:</li>
+  <li>has_many - this is a method</li>
+  <li>belongs_to - this is a method</li>
+</ul>
+
+<h3 id="many-to-many">Many-to-Many</h3>
+
+<h4 id="many-to-many-at-the-database-level-articles-tags-and-article_tags-tables">Many-to-Many at the Database Level: articles, tags, and article_tags tables</h4>
+
+<ul>
+  <li>need three tables</li>
+  <li>join table holds foreign keys for each of the other two tables</li>
+</ul>
+
+<h4 id="many-to-many-at-the-model-level-articletagarticletag-models">Many-to-Many at the Model Level: Article/Tag/ArticleTag models</h4>
+
+<ul>
+  <li>join tables: <code class="highlighter-rouge">has_many :things</code> and <code class="highlighter-rouge">has_many :things, through: :other_things</code> - this is a method with an argument</li>
+  <li>order matters</li>
+  <li>click <a href="http://guides.rubyonrails.org/association_basics.html">here</a> for more associations</li>
+</ul>
+
+<h3 id="etsy">Etsy</h3>
+
+<h4 id="draft-schema-for-etsy-15-minutes">Draft Schema for Etsy (15 minutes)</h4>
+
+<ul>
+  <li>By yourself, try to draft a schema for Etsy. Be sure to include store, items, and categories.</li>
+  <li>Share with a partner.</li>
+  <li>Share.</li>
+</ul>
+
+<h4 id="creating-a-new-project-15-minutes">Creating a new project (15 minutes)</h4>
+
+<p>What arguments do we need to pass <code class="highlighter-rouge">rails new</code> to create our new Etsy clone? All run it together.</p>
+
+<h4 id="practice-30-minutes">Practice (30 minutes)</h4>
+
+<p>With a partner, implement the schema that we discussed.</p>
+
+<ul>
+  <li>Create/run the migrations.</li>
+  <li>Add the models.</li>
+  <li>Add some data so you can see it in the rails console.</li>
+</ul>
+
+<h4 id="share-15-minutes">Share (15 minutes)</h4>
+
+<h3 id="homework">Homework</h3>
+
+<p>Then this afternoon/evening complete the <a href="./rails_basics_challenge">Rails Basics Challenge</a>)</p>
+:ET

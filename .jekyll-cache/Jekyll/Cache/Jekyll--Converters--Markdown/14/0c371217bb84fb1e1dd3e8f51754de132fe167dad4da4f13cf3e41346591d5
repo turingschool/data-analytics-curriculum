@@ -1,0 +1,476 @@
+I"/Z<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Practice pulling data from public APIs using both curl and dedicated wrapper libraries</li>
+  <li>Understand some common organizational patterns for public APIs</li>
+  <li>Practice retrieving nested data from multi-level JSON structures</li>
+  <li>Understand API tokens and application registration</li>
+</ul>
+
+<p>Supporting materials:</p>
+
+<ul>
+  <li>gist containing sample API tokens to use for each service</li>
+</ul>
+
+<p>Workshop: Building a rails app to fetch tweet data</p>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>25 mins - Warmup / Discussion: What is an API? What to expect from most APIs?</li>
+  <li>5 mins - Break</li>
+  <li>25 mins - Twurl discussion, setup and some examples</li>
+  <li>5 mins - Break</li>
+  <li>10 mins - Finishing Twurl examples</li>
+  <li>15 mins - Wrapper gem discussion and set up</li>
+  <li>5 mins - Break</li>
+  <li>25 mins - Wrapper gem usage and student experimentation</li>
+  <li>5 mins - Break</li>
+  <li>25 mins - Twitter API demo app walkthrough</li>
+  <li>5 mins - Break</li>
+  <li>15 mins - Twitter API demo app walkthrough wrapup</li>
+  <li>10 mins - Recap / Wrapup discussion</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<h2 id="discussion---what-is-an-api">Discussion - What is an API?</h2>
+
+<ul>
+  <li>Have you encountered the term <em>API</em> before? What does it stand for?</li>
+  <li>What are the most common use-cases for a service to provide an API? Why bother?</li>
+  <li>What APIs have you used or wanted to use in the past?</li>
+</ul>
+
+<h2 id="discussion---apis-variety-is-the-spice-of-life">Discussion - APIs: Variety is the Spice of Life</h2>
+
+<p>One of the problems with working with APIs is that there are very few consistent
+generalizations or assumptions that can be made.</p>
+
+<p>As an exercise, let’s consider some of the things that make it (relatively)
+easy for us, as Rubyists, to read code written by other Rubyists:</p>
+
+<ul>
+  <li>Common idioms for expressing ourselves</li>
+  <li>Common language features for structuring our code (classes, OOP, method practices)</li>
+  <li>Common set of tools for designing projects</li>
+  <li>Common style practices (capitalization, underscores, spelling, predicate methods, etc)</li>
+  <li>Shared community best practices – <code class="highlighter-rouge">SOLID</code>, Sandi Metz’ rules, conference talks, ruby books, etc etc</li>
+</ul>
+
+<p>In short, when working within the ruby community, we have a lot of shared practices
+and ideas that help us write “unsurprising” code that will hopefully be easily intelligble
+to a future reader, especially one versed in the same community idioms as we are.</p>
+
+<p>Why bring this up? Because we are about to make our first forays into the realm of
+public APIs, which is, comparatively the Wild Wild West.</p>
+
+<p>Let’s consider some of the reasons why we might find relative non-conformity within
+this corner of the tech world:</p>
+
+<ul>
+  <li>Huge cross-section of language and community backgrounds (power of HTTP is its accessibility
+from any platform)</li>
+  <li>Very little shared design principles. Even around the ideas of REST there are differing interpretations
+and implementations</li>
+  <li>Lack of standardization around request/response formats, status codes, etc. etc.</li>
+  <li>Tremendous variation in quality of documentation (often very little…)</li>
+</ul>
+
+<p>In short, there’s a good chance that no 2 APIs you will encounter are alike.</p>
+
+<p>A handful of community projects such as <a href="http://swagger.io/">Swagger</a> and <a href="http://jsonapi.org/">json:api</a>
+have attempted to address this, but even these are fragmented and not well adopted.</p>
+
+<p>(<a href="https://xkcd.com/927/">See Relevant XKCD</a>)</p>
+
+<p>So why should we venture into this cesspool of non-conforming inter-process communication?</p>
+
+<p>Because APIs let us do cool stuff. And fortunately HTTP with JSON (or even XML) is a relatively
+easy to understand format.</p>
+
+<p>With a little careful experimentation and probing, we can generally figure out what we need to do.
+But it’s good to have a sense of what to expect so that when we run into issues we won’t be surprised and
+will know what to do.</p>
+
+<h2 id="discussion-api-spectrum-of-quality">Discussion API Spectrum of Quality</h2>
+
+<p>You can never really know what to expect from an API, but here are a few general predictors</p>
+
+<ul>
+  <li>The larger the platform, the better. The top names in the social media space (twitter, foursquare,
+facebook, instagram, etc) will generally have better public APIs since more people use them.</li>
+  <li>The newer the better. Unsurprisingly an API that was implemented in the early 2000’s will
+often feel dated or clunky</li>
+  <li>The more “RESTful” the better. This is hard to predict until you start digging in,
+but the more Resource-oriented an API is, the more natural it will feel to use. You can often
+“guess” a resource or endpoint and be relatively close</li>
+</ul>
+
+<h2 id="workshop--consuming-apis">Workshop – Consuming APIs</h2>
+
+<p>With these ringing endorsements out of the way, let’s get down to actually
+consuming some data.</p>
+
+<p>Throughout this section, we’ll work on answering a few key questions:</p>
+
+<ul>
+  <li>What are some ways for sending input data <em>to</em> an API?</li>
+  <li>What tools are available to fetch data from an API?</li>
+</ul>
+
+<p><strong>Material:</strong> Instructor should provide students with a private gist containing
+API tokens for Twitter, Instagram, and Github.</p>
+
+<h3 id="step-1--apis-via-raw-http">Step 1 – APIs via Raw HTTP</h3>
+
+<p>These days, when we say “API”, we’re generally talking about a RESTful, HTTP API.
+With any luck, it uses JSON as a serialization format.</p>
+
+<p>So if it’s just HTTP, what’s the simplest way to interact with it?</p>
+
+<p>Let’s practice using everyone’s favorite lightweight HTTP tool: <code class="highlighter-rouge">cURL</code>.
+For each of the sections below, we’ll be starting with Twitter and then
+doing some independent exploration using Github and Instagram.</p>
+
+<p>First, let’s head over to the API docs to get a sense of what we’re
+working with. You can find them <a href="https://dev.twitter.com/rest/public">here</a>.</p>
+
+<p>We’re mostly interested in the REST API. Consider Twitter’s summary of what
+they are providing:</p>
+
+<blockquote>
+  <p>The REST APIs provide programmatic access to read and write Twitter data.
+Author a new Tweet, read author profile and follower data, and more.
+The REST API identifies Twitter applications and users using OAuth; responses are available in JSON.</p>
+</blockquote>
+
+<p>So: <strong>JSON</strong> and <strong>REST</strong>. So far so good.</p>
+
+<p>Now let’s take a moment to peruse the API docs and see what’s available.
+This is one of the most important skills when consuming APIs, so it’s important to practice.</p>
+
+<p><strong>Demo:</strong> Instructor reads through API docs noting especially what parameters
+are required for each request and what data is returned.</p>
+
+<p><strong>Practice: Pulling Data</strong></p>
+
+<p>Now that we’ve poked around a bit, let’s practice pulling some data.</p>
+
+<p>Unfortunately, Twitter’s API requires OAuth in order to access it. This is a bit of
+a pain to configure manually, so we’ll use a gem called <a href="https://github.com/twitter/twurl">twurl</a>,
+which gives us a curl-like interface to Twitter using OAuth.</p>
+
+<p>Install it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install twurl
+</code></pre></div></div>
+
+<p>And authorize our app with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>twurl authorize --consumer-key my-consumer-key --consumer-secret my-consumer-secret
+</code></pre></div></div>
+
+<p>This authentication process is a bit strange, but it will basically output a URL to your
+terminal which you should copy, and open in your browser.</p>
+
+<p>This will prompt you to OAuth with the app, and will provide you a numeric
+PIN to finish the Auth process.</p>
+
+<p>Paste this PIN into the console, and your authentication should be compelete.</p>
+
+<p>Now we can finally make some requests. Let’s practice by fetching these pieces of data</p>
+
+<p>Try these 2 requests:</p>
+
+<ol>
+  <li>Recent tweets from user “worace” (twurl command: <code class="highlighter-rouge">twurl "/1.1/statuses/user_timeline.json?screen_name=worace"</code>)</li>
+  <li>Recent retweets for your user account (question: how does twitter identify “your user account”?) (twurl: <code class="highlighter-rouge">twurl "/1.1/statuses/retweets_of_me.json"</code>)</li>
+</ol>
+
+<p><strong>Your turn</strong></p>
+
+<p>Based on the patterns above, see if you can generate the proper twurl requests to
+fetch these pieces of data</p>
+
+<ol>
+  <li>Recent tweets from user “j3”</li>
+  <li>Recent user timeline for your account (i.e. tweets from users you follow)</li>
+</ol>
+
+<p><strong>Extra Credit: Posting Data</strong></p>
+
+<p>If you’re feeling brave, let’s see if we can send a tweet.</p>
+
+<ul>
+  <li>Under REST, what sort of request would we expect to use to create a tweet?</li>
+  <li>How can we send data when making a request like this?</li>
+</ul>
+
+<p>Here’s an example to post a tweet:</p>
+
+<p><code class="highlighter-rouge">twurl -d "status=Posting tweets from twitter API with @turingschool" "/1.1/statuses/update.json"</code></p>
+
+<h3 id="step-2--apis-using-a-wrapper-library">Step 2 – APIs Using a Wrapper Library</h3>
+
+<p>If you haven’t caught on yet, this process is a bit of a pain.</p>
+
+<p>For every we request we want to make, we have to look up what its url and format are. We
+have to figure out the proper HTTP verb to use, and if there are any request parameters,
+we have to make sure we get those just right as well.</p>
+
+<p>And how about that authentication process? On the one hand, it’s good that twitter is keeping
+everything secure, but it can be a pain as a developer when the Auth procedure is so involved
+(note - many APIs will simply accept your API tokens as auth credentials, which simplifies things).</p>
+
+<p>As the <a href="http://c2.com/cgi/wiki?OneMoreLevelOfIndirection">saying goes</a>, there’s no problem
+that can’t be solved with another layer of abstraction. One very common practice when working
+with external APIs is to use a wrapper library. In our case, this will be a ruby gem, although most popular
+APIs will have wrapper libraries available in many languages.</p>
+
+<p>This has several advantages:</p>
+
+<ul>
+  <li>Allow us to bundle up process of authenticating with API credentials</li>
+  <li>Easier to pull returned values into our code (as opposed to fetching raw strings via <code class="highlighter-rouge">curl</code>)</li>
+  <li>Easier data passing – we can provide parameters as method arguments rather than building
+a raw URL or post body string</li>
+  <li>More idiomatic interface</li>
+</ul>
+
+<p>Fortunately for us, the <a href="https://github.com/sferik/twitter">twitter ruby gem</a> by <a href="https://github.com/sferik">sferik</a>
+is one of the nicest around. Let’s get some practice using it to make requests
+instead of the manual <code class="highlighter-rouge">twurl</code> approach.</p>
+
+<p><strong>Setup: Twitter Gem</strong></p>
+
+<p>For now, let’s just install the gem globally:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install twitter
+</code></pre></div></div>
+
+<p>Then start a new Pry session and pull in the gem:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pry
+[1] pry(main)&gt; require "twitter"
+=&gt; true
+[2] pry(main)&gt; Twitter
+=&gt; Twitter
+</code></pre></div></div>
+
+<p>Next, we need to configure the gem to use our API credentials:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = "YOUR_CONSUMER_KEY"
+  config.consumer_secret     = "YOUR_CONSUMER_SECRET"
+end
+=&gt; #&lt;Twitter::REST::Client:0x007fb216732290
+</code></pre></div></div>
+
+<p>The gem also accepts user-specific OAuth access tokens, but for now we just
+need our app-level credentials.</p>
+
+<p><strong>Usage: Twitter Gem</strong></p>
+
+<p>Notice the object we just instantiated: an instance of <code class="highlighter-rouge">Twitter::Rest::Client</code>.
+This object will give us a nice, object-oriented interface into the Twitter
+REST api.</p>
+
+<p>Let’s practice a simple example by retrieving the user information for
+twitter user “j3”:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.user("j3")
+</code></pre></div></div>
+
+<p>Store the returned object as a variable in your console. Use the <code class="highlighter-rouge">#methods</code>
+method to see some of the data it has available. Spend a few moments trying
+some of these methods to see what they give you.</p>
+
+<p><strong>Your Turn: Twitter Gem Experimentation (10 - 15 minutes)</strong></p>
+
+<p>Now that we have our Twitter ruby client set up, experiment with making the
+some API requests using the gem.</p>
+
+<p>The Twitter gem is pretty large, so you may want to consult the
+<a href="http://www.rubydoc.info/gems/twitter">API Docs</a>.</p>
+
+<ol>
+  <li>Fetch recent tweets from user “worace”</li>
+  <li>Find total number of tweets posted by user “j3”</li>
+  <li>The permalink of the most recent tweet from user “stevekinney”</li>
+  <li>The text of the last 3 tweets for the hastag “#turingschool”</li>
+</ol>
+
+<h2 id="final-workshop--consuming-an-api-in-a-rails-app">Final Workshop – Consuming an API in a Rails App</h2>
+
+<p>Let’s see if we can build a simple rails app which allows a user to
+log in and see recent tweets from their Twitter feed.</p>
+
+<p>We’ll use this to get some more
+practice with APIs, and then we’ll build on it with some tests in the
+next lesson.</p>
+
+<p>Additionally, since we want users to be able to authenticate with Twitter,
+we’ll build on top of the OAuth sample app in <a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_03-professional_rails_applications/getting_started_with_oauth.markdown">this tutorial</a>.</p>
+
+<p>If you have your own application from that tutorial, continue working with
+that. Otherwise, you can start with the [example implementation provided here]
+(https://github.com/turingschool-examples/oauth-workshop). (Follow the setup
+instructions included in the application’s README to get started)</p>
+
+<p><strong>Step 1 - Basic Setup / Verification</strong></p>
+
+<p>Make sure your application is properly running and that you
+can login using Twitter’s OAuth process and see that it is
+able to pull in your username.</p>
+
+<p><strong>Step 2 - Adding Twitter Dependency</strong></p>
+
+<p>We’d like to see a user’s recent timeline info on our homepage.</p>
+
+<p>To get this information, we’ll need to pull it from Twitter’s API.</p>
+
+<p>And as we learned in the previous section, the most pleasant way to
+do this will be to use the Twitter gem, so let’s add
+it as a dependency in our Gemfile:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># in Gemfile</span>
+<span class="n">gem</span> <span class="s2">"twitter"</span>
+</code></pre></div></div>
+
+<p>(don’t forget to bundle)</p>
+
+<p><strong>Step 3 - A User’s Twitter Information</strong></p>
+
+<p>Recall that in the previous step we were able to access Twitter
+information by instantiating an instance of the <code class="highlighter-rouge">Twitter::REST::Client</code>
+which the twitter gem provides us.</p>
+
+<p>We were even able to pass in a user’s screen name and see
+some of their recent tweets. But what about the user’s home timeline?
+Were you able to access that data? If you had tried, you
+probably would have gotten a security or permissions error,
+since this information requires authentication on behalf of the
+user.</p>
+
+<p>Fortunately, this is exactly what OAuth provides us. When we
+authenticate a user, we are saving (in our DB) their
+<code class="highlighter-rouge">oauth_token</code> and <code class="highlighter-rouge">oauth_token_secret</code>. These credentials
+will allow us to make authenticated API requests to twitter on
+behalf of the user.</p>
+
+<p>Let’s experiment with this in rails console. First make sure
+you have authenticated at least one user into the app, then
+open a rails console session and try these commands:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">u</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">last</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="no">Twitter</span><span class="o">::</span><span class="no">REST</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">consumer_key</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"TWITTER_CONSUMER_KEY"</span><span class="p">]</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">consumer_secret</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"TWITTER_CONSUMER_SECRET"</span><span class="p">]</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">access_token</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="nf">oauth_token</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">access_token_secret</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="nf">oauth_token_secret</span>
+<span class="k">end</span>
+
+<span class="n">tweets</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">home_timeline</span>
+</code></pre></div></div>
+
+<p><strong>Step 4 - Pulling this Information into our App</strong></p>
+
+<p>So we can now see that it’s possible, using the OAuth tokens
+we’ve acquired, to make authenticated twitter requests for
+our users.</p>
+
+<p>So let’s pull this into our app. It would be nice
+if we had a method on our <code class="highlighter-rouge">User</code> model to fetch
+their twitter timeline.</p>
+
+<p>To do this we’ll need to set up a user-specific Twitter client
+just as we did in the previous console example, but fortunately
+both of these are pretty straightforward.</p>
+
+<p>Let’s add the code to <code class="highlighter-rouge">app/models/user.rb</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># in app/models/user.rb</span>
+
+<span class="k">def</span> <span class="nf">twitter_client</span>
+  <span class="vi">@client</span> <span class="o">||=</span> <span class="no">Twitter</span><span class="o">::</span><span class="no">REST</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+    <span class="n">config</span><span class="p">.</span><span class="nf">consumer_key</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"TWITTER_CONSUMER_KEY"</span><span class="p">]</span>
+    <span class="n">config</span><span class="p">.</span><span class="nf">consumer_secret</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">[</span><span class="s2">"TWITTER_CONSUMER_SECRET"</span><span class="p">]</span>
+    <span class="n">config</span><span class="p">.</span><span class="nf">access_token</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="nf">oauth_token</span>
+    <span class="n">config</span><span class="p">.</span><span class="nf">access_token_secret</span> <span class="o">=</span> <span class="n">u</span><span class="p">.</span><span class="nf">oauth_token_secret</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">twitter_timeline</span>
+  <span class="n">twitter_client</span><span class="p">.</span><span class="nf">home_timeline</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>Step 5 - Your Turn: Pulling and Displaying Tweets on the Homepage</strong></p>
+
+<p>Now that we have the basic infrastructure, see if you can finish the
+job.</p>
+
+<p>When a user logs in and visits the homepage of our simple app,</p>
+
+<ul>
+  <li>Show them a message saying “Your Twitter Timeline:”</li>
+  <li>Fetch their home timeline, and display the tweets in a simple list</li>
+  <li>See if you can display the sender’s username and time submitted for
+each tweet as well</li>
+</ul>
+
+<p>Remember that Twitter provides this data to us wrapped as methods on various
+Ruby objects (for example <code class="highlighter-rouge">Twitter::Tweet</code>). Use experimentation in pry/console
+or the API docs to figure out how to access the data you need.</p>
+
+<h2 id="addenda--extras">Addenda / Extras</h2>
+
+<h3 id="additional-apis-for-experimentation">Additional APIs for Experimentation</h3>
+
+<h4 id="foursquare">Foursquare</h4>
+
+<ul>
+  <li>Documentation: https://developer.foursquare.com/docs/</li>
+  <li>Gem: https://github.com/mattmueller/foursquare2</li>
+  <li>Apps: https://foursquare.com/developers/apps</li>
+  <li>API Explorer: https://developer.foursquare.com/docs/explore#req=users/self</li>
+</ul>
+
+<p>(Foursquare’s interactive API explorer is one of the nicer ones out
+there IMO)</p>
+
+<p>See if you can retrieve a list of venues near Turing (lat/long: 39.7496354, -105.0001058)</p>
+
+<p>What data is available with only an application token and secret?
+What actions require an authenticated user token?
+What is the “version” parameter that foursquare requires?</p>
+
+<h4 id="flickr">Flickr</h4>
+
+<p>Demo Api Key:
+<code class="highlighter-rouge">1c5111342219c4fab62e164fce5e28f6</code>
+Demo Api Secret: <code class="highlighter-rouge">36454725931308aa</code>
+https://www.flickr.com/services/apps/by/127167934@N07</p>
+
+<ul>
+  <li>Documentation: http://www.flickr.com/services/api/</li>
+  <li>Flickraw gem: https://github.com/hanklords/flickraw</li>
+  <li>Flickr-objects gem: https://github.com/janko-m/flickr-objects</li>
+</ul>
+
+<p>Try pulling some images from the “latest” feed (similar to how we did
+with 500px above).</p>
+
+<h4 id="npr">NPR</h4>
+
+<ul>
+  <li>Documentation: http://www.npr.org/api/index</li>
+  <li>
+    <p>NPR Gem: https://github.com/bricker/npr</p>
+  </li>
+  <li>Can you find the station closest to Turing (zip 80202)?</li>
+</ul>
+:ET

@@ -1,0 +1,278 @@
+I"^G<h2 id="learning-goals">Learning Goals</h2>
+<p>By the end of this lesson, you will know/be able to:</p>
+
+<ul>
+  <li>Explain what multi-tenancy is and why we implement it.</li>
+  <li>Implement multi-tenancy at the routes level.</li>
+  <li>Implement multi-tenancy at the controller level.</li>
+  <li>Design a database for a mutli-tenant application.</li>
+</ul>
+
+<h1 id="slides">Slides</h1>
+
+<ul>
+  <li>Available <a href="../slides/understanding_multitenancy">here</a></li>
+</ul>
+
+<h2 id="discussion--what-is-multitenancy">Discussion – What is Multitenancy?</h2>
+
+<h4 id="development-as-a-metaphor-for-development">Development as a metaphor for development</h4>
+
+<p>As a developer (the real-estate variety) you start by buying a small plot of land, and building a little shop. A business moves in and that business has it’s own customers. You can do this for a few more businesses, and each building is completely different, and built to the needs of the business. These are a basic web apps; the type you’re used to building.</p>
+
+<p>After some successes, you build a strip mall. Many businesses move in, and each of them have their own customers. You’ve built one large building to house them all, but each business has their own address. They really aren’t related in any way. They can put up a logo on the front, and they can put whatever fixtures they want inside, but each business is in basically the same space. This is a basic form of multi-tenancy. Squarespace is like this.</p>
+
+<p>Now you want to go big. You build a mall. Your mall has many shops in it, but you can sell gift cards that all of the shops take. Customers can browse all of the stores by walking around the mall, and go into the stores they want. At your mall, customers can bundle items from different shops, and pay for them all at once. Innovation!</p>
+
+<p>This is the kind of multi-tenancy we’re going to talk about. We’re going to build a “mall” where users register once for your site, and can shop anywhere, and check out once.</p>
+
+<h4 id="multi-tenancy-on-the-web">Multi-tenancy on the web</h4>
+
+<ul>
+  <li>View some examples (etsy, ebay, shopify, squarespace)</li>
+  <li>What distinguishes a software “platform”?</li>
+  <li>What differentiates a store that sells its own goods from a store that lets other people sell goods?</li>
+  <li>What other ways might a software company support multiple tenants – multi-instance (self-hosted)
+vs single-instance (SaaS)</li>
+  <li>Marketplace / Platform / Whitelabel – very common software product patterns</li>
+  <li>Economics of a multi-tenant product – what is the additional value that the platform owner
+is providing?</li>
+</ul>
+
+<h4 id="multitenancy-scoping-security-and-authorization-concerns">Multitenancy Scoping, Security, and Authorization Concerns</h4>
+
+<ul>
+  <li>Recall - what’s the difference between authorization and authentication?</li>
+  <li>What additional burdens does a multi-tenant system add with regard to these concepts?</li>
+  <li>How can we keep one store from interacting with data from another?</li>
+  <li><em>Multitenancy</em> – kind of a big scary word for just another type of DB relationship</li>
+</ul>
+
+<h2 id="multitenancy-in-rails--db-and-routing-concerns">Multitenancy in Rails – DB and Routing Concerns</h2>
+
+<p>What about actually adding multitenancy to an application? Let’s consider
+the changes we would need to make.</p>
+
+<p>Let’s start with the Storedom schema – what changes would we need to make in order to
+make this application support multiple stores?</p>
+
+<ol>
+  <li>Need a way to represent our stores / tenants</li>
+  <li>Need a way to associate other “nested” data with stores</li>
+</ol>
+
+<p>Similarly, at the routing and controller level, we need to identify
+which specific store we’re talking about at certain points (for example when
+browsing a list of items)</p>
+
+<ol>
+  <li>How can we include and capture store/tenant information from our URLs?</li>
+  <li>What extra work will we need to do in our controllers to account for this?</li>
+</ol>
+
+<h2 id="code-along--adding-multitenant-stores-to-storedom">Code Along – Adding Multitenant Stores to Storedom</h2>
+
+<p>For this, we will work through the process of adding a concept
+of separate stores to the storedom project, and scoping items and orders so
+that they are attached to specific stores.</p>
+
+<h3 id="setup">Setup</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/turingschool-examples/storedom-5.git multitenancy
+cd multitenancy
+bundle &amp;&amp; bundle exec rake db:drop db:setup
+</code></pre></div></div>
+
+<h3 id="process">Process</h3>
+
+<p>Here’s a breakdown of the big goals we need to achieve. Let’s
+see if we as a group can devise a way to tackle these in terms
+of the routing and relationship constructs Rails gives us.</p>
+
+<p><strong>Objectives:</strong></p>
+
+<ol>
+  <li>Need a record to model our “stores”</li>
+  <li>Need a way to view our stores in the app (at least an index / show)</li>
+  <li>Need a way to associate an item with a store (Q: what shape does this relationship take)</li>
+  <li>Need a way to view an item within the app <em>with contextual info about what store it’s associated with</em>.</li>
+  <li>Need a way to prevent accessing the items in the wrong store.</li>
+</ol>
+
+<h4 id="step-1-routes">Step 1: Routes</h4>
+
+<p>Right now, we have routes leading straight to items and orders view pages.</p>
+
+<p>Our end goal is to see items and orders by store, so we’ll want to modify these routes to be namespaced by <code class="highlighter-rouge">stores</code>.</p>
+
+<p>We also want to route to different stores by their <code class="highlighter-rouge">slug</code>.</p>
+
+<blockquote>
+  <p>A <code class="highlighter-rouge">slug</code> is a piece of the URL’s path that is typically a hyphenated version of the title or main piece of a webpage you’re on.</p>
+</blockquote>
+
+<p>We’ll also change the root of our application to <code class="highlighter-rouge">stores#index</code> as a jumping point for our browsing users.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">root</span> <span class="sb">`stores#index`</span>
+
+<span class="n">namespace</span> <span class="ss">:stores</span><span class="p">,</span> <span class="ss">as: :store</span><span class="p">,</span> <span class="ss">path: </span><span class="s1">':store'</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:index</span><span class="p">,</span> <span class="ss">:show</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="step-2-controllers">Step 2: Controllers</h4>
+
+<p>Our root path is looking for a <code class="highlighter-rouge">StoresController</code> within <code class="highlighter-rouge">app/</code>.</p>
+
+<p>Our namespaced routes are looking for a corresponding <code class="highlighter-rouge">Stores::ItemsController</code> within <code class="highlighter-rouge">app/stores/</code>.</p>
+
+<h4 id="step-3-models">Step 3: Models</h4>
+
+<p>We need a <code class="highlighter-rouge">stores</code> table in our database. Each store (for now) will have a <code class="highlighter-rouge">name</code> and <code class="highlighter-rouge">slug</code>. We’re going to create the slug based on the store’s name - not meant for a user to create by hand.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rails</span> <span class="n">g</span> <span class="n">model</span> <span class="n">store</span> <span class="nb">name</span> <span class="n">slug</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>What type of relationship to <code class="highlighter-rouge">Item</code> and <code class="highlighter-rouge">Store</code> have?</p>
+</blockquote>
+
+<p>To reflect this, we’ll want to add a <code class="highlighter-rouge">store_id</code> column to the <code class="highlighter-rouge">items</code> table.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rails</span> <span class="n">g</span> <span class="n">migration</span> <span class="no">AddStoreToItems</span> <span class="n">store</span><span class="ss">:references</span>
+</code></pre></div></div>
+
+<p>Let’s head back to the <code class="highlighter-rouge">Store</code> model to configure.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">has_many</span> <span class="ss">:items</span>
+
+<span class="n">validates</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">uniqueness: </span><span class="kp">true</span>
+<span class="n">validates</span> <span class="ss">:slug</span><span class="p">,</span> <span class="ss">uniqueness: </span><span class="kp">true</span>
+
+<span class="c1"># callback to execute once uniqueness is verified</span>
+<span class="n">before_validation</span> <span class="ss">:generate_slug</span>
+
+<span class="k">def</span> <span class="nf">generate_slug</span>
+  <span class="nb">self</span><span class="p">.</span><span class="nf">slug</span> <span class="o">=</span> <span class="nb">name</span><span class="p">.</span><span class="nf">parameterize</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Take a moment to play around with <code class="highlighter-rouge">parameterize</code> (a Rails helper) in your <code class="highlighter-rouge">rails console</code>.</p>
+
+<p>On the flip-side, we need to add our <code class="highlighter-rouge">belongs_to</code> macro on the <code class="highlighter-rouge">Item</code> model.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">belongs_to</span> <span class="ss">:store</span>
+</code></pre></div></div>
+
+<p>On your own, create at least 4 stores in your <code class="highlighter-rouge">rails console</code> and add at least 2 items to each.</p>
+
+<h4 id="step-4-views">Step 4: Views</h4>
+
+<p><strong><code class="highlighter-rouge">stores#index</code></strong></p>
+
+<p>Starting with our <code class="highlighter-rouge">stores#index</code> view, let’s loop through each store.</p>
+
+<p>To do so, we’ll need access to all stores in the view.</p>
+
+<p>Let’s also add a link to each store. We’ll want to leverage the slug in our URL to determine which store we’re viewing.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&lt;</span><span class="sx">%= link_to 'Visit Store', store_items_path(store: store.slug)
+</span></code></pre></div></div>
+
+<p><strong><code class="highlighter-rouge">stores/items#index</code></strong></p>
+
+<p>We’re linking to the <code class="highlighter-rouge">stores/items#index</code> view from the root of our app. Let’s grab all items associated with the store in our slug and loop through those in the view.</p>
+
+<p>How can we make this better?</p>
+
+<p>A <code class="highlighter-rouge">current_store</code> helper, similar to the common <code class="highlighter-rouge">current_user</code> helper.</p>
+
+<p>We can set up a <code class="highlighter-rouge">Stores::StoresController</code> to act like an <code class="highlighter-rouge">ApplicationController</code> scoped just for our stores.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># stores/stores_controller.rb</span>
+<span class="k">class</span> <span class="nc">StoresController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="n">helper_method</span> <span class="ss">:current_store</span>
+
+  <span class="k">def</span> <span class="nf">current_store</span>
+    <span class="vi">@current_store</span> <span class="o">||=</span> <span class="no">Store</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">slug: </span><span class="n">params</span><span class="p">[</span><span class="ss">:store</span><span class="p">])</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now we can utilize the <code class="highlighter-rouge">current_store</code> helper in our <code class="highlighter-rouge">stores/items/index.html.erb</code> view.</p>
+
+<p>Discuss with your neighbor the benefits of this scoped <code class="highlighter-rouge">Stores::StoresController</code> and other applications this structure could be useful for.</p>
+
+<h4 id="step-5-store-not-found">Step 5: Store Not Found</h4>
+
+<p>What error do we see if we visit a store page via a slug that does not exist?</p>
+
+<p>We can add another callback to our <code class="highlighter-rouge">Stores::StoresController</code> that checks to see if our <code class="highlighter-rouge">current_store</code> exists and redirects back to our root if it doesn’t.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">before_action</span> <span class="ss">:store_not_found</span>
+
+<span class="k">def</span> <span class="nf">store_not_found</span>
+  <span class="n">redirect_to</span> <span class="n">root_path</span> <span class="k">unless</span> <span class="n">current_store</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="step-6-modify-navbar">Step 6: Modify Navbar</h4>
+
+<p>We can replace our <code class="highlighter-rouge">users</code>, <code class="highlighter-rouge">orders</code>, and <code class="highlighter-rouge">items</code> with a conditional <code class="highlighter-rouge">items</code> link for items in our store if a <code class="highlighter-rouge">current_store</code> exists.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">link_to</span> <span class="err">“</span><span class="no">Items</span><span class="err">”</span><span class="p">,</span> <span class="n">store_items_path</span><span class="p">(</span><span class="ss">store: </span><span class="vi">@current_store</span><span class="p">.</span><span class="nf">slug</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="your-turn">Your Turn</h3>
+
+<p>Go through the same procedure for the “orders” model:</p>
+
+<ul>
+  <li>Modify your DB schema and AR relationships to associate an order with a given store</li>
+  <li>Create a namespaced route for the orders within a store</li>
+  <li>Add a stores/order controller and a view that lists the orders that belong to that store</li>
+  <li>Add an order to the store via the console and verify that it works</li>
+  <li>Add an orders url in the navbar to access these orders only when a store is present</li>
+</ul>
+
+<h3 id="takeaways">Takeaways</h3>
+
+<ul>
+  <li>When you want text in your URLs, use slugs. Slugs are short text strings that use only lowercase letters, numbers and dashes. Rails gives you <code class="highlighter-rouge">parameterize</code> for this.</li>
+  <li>When you have models that only exist in the context of other models, you’ll nest child resources inside folders for the parent resources in the <code class="highlighter-rouge">controllers</code> and <code class="highlighter-rouge">views</code> folder</li>
+  <li>Then to access nested controller actions, use something like the following in your routes file</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">':store/items'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'store/items#index'</span><span class="p">,</span> <span class="ss">as: :store_items</span>
+<span class="n">get</span> <span class="s1">':store/items/:id'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'store/items#show'</span><span class="p">,</span> <span class="ss">as: :store_item</span>
+</code></pre></div></div>
+
+<p>is the same as…</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">namespace</span> <span class="ss">:store</span><span class="p">,</span> <span class="ss">path: </span><span class="s1">':store'</span><span class="p">,</span> <span class="ss">as: :store</span> <span class="k">do</span>
+  <span class="n">get</span> <span class="s1">'items'</span><span class="p">,</span> <span class="ss">to: </span><span class="s2">"items#index"</span><span class="p">,</span> <span class="ss">as: :items</span>
+  <span class="n">get</span> <span class="s1">'items/:id'</span><span class="p">,</span> <span class="ss">to: </span><span class="s2">"items#show"</span><span class="p">,</span> <span class="ss">as: :item</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>is the same as…</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">namespace</span> <span class="ss">:store</span><span class="p">,</span> <span class="ss">path: </span><span class="s1">':store'</span><span class="p">,</span> <span class="ss">as: :store</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:items</span><span class="p">,</span> <span class="ss">only: </span><span class="p">[</span><span class="ss">:index</span><span class="p">,</span> <span class="ss">:show</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>they all give this result when you <code class="highlighter-rouge">rake routes</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Prefix Verb URI  Pattern                     Controller#Action
+store_items GET  /:store/items(.:format)     store/items#index
+store_item  GET  /:store/items/:id(.:format) store/items#show
+</code></pre></div></div>
+
+<h2 id="supporting-materials">Supporting Materials</h2>
+
+<ul>
+  <li><a href="https://vimeo.com/128198524">Video 1502</a></li>
+  <li><a href="https://vimeo.com/137402841">Video 1505</a></li>
+</ul>
+:ET

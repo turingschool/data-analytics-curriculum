@@ -1,0 +1,191 @@
+I"�$<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand some of the best practices for working collaboratively on software projects using Git and GitHub</li>
+  <li>Learn to use GitHub’s tools to review and discuss code</li>
+  <li>Use a variety of techniques to create, track, and manage issues, bugs, and features</li>
+</ul>
+
+<h2 id="ace-ventura-git-detective">Ace Ventura Git Detective</h2>
+
+<p>Learning to search git for specific info is incredibly useful when you are working on large projects.</p>
+
+<ol>
+  <li>Clone down <a href="https://github.com/bundler/bundler">bundler</a>.</li>
+  <li>Katrina Owen has one commit in the project. Find it.</li>
+  <li>What change was made?</li>
+  <li>Why? Read the article linked there.</li>
+</ol>
+
+<h4 id="hints">Hints</h4>
+
+<p>Use the <a href="https://www.kernel.org/pub/software/scm/git/docs/">man page for git-log</a> to figure out how to get the commit hash based on the author name.</p>
+
+<p>Once you have the correct commit hash, use the man page for git-log to figure out how to look at the commit.</p>
+
+<h2 id="github-efficiency-techniques">Github efficiency techniques</h2>
+
+<p>As developers, we often use github as much as some of our other
+development tools (editors, command-line-tools, etc). It’s worth
+investing a little time in getting familiar with the interface so you
+can navigate it more efficiently.</p>
+
+<ul>
+  <li>Github has a number of useful keyboard shortcuts to help you navigate through a repository. Use the <code class="highlighter-rouge">?</code> key to see all of the shortcuts available on a given page.</li>
+  <li>On a repository view the <code class="highlighter-rouge">t</code> command brings up a “fuzzy find” UI for
+finding files easily.</li>
+  <li>The <code class="highlighter-rouge">history</code> view for a given file allows you to see what commits
+touched that file and in what order</li>
+  <li>The <code class="highlighter-rouge">blame</code> view lets you see who last touched a given line in a file.</li>
+  <li>When viewing a file, the <code class="highlighter-rouge">y</code> key lets you get the “canonical url” to
+that file, which can be useful to link to the current state of a file
+even if it changes in the future.</li>
+  <li>Clicking line-numbers of a file in the file-view allows you to link to
+a specific line or range of lines of that file. Useful for calling a
+teammate’s attention to a specific chunk of code.</li>
+</ul>
+
+<p>Create a new gist. In this gist I want you to sumarize what github shorcuts you have available on different pages.
+Pull up all the github shortcuts (hint: ?). In your gist include the shortcut, a description of what it does, and a practical example of when you may use that shortcut.</p>
+
+<h2 id="git-workflow">Git Workflow</h2>
+
+<p>When working on a team, it’s important to have a workflow. The details of the workflow will vary from team to team and company to company, but it’s important that you have a workflow.</p>
+
+<p>Below is GitHub’s workflow. Most teams will do something similar. Step 6 can vary.</p>
+
+<ol>
+  <li>Anything in the master branch is deployable</li>
+  <li>To work on something new, create a descriptively named branch off of the up to date  master branch (ie: new-oauth2-scopes)</li>
+  <li>Commit to that branch locally frequently. We do this so we have regular checkpoints we can always go back to incase something goes wrong or breaks and we need to go back to the last known working code.</li>
+  <li>Regularly push your work to the same named branch on the remote server (most likely the <strong>origin</strong> remote)</li>
+  <li>Open a [WIP] pull request so your code can be reviewed and commented on along the way.</li>
+  <li>When you need feedback or help, or you think the branch is ready for merging, tag your reviewer or team in a comment with their github username (@username) asking them to review the PR. (ex: @carmer please review this branch for the following: …)</li>
+  <li>After someone else has reviewed and signed off on the feature, it can be merged to master. This is usually done by the reviewer.</li>
+  <li>Once it is merged and pushed to ‘master’, you can and should deploy immediately. Anything on master should be deployable.</li>
+</ol>
+
+<p>It’s useful to think of branches like Ruby methods: they should be small, have descriptive names and implement a single feature. Use branches for the small features that you can implement quickly.</p>
+
+<p>When your feature is complete, don’t just merge it into master—submit a pull request and let someone from your team review your code.</p>
+
+<p><a href="https://gist.github.com/erinnachen/1f802734671d9db5c452">Here is a detialed step-by-step checklist for workflow, by Erinna Chen</a></p>
+
+<h2 id="github-and-code-reviews">Github and Code Reviews</h2>
+
+<p>Having your code reviewed gives you confidence that your code is clear, that it runs on someone else’s machine, and that it’s not accidentally causing an error somewhere else in the application. It’s also an opportunity to allow a mentor to review the code you’re writing and give you advice.</p>
+
+<p>Reviewing a teammate’s code allows you to be familiar with parts of the codebase that you may not have touched. It also provides context for how the code your writing in your branch fits into the larger app.</p>
+
+<p>Tools for conducting a code review:</p>
+
+<ul>
+  <li>Line comments on Github</li>
+  <li>Discussion in Github Issues and Waffle.io</li>
+</ul>
+
+<p><strong>WIP Pull Request:</strong> A pull request isn’t the final word. You can always add to it based on feedback, so it can be a useful collaboration tool for code that’s still “under development.” Many teams will call this a “WIP” PR and sometimes will mark it with a special label (to make sure it doesn’t accidentally get merged).</p>
+
+<h2 id="activity-conflict-resolution">Activity: Conflict Resolution</h2>
+
+<p>In pairs assign one person the role of <code class="highlighter-rouge">Person 1</code> and the other <code class="highlighter-rouge">Person 2</code>.</p>
+
+<ol>
+  <li>
+    <p>Person 1: Create a repo on Github with a README. Add Person 2 as a Collaborator.</p>
+  </li>
+  <li>
+    <p>Person 1: Add the project to waffle.io</p>
+  </li>
+  <li>
+    <p>Person 1: Add 2 issues to your waffleboard, one for Person 1, the other for Person 2.</p>
+  </li>
+  <li>
+    <p>Both: checkout a unique feature_branch.</p>
+  </li>
+</ol>
+
+<p>Example:</p>
+
+<p><code class="highlighter-rouge">git checkout -b person_1_changes_stuff</code></p>
+
+<p><code class="highlighter-rouge">git checkout -b person_2_changes_things</code></p>
+
+<ol>
+  <li>
+    <p>Both: Make changes to the same line in the README in both repos.</p>
+  </li>
+  <li>
+    <p>Person 1: Push your branch and open a PR.</p>
+  </li>
+  <li>
+    <p>Person 2: Merge the PR and close the issue assigned to Person 1</p>
+  </li>
+  <li>Person 2: Push your branch and open a PR.
+    <ul>
+      <li>Notice that we can’t merge it automatically</li>
+      <li>We need to fix it locally first</li>
+    </ul>
+  </li>
+  <li>
+    <p>Person 2: checkout the master branch.</p>
+  </li>
+  <li>
+    <p>Person 2: Pull from master on Github.</p>
+  </li>
+  <li>
+    <p>Person 2: Checkout the branch you have an open PR for.</p>
+  </li>
+  <li>Person 2: Merge master into your current branch.
+    <ul>
+      <li>This should throw an error
+  CONFLICT (content): Merge conflict in sample.txt
+Automatic merge failed; fix conflicts and then commit the result.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Person 2: Open the file it says the conflict occurs in. You can see it if you run git status</p>
+  </li>
+  <li>Person 2: You see something that looks like this:</li>
+</ol>
+
+<pre><code class="language-git">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Person 2 adds a line!
+=======
+Person 1 Adds a line!
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; master
+</code></pre>
+<ol>
+  <li>Person 2: Update the line to look the way you want it to look. This may mean you want to keep all the ‘code’ or just one of the two versions. Your team should know what needs to be the current work after the resolution of the conflict.
+    <ul>
+      <li>Remove the <code class="highlighter-rouge">&lt;&lt;&lt;&lt; HEAD</code>, <code class="highlighter-rouge">=======</code>, and <code class="highlighter-rouge">&gt;&gt;&gt;&gt; master</code> lines</li>
+    </ul>
+  </li>
+  <li>Person 2: running git status tells you how to mark the conflict as resolved
+    <ul>
+      <li>After resolving and running git status you will see a <code class="highlighter-rouge">Changes to be committed</code> message.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Person 2: Commit the resolved changes</p>
+  </li>
+  <li>
+    <p>Person 2: Push the changes to your feature_branch on Github.</p>
+  </li>
+  <li>Reload the pull request
+    <ul>
+      <li>It should now be able to be merged in automatically.</li>
+      <li>You should also see the commit that merged the two changes</li>
+    </ul>
+  </li>
+  <li>Person 1: Merge the PR and close the issue.</li>
+</ol>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li><a href="http://zackperdue.com/tutorials/super-useful-need-to-know-git-commands">Usefull git commands</a></li>
+  <li><a href="https://blog.hartleybrody.com/git-small-teams/">Minimum Viable Git Best Practices for Small Teams</a></li>
+  <li><a href="https://github.com/janosgyerik/git-workflows-book/blob/small-team-workflow/chapter05.md">The small team workflow</a></li>
+</ul>
+:ET

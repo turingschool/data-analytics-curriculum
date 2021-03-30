@@ -1,0 +1,122 @@
+I"�<h1 id="testing-in-a-project">Testing in a Project</h1>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Recall what our debugging tools are</li>
+  <li>Recall advantages of TDD</li>
+  <li>Discuss &amp; share testing from your current project</li>
+  <li>Identify further ways to implement TDD in your project</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 min - Warm Up</li>
+  <li>15 min - TDD Patterns</li>
+  <li>5 min - Break</li>
+  <li>25 min - Implement Testing in a Project</li>
+  <li>5 min - Wrap Up</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>TDD</li>
+  <li>Assertion methods</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>Name 2 debugging tools we use heavily in collaboration with TDD</li>
+  <li>Recall 3 necessary components of a test file</li>
+  <li>Name 4 assertion methods</li>
+  <li>Why is the TDD workflow (Red-Green-Refactor/tests before implementation) helpful/important?</li>
+</ul>
+
+<h2 id="tdd-patterns">TDD Patterns</h2>
+
+<h3 id="breaking-down-the-big-idea">Breaking down the big idea</h3>
+<p>How do you decide what to assert?</p>
+
+<p>Let’s say I’m building a model to represent a house. What testing assertions could I define that would prove to me, once they’re all true, that I’ve in fact built the house I expect?</p>
+
+<ul>
+  <li>Does it have a roof?</li>
+  <li>Does it have a foundation?</li>
+  <li>Does it have windows?</li>
+  <li>Does it have walls?</li>
+  <li>Do the walls create rooms?</li>
+  <li>Does it have a kitchen? a bedroom? a bathroom? a living room?</li>
+</ul>
+
+<h4 id="turn--talk">Turn &amp; Talk</h4>
+<p>What testing questions could you ask to verify that the following models have been created appropriately?</p>
+
+<ul>
+  <li>An office</li>
+  <li>A movie set</li>
+  <li>A frozen banana stand</li>
+  <li>A staircar</li>
+</ul>
+
+<h3 id="inputoutput-thought-process">Input/Output thought process</h3>
+<p>For each test, consider:</p>
+
+<ul>
+  <li>What object(s) do we need to access?</li>
+  <li>What is the actual method we’re testing? (What is the input for the assertion method?)</li>
+  <li>What do we expect to see? (What output do we expect the method to return?)</li>
+</ul>
+
+<h3 id="test-format">Test Format</h3>
+
+<p>Generally, we only want the minimum necessary setup and we space tests according to setup and assertion(s):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">test_method_does_something</span>
+  <span class="c1"># setup</span>
+  
+  <span class="c1"># assertion(s)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="practice">Practice</h3>
+
+<ol>
+  <li>
+    <p>Let’s pick one of the models from the previous exercise (an office, a movie set, a staircar) and use <code class="highlighter-rouge">minitest</code> to turn our testing questions into tests.</p>
+  </li>
+  <li>
+    <p>We’ll finish the red-green-refactor loop by writing implementation code to pass the test and then refactor.</p>
+  </li>
+</ol>
+
+<p>** break **</p>
+
+<h2 id="identifying-ways-to-improve-testing-in-a-project">Identifying Ways to Improve Testing in a Project</h2>
+
+<p>Remember that TDD helps:</p>
+
+<ul>
+  <li>Shape design</li>
+  <li>Break code into small pieces</li>
+  <li>Communicate what your code <em>should</em> do</li>
+</ul>
+
+<h4 id="turn--talk-1">Turn &amp; Talk</h4>
+<p>Break down a test that you’ve written with a person working on the same project as you; ask your partner:</p>
+
+<ul>
+  <li>Does the test make sense?</li>
+  <li>How could I improve this test?</li>
+  <li>What are some assertions or tests I could add to build on this test to make my method more robust?</li>
+</ul>
+
+<h2 id="recap">Recap</h2>
+<ul>
+  <li>How does testing help problem-solving?</li>
+  <li>What’s another way to think about assertion expected &amp; actual values?</li>
+  <li>What’s one new technique you learned from your partner or improvement you made to your test suite?</li>
+</ul>
+:ET

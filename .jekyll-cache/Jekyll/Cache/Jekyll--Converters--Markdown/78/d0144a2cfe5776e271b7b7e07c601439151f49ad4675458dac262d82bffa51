@@ -1,0 +1,176 @@
+I"�=<h3 id="goals">Goals</h3>
+
+<p>By the end of this lesson, you will know/be able to:</p>
+
+<ul>
+  <li>define CRUD in the programming sense of the word</li>
+  <li>add functionality to complete the <em>U</em>pdate and <em>D</em>elete functionality of CRUD for a Sinatra app</li>
+  <li>divide responsibilities between the controller, views, and models</li>
+</ul>
+
+<h3 id="structure">Structure</h3>
+
+<ul>
+  <li>Lecture</li>
+  <li>Workshop</li>
+  <li>Recap</li>
+</ul>
+
+<h3 id="repository">Repository</h3>
+
+<ul>
+  <li>If you have been following the <a href="https://github.com/s-espinosa/task_manager_redux">TaskManager</a> tutorials up to this point, you should be able to use the version you already have.</li>
+  <li>If not, clone the <a href="https://github.com/s-espinosa/task_manager_redux">TaskManager Repo</a>, and switch to the crud-lesson branch.</li>
+</ul>
+
+<h3 id="warm-up">Warm Up</h3>
+
+<ul>
+  <li>What does CRUD stand for and why is it important?</li>
+  <li>What CRUD functionality are we missing in TaskManager?</li>
+  <li>How would you write a raw SQL statement to update a task’s title and description for task with id 6?</li>
+  <li>What does MVC stand for? Create a diagram of the MVC pattern.</li>
+  <li>What part of the MVC does <code class="highlighter-rouge">task_manager_app.rb</code> represent in our current TaskManager app? What about <code class="highlighter-rouge">task.rb</code>?</li>
+</ul>
+
+<h3 id="crud-introduction">CRUD Introduction</h3>
+
+<p>Assuming we want to create full CRUD functionality in our Sinatra app for users accessing our site through a browser, there are seven routes that we will need to define. Let’s make a chart together.</p>
+
+<p>(Here’s a <a href="https://www.dropbox.com/s/vx3ocfsusjdrgfw/crud_in_sinatra.pdf?dl=0">completed chart</a>, but don’t open it until you’re finished!)</p>
+
+<h3 id="workshop">Workshop</h3>
+
+<p>We’re going to follow the MVC design pattern (Rails uses this by default, but in Sinatra we will need to create this structure ourselves) to implement the CRUD actions we’re missing.</p>
+
+<p>So far, we are able to create a task and read a task. How do we add functionality to update and delete tasks?</p>
+
+<h4 id="editing-a-task">Editing a task</h4>
+
+<p>Our <strong>edit</strong> route should bring the user to a form where they can change the title and description of the task. In order to create this functionality, we’ll need to create a button to get to the edit page, a route in our controller for that link, and a view that will be rendered when we hit the new route.</p>
+
+<p>In our <code class="highlighter-rouge">index.erb</code> view:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h1&gt;</span>All Tasks<span class="nt">&lt;/h1&gt;</span>
+
+<span class="cp">&lt;%</span> <span class="vi">@tasks</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">task</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;h3&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/tasks/</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span><span class="nt">&lt;/a&gt;&lt;/h3&gt;</span>
+  <span class="nt">&lt;p&gt;</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">description</span>  <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/tasks/</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">/edit"</span><span class="nt">&gt;</span>Edit<span class="nt">&lt;/a&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>In our controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">get</span> <span class="s1">'/tasks/:id/edit'</span> <span class="k">do</span>
+    <span class="vi">@task</span> <span class="o">=</span> <span class="no">Task</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+    <span class="n">erb</span> <span class="ss">:edit</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+<p>In our view, <code class="highlighter-rouge">edit.erb</code>:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"/tasks/</span><span class="cp">&lt;%=</span> <span class="vi">@task</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p&gt;</span>Edit<span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"_method"</span> <span class="na">value=</span><span class="s">"PUT"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'text'</span> <span class="na">name=</span><span class="s">'task[title]'</span> <span class="na">value=</span><span class="s">"</span><span class="cp">&lt;%=</span> <span class="vi">@task</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span><span class="s">"</span><span class="nt">/&gt;&lt;br/&gt;</span>
+  <span class="nt">&lt;textarea</span> <span class="na">name=</span><span class="s">'task[description]'</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@task</span><span class="p">.</span><span class="nf">description</span> <span class="cp">%&gt;</span><span class="nt">&lt;/textarea&gt;&lt;br/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">'submit'</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<p>One quick note about the form: you’ll notice that there’s a hidden field with a value of <code class="highlighter-rouge">PUT</code>. Normally, HTML forms only allow <code class="highlighter-rouge">GET</code> or <code class="highlighter-rouge">POST</code> requests (see more information <a href="http://www.w3schools.com/tags/att_form_method.asp">here</a>).</p>
+
+<p>We’re going to want this form to access a route in our controller (that we’ll create momentarily) using <code class="highlighter-rouge">PUT</code> to be consistent with conventions about the HTTP verb that is used when updating a resource (take a quick look at <a href="http://www.restapitutorial.com/lessons/httpmethods.html">this table</a> if this is new information).</p>
+
+<p>HTML won’t allow us to use <code class="highlighter-rouge">method='put'</code> in our <code class="highlighter-rouge">form</code> tag, but passing it as a hidden value gives our controller the information it needs to route the request correctly.</p>
+
+<h4 id="updating-a-task">Updating a task</h4>
+
+<p>Our new form needs somewhere to go when a user clicks submit. We’ll use the <strong>update</strong> route to do the work of changing the task in the database.</p>
+
+<p>In our controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">set</span> <span class="ss">:method_override</span><span class="p">,</span> <span class="kp">true</span>  <span class="c1"># this allows us to use _method in the form</span>
+  <span class="o">...</span>
+  <span class="n">put</span> <span class="s1">'/tasks/:id'</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+    <span class="no">Task</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="nb">id</span><span class="p">.</span><span class="nf">to_i</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="ss">:task</span><span class="p">])</span>
+    <span class="n">redirect</span> <span class="s2">"/tasks/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>In our TaskManager model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">update</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">task_params</span><span class="p">)</span>
+    <span class="n">database</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s2">"UPDATE tasks
+                      SET title = ?,
+                          description = ?
+                      WHERE id = ?;"</span><span class="p">,</span>
+                      <span class="n">task_params</span><span class="p">[</span><span class="ss">:title</span><span class="p">],</span>
+                      <span class="n">task_params</span><span class="p">[</span><span class="ss">:description</span><span class="p">],</span>
+                      <span class="nb">id</span><span class="p">)</span>
+
+    <span class="no">Task</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="deleting-a-task">Deleting a task</h4>
+
+<p>We don’t need a form to delete a task, we just need to know which task we want to delete. We’ll use a form to send a <code class="highlighter-rouge">DELETE</code> request to a route with our task id.</p>
+
+<p>In our <code class="highlighter-rouge">index.erb</code> view:</p>
+
+<div class="language-erb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;%</span> <span class="vi">@tasks</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">task</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;h3&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/tasks/</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">"</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">title</span> <span class="cp">%&gt;</span><span class="nt">&lt;/a&gt;&lt;/h3&gt;</span>
+  <span class="nt">&lt;p&gt;</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">description</span> <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/tasks/</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">id</span>  <span class="cp">%&gt;</span><span class="s">/edit"</span><span class="nt">&gt;</span>Edit<span class="nt">&lt;/a&gt;</span>
+  <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"/tasks/</span><span class="cp">&lt;%=</span> <span class="n">task</span><span class="p">.</span><span class="nf">id</span> <span class="cp">%&gt;</span><span class="s">"</span> <span class="na">method=</span><span class="s">"POST"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">name=</span><span class="s">"_method"</span> <span class="na">value=</span><span class="s">"DELETE"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"delete"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</code></pre></div></div>
+
+<p>In our controller:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">delete</span> <span class="s1">'/tasks/:id'</span> <span class="k">do</span> <span class="o">|</span><span class="nb">id</span><span class="o">|</span>
+    <span class="no">Task</span><span class="p">.</span><span class="nf">destroy</span><span class="p">(</span><span class="nb">id</span><span class="p">.</span><span class="nf">to_i</span><span class="p">)</span>
+    <span class="n">redirect</span> <span class="s1">'/tasks'</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<p>In our TaskManager model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">destroy</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">database</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s2">"DELETE FROM tasks
+                      WHERE id = ?;"</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="homework--work-time">Homework &amp; Work Time</h3>
+
+<h4 id="robot-world">Robot World</h4>
+
+<p>Fork <a href="https://github.com/turingschool-examples/robot-world">this repository</a> and CRUD out a robot. This app should be a directory of robots. A robot has a name, city, state, and department. Users should be able to enter a robot (create), see a list of all of the robots, see each robot individually (read), edit a robot (update), and delete a robot (delete).</p>
+
+<h3 id="optional-possibly-helpful-setup">Optional (possibly helpful) Setup</h3>
+
+<p>Want a better error page? What about a layout to connect your stylesheet? Check out the <a href="https://github.com/turingschool/challenges/blob/master/sinatra_view_boilerplate.markdown">Sinatra View Boilerplate</a>.</p>
+
+<h3 id="extensions">Extensions:</h3>
+
+<ul>
+  <li>Add an avatar for each robot. Use <a href="http://robohash.org/">http://robohash.org/</a> for pictures.</li>
+  <li>Add a dashboard that shows statistical data: a breakdown of how many robots and number of robots in each department/city/state.</li>
+  <li>Can you use <a href="http://haml.info/">HAML</a> for your html templates instead of ERB?</li>
+  <li>Can you use a <a href="http://www.sinatrarb.com/faq.html#partials">partial</a> in your views?</li>
+  <li>Can you use the Pony gem to <a href="http://www.sinatrarb.com/faq.html#email">send an email</a> from your Sinatra app?</li>
+  <li>Can you protect your app using <a href="http://www.sinatrarb.com/faq.html#auth">HTTP Basic Auth</a>?</li>
+  <li>Use <a href="https://github.com/stympy/faker">Faker gem</a> to get dynimac content in your app</li>
+</ul>
+
+<h3 id="other-resources">Other Resources:</h3>
+
+<ul>
+  <li><a href="http://tutorials.jumpstartlab.com/projects/idea_box.html">Jumpstartlab IdeaBox Tutorial</a></li>
+</ul>
+:ET

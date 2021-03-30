@@ -1,0 +1,389 @@
+I"M�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Write migrations in Rails.</li>
+  <li>Define Schema.</li>
+  <li>Explain what a migration is, and how it relates to our schema.</li>
+  <li>Create one-to-many relationships at the database level using foreign keys.</li>
+  <li>Use <code class="highlighter-rouge">has_many</code> and <code class="highlighter-rouge">belongs_to</code> to create one-to-many relationship at the model level.</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+<ul>
+  <li>Migration</li>
+  <li>Schema</li>
+  <li>Relationships</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+
+<ul>
+  <li>In your own words, what is a migration?</li>
+  <li>What are some things that we can do with a migration?</li>
+  <li>What is the relationship between a migration and our database?</li>
+</ul>
+
+<h2 id="set-up">Set Up</h2>
+
+<p>This lesson builds off of the <a href="./feature_testing">Feature Testing Lesson</a>. You can find the completed code from this lesson on the <code class="highlighter-rouge">feature_testing</code> branch of <a href="https://github.com/turingschool-examples/set_list/tree/feature_testing">this repo</a></p>
+
+<h2 id="models-migrations-and-databases-in-rails">Models, Migrations, and Databases in Rails</h2>
+
+<p>In this lesson, we’ll be adding to our new SetList Rails app to demonstrate a one-to-many relationship.</p>
+
+<p>We’ll add a table <code class="highlighter-rouge">artists</code> to our database, and connect them to our existing <code class="highlighter-rouge">songs</code> table. What might the relationships look like?</p>
+
+<h2 id="one-to-many-relationships">One-to-Many Relationships</h2>
+
+<h3 id="at-the-database-level-artist">At the Database Level: Artist</h3>
+
+<p>We want to create some artists with a name. Let’s add a test for that! Since this will be a model test, we need to first make a <code class="highlighter-rouge">/models</code> directory nested under <code class="highlighter-rouge">/spec</code> then create a <code class="highlighter-rouge">artist_spec.rb</code></p>
+
+<p><code class="highlighter-rouge">mkdir spec/models</code><br />
+<code class="highlighter-rouge">touch spec/models/artist_spec.rb</code></p>
+
+<p>We’re going to use the handy dandy gem <a href="https://github.com/thoughtbot/shoulda-matchers">shoulda-matchers</a> to give us some streamlined syntax to use in testing our validations and relationships.</p>
+
+<ul>
+  <li>Add <code class="highlighter-rouge">gem 'shoulda-matchers', '~&gt; 3.1'</code> to <code class="highlighter-rouge">group :development, :test</code> in your <code class="highlighter-rouge">Gemfile</code></li>
+  <li>run <code class="highlighter-rouge">bundle install</code></li>
+  <li>Put the following in <code class="highlighter-rouge">rails_helper.rb</code>:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Shoulda</span><span class="o">::</span><span class="no">Matchers</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">integrate</span> <span class="k">do</span> <span class="o">|</span><span class="n">with</span><span class="o">|</span>
+    <span class="n">with</span><span class="p">.</span><span class="nf">test_framework</span> <span class="ss">:rspec</span>
+    <span class="n">with</span><span class="p">.</span><span class="nf">library</span> <span class="ss">:rails</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In <code class="highlighter-rouge">artist_spec.rb</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">Artist</span><span class="p">,</span> <span class="ss">type: :model</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">"validations"</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">validate_presence_of</span> <span class="ss">:name</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>When we run rspec, we get an error similar to this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failure/Error:
+  RSpec.describe Artist, type: :model do
+    describe 'validations' do
+      it {should validate_presence_of :name}
+    end
+  end
+
+NameError:
+  uninitialized constant Artist
+# ./spec/models/artist_spec.rb:3:in `&lt;top (required)&gt;'
+</code></pre></div></div>
+
+<p>There are a few things that have to happen to get this test passing.</p>
+
+<p>First, let’s clear this error by creating our <code class="highlighter-rouge">Artist</code> model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/artist.#!/usr/bin/env ruby -wKU</span>
+
+<span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now, let’s run our test again.  We should see an error like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ./spec/models/artist_spec.rb:5:in `block (3 levels) in &lt;top (required)&gt;'
+    # ------------------
+    # --- Caused by: ---
+    # PG::UndefinedTable:
+    #   ERROR:  relation "artists" does not exist
+    #   LINE 8:                WHERE a.attrelid = '"artists"'::regclass
+    #                                             ^
+    #   ./spec/models/artist_spec.rb:5:in `block (3 levels) in &lt;top (required)&gt;'
+</code></pre></div></div>
+
+<p>This error is telling us that we don’t have an <code class="highlighter-rouge">artists</code> table set up in our database, so let’s create that with a migration:</p>
+
+<p><code class="highlighter-rouge">rails g migration CreateArtists name:string</code></p>
+
+<p>The migration generator creates a migration and if we follow the working convention for rails the migration will be pre-populated.</p>
+
+<p>Let’s look at the migration inside of <code class="highlighter-rouge">db/migrate</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateArtists</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">5.1</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">create_table</span> <span class="ss">:artists</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+      <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="ss">:name</span>
+
+      <span class="n">t</span><span class="p">.</span><span class="nf">timestamps</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Will this fix our tests? Discuss with the person next to you why or why not.</p>
+
+<p>Take a look at our <code class="highlighter-rouge">db/schema.rb</code>; at this point, it should look something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Schema</span><span class="p">.</span><span class="nf">define</span><span class="p">(</span><span class="ss">version: </span><span class="mi">20190430171832</span><span class="p">)</span> <span class="k">do</span>
+
+  <span class="c1"># These are extensions that must be enabled in order to support this database</span>
+  <span class="n">enable_extension</span> <span class="s2">"plpgsql"</span>
+
+  <span class="n">create_table</span> <span class="s2">"songs"</span><span class="p">,</span> <span class="ss">force: :cascade</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="s2">"title"</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">integer</span> <span class="s2">"length"</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">integer</span> <span class="s2">"play_count"</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">datetime</span> <span class="s2">"created_at"</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">datetime</span> <span class="s2">"updated_at"</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>There are two things to focus on here. First, we only see a <code class="highlighter-rouge">create_table 'songs'</code> command, which means that our database only has a <code class="highlighter-rouge">songs</code> table. Second, take a look at the <code class="highlighter-rouge">version: 20190430171832</code> - this version number <em>should</em> match the version of our latest migration file, but it doesn’t!  That means that we have migrations that have not been run yet.  Let’s do that now:</p>
+
+<p><code class="highlighter-rouge">rails db:migrate</code></p>
+
+<p>Now, if we go back to our schema, we should see a command to <code class="highlighter-rouge">create_table 'artists'</code>, and when we run our tests again, we should be getting a new error!</p>
+
+<p>Let’s run rspec again.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) Artist should validate that :name cannot be empty/falsy
+     Failure/Error: it {should validate_presence_of(:name)}
+
+       Artist did not properly validate that :name cannot be empty/falsy.
+         After setting :name to ‹nil›, the matcher expected the Artist to be
+         invalid, but it was valid instead.
+     # ./spec/models/artist_spec.rb:4:in `block (2 levels) in &lt;top (required)&gt;'
+</code></pre></div></div>
+
+<p>The important part to read here is <code class="highlighter-rouge">Artist did not properly validate that :name cannot be empty/false.</code></p>
+
+<p>Let’s add a validation to Artist!</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+ <span class="n">validates_presence_of</span> <span class="ss">:name</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run rspec again and we get passing tests!</p>
+
+<h3 id="what-about-songs">What about Songs?</h3>
+
+<p>What’s the relationship between song and artist? Draw this out in a diagram to help visualize the relationship.</p>
+
+<p>Let’s create a test to help us drive this out.  Add the following to your <code class="highlighter-rouge">artist_spec.rb</code> within the greater describe Artist block, but outside of the validations block.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">describe</span> <span class="s1">'relationships'</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_many</span> <span class="ss">:songs</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When we run this test we get an error something like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failures:
+
+  1) Artist relationships should have many songs
+     Failure/Error: it {should have_many(:songs)}
+       Expected Artist to have a has_many association called songs (no association called songs)
+     # ./spec/models/artist_spec.rb:9:in `block (3 levels) in &lt;top (required)&gt;'
+</code></pre></div></div>
+
+<p>The important part to read here <code class="highlighter-rouge">Expected Artist to have a has_many association called songs (no association called songs)</code> Tells us we are missing a relationship. Let’s go make one!</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g migration AddArtistsToSongs artist:references
+</code></pre></div></div>
+
+<p>Take a look at what this migration creates.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AddArtistsToSongs</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">5.1</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_reference</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">:artist</span><span class="p">,</span> <span class="ss">foreign_key: </span><span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>What do we need to do to affect this change in our database?
+What else do we need to make this work as expected?</p>
+
+<h2 id="associations">Associations</h2>
+
+<h3 id="one-to-many-relationships-at-the-model-level-songartist">One-to-Many Relationships at the Model Level: Song/Artist</h3>
+
+<p>We have set up our database level relationships, now let’s implement some model-level associations using some handy ActiveRecord methods.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">has_many</code></li>
+  <li><code class="highlighter-rouge">belongs_to</code></li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Song</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">belongs_to</span> <span class="ss">:artist</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span>
+
+  <span class="n">validates_presence_of</span> <span class="ss">:name</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Why do we need a foreign key at the database level and the <code class="highlighter-rouge">belongs_to</code> method in the model? What do each of these things allow for?</p>
+
+<p>Let’s play around in our development database by dropping in to the rails console <code class="highlighter-rouge">rails console</code> or <code class="highlighter-rouge">rails c</code></p>
+
+<p><em>In the console</em>:</p>
+
+<ul>
+  <li>Create a artist <code class="highlighter-rouge">Artist.create!(name: 'Prince')</code></li>
+  <li>Create a song <code class="highlighter-rouge">Song.create!(title: 'Raspberry Beret', length: 345, play_count: 34)</code></li>
+</ul>
+
+<p>Did you get an error?</p>
+
+<ul>
+  <li>Why are we getting this error?</li>
+  <li>What do we need to do to fix this error?</li>
+</ul>
+
+<p>Now that a <code class="highlighter-rouge">song</code> <strong>belongs to</strong> an <code class="highlighter-rouge">artist</code>, a <code class="highlighter-rouge">song</code> can not exist without an <code class="highlighter-rouge">artist</code></p>
+
+<ul>
+  <li>
+    <p>What are different ways to associate songs with artists?</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">,</span> <span class="ss">artist: </span><span class="n">artist</span><span class="p">)</span>
+
+<span class="c1"># OR</span>
+
+<span class="n">artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">,</span> <span class="ss">artist_id: </span><span class="n">artist</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+<span class="c1"># OR</span>
+
+<span class="n">artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">song</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Before we move on, let’s make sure to circle back and add a relationship validation to <code class="highlighter-rouge">Song</code>. You may also need to adjust your setup section of your <code class="highlighter-rouge">song_spec.rb</code> if you already have one.</p>
+
+<h2 id="seeds">Seeds</h2>
+
+<p>Now that our App is getting more complex, it would be good to add some seeds. Seeding your database is when you insert a set of data into the database. It is useful to have some seed data when we are experimenting and developing. You could consider what we’ve done in the Rails Console so far as a type of seeding, but doing things manually in the Rails Console can get very tedious, so what we will do instead is write a script to seed our database that we can reuse. Rails comes with a file for us to write this script in <code class="highlighter-rouge">db/seeds.rb</code>. Open up that file and add the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Song</span><span class="p">.</span><span class="nf">destroy_all</span>
+<span class="no">Artist</span><span class="p">.</span><span class="nf">destroy_all</span>
+
+<span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">rtj</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Run The Jewels'</span><span class="p">)</span>
+<span class="n">caamp</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Caamp'</span><span class="p">)</span>
+<span class="n">jgb</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Jerry Garcia Band'</span><span class="p">)</span>
+<span class="n">billie</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Billie Eilish'</span><span class="p">)</span>
+<span class="n">lcd</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'LCD Soundsystem'</span><span class="p">)</span>
+
+<span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+<span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Purple Rain'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">524</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">19</span><span class="p">)</span>
+
+<span class="n">rtj</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Legend Has It'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">2301</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">2300000</span><span class="p">)</span>
+<span class="n">rtj</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Talk to Me'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">2301</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">2300000</span><span class="p">)</span>
+
+<span class="n">caamp</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'26'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">940</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">150000</span><span class="p">)</span>
+<span class="n">caamp</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Vagabond'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">240</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">120000</span><span class="p">)</span>
+
+<span class="n">jgb</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Aint No Bread In The Breadbox'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">540</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">12000</span><span class="p">)</span>
+<span class="n">jgb</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'The Harder They Come'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">240</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">120000</span><span class="p">)</span>
+
+<span class="n">billie</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'bury a friend'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">340</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1200000</span><span class="p">)</span>
+<span class="n">billie</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'bad guy'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">240</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">100000</span><span class="p">)</span>
+
+<span class="n">lcd</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Someone Great'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">500</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1000000</span><span class="p">)</span>
+<span class="n">lcd</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'I Can Change'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">640</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">100000</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now that we have our seeds file, we can run it with <code class="highlighter-rouge">rails db:seed</code>. Additionally, if we check this file into our version control system, other developers working on this app will be able to easily seed their local databases.</p>
+
+<p>Notice that the first two lines of this seeds file will destroy all Songs and Artists from the database. The reason we want to do this is so that we know we are starting with an empty database every time we want to reseed our database. If we did not have these two lines, this script would create duplicate records every time we reran <code class="highlighter-rouge">rails db:seed</code>.</p>
+
+<h2 id="adding-behaviors-to-models">Adding Behaviors to Models</h2>
+
+<p>Now, we have two models that are related to each other with <strong>has_many</strong> and <strong>belongs_to</strong>, and these models can handle basic CRUD functionality through the methods that they inherit from ActiveRecord - but what if we need our models to be customized to perform behaviors related to our application? For example, what if we want our <code class="highlighter-rouge">Song</code> model to be able to tell us how many songs exist in our database, and we want an <code class="highlighter-rouge">artist</code> to be able to tell us the average length of all their songs.</p>
+
+<p>First - Test!</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/song_spec.rb</span>
+
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Song</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s1">'relationships'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">belong_to</span> <span class="ss">:artist</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="n">describe</span> <span class="s1">'class methods'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'.song_count'</span> <span class="k">do</span>
+      <span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+      <span class="n">talking_heads</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Talking Heads'</span><span class="p">)</span>
+      <span class="n">rasperry_beret</span> <span class="o">=</span> <span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">234</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+      <span class="n">wild_life</span> <span class="o">=</span> <span class="n">talking_heads</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Wild Wild Life'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">456</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">45</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="no">Song</span><span class="p">.</span><span class="nf">song_count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Use TDD to create a class method on our <code class="highlighter-rouge">Song</code> model that returns a count of the songs in our database. As you build out this method, remember to use <code class="highlighter-rouge">pry</code> and <code class="highlighter-rouge">self</code> to help debug and guide your implementations!</p>
+
+<p>And, for our next method - a test!</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="no">RSpec</span><span class="p">.</span><span class="nf">describe</span> <span class="no">Artist</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s1">'validations'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">validate_presence_of</span> <span class="ss">:name</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="n">describe</span> <span class="s1">'relationships'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="p">{</span><span class="n">should</span> <span class="n">have_many</span> <span class="ss">:songs</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="n">describe</span> <span class="s1">'instance methods'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'.average_song_length'</span> <span class="k">do</span>
+      <span class="n">talking_heads</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Talking Heads'</span><span class="p">)</span>
+      <span class="n">she_was</span> <span class="o">=</span> <span class="n">talking_heads</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'And She Was'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">234</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+      <span class="n">wild_life</span> <span class="o">=</span> <span class="n">talking_heads</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Wild Wild Life'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">456</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">45</span><span class="p">)</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">talking_heads</span><span class="p">.</span><span class="nf">average_song_length</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">345</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Use TDD to create an instance method on our <code class="highlighter-rouge">Artist</code> model that returns the average of a single artist’s songs. As you build out this method, remember to use <code class="highlighter-rouge">pry</code> and <code class="highlighter-rouge">self</code> to help debug and guide your implementations!</p>
+
+<hr />
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>What are two different types of table relationships that you might need to implement? In what scenario would you use each?</li>
+  <li>What is the syntax for the following migrations in Rails?
+    <ul>
+      <li>Create a table</li>
+      <li>Add a column to a table, with or without a data type</li>
+      <li>Add a reference from one table to another</li>
+    </ul>
+  </li>
+</ul>
+:ET

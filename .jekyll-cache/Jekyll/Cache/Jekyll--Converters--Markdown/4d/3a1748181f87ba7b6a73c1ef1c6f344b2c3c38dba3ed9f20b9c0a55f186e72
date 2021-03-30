@@ -1,0 +1,370 @@
+I";<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Learners are familiar with the visual layout of Pivotal Tracker.</li>
+  <li>Learners can explain the five types of tracker cards: feature, epic, bug, chore, and release.</li>
+  <li>Learners understand how to assign points and estimate a feature.</li>
+  <li>Learners are familiar with a recommended progression of features.</li>
+  <li>Understand roles and responsibilities.</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>5</td>
+      <td>Overview and Warmup</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Exploring Tracker</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Pomodoro</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Exploring Continued</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Pomodoro</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Applied Practice</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Review</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="why">Why</h2>
+
+<p>Professional software teams use tools to organize their development. While simple tools Trello or Waffle can work in small teams with simple structures, larger teams use larger tools. These larger tools are particularly appropriate when we have multiple parties involved including developers, project managers, product owners, Q/A, etc.</p>
+
+<p>While tools like Pivotal Tracker and Jira can be used in different ways in different organizations, let’s explore a mainstream way to use Pivotal Tracker.</p>
+
+<h2 id="exploring-tracker">Exploring Tracker</h2>
+
+<h3 id="warmup-2-minutes">Warmup (2 minutes)</h3>
+
+<ul>
+  <li>Open your project in Pivotal Tracker.</li>
+  <li>Find <em>two</em> terms, buttons, or features that you don’t understand.</li>
+  <li>Try to create a new story card with a two-point estimate.</li>
+</ul>
+
+<p>Pivotal Tracker is a heavy tool that will take some practice.</p>
+
+<p>Additional Resource for getting started is <a href="https://www.pivotaltracker.com/help/articles/quick_start/">here</a>.</p>
+
+<h3 id="create-a-project">Create a Project</h3>
+
+<p>If you have admin access, you can create a project. Without paying for admin access, you will not be able to create a project.</p>
+
+<ul>
+  <li>Click the top left project menu (might say “Pivotal Tracker” or the name of your project).</li>
+  <li>Click “Dashboard”.</li>
+  <li>Click the green “Create Project” button in the top right.</li>
+</ul>
+
+<h3 id="what-is-a-workspace">What is a Workspace?</h3>
+
+<ul>
+  <li>The <code class="highlighter-rouge">Create Workspace</code> feature will be used mostly by Project Managers, Product Owners and Developers that might work on multiple projects in tandem.</li>
+  <li>Workspaces are private and only accessible to the specific user. (Good for personal organization).</li>
+  <li>Projects are color-coded for organization.</li>
+</ul>
+
+<h4 id="project-naming">Project Naming</h4>
+
+<ul>
+  <li>Organization is critical.</li>
+  <li>Create a naming convention.</li>
+</ul>
+
+<h4 id="public-private">Public? Private?</h4>
+
+<p>For student work it’s probably best to make the project’s <em>public</em>. That’ll allow casual participants like mentors and students in other cohorts to view the project details but not contribute.</p>
+
+<h4 id="other-settings">Other Settings</h4>
+
+<ul>
+  <li>When Pivotal Tracker opens, it opens to the dashboard. This can be changed in the users profile under <code class="highlighter-rouge">start page</code> to open the project that is currently being worked on.</li>
+</ul>
+
+<h4 id="what-you-see">What You See</h4>
+
+<p>Here are a few things to observe:</p>
+
+<ul>
+  <li><em>Current Iteration / Backlog</em> - this is where we keep the prioritized cards we’re working on now or in the near future.</li>
+  <li><em>Icebox</em> - this is where we keep cards for the future and ideas we don’t want to forget about. They are not ready to work on. Once it has a good estimate, it can move into current iteration/backlog .</li>
+  <li><em>Velocity</em> - Right next to the backlog title is a velocity that estimates how many points our team is delivering per week.</li>
+  <li><em>Members</em> - The last link on the top left nav bar, note that Members is where we control who has access to this project.</li>
+</ul>
+
+<h3 id="roles--responsibilities">Roles &amp; Responsibilities</h3>
+
+<p>In a typical project there are several roles including those below. One person might have multiple roles.</p>
+
+<h4 id="product-owner">Product Owner</h4>
+
+<p>The <em>Product Owner</em> is responsible for:</p>
+
+<ul>
+  <li>Defining the business needs of the project (ie: what should it do, what should it not do)</li>
+  <li>Approving the completion of work (ie: deciding whether it does or does not fulfill the expectations based on acceptance criteria)</li>
+  <li>Providing the ideas/information needed to write stories</li>
+  <li>Setting story priority</li>
+</ul>
+
+<h4 id="users">Users</h4>
+
+<p>The <em>Users</em> are responsible for:</p>
+
+<ul>
+  <li>Using the software to achieve their business needs</li>
+  <li>Submitting bug reports and feedback</li>
+</ul>
+
+<h4 id="technical-lead">Technical Lead</h4>
+
+<p>The <em>Technical Lead</em> is responsible for:</p>
+
+<ul>
+  <li>Advising the overall technical approach</li>
+  <li>Ensuring that code is well built</li>
+  <li>Ensuring that strong technical workflow practices are being followed (project tracker, pull requests, documentation, etc)</li>
+  <li>Connecting the team with technical resources (mentors, books/articles, etc)</li>
+</ul>
+
+<h4 id="developers">Developers</h4>
+
+<p>The <em>Developers</em> are responsible for:</p>
+
+<ul>
+  <li>Turning business requirements from the Product Owner into stories</li>
+  <li>Estimating the stories</li>
+  <li>Scheduling the stories based on the PO’s priorities</li>
+  <li>Writing acceptance tests that demonstrate the business value described by the story</li>
+  <li>Implementing features in fulfillment of the acceptance tests</li>
+  <li>Using a strong collaborative method for merging features</li>
+  <li>Deploying features into staging for approval from the PO</li>
+  <li>Deploying approved features into production</li>
+  <li>Gathering feedback from the users</li>
+  <li>Turning user feedback into new acceptance criteria, bug stories, etc with guidance from the PO</li>
+  <li>Coordinating with the Technical Lead for feedback and planning</li>
+  <li>Coordinating with the Technical Mentors for pairing, code review, etc</li>
+  <li>Notifying users of new features, changes, etc</li>
+</ul>
+
+<h3 id="how-stories-are-born">How Stories Are Born</h3>
+
+<p>In a perfect world, here’s how an idea turns into production code:</p>
+
+<ul>
+  <li>Product Owner (PO) discusses the business needs with Dev Team (DT), in person or on Slack</li>
+  <li>DT drafts and estimates a story or multiple stories, sends to Product Owner for feedback/approval</li>
+  <li>PO approves and schedules the story</li>
+</ul>
+
+<p>At that point, the story is ready to be worked on. In a follow up lesson we’ll review the workflow after this point.</p>
+
+<h2 id="creating-cards">Creating Cards</h2>
+
+<p>There are four card types:</p>
+
+<h3 id="feature">Feature</h3>
+
+<p>A feature is the most common card type – it describes a unit of business value to be delivered through software.</p>
+
+<ul>
+  <li>One feature card for each story.</li>
+  <li>A feature card can be estimated.</li>
+  <li>Completing the feature adds to the team’s velocity.</li>
+</ul>
+
+<p><em>Practice</em>: Create a feature card with the story below and give it a one-point estimate</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a Tracker user
+When I create a new feature card
+And I enter the story
+And I set an estimate
+And I click Save
+Then my teammates see the card in their project views
+</code></pre></div></div>
+
+<h3 id="epic">Epic</h3>
+
+<p>Epics are made to help organize large themes of functionality. In other words, a bunch of small, related stories make up an epic.</p>
+
+<p>For example, we might group all stories related to user authentication under an epic card titled “User Authentication”. Labels tied to epics are colored purple, whereas regular labels are green. Epics allow teammates to assess and understand the state of a project based on broader themes and categories.</p>
+
+<p><em>Practice</em>: Create a User Authentication epic and designate a <code class="highlighter-rouge">LINKED LABEL</code> for it (e.g., “authentication”). Add two feature cards related to logging in and out and add the “authentication” label to them. Explore the epic once these features are written.</p>
+
+<h3 id="bug">Bug</h3>
+
+<p>A bug card is used to track bugs that are found in features already deployed.</p>
+
+<ul>
+  <li>One bug card per problem.</li>
+  <li>Bugs do not carry estimates.</li>
+  <li>Bugs do not affect velocity.</li>
+</ul>
+
+<p><em>Practice</em>: Create a bug card with the title “Debug why new account emails are sent properly in staging but not production”</p>
+
+<h3 id="chore">Chore</h3>
+
+<p>Chores are tasks that need to be completed but do not directly deliver business value. For instance, a team/project might need to “Setup PostgreSQL accounts on the production server”. That’s a chore. They are not estimated and don’t contribute to velocity.</p>
+
+<p><em>Practice</em>: Create a chore card with the title “Setup email provider account keys for production server instance”</p>
+
+<h3 id="release">Release</h3>
+
+<p>These are dated checkpoints. Typically you’ll want to create a Release card for each check-in date and the project submission.</p>
+
+<p><em>Practice</em>: Create a release card with the name “End of First Sprint” dated for tomorrow</p>
+
+<h2 id="card-states">Card States</h2>
+
+<p>Feature cards in Tracker go through several stages: “Not Yet Started”, “Started”, “Finished”, “Delivered”, “Accepted”, and/or “Rejected”.</p>
+
+<p>What’s important for each stage:</p>
+
+<ul>
+  <li>WHO: who clicks the button.</li>
+  <li>WHY: why they click it.</li>
+  <li>NEXT: what happens next</li>
+</ul>
+
+<p>Here are the transitions that each story card should progress through for your project.</p>
+
+<h3 id="a-note-on-priority">A Note on Priority</h3>
+
+<p>The order that cards appear in a Tracker project indicates their priority as determined by the product manager and/or project manager. No cards should be in progress unless <em>all</em> cards of higher priority are completed or also in progress.</p>
+
+<h3 id="start">START</h3>
+
+<ul>
+  <li>WHO: Developer</li>
+  <li>WHY: They’re ready to begin work on a new feature</li>
+  <li>NEXT: After clicking start they begin their development work</li>
+</ul>
+
+<p>Any Tracker story card being worked on should be started when work <em>begins</em>. This lets other developers know not to duplicate the work going in to that card’s feature.</p>
+
+<h3 id="finish">FINISH</h3>
+
+<ul>
+  <li>WHO: Developer</li>
+  <li>WHY: They’ve completed the work and ready to move on</li>
+  <li>NEXT: After clicking finish they’re ready to deliver</li>
+</ul>
+
+<p>When the feature is built, submit a PR to the project and click FINISH.</p>
+
+<p>If there are other tightly-related cards, mark the PR as a WIP, then go through the same START/FINISH cycle and add additional features to the same PR.</p>
+
+<h3 id="deliver">DELIVER</h3>
+
+<ul>
+  <li>WHO: Developer, Team Lead</li>
+  <li>WHY: The feature is merged and pushed to staging</li>
+  <li>NEXT: The PO will need to review the work</li>
+</ul>
+
+<p>Once the PR is reviewed and accepted it’s time to transition responsibility to the product owner. Push the feature to staging and click DELIVER.</p>
+
+<h3 id="accept-or-reject">ACCEPT or REJECT</h3>
+
+<ul>
+  <li>WHO: Product Owner</li>
+  <li>WHY: Determine if the feature is ready for production</li>
+  <li>NEXT: Deploy to prod</li>
+</ul>
+
+<p><strong>Only the Product Owner decides to Accept/Reject a card.</strong></p>
+
+<p>The PO visits the staging environment and exercises the feature according to the story.</p>
+
+<p>If the PO finds the feature to meet the expectations of the story, they click “Accept”. Once accepted, the card is frozen and the status should <em>never</em> be changed. The code is ready to be deployed to production.</p>
+
+<p>If the PO finds a problem, they click “REJECT” and add a comment explaining the problem. At that point the entire cycle can be restarted by the developer.</p>
+
+<p>If the PO finds additional functionality that should be implemented, they create a new feature card (rather than modifying this one).</p>
+
+<p>If a problem is found after the story is accepted the PO should create a BUG card, not modify this feature.</p>
+
+<h4 id="quick-story-writing">Quick Story Writing</h4>
+
+<p>Let’s start with some ideas that translate well to single stories.</p>
+
+<p><em>Imagine</em> we’ve prototyped a small to-do list app. It just allows the user to create to-dos. And it only supports a single user.</p>
+
+<p>Start on your own and draft one story for <em>each</em> of the following:</p>
+
+<ul>
+  <li>Users can complete a task and it moves somewhere else.</li>
+  <li>User knows how many items are on the to-do list.</li>
+  <li>Search my to-do’s.</li>
+  <li>Clicking trash on a to-do pops up a confirm/cancel dialog</li>
+</ul>
+
+<p>Then we’ll turn to a pair and compare our results.</p>
+
+<p>As a group, let’s brainstorm questions to increase clarity for user stories.</p>
+
+<h2 id="estimating">Estimating</h2>
+
+<p>Each feature story should have an estimate. As a quick refresher, here’s how we understand the point scale:</p>
+
+<p>Points mean different things at different places. There is no one way to estimate stories. For now, let’s use the following:</p>
+
+<ul>
+  <li>1 Point = ~2 hours of work</li>
+</ul>
+
+<h4 id="decomposing-stories">Decomposing Stories</h4>
+
+<p>Start with this 6-point story:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As an unauthenticated user
+When I click "Login with Census"
+And I login successfully
+Then I see only my own todos
+</code></pre></div></div>
+
+<p>This is way too big to start work on! It’ll be in-progress for days.</p>
+
+<p>With your pair, work on drafting at least four 1-point stories that deliver the same functionality as this 6-point story.</p>
+
+<h4 id="big-picture-thinking">Big-Picture Thinking</h4>
+
+<p>Imagine that you get into a meeting with the PO and they tell you <em>“Oh, by the way, the app should have an API”</em>. You jot down a quick 3-point story so it doesn’t get forgotten – but there’s no way to start work on an idea that’s so vague.</p>
+
+<p>On your own take five minutes to draft at least three 2-point stories about building the todo list’s API.</p>
+
+<p>Trade a two-point story with your pair and spend five minutes drafting at least three 1-point stories from theirs.</p>
+
+<h2 id="review">Review</h2>
+
+<p>Explain/describe the following:</p>
+
+<ul>
+  <li>feature</li>
+  <li>epic</li>
+  <li>bug</li>
+  <li>chore</li>
+  <li>release</li>
+  <li>assigning points</li>
+  <li>progression/timeline of a feature</li>
+  <li>business roles</li>
+</ul>
+:ET

@@ -1,0 +1,115 @@
+I"u<h2 id="goals">Goals</h2>
+<ul>
+  <li>Understand that the attributes of an object are stored in instance variables.</li>
+  <li>See the pattern that if attributes need to be changed, they should be
+changed through methods we add.</li>
+  <li>Realize that we encounter methods that do stuff to an object or methods
+that tell us stuff about an object.</li>
+</ul>
+
+<h2 id="big-ideas">Big Ideas</h2>
+
+<p>We want to write good code. We want to write reusable code. We’ve just
+talked about objects, instances, and classes, and so now let’s talk a little
+bit about how we would use this in practice.</p>
+
+<p>We already know that a class is kind of an template for an object, and that
+an instance of a class is a particular “copy” of that class.</p>
+
+<p>Let’s take this discussion in the direction of physical objects that we can
+visualize easier.</p>
+
+<p>We can say that there exists a car class, and this is the car factory.</p>
+
+<p>I have my own car, which is based on the template of the car class. You too
+have your own car, which is an instance of the same car class.</p>
+
+<p>How would that look in code?</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Car
+end
+
+my_car = Car.new
+
+your_car = Car.new
+</code></pre></div></div>
+
+<p>This would actually be really boring. We want cars to be different colors.</p>
+
+<p>Before we do, lets talk about what a color IS in terms of a car.</p>
+
+<p>It’s an attribute. How do we store attributes of an instance of an object?</p>
+
+<p>In an instance variable. An instance variable is something that is available
+to all methods in that class.</p>
+
+<p>And we’re going to make it so that we set the color of the car when we are
+creating it. Kind of like how we get a car now. They paint it at the factory.
+You don’t really get the car from the dealer and then repaint it.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+class Car
+
+  def initialize(color)
+    @color = color
+  end
+
+end
+
+
+my_car = Car.new("Silver")
+
+your_car = Car.new("Red")
+</code></pre></div></div>
+
+<p>Now, we know that we have a silver car and a red car, but how can we tell what
+color they are? We can’t. You don’t get access to the instance variables
+inside an instance of a class. If you want access, you have to create it.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Car
+  def initialize(color)
+    @color = color
+  end
+
+  def color
+    @color
+  end
+
+end
+</code></pre></div></div>
+
+<p>So now, we can access the color of the car by doing something like
+<code class="highlighter-rouge">puts my_car.color</code></p>
+
+<p>Just for fun, let’s give the car a fuel level.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Car
+  def initialize(color)
+    @color = color
+    @fuel = 100
+    @engine_on = false
+  end
+
+  def color
+    @color
+  end
+
+  def fuel
+    @fuel
+  end
+
+  def on?
+    @engine_on
+  end
+
+end
+</code></pre></div></div>
+
+<p>We’re just going to say that it has 100 fuel. Completely arbitrary. We’re also
+going to store some other things in here. We want to track if the engine is
+on or not, and by default it’s going to be off. Makes sense, right? You dont
+buy a car and the engine is running.</p>
+
+<p>So this is where we get the idea of methods that tell you something about an
+object and methods that let you change objects.</p>
+:ET

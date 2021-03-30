@@ -1,0 +1,190 @@
+I":<h2 id="themes">Themes</h2>
+
+<ul>
+  <li>Establishing workflow, dev environment, staging</li>
+  <li>Extracting functionality into components/services</li>
+  <li>Implementing authentication via OAuth</li>
+  <li>Revisiting Ruby techniques</li>
+  <li>Building JavaScript fundamentals towards implementation in S2</li>
+</ul>
+
+<h2 id="expectations-for-students">Expectations for Students</h2>
+
+<ul>
+  <li>Get the application running on each member’s development machine</li>
+  <li>Get the application running in staging on a VPS or Heroku</li>
+  <li>Asses/explore existing code in the app</li>
+  <li>Identify at least one component to extract into a gem/component or service</li>
+  <li>Look for opportunities to improve configuration via initializers and environment variables</li>
+  <li>Integrate OmniAuth into the app if not already present</li>
+  <li>Implement an authorization system if not already present</li>
+  <li>Setup and make use of a project management system</li>
+  <li>Begin using strong story/code/PR/review/merge/deploy cycles</li>
+</ul>
+
+<h2 id="instructional-sessions---week-1">Instructional Sessions - Week 1</h2>
+
+<h3 id="javascript-without-a-browser">JavaScript without a Browser</h3>
+
+<ul>
+  <li>Staff: Andrew</li>
+  <li>Status: Needs Planning</li>
+</ul>
+
+<p>There are surely existing materials somewhere, but the idea here is to make sure students understand how JS gets run without a browser. Would be a good time for some history/context of V8.</p>
+
+<h3 id="workflow--communication">Workflow &amp; Communication</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/workflow_and_communication">Lesson Plan</a></li>
+</ul>
+
+<h3 id="object-oriented-javascript">Object-Oriented JavaScript</h3>
+
+<ul>
+  <li>Staff: Andrew</li>
+  <li>Status: Ready</li>
+</ul>
+
+<p>There is an existing lesson plan to be reviewed.</p>
+
+<h3 id="professional-code-environments">Professional Code Environments</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/professional_code_environments">Lesson Plan</a></li>
+</ul>
+
+<h3 id="debugging-javascript">Debugging JavaScript</h3>
+
+<ul>
+  <li>Staff: Andrew</li>
+  <li>Status: Needs Review</li>
+</ul>
+
+<p>I believe there are existing materials, but they’re browser-centric. Can they be bent to non-browser usage?</p>
+
+<h3 id="acceptance-testing">Acceptance Testing</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/acceptance_testing">Lesson Plan</a></li>
+</ul>
+
+<h3 id="ps-flower-exercise-follow-up">PS: Flower Exercise Follow-Up</h3>
+
+<ul>
+  <li>Staff: Allison</li>
+  <li>Status: Ready</li>
+</ul>
+
+<h3 id="oauth-revisited">OAuth Revisited</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Light Planning</li>
+</ul>
+
+<p>Short session that will recap how OAuth works, the role of OmniAuth, OmniAuth Strategies, etc</p>
+
+<h3 id="enumerables-in-javascript">Enumerables in JavaScript</h3>
+
+<ul>
+  <li>Staff: Andrew</li>
+  <li>Status: Light Planning</li>
+</ul>
+
+<p>Pull together components from the existing Array Prototype less, Lodash lesson, etc.</p>
+
+<h2 id="instructional-sessions---week-2">Instructional Sessions - Week 2</h2>
+
+<h3 id="getting-started-with-services">Getting Started with Services</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/getting_started_with_services">Lesson Plan</a></li>
+</ul>
+
+<h3 id="extracting-a-proxy-service">Extracting a Proxy Service</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/extracting_a_proxy_service">Lesson Plan</a></li>
+</ul>
+
+<h3 id="isolating-dependencies-with-wrappers">Isolating Dependencies with Wrappers</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Draft Ready</li>
+  <li><a href="lessons/writing_a_wrapper_gem">Lesson Plan</a></li>
+</ul>
+
+<h3 id="ps-negotiating">PS: Negotiating</h3>
+
+<ul>
+  <li>Staff: Lia</li>
+  <li>Status: Ready</li>
+</ul>
+
+<h3 id="linked-lists-in-js">Linked Lists in JS</h3>
+
+<ul>
+  <li>Staff: Andrew</li>
+  <li>Status: Ready</li>
+</ul>
+
+<p>Nate’s done this before, so it should be ready to go.</p>
+
+<h3 id="testing-in-a-world-of-services">Testing in a World of Services</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Needs Planning</li>
+</ul>
+
+<p>Dealing with the mocking of services, possibly offering reusable mock libraries in the model of omniauth.</p>
+
+<h3 id="pubsub-is-crazy-awesome">Pub/Sub is Crazy Awesome</h3>
+
+<ul>
+  <li>Staff: Jeff</li>
+  <li>Status: Light Planning</li>
+</ul>
+
+<p>Review the existing Pub/Sub tutorial and revise it into a lighter lesson, possibly with stations/small groups.</p>
+
+<h3 id="bst-in-js">BST in JS</h3>
+
+<ul>
+  <li>Staff: Andrew</li>
+  <li>Status: Ready</li>
+</ul>
+
+<p>Nate’s done this before, so it should be ready to go.</p>
+
+<h2 id="preparation-to-dos">Preparation To-Dos</h2>
+
+<ul>
+  <li>Check-in with Lia/Allison about PD sessions they were already planning to teach and make sure the schedule is aligned</li>
+  <li>Determine which of our professional skills sessions are/aren’t covered by their sessions</li>
+  <li>Schedule any PSkills sessions that are not covered</li>
+  <li>Make a work plan to develop the lesson plans as needed</li>
+  <li>Decide on the role of “homework” outside of project work</li>
+  <li>Finalize thinking about “Art” vs “Practice” and whether that language will be used with students</li>
+  <li>Schedule an inception meeting with each project team</li>
+  <li>Recruit/assign mentors to each project</li>
+  <li>Communicate mentor expectations/parameters to the teams and mentors</li>
+  <li>DONE: Lay out first draft class sessions for this sprint (weeks 1 &amp; 2)</li>
+  <li>DONE: Assign each technical class session to either Jeff or Andrew</li>
+  <li>DONE: Review the lessons from the first two weeks to determine what we do and don’t have ready</li>
+  <li>DONE: Pick the three projects</li>
+  <li>DONE: Determine the student three teams</li>
+</ul>
+:ET

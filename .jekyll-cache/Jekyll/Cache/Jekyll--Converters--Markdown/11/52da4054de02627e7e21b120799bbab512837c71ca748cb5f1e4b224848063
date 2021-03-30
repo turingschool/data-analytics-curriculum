@@ -1,0 +1,99 @@
+I"�<h2 id="project-description">Project Description</h2>
+
+<p>You are working for a company developing an E-Commerce Application. Your team is working in a service-oriented architecture, meaning the front and back ends of this application are separate and communicate via APIs. Your job is to expose the data that powers the site through an API that the front end will consume.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<h3 id="explicit">Explicit</h3>
+
+<p>Below are technical goals that you should be applying in this project.<br />
+The priority of these goals are demonstrated using a star grading system.<br />
+By the end of this project: <br />
+  Student should have a functional understanding of the concept ⭐ ⭐ ⭐ <br />
+  Student should have a familiar understanding, but may still have questions ⭐ ⭐ <br />
+  Student should know of the concept, but need further resources to implement ⭐</p>
+
+<ul>
+  <li>Expose an API ⭐ ⭐ ⭐</li>
+  <li>Use serializers to format JSON responses ⭐ ⭐ ⭐</li>
+  <li>Test API exposure ⭐ ⭐ ⭐</li>
+  <li>Compose advanced ActiveRecord queries to analyze information stored in SQL databases ⭐ ⭐</li>
+  <li>Write basic SQL statements without the assistance of an ORM ⭐</li>
+</ul>
+
+<p><em>Note: See <a href="../../misc/learning_goals">Learning Goals</a> to see at what level these skills need to be by the final.</em></p>
+
+<h3 id="implicit">Implicit</h3>
+<p>Below are skills that are more general/necessary on the job that are practiced by completing the goals above.</p>
+
+<ul>
+  <li>Reading Documentation</li>
+  <li>Time Management</li>
+  <li>Prioritizing Work</li>
+  <li>Breaking down large project into small pieces</li>
+  <li>Breaking down a problem into small steps</li>
+  <li>Practice individual research (articles, videos, mentors)</li>
+</ul>
+
+<h2 id="project-management">Project Management</h2>
+
+<p>The organization of this project spec is by feature type. However, it is encouraged that you work through a little of each feature type rather than trying to complete an entire feature type before moving to the next. We encourage you to use an Agile approach as much as possible to complete this assignment, and to review the work and develop estimated milestones before you begin. <strong>Any good set of milestones will allow for some slippage before the project is due.</strong></p>
+
+<p>We <em>highly</em> encourage you to have attempted some of the business intelligence queries before the Advanced ActiveRecord class.</p>
+
+<h2 id="postman">Postman</h2>
+
+<p>We have adapted this project from previous cohorts and have rewritten a fully functional test suite right within Postman. By importing the JSON file noted below, you can open the Postman “Runner” and execute a large suite of tests.</p>
+
+<p>Note: in order to pass the project, not ALL of the Postman tests will be passing. You will need to examine the tests you NEED to run, since we’re giving students some choice in how to build the application.</p>
+
+<h4 id="importing-the-test-suite">Importing the Test Suite</h4>
+
+<p>Download the test suite <a href="./RailsEngine.postman_collection.json">from this URL</a>. In Postman, in the top left corner, click on the “Import” button, and drag the downloaded JSON file over the interface or use the file selector to locate the file on your operating system.</p>
+
+<p>Next, you’ll “confirm” the import. The test suite should display as a “Postman Collection v2.1” and import as a “Collection”. Click the “Import” button to continue.</p>
+
+<p>On the left side of your Postman interface, you should see a “Rails Engine” entry with “19 requests”.</p>
+
+<h4 id="running-the-tests">Running the Tests</h4>
+
+<p>There are two ways to run the test suite: one endpoint at a time, or the whole suite.</p>
+
+<h4 id="running-one-endpoint-at-a-time">Running one endpoint at a time</h4>
+
+<p>As you develop your endpoints, run “rails s” and find the appropriate endpoint within the Postman collection you imported. For example, “Get All Merchants”. When you select “Get All Merchants” from the list, you should see a Postman tab open, pre-populated with everything you need to connect to the endpoint in your code and see if it works correctly.</p>
+
+<p>Click the “Send” button in the top right corner.</p>
+
+<p>In the lower portion of the Postman interface, you should see “Body”, “Cookies”, “Headers” and a spot that says something like “Test Results (7/7)”. This would indicate that 7 tests passed out of 7. If you see, for example, 3/7 then 7 tests passed and 4 did not.</p>
+
+<p>You can click on the “Test Results (7/7)” to see which tests passed.</p>
+
+<p>The error messages aren’t that great, but we’re here to help you diagnose the problems.</p>
+
+<p><strong>IMPORTANT</strong> some of the endpoints include EDGE CASE testing, which should be saved as “extension” work.</p>
+
+<h4 id="running-the-full-test-suite">Running the full test suite</h4>
+
+<p>In the top left corner of the Postman interface, you’ll see a “Runner” button. Click that and a new Postman window will appear. From here, you can select “Rails Engine” from the list of “All Collections”.</p>
+
+<p>Next you can select/deselect which tests you’d like to run. Next, click the “Run Rails Engine” button.</p>
+
+<p>As it runs, it will show you which tests are passing or failing.</p>
+
+<h2 id="technical-requirements">Technical Requirements</h2>
+
+<p>The Technical Requirements for this project can be found <a href="./requirements">here</a></p>
+
+<h2 id="extensions">Extensions</h2>
+
+<p>Review the evaluation details to ensure you have completed each section of it before tackling any extensions. If all requirements have been met, then please work on the extensions found <a href="./extensions">here</a></p>
+
+<h2 id="evaluation">Evaluation</h2>
+
+<p>Evaluation details can be found <a href="./evaluation">here</a></p>
+
+<h2 id="peer-code-review">Peer Code Review</h2>
+
+<p>Instructions for the peer review can be found <a href="./peer_code_review">here</a></p>
+:ET

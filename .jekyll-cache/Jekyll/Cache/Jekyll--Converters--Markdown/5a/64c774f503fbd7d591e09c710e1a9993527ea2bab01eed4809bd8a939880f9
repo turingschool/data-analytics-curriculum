@@ -1,0 +1,31 @@
+I"w<h2 id="spin-up-a-rack-server-and-see-the-basics-of-a-server-response">Spin up a Rack server and see the basics of a server response</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">gem install rack</code></li>
+  <li>
+    <p>get into a repl session with <code class="highlighter-rouge">pry</code>:</p>
+
+    <div class="language-terminal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">  require 'rack'
+
+  app = Proc.new do |env|
+</span><span class="gp">      ['200', {'Content-Type' =&gt;</span><span class="w"> </span><span class="s1">'text/html'</span><span class="o">}</span>, <span class="o">[</span><span class="s1">'Now You Have A barebones rack app.'</span><span class="o">]]</span>
+<span class="go">  end
+
+  Rack::Handler::WEBrick.run app
+</span></code></pre></div>    </div>
+  </li>
+  <li>In your browser, navigate to the port your terminal output is directing you. See your response rendered by the server.</li>
+  <li>
+    <p>Now go back into the repl session:</p>
+
+    <div class="language-terminal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">  require 'rack'
+
+  app = Proc.new do |env|
+</span><span class="gp">    ['200', {'Content-Type' =&gt;</span><span class="w"> </span><span class="s1">'text/html'</span><span class="o">}</span>, <span class="o">[</span><span class="s2">"&lt;h1&gt;Meow You Have A barebones rack app.&lt;/h1&gt;&lt;img src='http://i.telegraph.co.uk/multimedia/archive/02830/cat_2830677b.jpg'&gt;"</span><span class="o">]]</span>
+<span class="go">  end
+
+  Rack::Handler::WEBrick.run app
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+:ET

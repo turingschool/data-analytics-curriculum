@@ -1,0 +1,24 @@
+I"<h2 id="pinspiration-pinterest">Pinspiration (Pinterest)</h2>
+
+<p>Need a new recipe? Maybe some ideas on what to wear to work? What color should
+you paint your bedroom? Let’s create a platform that allows you to keep
+all of your inspiration in one place.</p>
+
+<h3 id="specific-requirements">Specific Requirements</h3>
+
+<ul>
+  <li>User roles should include: guest, registered user, admin.</li>
+  <li>Guests and registered users should be able to browse public pin boards.</li>
+  <li>Registered users should be able to post to either public or private boards they manage.</li>
+  <li>Private boards can be shared with specific users.</li>
+  <li>Registered users should be able to follow each other.</li>
+  <li>Registered users can comment on pins.</li>
+  <li>Registered users should see a dashboard on login with chronologically listed updates from those they follow.</li>
+</ul>
+
+<h3 id="possible-extensions">Possible Extensions</h3>
+
+<ul>
+  <li>Build a Chrome extension that makes images and links on the web “pinnable.”</li>
+</ul>
+:ET

@@ -1,0 +1,309 @@
+I"eD<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Define and demonstrate a testing cycle</li>
+  <li>Use error messages to drive development</li>
+  <li>Implement new assertion methods</li>
+  <li>Identify best testing practices</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+
+<ul>
+  <li>Testing</li>
+  <li>Assertion</li>
+  <li>TDD</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/how_testing_works">here</a></p>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<p>Assume that you have a <code class="highlighter-rouge">Person</code> and a <code class="highlighter-rouge">Dog</code> class.
+Assume all dogs have owners.</p>
+
+<ul>
+  <li>How might you represent the idea of a dog having an owner in code?</li>
+  <li>Write an <code class="highlighter-rouge">initialize</code> method for <code class="highlighter-rouge">Dog</code></li>
+  <li>What do you need to put in a runner file to access both classes?</li>
+  <li>Up to now, how have you identified if your programs were working correctly? What are the downsides to this approach?</li>
+</ul>
+
+<h2 id="test-etiquette">Test Etiquette</h2>
+
+<h3 id="file-structure">File Structure</h3>
+
+<ul>
+  <li>Test files live in their own <code class="highlighter-rouge">test</code> directory</li>
+  <li>Implementation code files live in a sibling <code class="highlighter-rouge">lib</code> directory</li>
+  <li>Test files should reflect the class they’re testing with <code class="highlighter-rouge">_test</code> appended to the file name, e.g. <code class="highlighter-rouge">test/name_of_class_test.rb</code></li>
+  <li>In your test, you’ll now <code class="highlighter-rouge">require "./lib/name_of_class.rb"</code></li>
+  <li>Run your test files from the root of the project directory, e.g. <code class="highlighter-rouge">ruby test/name_of_class_test.rb</code>; running the test will invoke your program</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.
+├── lib
+|   └── name_of_class.rb
+└── test
+    └── name_of_class_test.rb
+</code></pre></div></div>
+
+<h3 id="minitest-setup">minitest Setup</h3>
+
+<p><a href="http://docs.seattlerb.org/minitest/">Minitest</a> is a framework used for automated testing. It is the testing framework used on many of the homework exercises you’ve been assigned.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install minitest
+</code></pre></div></div>
+
+<ul>
+  <li>Require <code class="highlighter-rouge">minitest/autorun</code> - the easy and explicit way to run all your tests</li>
+  <li>Require <code class="highlighter-rouge">minitest/pride</code> - vivid color explosion</li>
+</ul>
+
+<h3 id="minitest-convention">minitest Convention</h3>
+
+<ul>
+  <li>Test Class Name: <code class="highlighter-rouge">class NameOfClassTest</code></li>
+  <li>Test class inherits from <code class="highlighter-rouge">Minitest::Test</code>, e.g. <code class="highlighter-rouge">class NameOfClassTest &lt; Minitest::Test</code>
+    <ul>
+      <li><code class="highlighter-rouge">test</code> is a <code class="highlighter-rouge">minitest</code> module; <code class="highlighter-rouge">::</code> is a scope resolution operator</li>
+      <li>minitest/test is a small and incredibly fast unit testing framework. It provides a rich set of assertions to make your tests clean and readable.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">def test_something</code> for names of methods in test file – <strong>MUST start with <code class="highlighter-rouge">test_</code></strong></li>
+  <li>It’s good practice to reference your method in the test name <code class="highlighter-rouge">test_method_name_does_what_I_want_it_to</code></li>
+  <li>assert_equal starts with the <strong>assertion method</strong>, followed by the <strong>expected</strong> value, followed by the <strong>actual</strong> value</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">assert_equal</span> <span class="s1">'expected'</span><span class="p">,</span> <span class="s1">'actual'</span>
+</code></pre></div></div>
+
+<h2 id="code-along">Code-Along</h2>
+
+<h3 id="scenario-specifications">Scenario Specifications</h3>
+
+<ul>
+  <li>Students have names</li>
+  <li>Students have laptops. The laptop is usually an Apple, but it can be any brand</li>
+  <li>Students can bring various flavors of cookies to their instructors, but double-chocolate brownie chunk flavor can never be wrong</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># student_test.rb</span>
+<span class="nb">require</span> <span class="s1">'minitest'</span>
+<span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+
+<span class="k">class</span> <span class="nc">StudentTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="c1"># test it exists</span>
+  <span class="c1"># test it has a name</span>
+  <span class="c1"># test it has a laptop</span>
+  <span class="c1"># test it has cookies</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s build out our Student Test!</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># student_test.rb</span>
+<span class="nb">require</span> <span class="s1">'minitest'</span>
+<span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+
+<span class="k">class</span> <span class="nc">StudentTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def</span> <span class="nf">test_it_exists</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>
+    <span class="n">assert_instance_of</span> <span class="no">Student</span><span class="p">,</span> <span class="n">student</span>
+  <span class="k">end</span>
+  <span class="c1"># test it has a name</span>
+  <span class="c1"># test it has a laptop</span>
+  <span class="c1"># test it has cookies</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Write tests</li>
+  <li>Run tests</li>
+  <li>Thoroughly read errors &amp; failures</li>
+  <li>Write implementation code</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Do it all again</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># student_test.rb</span>
+<span class="nb">require</span> <span class="s1">'minitest'</span>
+<span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+
+<span class="k">class</span> <span class="nc">StudentTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def</span> <span class="nf">test_it_exists</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>
+    <span class="n">assert_instance_of</span> <span class="no">Student</span><span class="p">,</span> <span class="n">student</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_student_has_a_name</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Penelope"</span><span class="p">)</span>
+    <span class="n">assert_equal</span> <span class="s2">"Penelope"</span><span class="p">,</span> <span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+  <span class="c1"># test it has a laptop</span>
+  <span class="c1"># test it has cookies</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Student</span>
+  <span class="nb">attr_reader</span> <span class="ss">:name</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="turn--talk">Turn &amp; Talk</h3>
+<p>What do you think the following assertion methods do?</p>
+
+<ul>
+  <li><code class="highlighter-rouge">assert_instance_of</code></li>
+  <li><code class="highlighter-rouge">assert_equal</code></li>
+  <li><code class="highlighter-rouge">assert</code></li>
+  <li><code class="highlighter-rouge">assert_nil</code></li>
+  <li><code class="highlighter-rouge">refute</code></li>
+  <li><code class="highlighter-rouge">refute_equal</code></li>
+</ul>
+
+<h2 id="additional-test-intricacies">Additional Test Intricacies</h2>
+<ul>
+  <li>Tests will overwrite previous tests with the same name; <strong>give each test a new name</strong></li>
+  <li>Each test is independent of the next; <strong>don’t depend on tests to run in order</strong> of how they’re written
+    <ul>
+      <li>However, it clarifies your code to other humans to write in order of complexity; aim to start from most basic to most complex functionality and keep tests grouped by method</li>
+    </ul>
+  </li>
+  <li>You can create a setup method</li>
+  <li>Tests will generally return an <code class="highlighter-rouge">E</code> for error, <code class="highlighter-rouge">F</code> for failure &amp; <code class="highlighter-rouge">.</code> for passing</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">StudentTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="nb">attr_reader</span> <span class="ss">:student</span>
+
+  <span class="k">def</span> <span class="nf">setup</span>
+    <span class="vi">@student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="ensuring-dynamic-functionality">Ensuring Dynamic Functionality</h3>
+
+<p>We should make sure that all of our methods can handle different cases, ensuring that our implementation code is dynamic, e.g.:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># student_test.rb</span>
+<span class="nb">require</span> <span class="s1">'minitest'</span>
+<span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+
+<span class="k">class</span> <span class="nc">StudentTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def</span> <span class="nf">test_it_exists</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>
+    <span class="n">assert_instance_of</span> <span class="no">Student</span><span class="p">,</span> <span class="n">student</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_student_has_a_name</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Penelope"</span><span class="p">)</span>
+    <span class="n">assert_equal</span> <span class="s2">"Penelope"</span><span class="p">,</span> <span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_student_can_have_a_different_name</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Hermione"</span><span class="p">)</span>
+    <span class="n">assert_equal</span> <span class="s2">"Hermione"</span><span class="p">,</span> <span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+  <span class="c1"># test it has a laptop</span>
+  <span class="c1"># test it has cookies</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="testing-edge-cases">Testing Edge Cases</h3>
+
+<ul>
+  <li>Ensure that your implementation code can handle things we might not expect, e.g.:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># student_test.rb</span>
+<span class="nb">require</span> <span class="s1">'minitest'</span>
+<span class="nb">require</span> <span class="s1">'minitest/autorun'</span>
+<span class="nb">require</span> <span class="s1">'minitest/pride'</span>
+
+<span class="k">class</span> <span class="nc">StudentTest</span> <span class="o">&lt;</span> <span class="no">Minitest</span><span class="o">::</span><span class="no">Test</span>
+  <span class="k">def</span> <span class="nf">test_it_exists</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span>
+    <span class="n">assert_instance_of</span> <span class="no">Student</span><span class="p">,</span> <span class="n">student</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_student_has_a_name</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Penelope"</span><span class="p">)</span>
+    <span class="n">assert_equal</span> <span class="s2">"Penelope"</span><span class="p">,</span> <span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_student_can_have_a_different_name</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Hermione"</span><span class="p">)</span>
+    <span class="n">assert_equal</span> <span class="s2">"Hermione"</span><span class="p">,</span> <span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_student_cant_be_created_with_integer_name</span>
+    <span class="n">student</span> <span class="o">=</span> <span class="no">Student</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+    <span class="n">assert_equal</span> <span class="s2">"Name not Provided"</span><span class="p">,</span> <span class="n">student</span><span class="p">.</span><span class="nf">name</span>
+  <span class="k">end</span>
+  <span class="c1"># test it has a laptop</span>
+  <span class="c1"># test it has cookies</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="practice">Practice</h3>
+
+<p>Let’s explore how our code breaks when we don’t follow the Test Etiquette rules from above.</p>
+
+<h2 id="exercise-tdd-calculator">Exercise: TDD Calculator</h2>
+
+<ul>
+  <li>Build a calculator class from scratch using TDD</li>
+  <li>Start with whiteboarding and pseudocode</li>
+  <li>Write pseudocode in the test file first for a few methods</li>
+  <li>Your calculator should be able to handle the following methods:
+    <ul>
+      <li>.new</li>
+      <li>#total</li>
+      <li>#add</li>
+      <li>#clear</li>
+      <li>#subtract</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="recap">Recap</h2>
+
+<ul>
+  <li>What 2 directories should we have within our project directory?</li>
+  <li><code class="highlighter-rouge">minitest</code> setup
+    <ul>
+      <li>What do you have to require in a test file?</li>
+      <li>What does your test class inherit from?</li>
+      <li>What is the syntax for a minitest test? What’s the best name for a test?</li>
+      <li>Do tests need unique names? Should they be written in a particular order? Do they necessarily run in that order?</li>
+    </ul>
+  </li>
+  <li>Name 3 assertion methods you learned about today &amp; describe their syntax.</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+<ul>
+  <li>Explore the minitest gem! <a href="https://github.com/seattlerb/minitest">https://github.com/seattlerb/minitest</a></li>
+  <li>One solution to the <a href="https://github.com/JoshCheek/how-to-test">calculator challenge</a> using tests</li>
+</ul>
+:ET

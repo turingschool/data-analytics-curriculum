@@ -1,0 +1,75 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand how to “shim” responsibilities apart</li>
+  <li>Practice modeling a command-driven system</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>25 - Independent Work</li>
+  <li>Break</li>
+  <li>25 - Lecture/Demo</li>
+  <li>Break</li>
+  <li>25 - Paired Work</li>
+</ul>
+
+<h2 id="independent-work">Independent Work</h2>
+
+<p>First up let’s begin with a challenge. Work on your own to
+build a simple <a href="http://en.wikipedia.org/wiki/Polish_notation">“Polish Notation”</a> calculator.</p>
+
+<h3 id="the-rules">The Rules</h3>
+
+<ul>
+  <li>Don’t write tests</li>
+  <li>Don’t do anything fancy with STDIN/STDOUT</li>
+  <li>Don’t use any extra gems</li>
+  <li>Don’t use the built-in <code class="highlighter-rouge">*</code> or <code class="highlighter-rouge">/</code> methods</li>
+</ul>
+
+<h3 id="the-expectations">The Expectations</h3>
+
+<p>Your program should act as a “REPL” – Read, Eval, Print, Loop. Here’s an example interaction:</p>
+
+<pre><code class="language-plain">Enter your calculation:
+&gt; + 5 4
+9
+&gt; - 12 6
+6
+&gt; * 4 2
+8
+&gt; / 10 5
+2
+</code></pre>
+
+<p>Write your program to accept any such numeric inputs any of the operations <code class="highlighter-rouge">+</code>, <code class="highlighter-rouge">-</code>, <code class="highlighter-rouge">*</code>, or <code class="highlighter-rouge">/</code>.</p>
+
+<h2 id="lecture">Lecture</h2>
+
+<p>Let’s come back together to look at an example of how this could be written with tests using a “shim” technique.</p>
+
+<h2 id="paired-work">Paired Work</h2>
+
+<p>Now get together with your pair, restart the challenge with the provided base repo, and implement the functions with good test coverage.</p>
+
+<p>Use the following commands to clone the repository:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git clone https://github.com/turingschool-examples/calculator
+</code></pre></div></div>
+
+<h3 id="extensions">Extensions</h3>
+
+<p>Get those done? Try implementing:</p>
+
+<pre><code class="language-plain">&gt; ^ 2 3
+8
+&gt; &lt; 5 8
+true
+&gt; &gt; 5 8
+false
+&gt; = 6 6
+true
+</code></pre>
+:ET

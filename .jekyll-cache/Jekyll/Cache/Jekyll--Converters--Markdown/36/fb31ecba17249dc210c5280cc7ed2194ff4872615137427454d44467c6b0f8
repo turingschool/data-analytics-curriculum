@@ -1,0 +1,105 @@
+I"L<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Don’t be scared when someone says Proc or lambda</li>
+  <li>Explain how Procs, lambdas, and blocks are all related</li>
+  <li>Refactor common enumerables with lambdas</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>5</td>
+      <td>Warm Up</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Overview</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Code Along</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Pomodoro</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Code Along</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Wrap Up</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="warm-up">Warm-up</h2>
+
+<ul>
+  <li>How do you know when you see a “block” of code in Ruby?</li>
+  <li>In your own words, what is a block?</li>
+  <li>Why is the DRY principle important?</li>
+</ul>
+
+<h2 id="brief-overview">Brief Overview</h2>
+
+<p>Procs and lambdas are NOT required to be a good programmer. I was really intimidated by them when I was going through Turing, because they had weird syntax, and people said to just not worry about them. After diving into Javascript and falling in love with functions as objects I could pass around, I wanted to have the same abilities in Ruby. Procs and lambdas are just that: <em>blocks of code in the form of an object</em>.</p>
+
+<p>Proc is short for <strong>procedure</strong>. That’s it. Nothing fancy or complex. Just a bundle of code that we can use to carry out a task. Lambdas are special types of Procs, which you can explore in the resources below another time. Today we’re just going to see how they can clean up our code.</p>
+
+<p>Methods carry out tasks the minute they are called, Procs and lambdas just require a “message” in order to invoke them. When you type <code class="highlighter-rouge">some_method</code> that refers to:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">some_method</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>that <code class="highlighter-rouge">some_method</code> is not an object. It is just an instantly invoked set of instructions. However, since everything is an object in Ruby, we can actually peek under the hood at how <code class="highlighter-rouge">some_method</code>, actually <strong>is</strong> an object. Open a pry session and run this code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">adder</span><span class="p">(</span><span class="n">number1</span><span class="p">,</span> <span class="n">number2</span><span class="p">)</span>
+  <span class="n">number1</span> <span class="o">+</span> <span class="n">number2</span>
+<span class="k">end</span>
+
+<span class="n">adder</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c1">#=&gt; 11</span>
+
+<span class="nb">method</span><span class="p">(</span><span class="ss">:adder</span><span class="p">)</span> <span class="c1">#=&gt; #&lt;Method: Object#adder&gt;</span>
+<span class="nb">method</span><span class="p">(</span><span class="ss">:adder</span><span class="p">).</span><span class="nf">call</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#=&gt; 11</span>
+</code></pre></div></div>
+
+<p>When we call <code class="highlighter-rouge">adder</code> on its own, it appears that <code class="highlighter-rouge">.call</code> happens under the hood. That <code class="highlighter-rouge">.call</code> is the message that Procs and lambdas need to hear before they actually execute their instructions. If a set of instructions doesn’t execute right when it is mentioned, like a regular method or block (<code class="highlighter-rouge">{...}</code> and <code class="highlighter-rouge">do ... end</code>), we can save it assign it to a variable and pass it around just like any other object.</p>
+
+<p>In review, Procs and lambdas are the Ruby way to store methods as objects. Let’s see it in action.</p>
+
+<h2 id="code-along">Code Along</h2>
+
+<p>Clone <a href="https://github.com/turingschool-examples/text_analyzer">this repo</a>.</p>
+
+<p>We’ll walk through refactoring these methods as a class.</p>
+
+<h2 id="wrap-up">Wrap-Up</h2>
+
+<ul>
+  <li>Review learning goals:
+    <ul>
+      <li>What does Proc stand for?</li>
+      <li>In Ruby, are methods objects?</li>
+      <li>How are Procs and lambdas different from blocks and methods?</li>
+      <li>How are Procs, lambdas, methods, and blocks the same?</li>
+      <li>What are some cases where refactoring with a lambda could be useful?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="http://awaxman11.github.io/blog/2013/08/05/what-is-the-difference-between-a-block/">Blocks, Procs, and Lambdas</a></li>
+  <li><a href="https://medium.com/@tmikeschutte/lambdas-and-enumerables-in-ruby-d1f52c34852">Blog post with examples</a></li>
+  <li><a href="https://gist.github.com/tmikeschu/1edc0dafce76aaf51ef450cb9525989c">Gist with examples</a></li>
+  <li><a href="https://stackoverflow.com/questions/1246099/ruby-method-proc-and-block-confusion">A succinct stack overflow answer</a></li>
+</ul>
+:ET

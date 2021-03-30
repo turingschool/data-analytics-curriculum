@@ -1,0 +1,14 @@
+I"�<h1 id="setup">Setup</h1>
+
+<p>First, we’ll need a new Rails application. Feel free to name it whatever you’d like, but be sure to create the new application with a postgresql database. Our app will have a <code class="highlighter-rouge">users</code> table, and each user must have a name, email and password (all strings)</p>
+
+<p>Use TDD to implement the following user story</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a visitor
+I visit the users index
+Then I see a list of all users in the database
+For each user, I see their name and email address.
+</code></pre></div></div>
+
+<p><a href="./auth_exp_it1">Next to Iteration 1</a></p>
+:ET

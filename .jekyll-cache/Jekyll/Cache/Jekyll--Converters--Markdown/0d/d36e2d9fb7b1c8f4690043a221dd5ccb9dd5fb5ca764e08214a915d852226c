@@ -1,0 +1,255 @@
+I"�,<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>identify common number systems used in programming</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/number_systems">here</a></p>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Binary</li>
+  <li>Hexadecimal</li>
+  <li>Octal</li>
+  <li>Base-#</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+<ul>
+  <li>Deconstruct the number 134. What does the 1 mean? What does the 3 mean? What does the 4 mean?</li>
+  <li>What is the significance of increasing the digits in a number? Why do we go from single digit at 9 to double digit at 10?</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>There’s more than one way of counting. You’re most familiar with the base-10 number system. In this session we’ll work to:</p>
+
+<ul>
+  <li>better understand base-10 (decimal)</li>
+  <li>explain and explore base-2 (binary)</li>
+  <li>explain and explore base-16 (hexadecimal)</li>
+  <li>explain and explore base-8 (octal)</li>
+</ul>
+
+<p>Create a chart like the one below to keep track of each number system:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">base</th>
+      <th style="text-align: center">name</th>
+      <th style="text-align: center">digits</th>
+      <th style="text-align: center">max-digit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">10</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">16</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: center">8</td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="base-10-decimal">Base-10 (decimal)</h3>
+
+<p>You use base-10 numbers everyday, but let’s think a bit more about how they work.</p>
+
+<h4 id="theory">Theory</h4>
+
+<ul>
+  <li>Uses the symbols <code class="highlighter-rouge">0</code>, <code class="highlighter-rouge">1</code>, <code class="highlighter-rouge">2</code>, <code class="highlighter-rouge">3</code>, <code class="highlighter-rouge">4</code>, <code class="highlighter-rouge">5</code>, <code class="highlighter-rouge">6</code>, <code class="highlighter-rouge">7</code>, <code class="highlighter-rouge">8</code>, <code class="highlighter-rouge">9</code></li>
+  <li>Digits carry over to the next place when <code class="highlighter-rouge">9</code> becomes <code class="highlighter-rouge">0</code></li>
+  <li>One digit can represent 10 unique numbers</li>
+  <li>Two digits represent 100 unique numbers</li>
+  <li>Moving right to left, positions represent:
+    <ul>
+      <li>10^0 = 1</li>
+      <li>10^1 = 10 (“tens”)</li>
+      <li>10^2 = 100 (“hundreds”)</li>
+      <li>10^3 = 1000 (“thousands”)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="base-2-binary">Base-2 (binary)</h3>
+
+<p>Everything in computing (hardware, software) is based on binary. At the electrical
+level a binary zero means “no electricity”, while a binary one means “yes electricity”.</p>
+
+<h4 id="theory-1">Theory</h4>
+
+<ul>
+  <li>Uses the symbols <code class="highlighter-rouge">0</code> and <code class="highlighter-rouge">1</code> only</li>
+  <li>Digits carry over to the next place when <code class="highlighter-rouge">1</code> becomes <code class="highlighter-rouge">0</code></li>
+  <li>One digit can represent only two unique numbers</li>
+  <li>Two digits can represent only four unique numbers</li>
+  <li>Moving right to left, positions represent:
+    <ul>
+      <li>2^0 = 1</li>
+      <li>2^1 = 2</li>
+      <li>2^2 = 4</li>
+      <li>2^3 = 8</li>
+    </ul>
+  </li>
+</ul>
+
+<p><em>Comprehension</em>: What number would come immediately after <code class="highlighter-rouge">1010</code>?</p>
+
+<h3 id="base-16-hexadecimal">Base-16 (hexadecimal)</h3>
+
+<p>Base-16 numbers are powerful for representing a large number of possible values with just a few characters (think of
+serial numbers). One common usage that you will see is the #hex value for a color. For example #000000 is the lowest positive number and represents black while #ffffff is the highest positive number (with 6 digits) and represents white.</p>
+
+<h4 id="theory-2">Theory</h4>
+
+<p>In hex you have sixteen symbols! The hex system:</p>
+
+<ul>
+  <li>Uses the symbols <code class="highlighter-rouge">0</code> through <code class="highlighter-rouge">9</code> then <code class="highlighter-rouge">A</code>, <code class="highlighter-rouge">B</code>, <code class="highlighter-rouge">C</code>, <code class="highlighter-rouge">D</code>, <code class="highlighter-rouge">E</code>, <code class="highlighter-rouge">F</code></li>
+  <li>Digits carry over to the next place when <code class="highlighter-rouge">F</code> becomes <code class="highlighter-rouge">0</code></li>
+  <li>One digit can represent sixteen unique numbers</li>
+  <li>Two digits can represent 256 unique numbers</li>
+  <li>Moving right to left, positions represent:
+    <ul>
+      <li>16^0 = 1</li>
+      <li>16^1 = 16</li>
+      <li>16^2 = 256</li>
+      <li>16^3 = 4096</li>
+    </ul>
+  </li>
+</ul>
+
+<p><em>Comprehension</em>: What is the highest value of a 6 digit hex number? What’s the decimal equivalent of this number?</p>
+
+<h3 id="base-8-octal">Base-8 (octal)</h3>
+
+<p>Octal is the least frequently use of these alternative number systems, but it has some interesting properties. One common
+usage is for dealing with <a href="http://www.tutonics.com/2012/12/linux-file-permissions-chmod-umask.html#octal_representation">file permissions in the Unix filesystem</a>.</p>
+
+<h4 id="theory-3">Theory</h4>
+
+<ul>
+  <li>Uses the symbols <code class="highlighter-rouge">0</code>, <code class="highlighter-rouge">1</code>, <code class="highlighter-rouge">2</code>, <code class="highlighter-rouge">3</code>, <code class="highlighter-rouge">4</code>, <code class="highlighter-rouge">5</code>, <code class="highlighter-rouge">6</code>, and <code class="highlighter-rouge">7</code></li>
+  <li>Digits carry over to the next place when <code class="highlighter-rouge">7</code> becomes <code class="highlighter-rouge">0</code></li>
+  <li>One digit can represent eight unique numbers</li>
+  <li>Two digits can represent 64 unique numbers</li>
+  <li>Moving right to left, positions represent:
+    <ul>
+      <li>8^0 = 1</li>
+      <li>8^1 = 8</li>
+      <li>8^2 = 64</li>
+      <li>8^3 = 512</li>
+    </ul>
+  </li>
+</ul>
+
+<p><em>Comprehension</em>: How many more unique numbers can be represented in four decimal digits versus four octal digits?</p>
+
+<h3 id="build-it">Build It</h3>
+
+<p>Use these <a href="https://drive.google.com/a/casimircreative.com/file/d/0Bz1JMFygchXyejZJWlo0SHZjQjg/view?usp=sharing">worksheets</a> to build and write each number 0-20 in each Number System (decimal, binary, hexidecimal, &amp; octal)</p>
+
+<p>Practice counting in your normal number system and think critically about the mechanics of how counting works.</p>
+
+<p><em>Comprehension</em>: If you have three decimal digits, how many unique value can you represent?</p>
+
+<h2 id="extensions">Extensions</h2>
+
+<p>If you get done with building out the numbers try out these extensions:</p>
+
+<h3 id="using-other-number-systems-from-ruby">Using Other Number Systems from Ruby</h3>
+
+<p>Ruby by default represents numbers to us using base-10, even though it stores them in binary under the hood. However it also has the ability to represent numbers as strings of different bases when requested.</p>
+
+<p>To do this, you simply pass an optional, numeric argument to the <code class="highlighter-rouge">to_s</code> method on <code class="highlighter-rouge">Fixnum</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6.to_s(2)
+=&gt; "110"
+</code></pre></div></div>
+
+<p>Similarly, you can also pass an optional argument to the <code class="highlighter-rouge">to_i</code> method on <code class="highlighter-rouge">String</code> to tell ruby to use a different base when it’s parsing a string into a number:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"110".to_i(2)
+=&gt; 6
+</code></pre></div></div>
+
+<p>Experiment with these methods to see if you can accomplish all the conversions from the exercises above using ruby.</p>
+
+<ol>
+  <li>Convert 100 decimal to hex</li>
+  <li>Convert AF6C hex to decimal</li>
+  <li>Convert 10,000 decimal to hex</li>
+  <li>Convert FACE hex to decimal</li>
+</ol>
+
+<h3 id="adding--subtracting-in-different-number-systems">Adding &amp; Subtracting in different Number Systems</h3>
+
+<p>Using the Adding &amp; Subtracting section of these resources, explore how familiar adding/subtracting algorithms are impacted by using a different number system.</p>
+
+<ul>
+  <li><a href="./archive/number_systems_binary">Binary</a></li>
+  <li><a href="./archive/number_systems_hexadecimal">Hexadecimal</a></li>
+  <li><a href="./archive/number_systems_octal">Octal</a></li>
+</ul>
+
+<h3 id="conversions-from-hex-to-binary">Conversions: From Hex to Binary</h3>
+
+<p>Converting Hex to decimal and vice-versa is useful for making Hex numbers more human-readable. But in reality one of the main advantages of hex is that it’s very easy to convert between hex and binary. Hexadecimal largely became popular as a number system among computer scientists and programmers because it serves as a convenient “shorthand” for representing binary numbers which would otherwise be very long.</p>
+
+<p>To understand why converting between these two is relatively easy, let’s think about what binary and hex each represent.</p>
+
+<p>In hex, each “digit” can represent 16 different values (0-15). In terms of binary, we might say that this represents “4 bits” of information – we could represent the same range of values in binary using various combinations of the first 4 bits.</p>
+
+<p>Thus, when converting hex to binary, we can actually just treat each digit in the Hexadecimal string as an independent set of 4 bits in binary. Convert all the digits into sets of 4 bits, string them together, and you’re done!</p>
+
+<p>Let’s look at an example of converting <code class="highlighter-rouge">AF</code> to Binary:</p>
+
+<pre><code class="language-plain">F (15) * 16^0 (1)  = 15(10)  =  0000 1111(2)
+A (10) * 16^1 (16) = 160(10) =  1010 0000(2)
+
+Total = 0000 1111 + 1010 0000 = Concatenate 1010 + 1111 = 10101111
+</code></pre>
+
+<h4 id="exercises">Exercises</h4>
+
+<h5 id="conversion---hex---binary">Conversion - Hex &lt;-&gt; Binary</h5>
+
+<ol>
+  <li>Convert 1010 binary to hex</li>
+  <li>Convert AF6C hex to binary</li>
+  <li>Convert 1101 0101 binary to hex</li>
+  <li>Convert FACE hex to binary</li>
+</ol>
+
+<h2 id="wrapup">WrapUp</h2>
+
+<ul>
+  <li>What are some different number systems used in programming? Where might you use them?</li>
+  <li>What do the digits 10 represent in each of these number systems?</li>
+</ul>
+
+<p><strong>Instructor Note:</strong>
+Print out the two pages of worksheet before class. Each student will need their own.</p>
+
+:ET

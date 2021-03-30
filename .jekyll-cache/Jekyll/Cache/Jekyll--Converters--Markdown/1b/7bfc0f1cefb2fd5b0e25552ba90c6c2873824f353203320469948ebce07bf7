@@ -1,0 +1,190 @@
+I"�<p><em><a href="./index">Back to Battleship Home</a></em>
+<em><a href="./requirements">Back to Requirements</a></em></p>
+
+<p>Now it’s time to put together the components you’ve built in the last two iterations to make a working game. You are allowed to build any additional classes or methods you think may be useful to accomplish this. However, this project will be assessed on the spec outlined in the last two iterations, so don’t remove any of the functionality from the Ship, Cell, or Board classes.</p>
+
+<p>You are not expected to test anything related to user input and output in this iteration, but try to use TDD as much as possible to help you design your solution.</p>
+
+<p>You are not expected to follow the Game described below <em>exactly</em>. If you want to give your computer player more personality, feel free to do so. However, the information relayed to the user and received from the user should not change. For instance, when firing a shot you are not allowed to omit displaying the result of the shot (hit, miss, sink) to the user. For your convenience, at the end of this page you will find a checklist that summarizes all of the functionality you are expected to build.</p>
+
+<p>You are expected to build at least one additional class to complete this iteration. This can be a single class that is responsible for running the game. You should have very little code that is not contained in a class.</p>
+
+<h2 id="main-menu">Main Menu</h2>
+
+<p>When the user starts the game, they should see a welcome message that asks them if they want to play or quit. Whenever a game ends, they should return to this message so they can start a new game, or quit.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to BATTLESHIP
+Enter p to play. Enter q to quit.
+</code></pre></div></div>
+
+<h2 id="setup">Setup</h2>
+
+<p>Once the User has chosen to play, you need to place the computer’s ships and the players ships to set up the game.</p>
+
+<h3 id="computer-ship-placement">Computer Ship Placement</h3>
+
+<p>The computer player should place their ships. The baseline computer should simply use random placements but still adhere to the valid placement rules from iteration 2.</p>
+
+<h3 id="player-ship-placement">Player Ship Placement</h3>
+
+<p>Next, the user places their ships. They should receive a short explanation of how to place along with a visual representation of their board (which should be empty).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I have laid out my ships on the grid.
+You now need to lay out your two ships.
+The Cruiser is three units long and the Submarine is two units long.
+  1 2 3 4
+A . . . .
+B . . . .
+C . . . .
+D . . . .
+Enter the squares for the Cruiser (3 spaces):
+&gt;
+</code></pre></div></div>
+
+<p>When the user enters a valid sequence of spaces, the ship should be placed on the board, the new board with the ship should be shown to the user, and then the user should be asked to place the other ship.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Enter the squares for the Cruiser (3 spaces):
+&gt; A1 A2 A3
+
+  1 2 3 4
+A S S S .
+B . . . .
+C . . . .
+D . . . .
+Enter the squares for the Submarine (2 spaces):
+&gt;
+</code></pre></div></div>
+
+<p>If the user enters an invalid sequence, they should be prompted again:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Enter the squares for the Submarine (2 spaces):
+&gt; C1 C3
+Those are invalid coordinates. Please try again:
+&gt; A1 B1
+Those are invalid coordinates. Please try again:
+&gt; C1 D1
+</code></pre></div></div>
+
+<h2 id="the-turn">The Turn</h2>
+
+<p>During the main game, players take turns firing at one another by selecting positions on the grid to attack.</p>
+
+<p>A single turn consists of:</p>
+
+<ul>
+  <li>Displaying the boards</li>
+  <li>Player choosing a coordinate to fire on</li>
+  <li>Computer choosing a coordinate to fire on</li>
+  <li>Reporting the result of the Player’s shot</li>
+  <li>Reporting the result of the Computer’s shot</li>
+</ul>
+
+<h3 id="displaying-the-boards">Displaying the Boards</h3>
+
+<p>At the start of the turn, the user is shown both boards. The user should see their ships but not the computer’s ships:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=============COMPUTER BOARD=============
+  1 2 3 4
+A M . . M
+B . . . .
+C . . . .
+D . . . .
+==============PLAYER BOARD==============
+  1 2 3 4
+A S S S .
+B . M . .
+C M . S .
+D . . S .
+</code></pre></div></div>
+
+<h3 id="player-shot">Player Shot</h3>
+
+<p>The player should be asked for a coordinate to fire on. If they enter an invalid coordinate, they should be prompted until they enter a valid one:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Enter the coordinate for your shot:
+&gt; D5
+Please enter a valid coordinate:
+&gt; Z1
+Please enter a valid coordinate:
+&gt; A4
+</code></pre></div></div>
+
+<h3 id="computer-shot">Computer Shot</h3>
+
+<p>The computer should choose a random space on the board. The computer should not fire on a space that has already been fired on.</p>
+
+<h3 id="results">Results</h3>
+
+<p>The results of the shots should be displayed:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your shot on A4 was a miss.
+My shot on C1 was a miss.
+</code></pre></div></div>
+
+<p>The game needs to handle all of the following results:</p>
+
+<ul>
+  <li>A shot missed</li>
+  <li>A shot hit a ship</li>
+  <li>A shot sunk a ship</li>
+</ul>
+
+<h3 id="coordinates-that-have-already-been-fired-upon">Coordinates that have already been fired upon</h3>
+
+<p>It is possible that the user enters a coordinate they have already fired upon. You need to add something that informs the user that this is the case. You may choose to either prompt them again for a coordinate they haven’t fired on, or let them choose it again and inform them in the results phase that they selected this coordinate again.</p>
+
+<h2 id="end-game">End Game</h2>
+
+<p>The game is over when either the computer or the user sinks all of the enemy ships. When this happens, the user should see a message stating who won:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You won!
+</code></pre></div></div>
+
+<p>or</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I won!
+</code></pre></div></div>
+
+<p>Then, they should be returned to the Main Menu asking them if they would like to play or quit.</p>
+
+<h2 id="functionality-checklist">Functionality Checklist</h2>
+
+<p>This checklist summarizes all of the functionality you are expected to build. This will be used to assess the completion of your project:</p>
+
+<p><strong>Main Menu</strong>:</p>
+
+<ul>
+  <li>User is shown the main menu where they can play or quit</li>
+</ul>
+
+<p><strong>Setup</strong>:</p>
+
+<ul>
+  <li>Computer can place ships randomly in valid locations</li>
+  <li>User can enter valid sequences to place both ships</li>
+  <li>Entering invalid ship placements prompts user to enter valid placements</li>
+</ul>
+
+<p><strong>Turn</strong>:</p>
+
+<ul>
+  <li>User board is displayed showing hits, misses, sunken ships, and ships</li>
+  <li>Computer board is displayed showing hits, misses, and sunken ships</li>
+  <li>Computer chooses a random shot</li>
+  <li>Computer does not fire on the same spot twice</li>
+  <li>User can choose a valid coordinate to fire on</li>
+  <li>Entering invalid coordinate prompts user to enter valid coordinate</li>
+  <li>Both computer and player shots are reported as a hit, sink, or miss</li>
+  <li>User is informed when they have already fired on a coordinate</li>
+  <li>Board is updated after a turn</li>
+</ul>
+
+<p><strong>End Game</strong>:</p>
+
+<ul>
+  <li>Game ends when all the user’s ships are sunk</li>
+  <li>Game ends when all the computer’s ships are sunk</li>
+  <li>Game reports who won</li>
+  <li>Game returns user back to the Main Menu</li>
+</ul>
+:ET

@@ -1,0 +1,57 @@
+I"�<h2 id="intro-5-minutes">Intro (5 minutes)</h2>
+
+<p>As you learned to build more complex applications, we gave you Rails. As a framework, one of Rails’ jobs is to help you organize your code. Logic that is related to a resource belongs in that resource’s model. Logic related to a view belongs in a helper.</p>
+
+<p>This doesn’t just help you organize your files – it helps you organize divide responsibilities in your code. You don’t really have to think about what’s unit testable. If it’s in a model, it’s unit testable.</p>
+
+<p>JavaScript is not just a new language, but a new environment and we’ve taken away any opinionated framework from you. Now, the responsibility division and code organization is completely your responsibility.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<p>By the end of this workshop, you should be able to:</p>
+
+<ul>
+  <li>Add unit tests to your front-end application</li>
+  <li>Understand how to approach refactoring client-side code for unit testing</li>
+  <li>Understand and be able to speak to why unit testing client-side code is complicated</li>
+</ul>
+
+<h2 id="how-should-we-think-about-unit-testing-20-minutes">How Should We Think About Unit Testing? (20 minutes)</h2>
+
+<p>Reading: <a href="https://alistapart.com/article/writing-testable-javascript">Writing Testable JavaScript</a></p>
+
+<p>After 15 minutes, turn to the person next to you and compare/discuss interesting parts of the reading.</p>
+
+<h3 id="murphys-four-areas-of-responsibility">Murphy’s Four Areas of Responsibility</h3>
+
+<ul>
+  <li>Presentation and interaction</li>
+  <li>Data management and persistence</li>
+  <li>Overall application state</li>
+  <li>Setup and glue code to make the pieces work together</li>
+</ul>
+
+<h2 id="activity-25-minutes">Activity (25 minutes)</h2>
+
+<ul>
+  <li><a href="https://gist.github.com/neight-allen/6b7f05c01023682d41ad5625febf2655">QS Snippet</a></li>
+</ul>
+
+<p>Using the four areas of responsibility from Murphy’s article, go through this partial Quantified Self implementation and take a first pass at highlighting the pieces you think belong to those certain sections.</p>
+
+<p>After about 15 minutes, turn to the person next to you and compare/discuss your results.</p>
+
+<h2 id="application-25-minutes">Application (25 minutes)</h2>
+
+<p>Get together with your project partner. Find a function within your codebase that would be a good candidate for refactoring based on what we’ve just learned.</p>
+
+<ol>
+  <li>Make a copy of the function you’re about to refactor, so you can compare when you’re done.</li>
+  <li>Pick apart the different logical steps that are taken in this function</li>
+  <li>Determine one or more functions that could be extracted out from your main function</li>
+  <li>Try to write unit tests for those functions before refactoring them</li>
+  <li>TDD your refactor</li>
+</ol>
+
+<p>Spend about 10 minutes doing this for one function. We’ll close by seeing some of your solutions.</p>
+:ET

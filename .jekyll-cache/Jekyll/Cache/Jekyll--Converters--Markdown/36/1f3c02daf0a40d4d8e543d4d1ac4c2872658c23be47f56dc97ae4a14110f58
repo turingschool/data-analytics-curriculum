@@ -1,0 +1,188 @@
+I"L+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Use multiple types of collections intermingled</li>
+  <li>Apply common hash and array methods</li>
+  <li>Describe strategies for navigating nested collections</li>
+</ul>
+
+<h2 id="vocabulary">Vocabulary</h2>
+<ul>
+  <li>Key &amp; Value: a paired combination of pieces of data that exist in a hash (think dictionary)</li>
+  <li>Element/Item: a piece of data within an array</li>
+  <li>Collection: a container for 0 or more pieces of data</li>
+  <li>Data Structure: a data organization/storage format that allows for efficient retrieval and modification of pieces of data</li>
+  <li>Nested Array: an array that exists as an element within another (outer) array</li>
+  <li>Nested Hash: a hash that exists as either an element in an array OR the value of a key within another hash</li>
+</ul>
+
+<h2 id="slides">Slides</h2>
+
+<p>Available <a href="../slides/nested_collections">here</a></p>
+
+<h2 id="warmup">WarmUp</h2>
+
+<p>With a partner find answers to the following.
+First, try to answer without using pry, then use pry to verify.</p>
+
+<p><code class="highlighter-rouge">animals = {"dogs" =&gt; 3, "cats" =&gt; 5, "iguanas" =&gt; 2}</code></p>
+<ul>
+  <li>Using the above animals hash, how would you do the following
+    <ul>
+      <li>return the amount of dogs</li>
+      <li>add 3 parakeets</li>
+      <li>increase the amount of cats by 2</li>
+    </ul>
+  </li>
+</ul>
+
+<p><code class="highlighter-rouge">pet_names = ["Fela", "Spot", "Patch", "Willy"]</code></p>
+<ul>
+  <li>Using the above pet_names array, how would you do the following
+    <ul>
+      <li>add “Claude”</li>
+      <li>access which name is first in the list</li>
+      <li>access which name is last in the list</li>
+      <li>remove “Fela” from the list</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="hash-and-array-nesting">Hash and Array Nesting</h3>
+
+<p>As our programs get more complex, we’ll sometimes encounter more sophisticated combinations of these structures. Consider the following scenarios:</p>
+
+<h4 id="array-within-an-array">Array within an Array</h4>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">numbers</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
+</code></pre></div></div>
+<p><strong>Turn and Talk</strong></p>
+<ul>
+  <li>what is <code class="highlighter-rouge">numbers.count</code></li>
+  <li>what is <code class="highlighter-rouge">numbers.first.count</code></li>
+  <li>how can I access the element <code class="highlighter-rouge">5</code></li>
+  <li>how can I add <code class="highlighter-rouge">[7,8,9]</code> to the numbers array</li>
+</ul>
+
+<h4 id="hashes-within-an-array">Hashes within an Array</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>food_feelings = [{:pizza =&gt; "tasty"}, {:calzone =&gt; "also tasty"}]
+</code></pre></div></div>
+<p><strong>Turn and Talk</strong></p>
+<ul>
+  <li>what is <code class="highlighter-rouge">food_feelings.count</code></li>
+  <li>what is <code class="highlighter-rouge">food_feelings.first.count</code></li>
+  <li>how can I access the element <code class="highlighter-rouge">"also tasty"</code></li>
+  <li>how can I change <code class="highlighter-rouge">also tasty</code> to <code class="highlighter-rouge">super delicious</code></li>
+</ul>
+
+<h4 id="hash-within-a-hash">Hash within a Hash</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pets = {:dog =&gt; {:name =&gt; "Chance", :weight =&gt; "45 pounds"},
+        :cat =&gt; {:name =&gt; "Sassy", :weight =&gt; "15 pounds"}}
+</code></pre></div></div>
+<p><strong>Turn and Talk</strong></p>
+<ul>
+  <li>what is <code class="highlighter-rouge">pets.count</code></li>
+  <li>what is <code class="highlighter-rouge">pets.keys</code></li>
+  <li>what is <code class="highlighter-rouge">pets.values</code></li>
+  <li>how can I access the element <code class="highlighter-rouge">"15 pounds"</code></li>
+  <li>how can I add <code class="highlighter-rouge">:age =&gt; 3</code> to the value of the key <code class="highlighter-rouge">:dog</code></li>
+</ul>
+
+<h4 id="array-within-a-hash">Array within a Hash</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pizza_toppings = {veggies: ["green peppers", "jalapeño", "mushrooms"],
+                  protein: ["pepperoni", "sausage", "sardines"],
+                  fruit: ["pineapple"]}
+</code></pre></div></div>
+
+<p><strong>Turn and Talk</strong></p>
+<ul>
+  <li>What is <code class="highlighter-rouge">pizza_toppings.count</code></li>
+  <li>What is <code class="highlighter-rouge">pizza_toppings.values</code></li>
+  <li>How can I access the element <code class="highlighter-rouge">"pineapple"</code></li>
+  <li>How can I add the element <code class="highlighter-rouge">"olives"</code> to the key <code class="highlighter-rouge">"veggies"</code></li>
+</ul>
+
+<h2 id="practice">Practice</h2>
+
+<h3 id="1-state-capitals">1: State Capitals</h3>
+
+<p>You have 2 hashes, one which maps state names to state abbreviations,
+and one which maps state abbreviations to their capital:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">states</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Oregon"</span> <span class="o">=&gt;</span> <span class="s2">"OR"</span><span class="p">,</span>
+          <span class="s2">"Alabama"</span> <span class="o">=&gt;</span> <span class="s2">"AL"</span><span class="p">,</span>
+          <span class="s2">"New Jersey"</span> <span class="o">=&gt;</span> <span class="s2">"NJ"</span><span class="p">,</span>
+          <span class="s2">"Colorado"</span> <span class="o">=&gt;</span> <span class="s2">"CO"</span><span class="p">}</span>
+
+<span class="n">capitals</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"OR"</span> <span class="o">=&gt;</span> <span class="s2">"Salem"</span><span class="p">,</span>
+            <span class="s2">"AL"</span> <span class="o">=&gt;</span> <span class="s2">"Montgomery"</span><span class="p">,</span>
+            <span class="s2">"NJ"</span> <span class="o">=&gt;</span> <span class="s2">"Trenton"</span><span class="p">,</span>
+            <span class="s2">"CO"</span> <span class="o">=&gt;</span> <span class="s2">"Denver"</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Level 1: Write some code which given a state name (“Alabama”) outputs the state abbreviation</li>
+  <li>Level 2: Write some code which given a state name (“Oregon”) outputs
+its capital (“Salem”)</li>
+  <li>Level 3: Handle the case when a state’s information is not known by
+returning “Unknown”</li>
+  <li>Level 4: Let’s go the other way. Given a capital name (“Denver”),
+return the state name for which it is the capital (“Colorado”)</li>
+  <li>
+    <p>Level 5: Write some code to turn these two hashes into one nested hash which looks like this:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">state_info</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s2">"Oregon"</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">abbreviation: </span><span class="s2">"OR"</span><span class="p">,</span> <span class="ss">capital: </span><span class="s2">"Salem"</span><span class="p">},</span>
+     <span class="s2">"Alabama"</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">abbreviation: </span><span class="s2">"AL"</span><span class="p">,</span> <span class="ss">capital: </span><span class="s2">"Montgomery"</span><span class="p">},</span>
+     <span class="s2">"New Jersey"</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">abbreviation: </span><span class="s2">"NJ"</span><span class="p">,</span> <span class="ss">capital: </span><span class="s2">"Trenton"</span><span class="p">},</span>
+     <span class="s2">"Colorado"</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">abbreviation: </span><span class="s2">"CO"</span><span class="p">,</span> <span class="ss">capital: </span><span class="s2">"Denver"</span><span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="2-age-ordering">2: Age Ordering</h3>
+
+<p>You have age data for a group of people:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ages</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">'Frank'</span><span class="p">,</span> <span class="mi">33</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">'Stacy'</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">'Juan'</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">'Dom'</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">'Steve'</span><span class="p">,</span> <span class="mi">24</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">'Jill'</span><span class="p">,</span> <span class="mi">24</span><span class="p">]</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Level 1: Write code that’ll output the ages (and only the ages) for the data set</li>
+  <li>Level 2: Write code that’ll output the names (and only the names) in order by
+ascending age</li>
+  <li>Level 3: Output the name with the age, like <code class="highlighter-rouge">Juan (24)</code></li>
+  <li>Level 4: Write code to automatically build a hash with the age as the key and
+an array of names as the value (all the people who are that age).
+e.g. <code class="highlighter-rouge">{24 =&gt; ['Juan', 'Steve', 'Jill']...}</code></li>
+</ul>
+
+<h2 id="more-practice">More Practice</h2>
+
+<p>Break into small groups based on how far you’ve worked on the “collections” exercises from the <a href="https://github.com/turingschool/ruby-exercises">ruby-exercises</a>:</p>
+
+<ol>
+  <li>Finished all exercises</li>
+  <li>Finished “nested_collections”</li>
+  <li>Finished “arrays” and “hashes”</li>
+  <li>Working on “arrays” and “hashes”</li>
+</ol>
+
+<p>Find a partner in your group and work on the exercises.</p>
+
+<h2 id="homework">Homework</h2>
+
+<ul>
+  <li>Complete the <code class="highlighter-rouge">data-types/collections</code> exercises in <a href="https://github.com/turingschool/ruby-exercises">ruby-exercises</a></li>
+</ul>
+:ET

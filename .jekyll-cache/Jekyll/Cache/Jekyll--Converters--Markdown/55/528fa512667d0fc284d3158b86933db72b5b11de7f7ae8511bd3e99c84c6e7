@@ -1,0 +1,163 @@
+I",<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Explain what GraphQL is and 1 benefit of using it over REST</li>
+  <li>Create a GraphQL query to access Github data</li>
+  <li>Explain the difference between a GraphQL Server and Client</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Take 5 mins to discuss with a partner about the following:</p>
+<ul>
+  <li>Why do we use APIs?</li>
+  <li>What makes an API RESTful?</li>
+  <li>What problems have you encountered while using REST APIs?</li>
+</ul>
+
+<h2 id="reasons-behind-graphql">Reasons behind GraphQL</h2>
+
+<p>So first what is GraphQL?</p>
+
+<blockquote>
+  <p>GraphQL is an API standard that enables declarative data fetching where a client can specify exactly what it needs from an API
+server.</p>
+</blockquote>
+
+<p>Before diving into what that means let’s discuss the why’s. When learning about a new technology, it can be helpful to understand first the reasons behind why it was built. This helps us understand how and why it works along with its intricacies.</p>
+
+<p>Reasons for GraphQL Development:</p>
+
+<ol>
+  <li>Increased mobile usage creates need for efficient data loading - slow loading on mobile causes need for less data to be fetched from the server, minimizes the amount of data that needs to be transferred over the network</li>
+  <li>Variety of different frontend frameworks and platforms on the client side (mobile, iOS, android, web) - makes it difficult to develop an api for each - each client can access exactly the data it needs</li>
+  <li>Fast development speed and expectation for rapid feature development - features are developed faster than they ever were before. The way REST apis are build requires manipulation of the data exposed be the server to accommodate new requirements and designs changes of the client side - this hinders fast development changes</li>
+</ol>
+
+<p>For more information, check out <a href="https://www.howtographql.com/basics/0-introduction/">How to GraphQL</a></p>
+
+<h2 id="but-really-what-is-graphql">But really what is GraphQL</h2>
+
+<p>Take 15 minutes to read - <a href="https://medium.freecodecamp.org/so-whats-this-graphql-thing-i-keep-hearing-about-baf4d36c20cf">So what’s this GraphQL thing I keep hearing about?</a></p>
+
+<p>Discuss with your partner:</p>
+<ul>
+  <li>What is GraphQL?</li>
+  <li>What is a GraphQL query?</li>
+  <li>What is a GraphQL resolver?</li>
+  <li>What is the difference between a GraphQL Server and Client?</li>
+</ul>
+
+<h2 id="putting-into-practice">Putting into practice</h2>
+
+<p>Many API providers are already making use of GraphQL over REST including Github. You may have noticed this already in their API docs.</p>
+
+<p>Github allows us to make in browser queries to their API using their <a href="https://developer.github.com/v4/explorer/">GitHub GraphQL Explorer</a>.</p>
+
+<p>With a partner complete the following exercises:</p>
+
+<p><em>Be sure to open up the Documentation Explorer to view the queryable <a href="http://graphql.github.io/learn/queries/#fields">fields</a> and <a href="http://graphql.github.io/learn/queries/#arguments">arguments</a></em></p>
+
+<ol>
+  <li>We want to display the following information in our UI about our current viewer using the <a href="https://developer.github.com/v4/explorer/">GitHub GraphQL Explorer</a>. Edit the default starting query to query for the necessary information.</li>
+</ol>
+
+<p><img src="../../assets/images/lessons/graphql/exercise-1-mockup.png" alt="exercise 1 mockup" /></p>
+
+<p><em>hint hint Look at the valid fields for User</em></p>
+
+<ol>
+  <li>
+    <p>That was fun, but now we want some more information about this so called “Turing School” Organization on Github. Let’s change our query to get the <code class="highlighter-rouge">email</code> and the total number of <code class="highlighter-rouge">repositories</code> of the <code class="highlighter-rouge">turningschool</code> organization.</p>
+  </li>
+  <li>
+    <p>BONUS: These have been more simplified queries up until now. Can you get the <code class="highlighter-rouge">name</code>, <code class="highlighter-rouge">email</code>, and <code class="highlighter-rouge">bio</code> of 10 users that belong to the <code class="highlighter-rouge">turningschool</code> organization?</p>
+  </li>
+</ol>
+
+<h2 id="rails-integration">Rails Integration</h2>
+
+<p>By now you are probably thinking to yourself, “Hot damn, this is so cool! Does it work with Rails? How can I add it?” Yes my friends, it does! You can implement a GraphQL server in Rails, Express/Node, Phoenix/Elixir, Django/Python and more. Let’s get started!</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>Let’s use our Rails QS repo to create a GraphQL server that enablges us to query our Foods. Add the following gems to you Gemfile:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s1">'graphql'</span>
+<span class="n">gem</span> <span class="s1">'graphiql-rails'</span><span class="p">,</span> <span class="ss">group: :development</span>
+</code></pre></div></div>
+
+<p>Now run</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle
+rails generate graphql:install
+</code></pre></div></div>
+
+<p>In order to use <a href="https://github.com/rmosolgo/graphiql-rails">GraphiQL</a>, the pretty in-browser GraphQL IDE that we used when exploring GitHub’s GraphQL server, We need to add the engine to our <code class="highlighter-rouge">routes.rb</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># config/routes.rb</span>
+<span class="k">if</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">env</span><span class="p">.</span><span class="nf">development?</span>
+  <span class="n">mount</span> <span class="no">GraphiQL</span><span class="o">::</span><span class="no">Rails</span><span class="o">::</span><span class="no">Engine</span><span class="p">,</span> <span class="ss">at: </span><span class="s2">"/graphiql"</span><span class="p">,</span> <span class="ss">graphql_path: </span><span class="s2">"graphql#execute"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>To make sure everything is working go to:</p>
+
+<p><a href="localhost:3000/graphiql">localhost:3000/graphiql</a></p>
+
+<p>If your Rails app is an API only app you may be encountering this error <code class="highlighter-rouge">ActionController::RoutingError (No route matches [GET] "/stylesheets/graphiql/rails/application.css")</code> Update your <code class="highlighter-rouge">application.rb</code> file to include <code class="highlighter-rouge">sprockets/railtie</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#config/application.rb</span>
+
+<span class="nb">require</span> <span class="s2">"sprockets/railtie"</span>
+</code></pre></div></div>
+
+<h3 id="query-for-returning-foods">Query for Returning Foods</h3>
+
+<p>First we need to set up our <a href="https://graphql.org/learn/schema/#object-types-and-fields">GraphQL Object Type</a> for foods, which just represent a kind of object you can fetch from your service, and what fields it has.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/graphql/types/food_type.rb</span>
+
+<span class="c1"># defines a new GraphQL type</span>
+<span class="no">Types</span><span class="o">::</span><span class="no">FoodType</span> <span class="o">=</span> <span class="no">GraphQL</span><span class="o">::</span><span class="no">ObjectType</span><span class="p">.</span><span class="nf">define</span> <span class="k">do</span>
+  <span class="c1"># this type is named `Food`</span>
+  <span class="nb">name</span> <span class="s1">'Food'</span>
+
+  <span class="c1"># it has the following fields</span>
+  <span class="n">field</span> <span class="ss">:id</span><span class="p">,</span> <span class="o">!</span><span class="n">types</span><span class="o">.</span><span class="no">ID</span>
+  <span class="n">field</span> <span class="ss">:name</span><span class="p">,</span> <span class="o">!</span><span class="n">types</span><span class="o">.</span><span class="no">String</span>
+  <span class="n">field</span> <span class="ss">:calories</span><span class="p">,</span> <span class="o">!</span><span class="n">types</span><span class="o">.</span><span class="no">Int</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>You can read more about ruby specific types <a href="http://graphql-ruby.org/guides#types-guides">here</a>.</p>
+
+<h3 id="query-resolver">Query Resolver</h3>
+
+<p>We have defined our type, but our server doesn’t know how to handle it yet. To do this we have to write our a resolver, function that the GraphQL server uses to fetch for a specific query.</p>
+
+<p>Each field of our GraphQL types needs a corresponding resolver function. When a query arrives at the backend, the server will call those resolver functions that correspond to the fields that are specified in the query.</p>
+
+<p>Let’s update <code class="highlighter-rouge">app/graphql/types/query_type.rb</code> which was created when we ran <code class="highlighter-rouge">rails generate graphql:install</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/graphql/types/query_type.rb</span>
+
+<span class="no">Types</span><span class="o">::</span><span class="no">QueryType</span> <span class="o">=</span> <span class="no">GraphQL</span><span class="o">::</span><span class="no">ObjectType</span><span class="p">.</span><span class="nf">define</span> <span class="k">do</span>
+  <span class="nb">name</span> <span class="s1">'Query'</span>
+
+  <span class="c1"># queries are just represented as fields</span>
+  <span class="n">field</span> <span class="ss">:allFoods</span><span class="p">,</span> <span class="o">!</span><span class="n">types</span><span class="p">[</span><span class="no">Types</span><span class="o">::</span><span class="no">FoodType</span><span class="p">]</span> <span class="k">do</span>
+    <span class="c1"># resolve would be called in order to fetch data for that field</span>
+    <span class="n">resolve</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="p">{</span> <span class="no">Food</span><span class="p">.</span><span class="nf">all</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="querying-foods">Querying Foods</h3>
+
+<p>Let’s go back to <a href="localhost:3000/graphiql">localhost:3000/graphiql</a>.</p>
+
+<p>Are you able to query for your foods? Woo! You just set up your first GraphQL server! Pretty neat huh?</p>
+
+<p>BONUS: If we didn’t want to use GraphiQL and wanted to sent our request over HTTP, what would our request look like?</p>
+
+<p><em>hint look back at your <code class="highlighter-rouge">routes.rb</code> file, what would our request body need to look like?</em></p>
+:ET

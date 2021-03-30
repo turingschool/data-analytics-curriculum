@@ -1,0 +1,115 @@
+I"�<h1 id="required">Required</h1>
+
+<p>You must complete and submit all of these assignments. <em>It is due the Saturday before the start of the inning at 5pm</em></p>
+
+<p>Submit your work here: <a href="https://forms.gle/1WVzP74v1hUadxwFA">Survey Link</a></p>
+
+<h3 id="professional-development">Professional Development</h3>
+
+<ul>
+  <li>Do <a href="https://github.com/turingschool/career-development-curriculum/blob/master/module_three/pre_work.md">this</a></li>
+</ul>
+
+<h3 id="ruby-and-rails-versions">Ruby and Rails Versions</h3>
+
+<p>Follow <a href="./ruby_and_rails_versions">this guide</a> to make sure your versions are correct.</p>
+
+<h2 id="core-learning-goals-of-mod-3">Core Learning Goals of Mod 3</h2>
+
+<ul>
+  <li>API Development</li>
+  <li>Authentication / Authorization systems</li>
+  <li>Managing deeply-nested data collections</li>
+  <li>Refactoring code into new Design Patterns</li>
+</ul>
+
+<hr />
+
+<h3 id="intro-to-apis">Intro to APIs</h3>
+
+<p>Everything we build in Mod 3 will focus on the theme of building and consuming APIs.</p>
+
+<p>Work through <a href="https://gist.github.com/BrianZanti/e9d73508062fdcb78225906a6d97686d">this tutorial</a> to review an intro to APIs.</p>
+
+<h3 id="authentication--authorization">Authentication / Authorization</h3>
+
+<p>Write up some notes and ideas on the following:</p>
+
+<ul>
+  <li>you need to store a user in a database table; what do we need to know about them (ie, email, password)</li>
+  <li>how can we store a password in a secure way (ie, if our database is compromised, how can we protect their passwords from prying eyes)</li>
+  <li>how would we store the idea of what a user is allowed to do on a web site</li>
+  <li>how would we build a safe login page</li>
+  <li>how could we tell if a user is logged in since HTTP is “stateless”</li>
+  <li>how could we allow a user to “stay logged in for 7 days” even if your Rails app is restarted</li>
+</ul>
+
+<h3 id="deeply-nested-collections">Deeply Nested Collections</h3>
+
+<p>When consuming APIs, the data is often returned in deeply nested collections, so you will need to tap into your Mod 1 skills to practice digging through them to retrieve the data you need.</p>
+
+<p>Fork and clone <a href="https://github.com/turingschool-examples/here-be-dragons">Here Be Dragons</a>. Get the tests to pass.</p>
+
+<h3 id="http-requestresponse">HTTP Request/Response</h3>
+
+<ul>
+  <li>On one piece of paper, write out all of the parts of an example <code class="highlighter-rouge">HTTP GET</code> request (Diagram the DNS look-up as well as how a Rails Application would handle the request via MVC)</li>
+  <li>On a separate piece of paper, write out an example 200 response to that request with all of the parts</li>
+  <li><strong>Bonus</strong> write your explanation as a metaphor</li>
+  <li>Bring this to class day 1.</li>
+</ul>
+
+<h3 id="rails-params-magic">Rails “params” magic.</h3>
+
+<p>How does “params” get built in Rails, and what precidence is given for query parameters (ie <code class="highlighter-rouge">?id=5</code> in a URL) versus dynamic placeholders (ie <code class="highlighter-rouge">/book/:id</code>) versus data sent in the body of a request from a form.</p>
+
+<p>Start writing up some notes based on the Rails documentation:</p>
+<ul>
+  <li>https://guides.rubyonrails.org/action_controller_overview.html#parameters</li>
+</ul>
+
+<h3 id="sqlactiverecord">SQL/ActiveRecord</h3>
+
+<p>Entering Module 3 with a solid understanding of ActiveRecord and SQL is key to getting the module off to a good start. Make sure you are able to write and understand queries that involve multiple <code class="highlighter-rouge">JOIN</code> statements and that combine math functions.</p>
+
+<ol>
+  <li>Complete and understand the <a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_03-professional_rails_applications/intermediate_sql.md">Intermediate SQL I</a> challenges.</li>
+  <li>Complete and understand the <a href="https://gist.github.com/case-eee/5affe7fd452336cef2c88121e8d49f5d">Intermediate SQL II</a> challenges.</li>
+</ol>
+
+<h3 id="reading">Reading</h3>
+
+<p>We will discuss the following on the first day of the inning:</p>
+
+<ul>
+  <li><a href="https://drive.google.com/file/d/1tBU_FF_kYLHltyvc6ZEPfb3LiYYQRreT/view?usp=sharing">Thinking Fast and Slow</a></li>
+</ul>
+
+<h1 id="for-further-exploration">For further exploration</h1>
+
+<p>If you have time, here are some activities that will be valuable not only in Mod 3, but in Mod 4 and the job hunt as well.</p>
+
+<h3 id="data-structures-and-algorithms">Data Structures And Algorithms</h3>
+
+<p>We are going to be covering various data structures to prepare you for the job hunt and technical interviews. Complete this former M1 project, <a href="https://backend.turing.io/module1/projects/jungle_beat">Jungle Beats</a></p>
+
+<h3 id="javascriptjquery-whats-this-javascript-i-keep-hearing-about">JavaScript/jQuery (What’s this JavaScript I keep hearing about?)</h3>
+
+<p><a href="http://eloquentjavascript.net/">Eloquent JavaScript</a></p>
+
+<p>JavaScript is the scripting language of web browsers. During Module 3 we’ll start getting our first introductions to JS and we’d like you to work through some basic materials as a preparation.</p>
+
+<p>You are to complete Chapters 1-5 of Eloquent Javascript.</p>
+
+<p>We are mainly looking for you to get experience with the syntax, and at a minimumum you should understand the JS Data Types, Conditionals, and Looping.</p>
+
+<p><a href="https://www.tutorialrepublic.com/jquery-tutorial/jquery-syntax.php">jQuery</a></p>
+
+<p>jQuery is a popular javascript library for manipulating the content of web pages. Dip your toes in with this introductory jQuery tutorial.</p>
+
+<h2 id="optional-reading-on-security-topics">Optional Reading on Security topics</h2>
+
+<ul>
+  <li><a href="https://guides.rubyonrails.org/security.html">Rails Security</a></li>
+</ul>
+:ET

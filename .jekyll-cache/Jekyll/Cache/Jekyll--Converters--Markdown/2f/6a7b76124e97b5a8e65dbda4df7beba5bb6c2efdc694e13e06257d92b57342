@@ -1,0 +1,20 @@
+I"�<h3 id="function-context--what-is-this">Function Context – What is <code class="highlighter-rouge">this</code></h3>
+
+<p>Goals:</p>
+
+<ul>
+  <li>Understand the various rules governing the behavior of the
+<code class="highlighter-rouge">this</code> keyword in javascript</li>
+  <li>Understand the precedence of these rules</li>
+  <li>Understand the difference between function definition context
+and invocation context</li>
+</ul>
+
+<p>To cover these topics, we’ll be walking through the issues
+covered in this <a href="https://github.com/worace/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/02-functions/03-what-is-this.md">MDN Tutorial on this</a></p>
+
+<p>The main priorities are to cover the various precedence rules
+as well as call, apply, and bind. This would take you through
+<a href="https://github.com/worace/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/02-functions/03-what-is-this.md#explicitly-setting-context-with-bind">this point</a> in the
+tutorial.</p>
+:ET

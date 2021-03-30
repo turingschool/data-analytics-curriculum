@@ -1,0 +1,162 @@
+I"<h3 id="goals">Goals</h3>
+
+<p>By the end of this lesson, you will know/be able to:</p>
+
+<ul>
+  <li>Explain what an API is and what an external API provides to us</li>
+  <li>Know why we need APIs</li>
+  <li>Set up an HTTP client for an API</li>
+  <li>Create an application that consumes an API</li>
+  <li>Access JSON data returned from an API</li>
+</ul>
+
+<h3 id="structure">Structure</h3>
+
+<ul>
+  <li>10 mins - API Discussion and Clarification</li>
+  <li>15 mins - Exploring the external API</li>
+  <li>5  mins - Break</li>
+  <li>25 mins - Create API consuming app - Service</li>
+  <li>5 mins - Break</li>
+  <li>25 mins - Continue with our app - Service/Models</li>
+  <li>5 mins - Break</li>
+  <li>25 mins - Continue with our app - Models/Controllers</li>
+  <li>15 mins - Break</li>
+  <li>25 mins - Continue with our app - Controllers/views</li>
+  <li>5 mins - Break</li>
+  <li>20 mins - Finish up and review</li>
+</ul>
+
+<h2 id="warmup">Warmup</h2>
+
+<h2 id="discussion---what-is-an-api">Discussion - What is an API?</h2>
+
+<ul>
+  <li>What does API stand for?</li>
+  <li>What are some common use cases and examples of APIs</li>
+  <li>Any experience with APIs?</li>
+  <li>Commonalities between APIs? Differences?</li>
+  <li>Are there <em>better</em> APIs out there?</li>
+</ul>
+
+<h2 id="discussion---apis-variety-is-the-spice-of-life">Discussion - APIs: Variety is the Spice of Life</h2>
+
+<p>One of the problems with working with APIs is that there are very few consistent
+generalizations or assumptions that can be made.</p>
+
+<p>As an exercise, let’s consider some of the things that make it (relatively)
+easy for us, as Rubyists, to read code written by other Rubyists:</p>
+
+<ul>
+  <li>Common idioms for expressing ourselves</li>
+  <li>Common language features for structuring our code (classes, OOP, method practices)</li>
+  <li>Common set of tools for designing projects</li>
+  <li>Common style practices (capitalization, underscores, spelling, predicate methods, etc)</li>
+  <li>Shared community best practices – <code class="highlighter-rouge">SOLID</code>, Sandi Metz’ rules, conference talks, ruby books, etc etc</li>
+</ul>
+
+<p>In short, when working within the ruby community, we have a lot of shared practices
+and ideas that help us write “unsurprising” code that will hopefully be easily intelligble
+to a future reader, especially one versed in the same community idioms as we are.</p>
+
+<p>Why bring this up? Because we are about to make our first forays into the realm of
+public APIs, which is, comparatively the Wild Wild West.</p>
+
+<p>Let’s consider some of the reasons why we might find relative non-conformity within
+this corner of the tech world:</p>
+
+<ul>
+  <li>Huge cross-section of language and community backgrounds (power of HTTP is its accessibility
+from any platform)</li>
+  <li>Very little shared design principles. Even around the ideas of REST there are differing interpretations
+and implementations</li>
+  <li>Lack of standardization around request/response formats, status codes, etc. etc.</li>
+  <li>Tremendous variation in quality of documentation (often very little…)</li>
+</ul>
+
+<p>In short, there’s a good chance that no 2 APIs you will encounter are alike.</p>
+
+<p>A handful of community projects such as <a href="http://swagger.io/">Swagger</a> and <a href="http://jsonapi.org/">json:api</a>
+have attempted to address this, but even these are fragmented and not well adopted.</p>
+
+<p>(<a href="https://xkcd.com/927/">See Relevant XKCD</a>)</p>
+
+<p>So why should we venture into this cesspool of non-conforming inter-process communication?</p>
+
+<p>Because APIs let us do cool stuff. And fortunately HTTP with JSON (or even XML) is a relatively
+easy to understand format.</p>
+
+<p>With a little careful experimentation and probing, we can generally figure out what we need to do.
+But it’s good to have a sense of what to expect so that when we run into issues we won’t be surprised and
+will know what to do.</p>
+
+<h2 id="discussion-api-spectrum-of-quality">Discussion API Spectrum of Quality</h2>
+
+<p>You can never really know what to expect from an API, but here are a few general predictors</p>
+
+<ul>
+  <li>The larger the platform, the better. The top names in the social media space (twitter, foursquare,
+facebook, instagram, etc) will generally have better public APIs since more people use them.</li>
+  <li>The newer the better. Unsurprisingly an API that was implemented in the early 2000’s will
+often feel dated or clunky</li>
+  <li>The more “RESTful” the better. This is hard to predict until you start digging in,
+but the more Resource-oriented an API is, the more natural it will feel to use. You can often
+“guess” a resource or endpoint and be relatively close</li>
+</ul>
+
+<h2 id="let-us-explore">Let Us Explore!</h2>
+
+<ul>
+  <li>my-chaimz.herokuapp.com</li>
+  <li>Postman</li>
+  <li>Bearer token authentication</li>
+  <li>api url structure</li>
+  <li>.json</li>
+  <li>If you want to see how an api is built - <code class="highlighter-rouge">git clone git@github.com:neight-allen/my_chaims.git</code></li>
+</ul>
+
+<h2 id="let-us-build">Let Us Build!</h2>
+<ul>
+  <li><code class="highlighter-rouge">rails new curating_chaims</code></li>
+  <li>First - The Service
+    <ul>
+      <li>What is a service? <a href="https://blog.engineyard.com/2014/keeping-your-rails-controllers-dry-with-services">Check out Ben Lewis’ Post on Services</a></li>
+      <li>Faraday</li>
+    </ul>
+  </li>
+  <li>Then - The Model</li>
+  <li>Finally our Controllers and Views</li>
+</ul>
+
+<h3 id="a-diagram">A diagram</h3>
+
+<p>I ended up drawing a diagram something like this on the board to help understand why we are organizing the code the way we are.</p>
+
+<p><img src="http://i.imgur.com/FVg9ODy.png?1" alt="How Models Work" /></p>
+
+<h3 id="video">Video</h3>
+
+<ul>
+  <li><a href="https://vimeo.com/143957483">Oct 2015 - Consuming and API</a></li>
+</ul>
+
+<h3 id="repository">Repository</h3>
+
+<ul>
+  <li><a href="https://github.com/neight-allen/my_chaims">My-Chaims API repo</a></li>
+  <li><a href="https://github.com/Carmer/chaims_consumption_practice">Example of Final Curating Chaims Api Consuming App</a> - Uses an old version of the API that doesn’t authenticate</li>
+  <li><a href="https://github.com/neight-allen/chaimz_curator">1511 curating chaims</a> - Uses HTTParty</li>
+  <li><a href="https://github.com/neight-allen/chaimz-curator">1602 curating chaims</a> - Uses Faraday</li>
+</ul>
+
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li><a href="http://jsonapi.org/">JSON API</a></li>
+  <li><a href="https://api.data.gov/">Government Data API</a></li>
+  <li><a href="http://data.worldbank.org/developers?display=">World Bank API</a></li>
+  <li><a href="https://developers.google.com/youtube/v3/?hl=en">YouTube data API</a></li>
+  <li><a href="http://www.programmableweb.com/">Programmable Web</a></li>
+  <li><a href="https://www.mashape.com/">MashApe</a></li>
+</ul>
+:ET

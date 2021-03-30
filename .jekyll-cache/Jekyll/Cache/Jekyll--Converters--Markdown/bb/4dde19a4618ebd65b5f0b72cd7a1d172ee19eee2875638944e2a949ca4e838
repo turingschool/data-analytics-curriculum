@@ -1,0 +1,339 @@
+I" s<h2 id="learning-goals">Learning Goals</h2>
+<ul>
+  <li>Develop a mental model for how memory works</li>
+  <li>Explain how memory works in Ruby</li>
+</ul>
+
+<h2 id="what-is-memory">What is Memory?</h2>
+
+<p>Computers need to be able to memorize something for the same reason that humans do: because they will need to access it later.</p>
+
+<p>In some ways, computer memory is better than human memory. When the computer memorizes something, it won’t forget it until we tell it to. You’ve never tried to open a saved document on your computer and it told you that it forgot it. Humans on the other hand forget things all the time.</p>
+
+<p>But computer memory is also a lot less advanced than human memory because computers can’t make connections. Humans make connections automatically (“Oh, that reminds me of this time…”, “That smells just like my grandma’s recipe…”). Computer’s need to be told explicitly what memories are connected and how. That’s what our code is for.</p>
+
+<h2 id="activity-1-objects-in-memory">Activity 1: Objects in Memory</h2>
+
+<p>Memory is a lot like a column on a spreadsheet. There’s many cells in that column for us to write whatever we want in there (let’s pretend like formulas don’t exist for this activity). Those cells also have a unique identifier. For example, the first cell in the second column of a spreadsheet is labeled B1. Memory works very similarly. It is a long list of cells for us to store things in, and we can look up those cells with a unique identifier that is called the <strong>Memory Address</strong>.</p>
+
+<p>In order to illustrate this, you are going to create a spreadsheet as an analogy to what is happening in the computer. Head to <a href="https://drive.google.com/">Google Drive</a> and create a new spreadsheet by clicking on the “New” button in the top left, then click on Google Sheets. When your new sheet opens, click on the blue “Share” button in the top right of the Sheet, name your Sheet “Memory Allocation”, and in the new window click on “Get shareable link”. At the end of this activity, you will submit that link to your instructors.</p>
+
+<p>In cell A1, type the header “variable”, in cell B1, type the header “memory address”, and in cell C1, type the header “memory”. Make these headers bold. Column C is our memory. Each cell represents a chunk of memory for us to store things in. Column B will hold the memory address that uniquely identifies that chunk of memory. Column A hold the variable name that we use in our Ruby program to reference that memory.</p>
+
+<p>Create a new file called <code class="highlighter-rouge">memory.rb</code> and add this code to it:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Taco</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:type</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="vi">@type</span> <span class="o">=</span> <span class="n">type</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+<span class="n">taco_2</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Carnitas"</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1 value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_2 memory address is </span><span class="si">#{</span><span class="n">taco_2</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_2 value is </span><span class="si">#{</span><span class="n">taco_2</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>You should see output similar to this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>taco_1 memory address is 70135104802680
+taco_1 value is #&lt;Taco:0x00007f9334041ef0 @type="Al Pastor"&gt;
+taco_2 memory address is 70135104802660
+taco_2 value is #&lt;Taco:0x00007f9334041ec8 @type="Carnitas"&gt;
+</code></pre></div></div>
+
+<p>In cell A2 of your sheet, put “taco_1” for the variable name. Copy and paste the memory address that was printed out and put it in cell B2. In cell C2, copy and paste the entire value printed out for taco_1.inspect. In the example above, it would be <code class="highlighter-rouge">#&lt;Taco:0x00007f9334041ef0 @type="Al Pastor"&gt;</code>. Do the same for taco_2. Your Sheet should look something like this:</p>
+
+<p><img src="https://i.imgur.com/OCUSw1O.png" alt="Imgur" /></p>
+
+<p><code class="highlighter-rouge">#&lt;Taco:0x00007f8129061880 @type="Al Pastor"&gt;</code> means “A Taco Object”. It also shows us the value of the object’s instance variables. Don’t worry too much about the Hexadecimal number that is printed after the colon. All you need to know is that it is very similar to the memory address, uniquely identifying the Object.</p>
+
+<p>In this example, we have created two different Taco Objects, or “Instances of the Taco Class”. In order to hold these two different values, Ruby has set aside two completely separate boxes of memory to hold our data. These boxes of memory are represented in column C. Notice that in our spreadsheet, two different rows are taken up, indicating two cells of memory. Setting aside memory for us to use is called <strong>Memory Allocation</strong>.</p>
+
+<p>Column B represents the memory addresses that uniquely identify those spaces of memory. The actual values of the memory addresses are unimportant, but what is important is that the memory addresses are unique for each row, each box of memory.</p>
+
+<p>Column A represents the variable names that we use in Ruby to reference those spaces in memory. If we wanted to get the first Taco Object in this example, we wouldn’t say “Hey Ruby, get me the object stored in memory address 70096357887040”. We say, “Hey Ruby, get me the object stored in <code class="highlighter-rouge">taco_1</code>”. Variables give us access to Objects stored in memory.</p>
+
+<p>Now let’s see what happens when the two variables hold the same data. Change your code to this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Taco</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:type</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="vi">@type</span> <span class="o">=</span> <span class="n">type</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+<span class="n">taco_2</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1 value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_2 memory address is </span><span class="si">#{</span><span class="n">taco_2</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_2 value is </span><span class="si">#{</span><span class="n">taco_2</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><strong>Turn and Talk</strong>: Do you expect the two Tacos to have different memory addresses?</p>
+
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+
+<p>Run this code, and you’ll notice that even though <code class="highlighter-rouge">taco_1</code> and <code class="highlighter-rouge">taco_2</code> have the same value, they each have unique object id’s. This is illustrating what it really means to be an “Object” or “Instance” in Ruby (remember, these words mean the same thing). Despite their identical values, they are separate entities.</p>
+
+<p>Update your Sheet’s cell C3 with the new value for <code class="highlighter-rouge">taco_2</code>.</p>
+
+<p>Run this code a couple more times and notice that the memory addresses are different every time. So it doesn’t really matter what the exact memory address is. What is important is that each time this code is run, Ruby is allocating two unique spaces in memory to hold our data.</p>
+
+<p>At this point, we’ve determined that Ruby is allocating memory for each of these objects. But what can we do with those spaces in memory? Can we change what they hold? Let’s try it. Change your code to this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Taco</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:type</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="vi">@type</span> <span class="o">=</span> <span class="n">type</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+<span class="n">taco_2</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 initial memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1 initial value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">taco_1</span><span class="p">.</span><span class="nf">type</span> <span class="o">=</span> <span class="s2">"Carnitas"</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 new memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1 new value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><strong>Turn and Talk</strong>: Do you expect <code class="highlighter-rouge">taco_1</code> to have a different memory address after we change the <code class="highlighter-rouge">type</code>?</p>
+
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+
+<p>Compare the initial memory_address and the new memory_address and notice that they are exactly the same! Not only can Ruby set aside these boxes of memory, but we can also change what is inside them. Update your Sheet’s row for <code class="highlighter-rouge">taco_1</code> with the new value being stored in memory after we change the <code class="highlighter-rouge">type</code>.</p>
+
+<p>Let’s make a slight change to the code. Instead of setting the <code class="highlighter-rouge">type</code> with the assignment operator <code class="highlighter-rouge">=</code>, we are going to use <code class="highlighter-rouge">.new</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Taco</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:type</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="vi">@type</span> <span class="o">=</span> <span class="n">type</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+<span class="n">taco_2</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Al Pastor"</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 initial memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1 initial value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Carnitas"</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 new memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1 new value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><strong>Turn and Talk</strong>: Do you expect <code class="highlighter-rouge">taco_1</code> to have a different memory address after the <code class="highlighter-rouge">.new</code>?</p>
+
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+
+<p>Compare the initial memory address and the new memory address and notice that they are NOT the same! Instead of using that box of memory that we already allocated for <code class="highlighter-rouge">taco_1</code>, Ruby sliced out a new chunk of memory to put the new Taco Object. Why did this behave different? The key is that we called <code class="highlighter-rouge">.new</code>. Every time you call <code class="highlighter-rouge">.new</code>, Ruby allocates a new chunk of memory for a newly instantiated object.</p>
+
+<p>Because Ruby allocated a new space of memory, we need a new row in our Sheet. In cell A4, put the variable name <code class="highlighter-rouge">taco_1</code>. In cell B4, put the new memory address that was printed out. In cell C4, put the new value being stored in that space of memory.</p>
+
+<p>Your sheet should now have two variables named <code class="highlighter-rouge">taco_1</code>, so which one will Ruby use? You have probably come across this a couple times in your code. When we reassign a variable, the old value is lost because we no longer have a variable to reference it. It goes poof, into the ether of the computer. The technical term for this is that the old memory is <strong>garbage collected</strong>. Delete row 2 from your Sheet to simulate the garbage collection. Your Sheet should look like this:</p>
+
+<p><img src="https://i.imgur.com/jHW2VFO.png" alt="Imgur" /></p>
+
+<p><strong>Check for Understanding</strong></p>
+
+<p>Answer the following questions in your Sheet:</p>
+
+<ul>
+  <li>What is Memory?</li>
+  <li>What is Memory Allocation?</li>
+  <li>What is a Memory Address?</li>
+  <li>What is an Object in terms of memory?</li>
+  <li>What is a variable?</li>
+  <li>What happens when we call <code class="highlighter-rouge">.new</code>?</li>
+  <li>What is garbage collection?</li>
+</ul>
+
+<h2 id="activity-2-objects-in-objects">Activity 2: Objects in Objects</h2>
+
+<p>We’ve started to get a feel for how Ruby works with memory. Let’s now dive a little deeper and see what happens when we use multiple classes. Create a new tab in your Sheet by clicking on the <code class="highlighter-rouge">+</code> icon in the lower left corner of your Sheet. Add the variable, memory_address, and memory headers just like in the first activity.</p>
+
+<p>Change your <code class="highlighter-rouge">memory.rb</code> file to this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Taco</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:filling</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">filling</span><span class="p">)</span>
+    <span class="vi">@filling</span> <span class="o">=</span> <span class="n">filling</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Filling</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:name</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">spicy_sausage</span> <span class="o">=</span> <span class="no">Filling</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Chorizo"</span><span class="p">)</span>
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">spicy_sausage</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"taco_1 memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"taco_1's value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nb">puts</span> <span class="s2">"@filling memory address is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">filling</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"@filling value is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">filling</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="nb">puts</span> <span class="s2">"spicy_sausage memory address is </span><span class="si">#{</span><span class="n">spicy_sausage</span><span class="p">.</span><span class="nf">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"spicy_sausage's value is </span><span class="si">#{</span><span class="n">spicy_sausage</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><strong>Turn and Talk</strong>: Will <code class="highlighter-rouge">@filling</code> have the same memory address as <code class="highlighter-rouge">spicy_sausage</code>?</p>
+
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+
+<p>Run this code and you should see output like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>taco_1 memory address is 70159993816600
+taco_1's value is #&lt;Taco:0x00007f9ecb048c30 @filling=#&lt;Filling:0x00007f9ecb048c58 @name="Chorizo"&gt;&gt;
+@filling memory address is 70159993816620
+@filling value is #&lt;Filling:0x00007f9ecb048c58 @name="Chorizo"&gt;
+spicy_sausage memory address is 70159993816620
+spicy_sausage's value is #&lt;Filling:0x00007f9ecb048c58 @name="Chorizo"&gt;
+</code></pre></div></div>
+
+<p>Notice that the memory addresses for <code class="highlighter-rouge">@filling</code> and <code class="highlighter-rouge">spicy_sausage</code> are the same! Even though this Filling object is being stored in two different places in our code, it is still only one object in memory.</p>
+
+<p>Update your Sheet with the variable names, memory addresses, and values in memory. You should have one row for the Taco object, and one row for the Filling object. Because both <code class="highlighter-rouge">spicy_sausage</code> and the Taco’s instance variable <code class="highlighter-rouge">@filling</code> are referencing the same Filling object, you should have two entries in the column for the variable that references the Filling object (separate them with a comma). Your Sheet should look something like this:</p>
+
+<p><img src="https://i.imgur.com/jVCFG64.png" alt="Imgur" /></p>
+
+<p>This is a very important concept: we can access the same object stored in memory through many different variables. We say that we have two different <strong>pointers</strong> to the same Object. In this case, there is only one memory location storing the Filling, but there are two variables that can access it.</p>
+
+<p>So if these two different variables are pointing to the same spot in memory, if we change one, do we change the other? Let’s try it:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Taco</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:filling</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">filling</span><span class="p">)</span>
+    <span class="vi">@filling</span> <span class="o">=</span> <span class="n">filling</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Filling</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:name</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">spicy_sausage</span> <span class="o">=</span> <span class="no">Filling</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Chorizo"</span><span class="p">)</span>
+<span class="n">taco_1</span> <span class="o">=</span> <span class="no">Taco</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">spicy_sausage</span><span class="p">)</span>
+
+<span class="nb">puts</span> <span class="s2">"Initial value of spicy_sausage is </span><span class="si">#{</span><span class="n">spicy_sausage</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Initial value of @filling is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">filling</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">taco_1</span><span class="p">.</span><span class="nf">filling</span><span class="p">.</span><span class="nf">name</span> <span class="o">=</span> <span class="s2">"Carne Asada"</span>
+
+<span class="nb">puts</span> <span class="s2">"New value of spicy_sausage is </span><span class="si">#{</span><span class="n">spicy_sausage</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"New value of @filling is </span><span class="si">#{</span><span class="n">taco_1</span><span class="p">.</span><span class="nf">filling</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><strong>Turn and Talk</strong>: Will changing <code class="highlighter-rouge">taco_1.filling.name</code> change <code class="highlighter-rouge">spicy_sausage</code>?</p>
+
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br /></p>
+
+<p>Run this code and you will see that changing <code class="highlighter-rouge">taco_1.filling.name</code> changed <code class="highlighter-rouge">spicy_sausage.name</code>. This can be a very intimidating concept at first, but it is very important. These variable names are ways of referencing Objects that live in memory. You can have many different variable names that reference the same Object. When we change an Object, all the variables that point to it will see the change.</p>
+
+<p>In your Sheet, update cell C3 with the new value for <code class="highlighter-rouge">spicy_sausage</code> AND <code class="highlighter-rouge">@filling</code>. Your sheet should look like this:</p>
+
+<p><img src="https://i.imgur.com/I6cQ5Zj.png" alt="Imgur" /></p>
+
+<p>Notice how you only changed one space of memory, but you affected both variables that point to it.</p>
+
+<p><strong>Check for Understanding</strong></p>
+
+<p>Answer the following questions in your Sheet based on this code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Car</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:make</span><span class="p">,</span> <span class="ss">:model</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+    <span class="vi">@make</span> <span class="o">=</span> <span class="n">make</span>
+    <span class="vi">@model</span> <span class="o">=</span> <span class="n">model</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Person</span>
+  <span class="nb">attr_accessor</span> <span class="ss">:car</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">car</span><span class="p">)</span>
+    <span class="vi">@car</span> <span class="o">=</span> <span class="n">car</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">camry</span> <span class="o">=</span> <span class="no">Car</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Toyota"</span><span class="p">,</span> <span class="s2">"Camry"</span><span class="p">)</span>
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">camry</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>How many Car Objects are created?</li>
+  <li>How many Person Objects are created?</li>
+  <li>How many different variables point to the Car Object?</li>
+  <li>How many different variables point to the Person Object?</li>
+  <li>If we called <code class="highlighter-rouge">person.car.model = "Rav 4"</code>, what would you see if you printed the variable <code class="highlighter-rouge">camry</code>?</li>
+  <li>If we called <code class="highlighter-rouge">camry.make = "Honda"</code>, what would you see if you printed <code class="highlighter-rouge">person.car</code>?</li>
+  <li>If we called <code class="highlighter-rouge">camry = Car.new("Honda", "Civic")</code>, what would you see if you printed <code class="highlighter-rouge">person.car</code>?</li>
+</ul>
+:ET

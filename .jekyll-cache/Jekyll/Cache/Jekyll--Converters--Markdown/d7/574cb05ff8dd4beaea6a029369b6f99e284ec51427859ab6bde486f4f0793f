@@ -1,0 +1,226 @@
+I"�+<p>Let’s build a development-ready environment including the following:</p>
+
+<ul>
+  <li>Ruby Version Manager (RVM)</li>
+  <li>Ruby 2.2</li>
+  <li>Git</li>
+  <li>PostgreSQL 9+</li>
+  <li>VirtualBox</li>
+  <li>Vagrant</li>
+  <li>Ubuntu Linux</li>
+</ul>
+
+<h2 id="setup-process">Setup Process</h2>
+
+<h3 id="virtualbox">VirtualBox</h3>
+
+<p>VirtualBox is an application for running virtual machines. It’s free and available for every major platform. You can <a href="https://www.virtualbox.org/">learn more about it</a>, or jump straight to the download page here:</p>
+
+<p><a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a></p>
+
+<p>Look under “VirtualBox platform packages” for the binary distribution appropriate for your platform. <strong>Run the installer and follow the instructions</strong>.</p>
+
+<h3 id="vagrant">Vagrant</h3>
+
+<p>Vagrant is a system for easily managing and interacting with VirtualBox-based virtual machines. Using vagrant we can do everything from the command line and rarely if ever need to open the actual VirtualBox application. You can <a href="http://vagrantup.com">learn more on the Vagrant website</a>.</p>
+
+<p>First, download the appropriate binary (matching your primary OS) from <a href="http://www.vagrantup.com/downloads.html">http://www.vagrantup.com/downloads.html</a> and run the installer. The following steps in this tutorial are based on the <a href="https://www.vagrantup.com/docs/getting-started/">Vagrant Getting Started Guide</a> which can be a good secondary reference.</p>
+
+<h4 id="setting-up-ubuntu">Setting Up Ubuntu</h4>
+
+<p>The easiest way to get going is to use an Ubuntu image preconfigured and vetted by the Vagrant project team. Drop into a terminal and <strong>change to a directory</strong> where you’ll build your project (such a <code class="highlighter-rouge">~/projects/vagrant_example</code>) and store the configuration for your virtual machine.</p>
+
+<p>Then in that directory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ vagrant init hashicorp/precise64
+</code></pre></div></div>
+
+<p>That’ll generate a <code class="highlighter-rouge">Vagrantfile</code>. Before starting the virtual machine, we want to setup a bridged port so we can later access a web server running in Vagrant from our host operating system.</p>
+
+<p>Open that <code class="highlighter-rouge">Vagrantfile</code> in a text editor and modify line 22 so it looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.vm.network "forwarded_port", guest: 3000, host: 3000
+</code></pre></div></div>
+
+<p>Save the file and close your editor. Return to the terminal and start the VM:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ vagrant up
+</code></pre></div></div>
+
+<p>When you run <code class="highlighter-rouge">up</code> it’ll try and boot that image, see that it’s not available on the local system, then fetch an image of Ubuntu 12.04 “Precise Pangolin”. Once downloaded and setup, it’ll be started.</p>
+
+<p>Other operating system “boxes” can be found at <a href="https://vagrantcloud.com/discover/featured">https://vagrantcloud.com/discover/featured</a> .</p>
+
+<h4 id="entering-the-virtual-machine">Entering the Virtual Machine</h4>
+
+<p>You can now SSH into the running virtual machine:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ vagrant ssh
+</code></pre></div></div>
+
+<p>You’re now inside the fully-functioning virtualized operating system.</p>
+
+<h4 id="synched-folders">Synched Folders</h4>
+
+<p>You can share files seamlessly between your host operating system and your virtual machine. This is useful if, for instance, you’d like to use a graphical editor in the host operating system, but run the code inside the VM.</p>
+
+<p>The folder that you used to store the vagrant configuration is <em>automatically</em> shared with the virtual machine. So…</p>
+
+<ul>
+  <li>Say you’re working in the directory <code class="highlighter-rouge">~/projects/vagrant_example</code></li>
+  <li>It currently contains the config file <code class="highlighter-rouge">~/projects/vagrant_example/Vagrantfile</code></li>
+  <li>You can create a file <code class="highlighter-rouge">~/projects/vagrant_example/README.md</code> using your host OS and any editor</li>
+  <li>Within the VM’s SSH session, you can interact with that file, like <code class="highlighter-rouge">cat /vagrant/README.md</code></li>
+</ul>
+
+<p>Check out <a href="http://docs.vagrantup.com/v2/synced-folders/">http://docs.vagrantup.com/v2/synced-folders/</a> for more complex folder synching, but this setup will be good enough for now.</p>
+
+<h3 id="git">Git</h3>
+
+<p>You’ll of course need Git for source control. Install it within the SSH session:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get update
+$ sudo apt-get install git
+</code></pre></div></div>
+
+<p>And respond <code class="highlighter-rouge">y</code> to the prompt. You might notice that the <code class="highlighter-rouge">sudo</code> didn’t ask for a password. Your Vagrant VM is setup to “trust” you. No one can login to the VM unless they’re an authenticated user of your host operating system, so this is safe.</p>
+
+<h3 id="rvm">RVM</h3>
+
+<p>There are several options for managing Ruby versions, but we’ll use RVM with the standard “single user” method.</p>
+
+<h4 id="initial-setup">Initial Setup</h4>
+
+<p>From your SSH session, we first need to install the <code class="highlighter-rouge">curl</code> tool for fetching files, then can use a script provided by the RVM team for easy setup:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install curl
+$ \curl -sSL https://get.rvm.io | bash
+</code></pre></div></div>
+
+<p>As it says in the post-install instructions, we need to load RVM into the current environment by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ source /home/vagrant/.rvm/scripts/rvm
+</code></pre></div></div>
+
+<p>Note that there will be no output from this command, but you can now see RVM:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ which rvm
+/home/vagrant/.rvm/bin/rvm
+</code></pre></div></div>
+
+<h4 id="requirements">Requirements</h4>
+
+<p>The RVM tool has an awesome tool for installing all the various compilers and packages you’ll need to build Ruby and common libraries. Run it like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rvm requirements
+</code></pre></div></div>
+
+<h4 id="ruby">Ruby</h4>
+
+<p>You can see all the Rubies available through RVM with this command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rvm list known
+</code></pre></div></div>
+
+<p>Then install Ruby 2.1:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rvm install 2.1
+</code></pre></div></div>
+
+<p>It’ll take awhile to compile/install.</p>
+
+<h4 id="default-ruby">Default Ruby</h4>
+
+<p>Run this to set your default Ruby:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rvm use 2.1 --default
+</code></pre></div></div>
+
+<p>And verify it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ which ruby
+/home/vagrant/.rvm/rubies/ruby-2.1.1/bin/ruby
+$ ruby -v
+ruby 2.1.1p76 (2014-02-24 revision 45161) [i686-linux]
+</code></pre></div></div>
+
+<h4 id="bundler">Bundler</h4>
+
+<p>Just about every project uses Bundler, so let’s install it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ gem install bundler
+</code></pre></div></div>
+
+<h4 id="javascript-runtime">JavaScript Runtime</h4>
+
+<p>Rails’ Asset Pipeline needs a JavaScript runtime. There are several options, but let’s install NodeJS:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install nodejs
+</code></pre></div></div>
+
+<h3 id="postgresql">PostgreSQL</h3>
+
+<p>Installing PostgreSQL isn’t the most straightforward process, but let’s give it a shot.</p>
+
+<h4 id="locale">Locale</h4>
+
+<p>Postgres uses information from the operating system to determine the language and encoding of databases. Let’s set that default locale before install postgres:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo /usr/sbin/update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+</code></pre></div></div>
+
+<h4 id="install">Install</h4>
+
+<p>Let’s get it installed with apt along with the “dev” headers that’ll be needed when we later install the <code class="highlighter-rouge">pg</code> gem:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install postgresql libpq-dev
+</code></pre></div></div>
+
+<h4 id="creating-the-database-instance--adding-a-user">Creating the Database Instance &amp; Adding a User</h4>
+
+<p>Once installed, we need to create the database instance. Within the SSH session:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mkdir -p /usr/local/pgsql/data
+$ sudo chown postgres:postgres /usr/local/pgsql/data
+$ sudo su postgres
+$ /usr/lib/postgresql/9.1/bin/initdb -D /usr/local/pgsql/data
+$ createuser vagrant
+</code></pre></div></div>
+
+<p>Respond “Y” to <code class="highlighter-rouge">Shall the new role be a superuser?</code> Then you can exit the <code class="highlighter-rouge">su</code> subshell:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ exit
+</code></pre></div></div>
+
+<p>Now you’re back to your Vagrant user session.</p>
+
+<h4 id="add-privilege-for-vagrant-to-create-database">Add privilege for Vagrant to create database.</h4>
+
+<p>Postgres keeps it’s own internal user system. Users can be setup to only read data, read and write, etc. Let’s give the <code class="highlighter-rouge">vagrant</code> user permission to create databases:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant@vagrant-ubuntu-trusty-64:~$ psql postgres
+psql (9.3.5)
+Type "help" for help.
+
+postgres=&gt; ALTER ROLE vagrant CREATEDB;
+postgres-&gt; \q
+vagrant@vagrant-ubuntu-trusty-64:~$
+</code></pre></div></div>
+
+<h4 id="verifying-install-and-permissions">Verifying Install and Permissions</h4>
+
+<p>You should now be back to the normal <code class="highlighter-rouge">vagrant@precise64:~$</code> prompt. Let’s create a database and connect to it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ createdb sample_db`
+$ psql sample_db
+</code></pre></div></div>
+
+<p>You should see the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ psql sample_db
+psql (9.1.12)
+Type "help" for help.
+
+sample_db=# \q
+</code></pre></div></div>
+:ET

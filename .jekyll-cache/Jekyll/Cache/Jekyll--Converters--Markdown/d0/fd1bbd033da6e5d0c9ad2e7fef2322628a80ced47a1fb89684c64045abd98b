@@ -1,0 +1,340 @@
+I"�j<h2 id="consuming-an-api">Consuming an API</h2>
+
+<h3 id="learning-goals">Learning Goals</h3>
+
+<ul>
+  <li>Can explain why API consumption is important/useful</li>
+  <li>Understands the value and process of using BDD to solve a problem</li>
+</ul>
+
+<h3 id="warmup">Warmup</h3>
+
+<ul>
+  <li>What are the advantages to OAuth?</li>
+  <li>Why bother consuming an API? What does it offer us?</li>
+  <li>Did you write any code you weren’t happy with yesterday after we kicked off the project? Where?</li>
+</ul>
+
+<h3 id="workshop">Workshop</h3>
+
+<p>We are going to use the Sunlight API to retrieve all legislators and committees that match a criteria - and we are going to test it using VCR.</p>
+
+<h4 id="0-setup">0. Setup</h4>
+
+<p>First, let’s create a new Rails project.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new testing_3rd_party_apis <span class="nt">--skip-spring</span> <span class="nt">--skip-turbolinks</span> <span class="nt">-T</span> <span class="nt">--database</span><span class="o">=</span>postgresql
+<span class="nv">$ </span><span class="nb">cd </span>testing_3rd_party_apis
+</code></pre></div></div>
+
+<p>Add to your Gemfile:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gem</span> <span class="s1">'rspec-rails'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle
+<span class="nv">$ </span>rails g rspec:install
+<span class="nv">$ </span>bundle <span class="nb">exec </span>rake db:create
+</code></pre></div></div>
+
+<p>We also need to add a few gems. We are going to add: <a href="https://github.com/lostisland/faraday">Faraday</a>, <a href="https://github.com/laserlemon/figaro">Figaro</a>.</p>
+
+<ul>
+  <li>Faraday is an HTTP client library that provides an easy-to-use interface to make requests</li>
+  <li>Figaro is simple, Heroku friendly and makes it easy to hide your secret configs in a Rails app</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+....
+
+gem 'faraday'
+gem 'figaro'
+
+</code></pre></div></div>
+
+<p>Bundle your gems to install the new dependencies. To configure Figaro, we run <code class="highlighter-rouge">bundle exec figaro install</code>. Now we can add our secrets to <code class="highlighter-rouge">config/application.yml</code> which is already added to the <code class="highlighter-rouge">.gitignore</code>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>figaro <span class="nb">install
+      </span>create  config/application.yml
+      append  .gitignore
+</code></pre></div></div>
+
+<h4 id="1-preparing-a-service">1. Preparing a service</h4>
+
+<p>We are going to create a Sunlight service in our application that can communicate with the Sunlight API. Let’s create the services folder and a service file:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>app/services
+<span class="nv">$ </span><span class="nb">touch </span>app/services/sunlight_service.rb
+<span class="nv">$ </span><span class="nb">mkdir </span>spec/services
+<span class="nv">$ </span><span class="nb">touch </span>spec/services/sunlight_service_test.rb
+</code></pre></div></div>
+
+<p>In <code class="highlighter-rouge">test/services/sunlight_service_test.rb</code>, add the following:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test/services/sunlight_service_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">SunlightService</span> <span class="k">do</span>
+  <span class="nb">attr_reader</span> <span class="ss">:service</span>
+
+  <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+    <span class="vi">@service</span> <span class="o">=</span> <span class="no">SunlightService</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>At the top, we require the <code class="highlighter-rouge">rails_helper</code>. We also add a method that will create a new instance of the SunlightService (yet to be built) and add an attr_reader so we can easily reference it throughout the program.</p>
+
+<p>Let’s add a first test; <code class="highlighter-rouge">#legislators</code>. The purpose of the <code class="highlighter-rouge">legislators</code> method is to return all legislators that match a certain criteria. In this case, we are querying for all the female legislators. In <code class="highlighter-rouge">services/sunlight_service.rb</code> we need to make a call to the Sunlight API and ask for all female legislators.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/services/sunlight_service_spec.rb</span>
+<span class="n">describe</span> <span class="s1">'#legislators'</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s1">'finds all female legislators'</span> <span class="k">do</span>
+    <span class="n">legislators</span> <span class="o">=</span> <span class="vi">@service</span><span class="p">.</span><span class="nf">legislators</span><span class="p">(</span><span class="ss">gender: </span><span class="s2">"F"</span><span class="p">)</span>
+    <span class="n">legislator</span>  <span class="o">=</span> <span class="n">legislators</span><span class="p">.</span><span class="nf">first</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">legislators</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">[</span><span class="ss">:first_name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Liz'</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">[</span><span class="ss">:last_name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Cheney'</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If we run <code class="highlighter-rouge">rspec</code> the errors ask us to create the SunglightService class.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/sunlight_service.rb</span>
+<span class="k">class</span> <span class="nc">SunlightService</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="2-exploring-the-api">2. Exploring the API</h4>
+
+<p>The API call we need to make in order to make the test pass is the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://congress.api.sunlightfoundation.com/legislators?gender=F
+</code></pre></div></div>
+
+<p>You can run that URL in the browser, replacing the last bit with your own API key.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">http://congress.api.sunlightfoundation.com/</code> is the base url</li>
+  <li><code class="highlighter-rouge">legislators</code> is the endpoint</li>
+  <li><code class="highlighter-rouge">?gender=F</code> are the params we are sending</li>
+</ul>
+
+<h4 id="3-fetching-legislators">3. Fetching legislators</h4>
+
+<p>If we run our test, it tells us that we don’t have the method <code class="highlighter-rouge">legislators</code>. Before we go any further, let’s create a connection to the Sunlight API using Faraday. In the <code class="highlighter-rouge">initialize</code> method we are creating a new connection with the base url. We also set the our API key as a param. In the legislators method we are just putting a <code class="highlighter-rouge">pry</code> for now.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/sunlight_service.rb</span>
+<span class="nb">attr_reader</span> <span class="ss">:connection</span>
+
+<span class="k">def</span> <span class="nf">initialize</span>
+  <span class="vi">@connection</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'http://congress.api.sunlightfoundation.com'</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">legislators</span><span class="p">(</span><span class="n">criteria</span><span class="p">)</span>
+  <span class="nb">require</span> <span class="s1">'pry'</span><span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If we run our tests and are caught by the pry, we can see what <code class="highlighter-rouge">connection</code> looks like. It’s a Faraday instance and you should be able to find the params we just set. In the <a href="https://github.com/lostisland/faraday#usage">Faraday docs</a> we see that it’s pretty easy to make <code class="highlighter-rouge">get</code> requests.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># GET http://sushi.com/nigiri/sake.json</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">get</span> <span class="s1">'/nigiri/sake.json'</span>
+
+<span class="c1"># GET http://sushi.com/nigiri?name=Maguro</span>
+<span class="c1"># and if we want to send additonal params</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">get</span> <span class="s1">'/nigiri'</span><span class="p">,</span> <span class="p">{</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s1">'Maguro'</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now try to make a <code class="highlighter-rouge">get</code> request in the pry session.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[5] pry(#&lt;SunlightService&gt;)&gt; connection.get('legislators', criteria)
+</code></pre></div></div>
+
+<p>In the body, we get a bunch of JSON back, and if you compare the values in the body with the JSON you get with the JSON you get from making the call in the browser you’ll see it’s the same.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://congress.api.sunlightfoundation.com/legislators?gender=F
+</code></pre></div></div>
+
+<p>Ok. We know how to make the API call. We get data (JSON) back. To make better sense of it, we need to parse it.</p>
+
+<p>First, let’s add a private method <code class="highlighter-rouge">parse</code> that can parse our responses.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/sunlight_service.rb</span>
+<span class="kp">private</span>
+
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+  <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">,</span> <span class="ss">symbolize_names: </span><span class="kp">true</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Then, let’s build out the <code class="highlighter-rouge">legislators</code> method. Here, we are passing the response to our <code class="highlighter-rouge">parse</code> method, and from that return value we are accessing the values under the <code class="highlighter-rouge">results</code> key. I highly recommend putting a pry in this method and look at the response and see why we are accessing the <code class="highlighter-rouge">results</code> key.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/services/sunlight_service.rb</span>
+<span class="k">def</span> <span class="nf">legislators</span><span class="p">(</span><span class="n">criteria</span><span class="p">)</span>
+  <span class="n">parse</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'legislators'</span><span class="p">,</span> <span class="n">criteria</span><span class="p">))[</span><span class="ss">:results</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run your tests… and we should have one passing test.</p>
+
+<h4 id="4-fetching-committees">4. Fetching committees</h4>
+
+<p>The process of fetching committees is fairly similar to how we fetched legislators. Let’s start with a test:</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1"># spec/services/sunlight_service_spec.rb</span>
+<span class="n">describe</span> <span class="s1">'#committees'</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s1">'can find a list of committees by chamber'</span> <span class="k">do</span>
+    <span class="n">committees</span> <span class="o">=</span> <span class="n">service</span><span class="p">.</span><span class="nf">committees</span><span class="p">(</span><span class="ss">chamber: </span><span class="s1">'senate'</span><span class="p">)</span>
+    <span class="n">committee</span>  <span class="o">=</span> <span class="n">committees</span><span class="p">.</span><span class="nf">first</span>
+
+    <span class="n">expect</span><span class="p">(</span><span class="n">committees</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">committee</span><span class="p">[</span><span class="ss">:name</span><span class="p">]).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Federal Spending Oversight and Emergency Management'</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Get the test passing by adding the <code class="highlighter-rouge">committees</code> method.</p>
+
+<h4 id="5-creating-a-legislator-model">5. Creating a Legislator model</h4>
+
+<p>We want to implement the following behavior:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ Legislator.find_by({gender: 'F'}) #=&gt; [&lt;Legislator&gt;, &lt;Legislator&gt;, &lt;Legislator&gt;, &lt;Legislator&gt;...]
+</code></pre></div></div>
+
+<p>Right now, we don’t even have a Legislator model! Before we add the model, let’s add a test file.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>spec/models
+<span class="nv">$ </span><span class="nb">touch </span>spec/models/legislator_spec.rb
+</code></pre></div></div>
+
+<p>Cool, now let’s add the test. Instead of accessing the SunlightService directly, we want to call a method on the Legislator to get Legislator objects back instead of just an array of hashes.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/legislator_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">Legislator</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s1">'#find_by'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s1">'finds legislators by gender'</span> <span class="k">do</span>
+      <span class="n">legislators</span> <span class="o">=</span> <span class="no">Legislator</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">gender: </span><span class="s1">'F'</span><span class="p">)</span>
+      <span class="n">legislator</span>  <span class="o">=</span> <span class="n">legislators</span><span class="p">.</span><span class="nf">first</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">legislators</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">.</span><span class="nf">class</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="no">Legislator</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">.</span><span class="nf">first_name</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Liz"</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">legislator</span><span class="p">.</span><span class="nf">last_name</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s2">"Cheney"</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The test tells us to add the model.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">touch </span>app/models/legislator.rb
+</code></pre></div></div>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/legislator.rb</span>
+<span class="k">class</span> <span class="nc">Legislator</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And add the method…</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/legislator.rb</span>
+<span class="k">class</span> <span class="nc">Legislator</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_by</span><span class="p">(</span><span class="n">criteria</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This is dynamic data we are getting from a 3rd party API and there’s no need to store it in our database - we don’t want to be in charge of data that we can easliy query for. But we still want to return Legislator objects from the <code class="highlighter-rouge">Legislator#find_by</code> method. To achieve this, we can use <a href="http://ruby-doc.org/stdlib-2.0.0/libdoc/ostruct/rdoc/OpenStruct.html">OpenStruct</a>.</p>
+
+<p>OpenStruct is a data structure very similar to a hash but we can define methods on the instance. For example:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>1] pry<span class="o">(</span>main<span class="o">)&gt;</span> require <span class="s1">'ostruct'</span>
+<span class="o">=&gt;</span> <span class="nb">true</span>
+<span class="o">[</span>2] pry<span class="o">(</span>main<span class="o">)&gt;</span> person <span class="o">=</span> OpenStruct.new
+<span class="o">=&gt;</span> <span class="c">#&lt;OpenStruct&gt;</span>
+<span class="o">[</span>3] pry<span class="o">(</span>main<span class="o">)&gt;</span> person.name <span class="o">=</span> <span class="s2">"Lovisa"</span>
+<span class="o">=&gt;</span> <span class="s2">"Lovisa"</span>
+<span class="o">[</span>4] pry<span class="o">(</span>main<span class="o">)&gt;</span> person.age <span class="o">=</span> 24
+<span class="o">=&gt;</span> 24
+<span class="o">[</span>5] pry<span class="o">(</span>main<span class="o">)&gt;</span> person
+<span class="o">=&gt;</span> <span class="c">#&lt;OpenStruct name="Lovisa", age=24&gt;</span>
+<span class="o">[</span>6] pry<span class="o">(</span>main<span class="o">)&gt;</span> person.class
+<span class="o">=&gt;</span> OpenStruct
+</code></pre></div></div>
+
+<p>First, let’s make the class inherit from OpenStruct. This enables us to call <code class="highlighter-rouge">Legislator.new({name: "Lovisa"})</code>, which will return a <code class="highlighter-rouge">Legislator</code> object with one property set; <code class="highlighter-rouge">name: "Lovisa"</code>.</p>
+
+<p>Then, we need to create an instance of the SunlightService so we can trigger API requests from this model.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/legislator.rb</span>
+<span class="k">class</span> <span class="nc">Legislator</span> <span class="o">&lt;</span> <span class="no">OpenStruct</span>
+  <span class="nb">attr_reader</span> <span class="ss">:service</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">service</span>
+    <span class="vi">@service</span> <span class="o">||=</span> <span class="no">SunlightService</span><span class="p">.</span><span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_by</span><span class="p">(</span><span class="n">criteria</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Great! If we run our tests, nothing has changed. Now we need to use <code class="highlighter-rouge">service</code> to fetch all the legislators matching the given criteria, then map over the array of hashes we get back and create a <code class="highlighter-rouge">Legislator</code> object for each hash.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/legislator.rb</span>
+<span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_by</span><span class="p">(</span><span class="n">criteria</span><span class="p">)</span>
+  <span class="n">service</span><span class="p">.</span><span class="nf">legislators</span><span class="p">(</span><span class="n">criteria</span><span class="p">).</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">legislator</span><span class="o">|</span>
+    <span class="no">Legislator</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">legislator</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Run the tests… and it should all be passing.</p>
+
+<h4 id="6-creating-a-committee-model">6. Creating a Committee model</h4>
+
+<p>Similar to legislators, we want to be able to query for committees matching a given criteria and get <code class="highlighter-rouge">Committee</code> objects back.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ Committee.find_by(chamber: 'senate') #=&gt; [&lt;Committee&gt;, &lt;Committee&gt;, &lt;Committee&gt;, &lt;Committee&gt;...]
+</code></pre></div></div>
+
+<p>As you can see, the <code class="highlighter-rouge">committee_spec.rb</code> is very similar to <code class="highlighter-rouge">legislator_test.rb</code>.</p>
+
+<div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># spec/models/committee_spec.rb</span>
+<span class="nb">require</span> <span class="s1">'rails_helper'</span>
+
+<span class="n">describe</span> <span class="no">Committee</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s1">'#find_by'</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">"returns committees by chamber"</span> <span class="k">do</span>
+      <span class="n">committees</span> <span class="o">=</span> <span class="no">Committee</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">chamber: </span><span class="s1">'senate'</span><span class="p">)</span>
+      <span class="n">committee</span>  <span class="o">=</span> <span class="n">committees</span><span class="p">.</span><span class="nf">first</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">committees</span><span class="p">.</span><span class="nf">count</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">committee</span><span class="p">.</span><span class="nf">class</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="no">Committee</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">committee</span><span class="p">.</span><span class="nf">name</span><span class="p">).</span><span class="nf">to</span> <span class="n">eq</span><span class="p">(</span><span class="s1">'Federal Spending Oversight and Emergency Management'</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Make the test pass - if you get stuck, reference the <code class="highlighter-rouge">Legislator</code> model.</p>
+
+<h3 id="materials">Materials</h3>
+
+<ul>
+  <li><a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_04-apis_and_scalability/mocking_apis_v2.markdown">Alternative Lesson Plan</a></li>
+  <li><a href="https://www.dropbox.com/s/3afogbj3qwuptj8/Turing%20-%20Testing%20an%20External%20API%20%28Notes%29.pages?dl=0">Code-a-Long Notes</a></li>
+  <li><a href="https://www.dropbox.com/s/3x1vfhu9wdx2juj/Turing%20-%20Revisiting%20Testing%20an%20External%20API.pages?dl=0">Alternative Code-a-Long</a></li>
+</ul>
+:ET

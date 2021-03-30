@@ -1,0 +1,287 @@
+I"|�<p><em><a href="./index">Back to Project Home</a></em><br />
+<em><a href="./requirements">Back to Requirements</a></em></p>
+
+<h2 id="iteration-2">Iteration 2</h2>
+
+<h3 id="player">Player</h3>
+
+<p>Create a <code class="highlighter-rouge">Player</code> class with accompanying tests.  A <code class="highlighter-rouge">Player</code> is initialized with a deck, and can determine if they have lost the game.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/deck'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/player'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card1</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'Queen'</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x007f9cc3a73a98 @rank=12, @suit=:diamond, @value="Queen"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card2</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:spade</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007f9cc3a03720 @rank=3, @suit=:spade, @value="3"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card3</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'Ace'</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007f9cc3a44c98 @rank=14, @suit=:heart, @value="Ace"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card1</span><span class="p">,</span> <span class="n">card2</span><span class="p">,</span> <span class="n">card3</span><span class="p">])</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007f9cc396bdf8 @cards=[#&lt;Card:0x007f9cc3a73a98...&gt;, #&lt;Card:0x007f9cc3a03720...&gt;, #&lt;Card:0x007f9cc3a44c98...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Clarisa'</span><span class="p">,</span> <span class="n">deck</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Player:0x007f9cc3b4c988 @deck=#&lt;Deck:0x007f9cc396bdf8 @cards=[#&lt;Card:0x007f9cc3a73a98...&gt;, #&lt;Card:0x007f9cc3a03720...&gt;, #&lt;Card:0x007f9cc3a44c98...&gt;]&gt;, @name="Clarisa"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">name</span>
+<span class="c1">#=&gt; "Clarisa"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007f9cc396bdf8 @cards=[#&lt;Card:0x007f9cc3a73a98...&gt;, #&lt;Card:0x007f9cc3a03720...&gt;, #&lt;Card:0x007f9cc3a44c98...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">has_lost?</span>
+<span class="c1">#=&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">deck</span><span class="p">.</span><span class="nf">remove_card</span>
+<span class="c1">#=&gt; #&lt;Card:0x007f9cc3a73a98 @rank=12, @suit=:diamond, @value="Queen"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">has_lost?</span>
+<span class="c1">#=&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">deck</span><span class="p">.</span><span class="nf">remove_card</span>
+<span class="c1">#=&gt; #&lt;Card:0x007f9cc3a03720 @rank=3, @suit=:spade, @value="3"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">has_lost?</span>
+<span class="c1">#=&gt; false</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">deck</span><span class="p">.</span><span class="nf">remove_card</span>
+<span class="c1">#=&gt; #&lt;Card:0x007f9cc3a44c98 @rank=14, @suit=:heart, @value="Ace"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">has_lost?</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007f9cc396bdf8 @cards=[]&gt;</span>
+</code></pre></div></div>
+
+<h3 id="turn">Turn</h3>
+
+<p>The <code class="highlighter-rouge">Turn</code> is responsible for much of the logic of the game and will respond to the following methods:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">initialize</code>: A Turn is created with two players - player1 and player2</li>
+  <li>readable attributes for <code class="highlighter-rouge">player1</code>, <code class="highlighter-rouge">player2</code>, and <code class="highlighter-rouge">spoils_of_war</code></li>
+  <li><code class="highlighter-rouge">type</code>: a turn is <code class="highlighter-rouge">:basic</code>, <code class="highlighter-rouge">:war</code>, or <code class="highlighter-rouge">:mutually_assured_destruction</code>.
+    <ul>
+      <li>A <code class="highlighter-rouge">:basic</code> turn is one in which the <code class="highlighter-rouge">rank_of_card_at(0)</code> from the players’ decks are <strong>not</strong> the same rank.</li>
+      <li>A <code class="highlighter-rouge">:war</code> turn occurs when both players’ <code class="highlighter-rouge">rank_of_card_at(0)</code> are the <strong>same</strong>.</li>
+      <li><code class="highlighter-rouge">:mutually_assured_destruction</code> occurs when both players’ <code class="highlighter-rouge">rank_of_card_at(0)</code> AND <code class="highlighter-rouge">rank_of_card_at(2)</code> are the <strong>same</strong>.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">winner</code>: this method will determine the winner of the turn.
+    <ul>
+      <li>if the turn has a type of <code class="highlighter-rouge">:basic</code>, it will return whichever <code class="highlighter-rouge">player</code> has a higher <code class="highlighter-rouge">rank_of_card_at(0)</code></li>
+      <li>if the turn has a type of <code class="highlighter-rouge">:war</code> the winner will be whichever player has a higher <code class="highlighter-rouge">rank_of_card_at(2)</code></li>
+      <li>if the turn has a type of <code class="highlighter-rouge">:mutually_assured_destruction</code> the method will return <code class="highlighter-rouge">No Winner</code>.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">pile_cards</code>: when this method is called, cards will be sent from the players’ decks into the <code class="highlighter-rouge">@spoils_of_war</code> based on these rules
+    <ul>
+      <li>for a <code class="highlighter-rouge">:basic</code> turn, each player will send one card (the top card) to the <code class="highlighter-rouge">spoils</code> pile</li>
+      <li>for a <code class="highlighter-rouge">:war</code> turn, each player will send three cards (the top three cards) to the <code class="highlighter-rouge">spoils</code> pile</li>
+      <li>for a <code class="highlighter-rouge">:mutually_assured_destruction</code> turn, each player will remove three cards from play (the top three cards in their deck).  These cards are <strong>not</strong> sent to the <code class="highlighter-rouge">spoils</code> pile, they are simply removed from each players’ deck.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">award_spoils</code>: this method will add each of the cards in the <code class="highlighter-rouge">@spoils_of_war</code> array to the <code class="highlighter-rouge">winner</code> of the turn.</li>
+</ul>
+
+<p>The three interaction patterns below highlight the behavior of each type of turn.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#turn type :basic</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/deck'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/player'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/turn'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card1</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'Jack'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x007fa3edaa0df0 @rank=11, @suit=:heart, @value="Jack"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card2</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'10'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3eda519a8 @rank=10, @suit=:heart, @value="10"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card3</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3ed98d9b8 @rank=9, @suit=:heart, @value="9"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card4</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'Jack'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3ee14ef80 @rank=11, @suit=:diamond, @value="Jack"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card5</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3edb263d8 @rank=8, @suit=:heart, @value="8"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card6</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'Queen'</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3eda3e1f0 @rank=12, @suit=:diamond, @value="Queen"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card7</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3edad1cc0 @rank=3, @suit=:heart, @value="3"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card8</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fa3eda89308 @rank=2, @suit=:diamond, @value="2"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck1</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card1</span><span class="p">,</span> <span class="n">card2</span><span class="p">,</span> <span class="n">card5</span><span class="p">,</span> <span class="n">card8</span><span class="p">])</span>    
+<span class="c1">#=&gt; #&lt;Deck:0x007fa3eda472c8 @cards=[#&lt;Card:0x007fa3edaa0df0...&gt;, #&lt;Card:0x007fa3eda519a8...&gt;, #&lt;Card:0x007fa3edb263d8...&gt;, #&lt;Card:0x007fa3eda89308...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck2</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card3</span><span class="p">,</span> <span class="n">card4</span><span class="p">,</span> <span class="n">card6</span><span class="p">,</span> <span class="n">card7</span><span class="p">])</span>    
+<span class="c1">#=&gt; #&lt;Deck:0x007fa3ee11ee48 @cards=[#&lt;Card:0x007fa3ed98d9b8...&gt;, #&lt;Card:0x007fa3ee14ef80...&gt;, #&lt;Card:0x007fa3eda3e1f0...&gt;, #&lt;Card:0x007fa3edad1cc0...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player1</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Megan"</span><span class="p">,</span> <span class="n">deck1</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Player:0x007fa3edae29d0 @deck=#&lt;Deck:0x007fa3eda472c8...&gt;, @name="Megan"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player2</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Aurora"</span><span class="p">,</span> <span class="n">deck2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Player:0x007fa3ed9e6568 @deck=#&lt;Deck:0x007fa3ee11ee48...&gt;, @name="Aurora"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span> <span class="o">=</span> <span class="no">Turn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">player1</span><span class="p">,</span> <span class="n">player2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Turn:0x007fa3edb25d20 @player1=#&lt;Player:0x007fa3edae29d0..., @name="Megan"&gt;, @player2=#&lt;Player:0x007fa3ed9e6568..., @name="Aurora"&gt;, @spoils_of_war=[]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">player1</span>
+<span class="c1">#=&gt; #&lt;Player:0x007fa3edae29d0 @deck=#&lt;Deck:0x007fa3eda472c8...&gt;, @name="Megan"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">player2</span>
+<span class="c1">#=&gt; #&lt;Player:0x007fa3ed9e6568 @deck=#&lt;Deck:0x007fa3ee11ee48...&gt;, @name="Aurora"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">spoils_of_war</span>
+<span class="c1">#=&gt; []</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">type</span>
+<span class="c1">#=&gt; :basic</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">winner</span> <span class="o">=</span> <span class="n">turn</span><span class="p">.</span><span class="nf">winner</span>
+<span class="c1">#=&gt; #&lt;Player:0x007fa3edae29d0 @deck=#&lt;Deck:0x007fa3eda472c8...&gt;, @name="Megan"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">pile_cards</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">spoils_of_war</span>
+<span class="c1">#=&gt; [#&lt;Card:0x007fa3edaa0df0 @rank=11, @suit=:heart, @value="Jack"&gt;, #&lt;Card:0x007fa3ed98d9b8 @rank=9, @suit=:heart, @value="9"&gt;]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">award_spoils</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player1</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007fa3eda472c8 @cards=[#&lt;Card:0x007fa3eda519a8...&gt;, #&lt;Card:0x007fa3edb263d8...&gt;, #&lt;Card:0x007fa3eda89308...&gt;, #&lt;Card:0x007fa3edaa0df0...&gt;, #&lt;Card:0x007fa3ed98d9b8...&gt;]&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player2</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007fa3ee11ee48 @cards=[#&lt;Card:0x007fa3ee14ef80...&gt;, #&lt;Card:0x007fa3eda3e1f0...&gt;, #&lt;Card:0x007fa3edad1cc0...&gt;]&gt;</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># turn type :war</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/deck'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/player'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/turn'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card1</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'Jack'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a170fe8 @rank=11, @suit=:heart, @value="Jack"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card2</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'10'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a0f1b58 @rank=10, @suit=:heart, @value="10"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card3</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42aa85a98 @rank=9, @suit=:heart, @value="9"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card4</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'Jack'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a205508 @rank=11, @suit=:diamond, @value="Jack"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card5</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a2149e0 @rank=8, @suit=:heart, @value="8"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card6</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'Queen'</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a1e4790 @rank=12, @suit=:diamond, @value="Queen"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card7</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a1b4c98 @rank=3, @suit=:heart, @value="3"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card8</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fc42a1580d8 @rank=2, @suit=:diamond, @value="2"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck1</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card1</span><span class="p">,</span> <span class="n">card2</span><span class="p">,</span> <span class="n">card5</span><span class="p">,</span> <span class="n">card8</span><span class="p">])</span>    
+<span class="c1">#=&gt; #&lt;Deck:0x007fc42a05a258 @cards=[#&lt;Card:0x007fc42a170fe8...&gt;, #&lt;Card:0x007fc42a0f1b58...&gt;, #&lt;Card:0x007fc42a2149e0...&gt;, #&lt;Card:0x007fc42a1580d8...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck2</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card4</span><span class="p">,</span> <span class="n">card3</span><span class="p">,</span> <span class="n">card6</span><span class="p">,</span> <span class="n">card7</span><span class="p">])</span>    
+<span class="c1">#=&gt; #&lt;Deck:0x007fc42a248678 @cards=[#&lt;Card:0x007fc42a205508...&gt;, #&lt;Card:0x007fc42aa85a98...&gt;, #&lt;Card:0x007fc42a1e4790...&gt;, #&lt;Card:0x007fc42a1b4c98...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player1</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Megan"</span><span class="p">,</span> <span class="n">deck1</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Player:0x007fc42a113000 @deck=#&lt;Deck:0x007fc42a05a258...&gt;, @name="Megan"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player2</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Aurora"</span><span class="p">,</span> <span class="n">deck2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Player:0x007fc42aab6b70 @deck=#&lt;Deck:0x007fc42a248678...&gt;, @name="Aurora"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span> <span class="o">=</span> <span class="no">Turn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">player1</span><span class="p">,</span> <span class="n">player2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Turn:0x007fc42a20d488 @player1=#&lt;Player:0x007fc42a113000 @deck=#&lt;Deck:0x007fc42a05a258...&gt;, @name="Megan"&gt;, @player2=#&lt;Player:0x007fc42aab6b70 @deck=#&lt;Deck:0x007fc42a248678...&gt;, @name="Aurora"&gt;, @spoils_of_war=[]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">type</span>
+<span class="c1">#=&gt; :war</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">winner</span> <span class="o">=</span> <span class="n">turn</span><span class="p">.</span><span class="nf">winner</span>
+<span class="c1">#=&gt; #&lt;Player:0x007fc42aab6b70 @deck=#&lt;Deck:0x007fc42a248678...&gt;, @name="Aurora"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">pile_cards</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">spoils_of_war</span>
+<span class="c1">#=&gt; [#&lt;Card:0x007fc42a170fe8...&gt;, #&lt;Card:0x007fc42a0f1b58...&gt;, #&lt;Card:0x007fc42a2149e0...&gt;, #&lt;Card:0x007fc42a205508...&gt;, #&lt;Card:0x007fc42aa85a98...&gt;, #&lt;Card:0x007fc42a1e4790...&gt;]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">award_spoils</span><span class="p">(</span><span class="n">winner</span><span class="p">)</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player1</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007fc42a05a258 @cards=[#&lt;Card:0x007fc42a1580d8...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player2</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007fc42a248678 @cards=[#&lt;Card:0x007fc42a1b4c98...&gt;, #&lt;Card:0x007fc42a170fe8...&gt;, #&lt;Card:0x007fc42a0f1b58...&gt;, #&lt;Card:0x007fc42a2149e0...&gt;, #&lt;Card:0x007fc42a205508...&gt;, #&lt;Card:0x007fc42aa85a98...&gt;, #&lt;Card:0x007fc42a1e4790...&gt;]&gt;</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># turn type :mutually_assured_destruction</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/deck'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/player'</span>
+<span class="c1">#=&gt; true</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/turn'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card1</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'Jack'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadb0922f38 @rank=11, @suit=:heart, @value="Jack"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card2</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'10'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadaf8c8458 @rank=10, @suit=:heart, @value="10"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card3</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadaf9ab320 @rank=9, @suit=:heart, @value="9"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card4</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'Jack'</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadb1046fa8 @rank=11, @suit=:diamond, @value="Jack"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card5</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadb0a247d8 @rank=8, @suit=:heart, @value="8"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card6</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadaf9e8e28 @rank=8, @suit=:diamond, @value="8"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card7</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:heart</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadaf130858 @rank=3, @suit=:heart, @value="3"&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card8</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">:diamond</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Card:0x007fadaf96b180 @rank=2, @suit=:diamond, @value="2"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck1</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card1</span><span class="p">,</span> <span class="n">card2</span><span class="p">,</span> <span class="n">card5</span><span class="p">,</span> <span class="n">card8</span><span class="p">])</span>    
+<span class="c1">#=&gt; #&lt;Deck:0x007fadaf94aae8 @cards=[#&lt;Card:0x007fadb0922f38...&gt;, #&lt;Card:0x007fadaf8c8458...&gt;, #&lt;Card:0x007fadb0a247d8...&gt;, #&lt;Card:0x007fadaf96b180...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck2</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card4</span><span class="p">,</span> <span class="n">card3</span><span class="p">,</span> <span class="n">card6</span><span class="p">,</span> <span class="n">card7</span><span class="p">])</span>    
+<span class="c1">#=&gt; #&lt;Deck:0x007fadb1086f40 @cards=[#&lt;Card:0x007fadb1046fa8...&gt;, #&lt;Card:0x007fadaf9ab320...&gt;, #&lt;Card:0x007fadaf9e8e28...&gt;, #&lt;Card:0x007fadaf130858...&gt;]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player1</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Megan"</span><span class="p">,</span> <span class="n">deck1</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Player:0x007fadaf8b16e0 @deck=##&lt;Deck:0x007fadaf94aae8 ...&gt;, @name="Megan"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player2</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Aurora"</span><span class="p">,</span> <span class="n">deck2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Player:0x007fadb0a47800 @deck=#&lt;Deck:0x007fadb1086f40 ...&gt;, @name="Aurora"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span> <span class="o">=</span> <span class="no">Turn</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">player1</span><span class="p">,</span> <span class="n">player2</span><span class="p">)</span>    
+<span class="c1">#=&gt; #&lt;Turn:0x007fadaf240fe0 @player1=#&lt;Player:0x007fadaf8b16e0 @deck=##&lt;Deck:0x007fadaf94aae8 ...&gt;, @name="Megan"&gt;, @player2= #&lt;Player:0x007fadb0a47800 @deck=#&lt;Deck:0x007fadb1086f40 ...&gt;, @name="Aurora"&gt;, @spoils_of_war=[]&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">type</span>
+<span class="c1">#=&gt; :mutually_assured_destruction</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">winner</span> <span class="o">=</span> <span class="n">turn</span><span class="p">.</span><span class="nf">winner</span>
+<span class="c1">#=&gt; "No Winner"</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">pile_cards</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">turn</span><span class="p">.</span><span class="nf">spoils_of_war</span>
+<span class="c1">#=&gt; []</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player1</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007fadaf94aae8 @cards=[#&lt;Card:0x007fadaf96b180...&gt;]&gt;</span>
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">player2</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x007fadb1086f40 @cards=[#&lt;Card:0x007fadaf130858...&gt;]&gt;</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,184 @@
+I"�#<h2 id="standards">Standards</h2>
+
+<ul>
+  <li>Understand that in Ruby, Modules serve three purposes</li>
+  <li>Be able to use a Module to create a namespace</li>
+  <li>Be able to use a Module to mimic functional programming</li>
+  <li>Be able to use a Module to create a mixin</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 - Warmup</li>
+  <li>20 - Namespacing</li>
+  <li>25 - Functional Programming</li>
+  <li>25 - Mixin</li>
+</ul>
+
+<h2 id="content">Content</h2>
+
+<h3 id="warmup">Warmup</h3>
+
+<p>Spend the first five minutes writing answers to the following questions:</p>
+
+<ol>
+  <li>What do you know about modules already? If little, what would you guess modules are all about?</li>
+  <li>Golf and basketball both use a ball. But if you’re on a basketball court and ask for “the ball”, no one is going to
+throw you a golf ball. Why? If you were as dumb as a computer, why would a golf ball be an acceptable response?</li>
+  <li>You’ve learned about the object model and method lookups. What would the impact be of injecting an
+additional ancestor into a class’ lookup chain?</li>
+</ol>
+
+<h3 id="namespacing">Namespacing</h3>
+
+<p>Let’s break this segment into two parts: discussion and independent work.</p>
+
+<h4 id="discussion-15-minutes">Discussion (15 Minutes)</h4>
+
+<p>Starting with this code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">Car</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"Back wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Car</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"All wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s explore/discuss:</p>
+
+<ul>
+  <li>What happens when the second <code class="highlighter-rouge">class Car</code> is evaluated by Ruby?</li>
+  <li>What happens if we instantiate an instance of <code class="highlighter-rouge">Car</code> after evaluating this code and call <code class="highlighter-rouge">drive</code>?</li>
+  <li>Can we access the definition of <code class="highlighter-rouge">#drive</code> that uses the back wheels?</li>
+</ul>
+
+<h4 id="explore-10-minutes">Explore (10 Minutes)</h4>
+
+<ul>
+  <li>Start with the code above</li>
+  <li>Wrap the first <code class="highlighter-rouge">Car</code> with a module to create a <code class="highlighter-rouge">Car::RWD</code></li>
+  <li>Wrap the second <code class="highlighter-rouge">Car</code> with a module to create a <code class="highlighter-rouge">Car::AWD</code></li>
+  <li>Create an instance of <code class="highlighter-rouge">Car::RWD</code> and prove that you can access both the expected methods</li>
+  <li>Create an instance of <code class="highlighter-rouge">Car::AWD</code> and prove that you can access both the expected methods</li>
+</ul>
+
+<h3 id="functional-programming">Functional Programming</h3>
+
+<h4 id="discussion-15-minutes-1">Discussion (15 Minutes)</h4>
+
+<ul>
+  <li>What’s the difference between traditional OOP and Functional programming?</li>
+  <li>What is a function?</li>
+  <li>Modules cannot be instantiated</li>
+  <li>Modules can have methods</li>
+</ul>
+
+<p>Check out this code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">Pythagorean</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_c</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="no">Math</span><span class="p">.</span><span class="nf">sqrt</span><span class="p">((</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>How would you use this method from IRB / other code?</li>
+  <li>Why might you say that this code is functional on two levels?</li>
+</ul>
+
+<h4 id="explore-10-minutes-1">Explore (10 Minutes)</h4>
+
+<p>Start with the snippet above and add <code class="highlighter-rouge">find_a</code> and <code class="highlighter-rouge">find_b</code> methods. As you might remember from geometry:</p>
+
+<p><code class="highlighter-rouge">c^2 = a^2 + b^2</code></p>
+
+<p>An easy triangle to use for testing purposes is <code class="highlighter-rouge">a = 3</code>, <code class="highlighter-rouge">b = 4</code>, <code class="highlighter-rouge">c = 5</code>.</p>
+
+<p>If you find this approach to programming interesting, you might check out <a href="https://www.destroyallsoftware.com/talks/boundaries">Gary Bernhart’s “Boundaries” Talk</a>.</p>
+
+<h3 id="mixin">Mixin</h3>
+
+<h4 id="discussion-15-minutes-2">Discussion (15 Minutes)</h4>
+
+<ul>
+  <li>Ruby, like other OOP languages, uses inheritance</li>
+  <li>Ruby only allows for single inheritance, strictly speaking</li>
+  <li>Traditional inheritance is often frowned upon</li>
+  <li>Module mixins are inheritance by a different name</li>
+  <li>Mixins are added to the lookup chain</li>
+  <li>Mixins can be shared by multiple classes</li>
+  <li>Mixins might be used by a single class to group functionality</li>
+  <li>The latter might be a terrible idea / just obfuscate code</li>
+</ul>
+
+<p>Consider the following code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Camry</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">stop</span>
+    <span class="nb">puts</span> <span class="s2">"Engine off!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"Back wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Jeep</span>
+  <span class="k">def</span> <span class="nf">start</span>
+    <span class="nb">puts</span> <span class="s2">"Engine on!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">stop</span>
+    <span class="nb">puts</span> <span class="s2">"Engine off!"</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">drive</span>
+    <span class="nb">puts</span> <span class="s2">"All wheels go!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Together let’s create a <code class="highlighter-rouge">HasEngine</code> module to extract the <code class="highlighter-rouge">start</code> and <code class="highlighter-rouge">stop</code> methods.</p>
+
+<h4 id="explore-10-minutes-2">Explore (10 Minutes)</h4>
+
+<p>Take the code from the discussion and implement a <code class="highlighter-rouge">HasAirConditioning</code> module that is mixed into both classes. Instances
+of either class should be able to turn the AC on (<code class="highlighter-rouge">Chilly air coming your way!</code>) or off (<code class="highlighter-rouge">Temp is fine in here</code>).</p>
+
+<p>Got it working? Then consider the following additional reading:</p>
+
+<ul>
+  <li><a href="http://www.railstips.org/blog/archives/2009/05/15/include-vs-extend-in-ruby/">Include vs Extend in Ruby</a> from John Nunemaker</li>
+  <li><a href="http://ruby-doc.com/docs/ProgrammingRuby/html/tut_modules.html">Modules</a> in Programming Ruby / RubyDoc</li>
+  <li><a href="http://matt.aimonetti.net/posts/2012/07/30/ruby-class-module-mixins/">Ruby Class, Module, and Mixin</a> by Matt Aimonetti</li>
+  <li><em>Josh Cheek’s Notes</em>: When I taught this material, I included a bit of object model
+so that I would have a foundation from which to explain the things below.
+We had three hours, with the intent that I could use some time for that,
+My examples deviated b/c we made them up on the spot, but despite the different names,
+I think the examples were very similar, and the standards were entirely based on this lesson plan.
+<a href="https://gist.github.com/JoshCheek/e653d93f98c3622f4b58">Here</a> is a link,
+it took me a long time and a lot of effort learn all the stuff in there,
+so if you’re teaching this, it’s probably worth skimming, just as reference.</li>
+</ul>
+:ET

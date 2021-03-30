@@ -1,0 +1,98 @@
+I"�<h3 id="goals">Goals</h3>
+
+<ul>
+  <li>Increase comfort reading new documentation and problem solving</li>
+  <li>Learn a new gem</li>
+  <li>Practice refactoring and reviewing code</li>
+</ul>
+
+<h4 id="intro">Intro:</h4>
+
+<p>Today’s goal is to practice implementing new gems into our projects, and become more confident reading documentation and solving problems/bugs.</p>
+
+<p>This lesson will be broken into two major parts. The first part of today’s workshop will be practicing reading, comprehending and reviewing code. The second part of today’s lesson will be taking on challenge. The challenge will be implementing and familiarizing yourself with new gems.</p>
+
+<h3 id="part-1-read-comprehend-review">Part 1: Read, Comprehend, Review</h3>
+
+<p>Reading more and more code allows you to practice comprehending things faster. The more you read code, particularly code you did not write, the better you will be at understanding code. Today we are going to practice reading code that others wrote, and reviewing that code. There are many good blog posts about what to look for when reviewing code, and other techniques and tactics to help.</p>
+
+<p>We are going to spend ~15 minutes on each persons code reviewing and refactoring things along the way. The goal for this session should be to better familiarize yourself with the new codebase and to practice reviewing code. Imagine the app you’re reading.</p>
+
+<p>One blog post I like about reviewing code is <a href="https://www.kevinlondon.com/2015/05/05/code-review-best-practices.html">Kevin London’s post: Code Review Best Practices</a>. Kevin lays our a nice and solid base for things to do and look for in code review sessions. Some particular things he points out that I would like you to keep in mind for this session are:</p>
+
+<h3 id="technical">Technical:</h3>
+
+<ul>
+  <li>
+    <p><strong>Single Responsibility Principle</strong>: The idea that a class should have one-and-only-one responsibility. Harder than one might expect. I usually apply this to methods too. If we have to use “and” to finish describing what a method is capable of doing, it might be at the wrong level of abstraction.</p>
+  </li>
+  <li>
+    <p><strong>Code duplication</strong>: I go by the “three strikes” rule. If code is copied once, it’s usually okay although I don’t like it. If it’s copied again, it should be refactored so that the common functionality is split out.</p>
+  </li>
+  <li>
+    <p><strong>Method names</strong>: Naming things is one of the hard problems in computer science. If a method is named get_message_queue_name and it is actually doing something completely different like sanitizing HTML from the input, then that’s an inaccurate method name. And probably a misleading function.</p>
+  </li>
+  <li>
+    <p><strong>Variable names</strong>: foo or bar are probably not useful names for data structures. e is similarly not useful when compared to exception. Be as verbose as you need (depending on the language). Expressive variable names make it easier to understand code when we have to revisit it later.</p>
+  </li>
+  <li>
+    <p><strong>Test coverage</strong>: I like to see tests for new features. Are the tests thoughtful? Do they cover the failure conditions? Are they easy to read? How fragile are they? How big are the tests? Are they slow?</p>
+  </li>
+  <li>
+    <p><strong>Testing at the right level</strong>: When I review tests I’m also making sure that we’re testing them at the right level. In other words, are we as low a level as we need to be to check the expected functionality?</p>
+  </li>
+</ul>
+
+<h3 id="soft-skill">Soft Skill:</h3>
+
+<h4 id="how-to-handle-code-reviews">How to handle code reviews:</h4>
+<p>From Kevin London’s Blog Post: Code Review best Practices-</p>
+
+<p>I find that the human parts of the code review offer as many challenges as reviewing the code. I’m still learning how to handle this part too. Here are some approaches that have worked for me when discussing code:</p>
+
+<ul>
+  <li>
+    <p><strong>Ask questions</strong>: How does this method work? If this requirement changes, what else would have to change? How could we make this more maintainable?</p>
+  </li>
+  <li>
+    <p><strong>Compliment / reinforce good practices</strong>: One of the most important parts of the code review is to reward developers for growth and effort. Few things feel better than getting praise from a peer. I try to offer as many positive comments as possible.</p>
+  </li>
+  <li>
+    <p><strong>Discuss in person for more detailed points</strong>: On occasion, a recommended architectural change might be large enough that it’s easier to discuss it in person rather than in the comments. Similarly, if I’m discussing a point and it goes back and forth, I’ll often pick it up in person and finish out the discussion.</p>
+  </li>
+  <li>
+    <p><strong>Explain reasoning</strong>: I find it’s best both to ask if there’s a better alternative and justify why I think it’s worth fixing. Sometimes it can feel like the changes suggested can seem nit-picky without context or explanation.</p>
+  </li>
+  <li>
+    <p><strong>Make it about the code</strong>: It’s easy to take notes from code reviews personally, especially if we take pride in our work. It’s best, I find, to make discussions about the code than about the developer. It lowers resistance and it’s not about the developer anyway, it’s about improving the quality of the code.</p>
+  </li>
+  <li>
+    <p><strong>Suggest importance of fixes</strong>: I tend to offer many suggestions, not all of which need to be acted upon. Clarifying if an item is important to fix before it can be considered done is useful both for the reviewer and the reviewee. It makes the results of a review clear and actionable.</p>
+  </li>
+</ul>
+
+<h3 id="part-2-discovering-new-gems">Part 2: Discovering new Gems</h3>
+
+<p>When trying to implement a new tool/gem into your app, your approach to the situation should be methodical. The first things to do when trying to implement a new Gem or tool is to read about it. Read the documentation thoroughly. The documentation should be your first stop in trying to learn about a gem. Sometimes a gems documentation is lacking and then we may want to move onto other resources such as stackoverflow to learn more.</p>
+
+<p>I suggest reading the documentation before you do anything else. Read about installation, configuration, implementation. Once you’ve read through it all and have a very rough, general understanding of things. Start again and start putting the gem into your project.</p>
+
+<p>Head over <a href="https://github.com/turingschool/resources/blob/master/rails_gems_and_other_resources.markdown">here - to a list of gems and other resources</a> and pick a gem that sounds interesting and or useful to your app.</p>
+
+<ul>
+  <li>
+    <p>Each pair should pick a different gem and spend the first 5-10 minutes reading the documentation and familiarizing themselves with the gem.</p>
+  </li>
+  <li>
+    <p>Once you make it through some of the documentation and feel like you can summarize it to your pair please briefly summarize what you understand to your pair.</p>
+  </li>
+  <li>
+    <p>Now, flip a coin, rock-paper-scissors, pair.sample, or do whatever it is you want to do to do to pick who goes first, but together I want you to pair on implementing the gem into your project. You should have at least 45 minutes per pair, so please keep an eye on the time and make sure you allot enough time per project.</p>
+  </li>
+  <li>
+    <p>Please note: Some of these gems may require a bit of extra work to see them working correctly. For example, if you’re implementing a paginator, you may want to create a hundred rows of seed data so you can see it all paginated. Or if you’re implementing HoundCI you will need to submit a pull request to see Hound do it’s thing.</p>
+  </li>
+</ul>
+
+<p>If you make it through both partners gems and you still have time - take the opportunity to learn even more helpful tools and start implementing another gem from the list.</p>
+:ET

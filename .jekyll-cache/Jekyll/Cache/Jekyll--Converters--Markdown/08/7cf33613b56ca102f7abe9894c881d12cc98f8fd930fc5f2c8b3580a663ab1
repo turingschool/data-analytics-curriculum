@@ -1,0 +1,77 @@
+I"�$<p>Use the exercise below with a pair to exercise your git techniques.</p>
+
+<h2 id="exercise">Exercise</h2>
+
+<ul>
+  <li>Sort your names alphabetically. The first is person “A” and the second is person “B”</li>
+  <li><code class="highlighter-rouge">A</code> should use their own laptop, go into the directory where they store projects,
+and create a directory named <code class="highlighter-rouge">poetry</code>.</li>
+  <li><code class="highlighter-rouge">A</code> then goes into the <code class="highlighter-rouge">poetry</code> directory and runs <code class="highlighter-rouge">git init</code></li>
+  <li><code class="highlighter-rouge">A</code> creates a file in that folder named <code class="highlighter-rouge">still_i_rise.txt</code></li>
+  <li><code class="highlighter-rouge">A</code> adds and commits that new file locally</li>
+  <li><code class="highlighter-rouge">A</code> goes on GitHub and creates a repository named <code class="highlighter-rouge">poetry</code></li>
+  <li><code class="highlighter-rouge">A</code> follows the directions shown by GitHub to add the remote to their local repo</li>
+  <li><code class="highlighter-rouge">A</code> pushes the local commits up to GitHub</li>
+  <li><code class="highlighter-rouge">B</code> should then clone the repository to their local machine</li>
+  <li><code class="highlighter-rouge">A</code> should add <code class="highlighter-rouge">B</code> as a collaborator to the repository in GitHub</li>
+  <li><code class="highlighter-rouge">B</code> then opens the poetry file locally and adds <a href="https://gist.githubusercontent.com/jcasimir/95be7c57e8e027642532/raw/9e57299977273e4b6e4f1073c6b5d37bab842930/headings.txt">this content of headings</a></li>
+  <li><code class="highlighter-rouge">B</code> adds and commits that change, then pushes it to GitHub</li>
+  <li><code class="highlighter-rouge">A</code> pulls to commit down to their local machine</li>
+  <li><code class="highlighter-rouge">A</code> creates a branch on their local machine named <code class="highlighter-rouge">verse_1</code> and adds in <a href="https://gist.githubusercontent.com/jcasimir/0d6939ccf64601be374d/raw/55cad33533d63ae14b8a7ef3781fe2d603f75ab6/verse%25201.txt">this content under the appropriate heading</a></li>
+  <li><code class="highlighter-rouge">B</code> creates a branch on their local machine named <code class="highlighter-rouge">verse_3</code> and adds in <a href="https://gist.githubusercontent.com/jcasimir/1e85576d1435525d2ddf/raw/c307ef3d5889f4b1e11e7217644717a1e0e32299/verse%25203.txt">this content under the appropriate heading</a></li>
+  <li><code class="highlighter-rouge">A</code> commits the change and pushes their branch to GitHub with <code class="highlighter-rouge">git push origin verse_1</code></li>
+  <li><code class="highlighter-rouge">B</code> commits the change and pushes their branch to GitHub with <code class="highlighter-rouge">git push origin verse_3</code></li>
+  <li><code class="highlighter-rouge">A</code> navigates to the homepage of the repository on GitHub (<strong>Hint</strong> If you have the <a href="https://hub.github.com/">Hub</a> CLI installed, you can do this easily with <code class="highlighter-rouge">hub browse</code>).
+There should be a button available to “Compare and Create Pull Request” for your recently pushed branch (<code class="highlighter-rouge">verse_1</code>).
+Select this option and walk through the steps to Create a Pull Request for this branch.</li>
+  <li><code class="highlighter-rouge">B</code> Repeats these steps to create a Pull Request for their <code class="highlighter-rouge">verse_3</code> branch</li>
+  <li><code class="highlighter-rouge">B</code> navigates to the repository on github and selects the tab for “Pull Requests”. You should see
+<code class="highlighter-rouge">A</code>’s pull request listed. Select this pull request, and use the green “Merge Pull Request” button to merge the PR.
+This will merge the branch into master on <em>GitHub’s copy</em> of the repository. Don’t forget to use GitHub’s
+handy “diff” view to visually review the changes in the pull request.</li>
+  <li><code class="highlighter-rouge">A</code> repeats this process to merge <code class="highlighter-rouge">B</code>’s pull request.</li>
+  <li>Now both <code class="highlighter-rouge">A</code> and <code class="highlighter-rouge">B</code> should checkout the master branch on their machines and pull from master. This
+will bring down the changes from <code class="highlighter-rouge">B</code> and the merge commit from when the branch was merged to master.</li>
+</ul>
+
+<p>Consult <a href="https://help.github.com/articles/using-pull-requests/">this tutorial</a> for more information
+on working with Pull Requests on GitHub.</p>
+
+<p>Ok, so we’re written some “features” successfully. Let’s create a conflict:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">A</code> fills in verse 2 with <a href="https://gist.githubusercontent.com/jcasimir/f746d176c87200910a1a/raw/2e0423a196f08a11975bdd75f7e48c636c066cfd/verse%25202a.txt">this content</a> and commits it locally on <code class="highlighter-rouge">master</code>.</li>
+  <li><code class="highlighter-rouge">B</code> fills in verse 2 with <a href="https://gist.githubusercontent.com/jcasimir/51c4f98d17965f180498/raw/f48f891600adeb648af1d5e50e95b49b92309e08/verse%25202b.txt">this content</a> and commits it locally on <code class="highlighter-rouge">master</code>.</li>
+  <li><code class="highlighter-rouge">A</code> pushes to master</li>
+  <li><code class="highlighter-rouge">B</code> pushes to master and it is rejected. <code class="highlighter-rouge">B</code> pulls and gets a <em>MERGE CONFLICT</em></li>
+  <li><code class="highlighter-rouge">B</code> must manually resolve the conflict to figure out how the lines should be fit together, remove the conflict markers, commit, then push to GitHub.</li>
+  <li><code class="highlighter-rouge">A</code> then pulls from GitHub and sees the file post-resolution.</li>
+</ul>
+
+<p>Your final work should <a href="https://gist.githubusercontent.com/jcasimir/23f378e26416560e47a8/raw/aaa3f2848b3c7d1c7cc091c394068599d3588c90/gistfile1.txt">look like this</a>.</p>
+
+<h3 id="extension--alternate-merging-workflow">Extension / Alternate Merging Workflow</h3>
+
+<p>It’s also possible to merge branches on your local machine</p>
+
+<ul>
+  <li><code class="highlighter-rouge">B</code> creates a branch on their local machine named <code class="highlighter-rouge">caged_bird_1_to_3</code> and creates a new file under the <code class="highlighter-rouge">poetry</code> directory called <code class="highlighter-rouge">caged_bird.markdown</code></li>
+  <li><code class="highlighter-rouge">B</code> adds <a href="https://gist.githubusercontent.com/worace/d699026f3b408b4d0cee/raw/fb739aa51039d97080b53e970f2328942d6cf5d0/content.txt">this content</a> to the file</li>
+  <li><code class="highlighter-rouge">B</code> stages and commits the new content, then pushes their branch to github (remember, <code class="highlighter-rouge">git push &lt;remote name&gt; &lt;branch name&gt;</code>).</li>
+  <li><code class="highlighter-rouge">A</code> runs <code class="highlighter-rouge">git fetch origin</code> on their local machine. This pulls down all branches from the remote
+to <code class="highlighter-rouge">A</code>’s local machine.</li>
+  <li><code class="highlighter-rouge">A</code> runs <code class="highlighter-rouge">git checkout caged_bird_1_to_3</code> to review the changes made by <code class="highlighter-rouge">B</code></li>
+  <li>When <code class="highlighter-rouge">A</code> is satisfied with <code class="highlighter-rouge">caged_bird_1_to_3</code>, then they merge it into master with
+<code class="highlighter-rouge">git checkout master</code> and <code class="highlighter-rouge">git merge caged_bird_1_to_3</code></li>
+  <li><code class="highlighter-rouge">A</code> then pushes these newly-merged changes (<code class="highlighter-rouge">git push origin master</code>) so that <code class="highlighter-rouge">B</code> can pull them down.</li>
+  <li>Now both <code class="highlighter-rouge">A</code> and <code class="highlighter-rouge">B</code> should checkout the master branch on their machines and pull from master. This
+will bring down the changes from <code class="highlighter-rouge">B</code> and the merge commit from when the branch was merged to master.</li>
+  <li>Now <code class="highlighter-rouge">A</code> should complete this same process with a branch called <code class="highlighter-rouge">caged_bird_4_to_6</code> using <a href="https://gist.githubusercontent.com/worace/7649dfa5fbd96a8fb871/raw/0c80b9289ca0eb35333890f57ebba3f927e7cdae/4_to_6.txt">this content</a>.</li>
+  <li>When <code class="highlighter-rouge">A</code> has pushed the branch, <code class="highlighter-rouge">B</code> should fetch from origin, checkout the branch, review it, then merge it
+to master.</li>
+  <li>Once it is merged, <code class="highlighter-rouge">B</code> should push to origin, then both partners should checkout master on their local machines and pull from origin
+to retrieve the newly merged changes.</li>
+</ul>
+
+<p>Your finished product should look like <a href="https://gist.githubusercontent.com/worace/b1a9cefa4da6a08ea788/raw/93db0b1c59c684d03c2b8eeafd581391c378c70b/caged_bird.md">this</a>.</p>
+:ET

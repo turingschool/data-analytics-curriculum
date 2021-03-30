@@ -1,0 +1,97 @@
+I"8#<h1 id="i2-basic-invoices">I2: Basic Invoices</h1>
+
+<p>Now we’ll begin to move a little faster. Let’s work with invoices and build up the data access layer  and business intelligence in one iteration.</p>
+
+<h2 id="data-access-layer">Data Access Layer</h2>
+
+<h3 id="invoicerepository"><code class="highlighter-rouge">InvoiceRepository</code></h3>
+
+<p>The <code class="highlighter-rouge">InvoiceRepository</code> is responsible for holding and searching our <code class="highlighter-rouge">Invoice</code>
+instances. It offers the following methods:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">all</code> - returns an array of all known <code class="highlighter-rouge">Invoice</code> instances</li>
+  <li><code class="highlighter-rouge">find_by_id</code> - returns either <code class="highlighter-rouge">nil</code> or an instance of <code class="highlighter-rouge">Invoice</code> with a matching ID</li>
+  <li><code class="highlighter-rouge">find_all_by_customer_id</code> - returns either <code class="highlighter-rouge">[]</code> or one or more matches which have a matching customer ID</li>
+  <li><code class="highlighter-rouge">find_all_by_merchant_id</code> - returns either <code class="highlighter-rouge">[]</code> or one or more matches which have a matching merchant ID</li>
+  <li><code class="highlighter-rouge">find_all_by_status</code> - returns either <code class="highlighter-rouge">[]</code> or one or more matches which have a matching status</li>
+  <li><code class="highlighter-rouge">create(attributes)</code> - create a new <code class="highlighter-rouge">Invoice</code> instance with the provided <code class="highlighter-rouge">attributes</code>. The new <code class="highlighter-rouge">Invoice</code>’s id should be the current highest <code class="highlighter-rouge">Invoice</code> id plus 1.</li>
+  <li><code class="highlighter-rouge">update(id, attribute)</code> - update the <code class="highlighter-rouge">Invoice</code> instance with the corresponding <code class="highlighter-rouge">id</code> with the provided <code class="highlighter-rouge">attributes</code>. Only the invoice’s <code class="highlighter-rouge">status</code> can be updated. This method will also change the invoice’s updated_at attribute to the current time.</li>
+  <li><code class="highlighter-rouge">delete(id)</code> - delete the <code class="highlighter-rouge">Invoice</code> instance with the corresponding <code class="highlighter-rouge">id</code></li>
+</ul>
+
+<p>The data can be found in <code class="highlighter-rouge">data/invoices.csv</code> so the instance is created and used like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">se</span> <span class="o">=</span> <span class="no">SalesEngine</span><span class="p">.</span><span class="nf">from_csv</span><span class="p">({</span><span class="ss">:invoices</span> <span class="o">=&gt;</span> <span class="s2">"./data/invoices.csv"</span><span class="p">})</span>
+<span class="n">invoice</span> <span class="o">=</span> <span class="n">se</span><span class="p">.</span><span class="nf">invoices</span><span class="p">.</span><span class="nf">find_by_id</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;invoice&gt;</span>
+</code></pre></div></div>
+
+<h3 id="invoice"><code class="highlighter-rouge">Invoice</code></h3>
+
+<p>The invoice has the following data accessible:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">id</code> - returns the integer id</li>
+  <li><code class="highlighter-rouge">customer_id</code> - returns the customer id</li>
+  <li><code class="highlighter-rouge">merchant_id</code> - returns the merchant id</li>
+  <li><code class="highlighter-rouge">status</code> - returns the status</li>
+  <li><code class="highlighter-rouge">created_at</code> - returns a <code class="highlighter-rouge">Time</code> instance for the date the item was first created</li>
+  <li><code class="highlighter-rouge">updated_at</code> - returns a <code class="highlighter-rouge">Time</code> instance for the date the item was last modified</li>
+</ul>
+
+<p>We create an instance like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">i</span> <span class="o">=</span> <span class="no">Invoice</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+  <span class="ss">:id</span>          <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">,</span>
+  <span class="ss">:customer_id</span> <span class="o">=&gt;</span> <span class="mi">7</span><span class="p">,</span>
+  <span class="ss">:merchant_id</span> <span class="o">=&gt;</span> <span class="mi">8</span><span class="p">,</span>
+  <span class="ss">:status</span>      <span class="o">=&gt;</span> <span class="s2">"pending"</span><span class="p">,</span>
+  <span class="ss">:created_at</span>  <span class="o">=&gt;</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">,</span>
+  <span class="ss">:updated_at</span>  <span class="o">=&gt;</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">,</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="business-intelligence">Business Intelligence</h2>
+
+<p>Assuming we have a <code class="highlighter-rouge">sales_engine</code> that’s an instance of <code class="highlighter-rouge">SalesEngine</code> let’s initialize a <code class="highlighter-rouge">SalesAnalyst</code> like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span> <span class="o">=</span> <span class="n">sales_engine</span><span class="p">.</span><span class="nf">analyst</span>
+</code></pre></div></div>
+
+<h3 id="how-many-invoices-does-the-average-merchant-have">How many invoices does the average merchant have?</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">average_invoices_per_merchant</span> <span class="c1"># =&gt; 10.49</span>
+<span class="n">sales_analyst</span><span class="p">.</span><span class="nf">average_invoices_per_merchant_standard_deviation</span> <span class="c1"># =&gt; 3.29</span>
+</code></pre></div></div>
+
+<h3 id="who-are-our-top-performing-merchants">Who are our top performing merchants?</h3>
+
+<p>Which merchants are more than two standard deviations <em>above</em> the mean?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">top_merchants_by_invoice_count</span> <span class="c1"># =&gt; [merchant, merchant, merchant]</span>
+</code></pre></div></div>
+
+<h3 id="who-are-our-lowest-performing-merchants">Who are our lowest performing merchants?</h3>
+
+<p>Which merchants are more than two standard deviations <em>below</em> the mean?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">bottom_merchants_by_invoice_count</span> <span class="c1"># =&gt; [merchant, merchant, merchant]</span>
+</code></pre></div></div>
+
+<h3 id="which-days-of-the-week-see-the-most-sales">Which days of the week see the most sales?</h3>
+
+<p>On which days are invoices created at more than one standard deviation <em>above</em> the mean?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">top_days_by_invoice_count</span> <span class="c1"># =&gt; ["Sunday", "Saturday"]</span>
+</code></pre></div></div>
+
+<h3 id="what-percentage-of-invoices-are-not-shipped">What percentage of invoices are not shipped?</h3>
+
+<p>What percentage of invoices are <code class="highlighter-rouge">shipped</code> vs <code class="highlighter-rouge">pending</code> vs <code class="highlighter-rouge">returned</code>? (takes symbol as argument)</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sales_analyst</span><span class="p">.</span><span class="nf">invoice_status</span><span class="p">(</span><span class="ss">:pending</span><span class="p">)</span> <span class="c1"># =&gt; 29.55</span>
+<span class="n">sales_analyst</span><span class="p">.</span><span class="nf">invoice_status</span><span class="p">(</span><span class="ss">:shipped</span><span class="p">)</span> <span class="c1"># =&gt; 56.95</span>
+<span class="n">sales_analyst</span><span class="p">.</span><span class="nf">invoice_status</span><span class="p">(</span><span class="ss">:returned</span><span class="p">)</span> <span class="c1"># =&gt; 13.5</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,682 @@
+I"[{<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Review the reasoning behind background processing and identify
+scenarios when it makes sense</li>
+  <li>Practice using Sidekiq to manage background processing within a rails
+app</li>
+  <li>Practice deploying a Rails application with background workers to
+heroku</li>
+</ul>
+
+<h2 id="discussion-background-workers-as-an-architectural-pattern">Discussion: Background Workers as an Architectural Pattern</h2>
+
+<h3 id="response-time--application-goodness-as-a-metric">Response Time – Application Goodness as a Metric</h3>
+
+<p>There are a lot of performance metrics to take into account
+when optimizing a web application, but there’s generally
+one that’s the most important – <strong>Response Time</strong>.</p>
+
+<p>Response Time (from a server perspective) represents the length of time between when your
+application receives a request from a user and when it finishes
+processing and sends back a completed HTTP response. Response Time
+is ultimately the main factor which determines how “snappy” your
+application will feel, and thus how much users will enjoy interacting
+with it.</p>
+
+<p>There’s no hard “rule” about response times, but generally response
+times under ~200 ms or so allow an application to feel snappy and
+responsive.</p>
+
+<h3 id="managing-application-response-time">Managing Application Response Time</h3>
+
+<p>Response Time is obviously important, so how to we keep it low?
+Our first choice would be to just make everything within
+the response cycle fast. If your application needs to do 5 things
+in order to return an HTTP response and each one takes 5 ms, then
+your response time would be <code class="highlighter-rouge">5 * 5 = 25 milliseconds</code>. Good Job!</p>
+
+<p>But sometimes our application simply needs to do something
+time-intensive in order to fulfill its responsibilities. Since
+we can’t make it faster, our remaining option is to “get rid of it”
+somehow. And this is what background processing allows us to do.</p>
+
+<p>Consider a hypothetical example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## APP RESPONSE CYCLE
+
+Load user info from DB (3 ms)
+          |
+          |
+Generate User Recommendations (100 ms)
+          |
+          |
+Send Email via slow 3rd party service (100 ms)
+          |
+          |
+Render HTML Response (20 ms)
+--------------------------
+TOTAL: 223 ms
+</code></pre></div></div>
+
+<p>With a background queue, we can replace the 2 expensive
+actions in the middle with a single action – Enqueuing
+the job, and then the expensive work can happen
+asynchronously:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## APP RESPONSE CYCLE               |  ## Worker Activity Cycle
+                                    |
+Load user info from DB (3 ms)       |
+          |                         |
+          |                         |
+Queue User Rec Job to Redis (1 ms)  |  Reads Queued job (1ms)
+          |                         |           |
+          |                         |           |
+Render HTML Response (20 ms)        |  Generate User Recommendations (100 ms)
+--------------------------          |           |
+TOTAL: 24 ms                        |           |
+                                    |     Send Email (100 ms)
+                                    | (201 ms, but not in R/R Cycle)
+</code></pre></div></div>
+
+<p>Of course, in reality the job processing likely doesn’t begin
+immediately after the queuing as in this diagram, but the important
+point is the concept of adding asynchronous processing to our
+application. The web process and the worker process communicate
+via the Job Queue (Redis in this case), so they don’t have to
+be rigidly linked in time.</p>
+
+<h3 id="what-makes-a-good-background-job">What Makes a Good Background Job?</h3>
+
+<p>There are 2 main attributes that make something a good
+candidate for background extraction:</p>
+
+<ul>
+  <li>Slow</li>
+  <li>Immediate user feedback not crucial</li>
+</ul>
+
+<p>The common example of sending emails asynchronously
+fits well here because it’s relatively slow and it’s also
+not essential that the user get their email immediately –
+a delay of a few moments is generally not noticeable.</p>
+
+<h3 id="designing-for-background-jobs">Designing For Background Jobs</h3>
+
+<p>There are a few things we can do in our code
+to make the process of extracting something into a background
+process easier.</p>
+
+<ul>
+  <li>Use objects and classes to provide good “boundaries” around
+calculations</li>
+  <li>Limit the amount of contextual data that needs to be passed
+into the calculation</li>
+</ul>
+
+<p>If these sound just like standard OO design principles that’s
+because…they are. But the utility will become especially clear
+once you have to extract a job from a poorly factored Rails
+controller. It’s much easier to move 1 line such as
+<code class="highlighter-rouge">MyThing.new("some", "data").new.calculate</code> than it is to untangle
+and move 20 lines of spaghetti code.</p>
+
+<h2 id="in-practice-backgrounding-fibtastic-computations">In Practice: Backgrounding FibTastic Computations</h2>
+
+<h3 id="1-app-setup">1: App Setup</h3>
+
+<p>Let’s look at an example of backgrounding a task using Sidekiq.
+We’ll use the “FibTastic” application for the following demo.
+Clone and bundle it like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/worace/fibtastic.git
+cd fibtastic
+bundle
+rails s
+</code></pre></div></div>
+
+<p>FibTastic is a very basic rails application which, upon request,
+emails a user a specified quantity of fibonacci numbers.</p>
+
+<p>With the server running, you should be able to view a simple
+UI at <code class="highlighter-rouge">http://localhost:3000</code> which has form inputs for an
+email address and a quantity of numbers.</p>
+
+<h3 id="2-mailcatcher-for-local-email-processing">2: Mailcatcher for Local Email Processing</h3>
+
+<p>In order to see the emails that the application outputs, lets
+also use mailcatcher. (Recall that mailcatcher is a ruby library
+for providing local SMTP server, thus allowing us to send emails
+in development). It’s included in the fibtastic gemfile, so
+we can simply run it with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec mailcatcher
+</code></pre></div></div>
+
+<p>Now test that the application is working by entering an email address
+and a quantity of fibonacci numbers you’d like to receive. You should
+see an email in the mailcatcher UI with the numbers.</p>
+
+<p>Notice that for sequence lengths beyond 10 or so, things start to get
+noticeably slower. What we have here is a perfect candidate for a
+background process:</p>
+
+<ul>
+  <li>Operation is slow</li>
+  <li>User’s interaction with the process is already asynchronous (submit
+the form <em>then</em> go check their email)</li>
+  <li>Operation is well-encapsulated behind the SequenceMailer interface</li>
+  <li>Operation requires relatively little data as inputs (email address
+and sequence length).</li>
+</ul>
+
+<p>Sidekiq and Resque are the 2 most popular queuing libraries for ruby.
+For this application, we’ll use Sidekiq.</p>
+
+<h3 id="3-dependency--redis">3: Dependency – Redis</h3>
+
+<p>Like Resque, Sidekiq uses Redis to store queued jobs, so first make
+sure you have redis installed and running.</p>
+
+<p>You can check if your redis process is running by executing the command
+<code class="highlighter-rouge">redis-cli</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ redis-cli
+127.0.0.1:6379&gt;
+</code></pre></div></div>
+
+<p>(Seeing a redis command prompt appear means you’re good to go)</p>
+
+<p>If you don’t already have redis, install it with homebrew:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install redis
+</code></pre></div></div>
+
+<h3 id="4-sidekiq-setup">4: Sidekiq Setup</h3>
+
+<p>Now we can add the sidekiq gem to our Gemfile:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'sidekiq'
+</code></pre></div></div>
+
+<p>bundle the app and you should now be able to run a sidekiq
+process by executing the command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec sidekiq
+</code></pre></div></div>
+
+<p>You should get the fancy Sidekiq ASCII logo in your terminal:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>         s
+          ss
+     sss  sss         ss
+     s  sss s   ssss sss   ____  _     _      _    _
+     s     sssss ssss     / ___|(_) __| | ___| | _(_) __ _
+    s         sss         \___ \| |/ _` |/ _ \ |/ / |/ _` |
+    s sssss  s             ___) | | (_| |  __/   &lt;| | (_| |
+    ss    s  s            |____/|_|\__,_|\___|_|\_\_|\__, |
+    s     s s                                           |_|
+          s s
+         sss
+         sss
+</code></pre></div></div>
+
+<h3 id="5-making-a-job">5: Making a Job</h3>
+
+<p>Now we have sidekiq running with our application, but so far it doesn’t
+do anything for us. Let’s create a worker to handle our FibTastic email
+sequences.</p>
+
+<p>Sidekiq’s convention is to store worker classes under the <code class="highlighter-rouge">app/workers</code> directory,
+so create a file at <code class="highlighter-rouge">app/workers/sequence_email_worker.rb</code> to contain
+our email worker.</p>
+
+<p>In order to make use of the various methods sidekiq provides, we need to
+include the <code class="highlighter-rouge">Sidekiq::Worker</code> module, so let’s set up our worker like
+so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class SequenceEmailWorker
+  include Sidekiq::Worker
+end
+</code></pre></div></div>
+
+<h3 id="6-defining-job-operations">6: Defining Job Operations</h3>
+
+<p>Within a Sidekiq worker, the instance method <code class="highlighter-rouge">#perform</code> is what gets
+called whenever a job appears for our worker to do. Let’s think about
+what needs to go in here and about what inputs are required for
+the worker to do its job:</p>
+
+<ul>
+  <li>Needs to take in the email address and sequence length (since these
+are the parameters needed to send the email)</li>
+  <li>Needs to send an email using the <code class="highlighter-rouge">SequenceMailer</code></li>
+</ul>
+
+<p>Given these constraints, it might look something like:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SequenceEmailWorker</span>
+  <span class="kp">include</span> <span class="no">Sidekiq</span><span class="o">::</span><span class="no">Worker</span>
+
+  <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">)</span>
+    <span class="no">SequenceMailer</span><span class="p">.</span><span class="nf">sequence_email</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">).</span><span class="nf">deliver_now</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="7-queueing-jobs--sidekiqworkerperform_async">7: Queueing Jobs – Sidekiq::Worker.perform_async</h3>
+
+<p>The Sidekiq worker defines what actual work will be done whenever
+our background process is invoked. Now we just need to actually
+invoke it.</p>
+
+<p>With Sidekiq, we dispatch a job for a worker to do later by
+calling the class method <code class="highlighter-rouge">.perform_async</code> on our worker and
+providing it whatever arguments are needed for the job.
+This is analogous to Resque’s <code class="highlighter-rouge">Resque.enqueue</code> method.</p>
+
+<p>Under the hood, the <code class="highlighter-rouge">perform_async</code> method writes data into
+Redis indicating the type of job which needs to be done
+and the data associated with it. The workers (in a separate
+process) are monitoring the queue so that whenever new jobs
+appear, they can spring into action and do them!</p>
+
+<p>This works out to our advantage thanks to the low
+latency of Redis as a data store. The “write” to Redis is
+extremely fast (often fractions of a milliseconds), so
+we effectively exchange a slow action (in our case calculating fibonacci
+numbers) for an extremely fast one.</p>
+
+<p>But enough chit-chat, let’s see what it looks like to actually
+queue the job. Recall that we were previously sending the
+email directly from our <code class="highlighter-rouge">SequencesController</code>. Let’s replace
+the line that was sending the email with this line to
+queue our job instead:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SequenceEmailWorker.perform_async(params["email"], params["sequence_length"].to_i)
+</code></pre></div></div>
+
+<p>Remember – the arguments passed in to the <code class="highlighter-rouge">.perform_async</code> method here
+will eventually be handed to your worker’s <code class="highlighter-rouge">#perform</code> method, so make
+sure they match up.</p>
+
+<h3 id="8-observing-effects--backgrounded-calculations">8: Observing Effects – Backgrounded Calculations</h3>
+
+<p>With these changes made, make sure you have your rails server
+and sidekiq process running, and try requesting another FibTastic
+email.</p>
+
+<p>Even if requesting a long sequence of numbers, you should get an
+almost immediate response from the server. Then flip over to
+Mailcatcher and wait for the email. It may take several seconds, but
+as expected your email should appear asynchronously, long after
+the related web request has returned.</p>
+
+<h2 id="backgrounding-in-production--deploying-sidekiq-to-heroku">Backgrounding in Production – Deploying Sidekiq to Heroku</h2>
+
+<p>Our current setup is working well in development, but what if we want
+to share FibTastic sequences with the world? Let’s see what it would
+take to get our application (along with its workers) running in
+production.</p>
+
+<h3 id="1-creating-our-app-on-heroku">1: Creating our App on Heroku</h3>
+
+<p>By now you’re probably familiar with this ritual:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku create
+</code></pre></div></div>
+
+<p>This should set up a new app on heroku for you and add it as a
+remote. Let’s push our app to see if it works:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push heroku master
+</code></pre></div></div>
+
+<p>You should be able to load the app’s main page at this point, but if
+you try to request a Fib sequence, you’ll likely get an error.
+Looking in the app’s logs (using <code class="highlighter-rouge">heroku logs</code>) reveals a problem
+connecting to Redis:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Redis::CannotConnectError (Error connecting to Redis on 127.0.0.1:6379 (Errno::ECONNREFUSED)):
+</code></pre></div></div>
+
+<h3 id="2-configuring-redis-on-heroku">2: Configuring Redis on Heroku</h3>
+
+<p>Our app is trying to enqueue jobs via Sidekiq, but we haven’t set it up
+to use Redis on heroku yet. We need to:</p>
+
+<ul>
+  <li>1: Add the RedisToGo addon to our app</li>
+  <li>2: Configure Sidekiq to use the appropriate redis settings</li>
+</ul>
+
+<p>We can add RedisToGo with the command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku addons:create redistogo
+</code></pre></div></div>
+
+<p>We can verify this worked by checking <code class="highlighter-rouge">heroku config</code>; you should see a
+line like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>REDISTOGO_URL:            redis://some-redis-host
+</code></pre></div></div>
+
+<p>Now we have redis, but we need to tell Sidekiq to use the one that
+we set up instead of the default (localhost) settings. Luckily
+Sidekiq attempts to read from an ENV variable called <code class="highlighter-rouge">REDIS_PROVIDER</code>
+when it boots. So we can tell Sidekiq to use our RedisToGo instance
+by pointing <code class="highlighter-rouge">REDIS_PROVIDER</code> at our <code class="highlighter-rouge">REDISTOGO_URL</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku config:set REDIS_PROVIDER=REDISTOGO_URL
+</code></pre></div></div>
+
+<p>Trying the app again we should be able to successfully request Fib numbers.
+But the requested numbers never show up! We’re now writing Fib jobs into
+the Sidekiq queue, but there are no workers to process them.</p>
+
+<p>We’ll deal with that issue in a moment, but first there’s one more
+configuration option we need to deal with.</p>
+
+<h3 id="3-configuring-an-smtp-provider-on-heroku">3: Configuring an SMTP Provider on Heroku</h3>
+
+<p>We had been using mailcatcher to send our emails in development,
+but this obviously won’t be available to us on Heroku. Instead,
+let’s use the email provider Mandrill, which conveniently provides
+a large number of emails on a free account.</p>
+
+<p>If you have not already, head over to <a href="https://mandrillapp.com/login">https://mandrillapp.com/login</a>
+to register for an account. Once registered you should be able to
+retrieve credentials from the “Settings” tab.</p>
+
+<p>We need credentials for “SMTP username” and an “API Key”. Once you
+retrieve these, set them in your heroku config as <code class="highlighter-rouge">MANDRILL_USERNAME</code>
+and <code class="highlighter-rouge">MANDRILL_API_KEY</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku config:set MANDRILL_USERNAME=my_user_name MANDRILL_API_KEY=my_api_key
+</code></pre></div></div>
+
+<p>Finally, let’s configure ActionMailer to use the appropriate settings
+for Mandrill. This can be done by adding this configuration to your
+<code class="highlighter-rouge">config/environments/production.rb</code> file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionMailer::Base.smtp_settings = {
+  :port =&gt;           '587',
+  :address =&gt;        'smtp.mandrillapp.com',
+  :user_name =&gt;      ENV['MANDRILL_USERNAME'],
+  :password =&gt;       ENV['MANDRILL_API_KEY'],
+  :domain =&gt;         'heroku.com',
+  :authentication =&gt; :plain
+}
+ActionMailer::Base.delivery_method = :smtp
+</code></pre></div></div>
+
+<h3 id="4-workers-on-heroku--intro-to-process-types">4: Workers on Heroku – Intro to Process Types</h3>
+
+<p>Now that we have our SMTP provider set up, let’s think about getting
+these workers to run in production. Before we proceed, its good
+to think a little bit about how heroku treats our applications.</p>
+
+<p>As an abstraction around provisioning and running App servers,
+Heroku needs to be able to handle a lot of different application
+and language types. In order to support this, Heroku allows us
+to define “types” of processes and then to specify what command
+is needed to run processes of that type. This lets us get the
+appropriate behavior for running a “web” process for our rails
+app, while someone running a Node server can define the appropriate
+instructions for their own “web” process, and everything just works!</p>
+
+<p>The “web” process type is the most common type of process executed
+on heroku – it’s so common in fact that heroku includes standard
+process definitions for common applications (such as rails), which
+explains how we’ve been able to deploy apps to heroku all this time
+without worrying about this stuff.</p>
+
+<p>But now that we’re getting into more sophisticated deployment
+setups, we’ll need to think about our process types more carefully.
+The way to customize process definitions for heroku is by including
+a special file called a <code class="highlighter-rouge">Procfile</code> in the root of our application.</p>
+
+<p>This file will allow us to specify the types of processes we’d like
+heroku to support for this app and which commands to run them
+with. You can read more about Heroku’s process model <a href="https://devcenter.heroku.com/articles/procfile">here</a>,
+but for now let’s practice it with out FibTastic app.</p>
+
+<p>Create a new <code class="highlighter-rouge">Procfile</code> in your application’s root directory,
+and fill it with the following settings:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>web: bundle exec rails server -p $PORT
+worker: bundle exec sidekiq
+</code></pre></div></div>
+
+<p>Commit this file and re-deploy the app – so far nothing should visibly
+change, so make sure the app still works as before.</p>
+
+<h3 id="5-turning-on-the-worker-process">5: Turning on the Worker Process</h3>
+
+<p>Another useful command heroku gives us is <code class="highlighter-rouge">heroku ps</code>, which
+allows us to see what processes are currently running for
+our app. Try it out and you should see something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=== web (1X): `bundle exec rails server -p $PORT`
+web.1: up 2015/05/25 19:08:32 (~ 32s ago)
+</code></pre></div></div>
+
+<p>We told heroku how to start a worker process by specifying it in
+our Procfile, but we didn’t actually <em>start</em> the process. By
+default, Heroku only runs a single web worker on your behalf.
+This is generally a good thing, since it prevents us from racking
+up large Heroku bills accidentally, but it does mean that when adding
+new processes like workers, we need to start them up manually.</p>
+
+<p>This is done with a subcommand of <code class="highlighter-rouge">ps</code>, <code class="highlighter-rouge">heroku ps:scale</code>. In our
+case, we want to add a single worker process to the single web
+process that’s already running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku ps:scale worker=1
+</code></pre></div></div>
+
+<p>Woo! Workers working! If you had alreay queued up background emails
+by submitting the FibTastic form, they should start to arrive now,
+as the worker springs into action and notices jobs sitting on the queue.</p>
+
+<p>But wait…a careful observer may check their heroku account
+and find a nasty surprise:</p>
+
+<p><img src="../images/heroku_dyno_bill.png" alt="Holy Dynos Batman" /></p>
+
+<p><strong>Zut!</strong> Adding that extra worker process put us over the single free
+process that Heroku allows. This is the 21st century, and that means
+I should be able to access web deployment resources for free!</p>
+
+<p>Let’s see if we can’t skirt around these pesky heroku limits. For now,
+let’s scale back our worker process so we don’t get charged for it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku ps:scale worker=0
+</code></pre></div></div>
+
+<p><strong>But for real – scale your worker down. I won’t be reimbursing anyone
+who racks up accidental worker charges</strong></p>
+
+<h3 id="6-free-workers-on-heroku">6: Free Workers on Heroku</h3>
+
+<p>In a fitting expression of 21st century capitalism, we would
+really like these workers to toil away in the server mines
+for free. Unfortunately, heroku’s default single-free-process
+model prevents us from doing this.</p>
+
+<p><strong>But</strong>, there is a way around
+this. We get 1 free process per app, so if we need a second one,
+we can just make a second app. In this case the second app
+will contain the same <em>code</em> as the first app, but its process
+scaling will be different. We’ll use one copy for the web process
+and one for the worker.</p>
+
+<p><strong>Copying our App</strong></p>
+
+<p>It would be kind of a pain to re-configure all the environment settings
+we already configured for our new app instance. Fortunately
+heroku provides a handy <code class="highlighter-rouge">fork</code> command that allows us to duplicate
+an existing application.</p>
+
+<p>To use the <code class="highlighter-rouge">fork</code> command, you need to specify a “source” app
+and a “target” app. In our case the “source”, will be the existing
+heroku FibTastic app we created. The “target” will be the new
+application, so here you can provide whatever name you like.
+Your application names will differ, but the command will look
+something like (I’ll be using <code class="highlighter-rouge">app-one</code> and <code class="highlighter-rouge">app-two</code> to represent
+these 2 app instances from here on out):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku fork --from app-one --to app-two
+</code></pre></div></div>
+
+<p>You should see some terminal output as heroku forks your app,
+along the lines of:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Installing plugin heroku-fork... done
+Forking app-one... done. Forked to app-two
+Deploying 966d5a5 to app-two... done
+Adding addon redistogo:nano to app-two... done
+Adding addon heroku-postgresql:hobby-dev to app-two... done
+Transferring DATABASE to DATABASE...
+Progress: done
+Copying config vars:
+  LANG
+  RAILS_ENV
+  RACK_ENV
+  SECRET_KEY_BASE
+  RAILS_SERVE_STATIC_FILES
+  REDIS_PROVIDER
+  MANDRILL_USERNAME
+  MANDRILL_API_KEY
+  ... done
+Fork complete. View it at https://app-two.herokuapp.com/
+</code></pre></div></div>
+
+<p>(You may also get some output about heroku updating or installing
+various plugins; just be patient and let these finish.)</p>
+
+<p><strong>Adding the Forked App as a Remote</strong></p>
+
+<p>Heroku doesn’t automatically add the new app as a remote, so we will
+need to do that ourselves. To find the git url of our new app, we
+can use the heroku info command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku info -a app-two
+</code></pre></div></div>
+
+<p>Where <code class="highlighter-rouge">app-two</code> is the name you gave to your forked copy
+of the app. This command will output some stats about the app,
+which look like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>=== app-two
+Addons:        heroku-postgresql:hobby-dev
+               redistogo:nano
+
+Dynos:         1
+Git URL:       https://git.heroku.com/app-two.git
+Owner Email:   horace.d.williams@gmail.com
+Region:        us
+Slug Size:     29M
+Stack:         cedar-14
+Web URL:       https://app-two.herokuapp.com/
+Workers:       0
+</code></pre></div></div>
+
+<p>The Git URL is what we’re interested in. Add it as a remote
+in your git repo using <code class="highlighter-rouge">git remote add</code> (you can name it whatever you like).</p>
+
+<h3 id="7-managing-multiple-heroku-apps">7: Managing Multiple Heroku Apps</h3>
+
+<p>We don’t often deploy multiple copies of simple demo apps to
+heroku, but this type of setup is pretty common on a larger project.
+Dev teams will frequently run multiple instances in order to have
+some as staging or backup environments, or students will fork their
+apps to avoid paying for them.</p>
+
+<p>The downside of having multiple app instances is that
+heroku now requires an <code class="highlighter-rouge">--app</code> flag
+for many commands so that it knows which instance of the app to
+run the command against. So, for example, to read the config settings
+for an app, we would need to specify: <code class="highlighter-rouge">heroku config --app my-app-name</code>.</p>
+
+<p>Another downside is that you’ll need to deploy both apps individually
+when updating.</p>
+
+<p>The upside is we will get workers for free.</p>
+
+<h3 id="8-connecting-our-2-apps-via-redistogo">8: Connecting Our 2 Apps Via RedisToGo</h3>
+
+<p>Remember that Redis, as the queue store used by Sidekiq, provides the
+means of communication between our Web process and our Worker process.
+In order to get our 2 separate apps talking to one another, we need
+to point them at the same RedisToGo url. The easiest way to do this
+is to read the config from one app:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku config:get REDISTOGO_URL --app app-one
+redis://redistogo:some-redis-to-go-url
+</code></pre></div></div>
+
+<p>and set it in the second:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku config:set REDISTOGO_URL=redis://redistogo:some-redis-to-go-url --app app-two
+</code></pre></div></div>
+
+<p>Where <code class="highlighter-rouge">app-one</code> and <code class="highlighter-rouge">app-two</code> are the names of your respective heroku
+apps. What this gives us is a sort of miniature Service Architecture –
+we now have 2 separate applications, connected via Redis as a
+communication channel.</p>
+
+<h3 id="9-turning-app-2-into-a-worker-farm">9: Turning App 2 Into a Worker Farm</h3>
+
+<p>In order to identify the final change we need to make, let’s check out
+the <code class="highlighter-rouge">ps</code> info for our 2 respective apps:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ heroku ps --app app-one
+=== web (1X): `bundle exec rails server -p $PORT`
+web.1: idle 2015/05/25 20:12:42 (~ 13m ago)
+$ heroku ps --app app-two
+=== web (1X): `bundle exec rails server -p $PORT`
+web.1: up 2015/05/25 20:20:18 (~ 5m ago)
+</code></pre></div></div>
+
+<p>Your output will vary slightly, but the important point is that we’re
+currently running web processes on each app and no worker processes.
+Our intention was to have one app as a web process and one as a worker
+process, so let’s set that up by scaling web to 0 and worker to 1 in
+our second app:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku ps:scale web=0 worker=1 --app app-two
+</code></pre></div></div>
+
+<h3 id="10-putting-it-all-together">10: Putting It All Together</h3>
+
+<p>Since we’re turning off the web worker for app-two, we’ll remain within the 1 worker
+threshold and our app will remain free. And since the 2 apps are
+pointing at the same <code class="highlighter-rouge">REDISTOGO_URL</code>, jobs queued by the first app (web)
+will be processed by the second one (worker).</p>
+
+<p>Try it out by visiting the url for app-one and requesting a Fib
+sequence. If everything is working correctly, app-one will enqueue
+a job via Sidekiq, app-two will pick it up and process it, and you will
+get your email!</p>
+
+<p><strong>To recap what we did:</strong></p>
+
+<ul>
+  <li>Added sidekiq as a background queueing library</li>
+  <li>Defined a job for processing our fibonacci sequence emails</li>
+  <li>Deployed our rails app to heroku like normal</li>
+  <li>Added RedisToGo as an addon to be used by Sidekiq</li>
+  <li>Created a second copy of our heroku app using <code class="highlighter-rouge">heroku fork</code></li>
+  <li>Pointed the second app at the same RedisToGo URL as the first app
+so they can use the same Redis to communicate</li>
+  <li>Scaled the second app to have 0 web and 1 worker process – it only
+processes background jobs</li>
+</ul>
+
+<p>If this all seems a bit convoluted… Heroku will be happy to take your
+money for running the additional worker process in the same app. But
+additionally, this sort of a multi-app setup is decent practice for the
+more sophisticated service architectures we’ll be seeing later in the
+module.</p>
+:ET

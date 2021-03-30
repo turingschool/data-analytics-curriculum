@@ -1,0 +1,455 @@
+I"H<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Design a one to many relationship using a schema designer</li>
+  <li>Write migrations to create tables with columns of varying data types and foreign keys.</li>
+  <li>Use Rails to create web pages that allow users to CRUD resources</li>
+  <li>Create instance and class methods on a Rails model that use ActiveRecord methods and helpers</li>
+  <li>Write model and feature tests that fully cover data logic and user behavior</li>
+</ul>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li>must use Rails 5.2.4.x</li>
+  <li>must use PostgreSQL</li>
+  <li>must “handroll” all routes (no use of <code class="highlighter-rouge">resources</code> syntax)</li>
+</ul>
+
+<h2 id="permission">Permission</h2>
+
+<ul>
+  <li>if there is a specific gem you’d like to use in the project that is not mentioned in this project page, please get permission from your instructors first</li>
+</ul>
+
+<h2 id="rubric">Rubric</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th><strong>Feature Completeness</strong></th>
+      <th><strong>Rails</strong></th>
+      <th><strong>Database Design</strong></th>
+      <th><strong>ActiveRecord</strong></th>
+      <th><strong>Testing and Debugging</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>4: Exceptional</strong></td>
+      <td>All User Stories 100% complete including edge cases, and at least one extension story completed</td>
+      <td>Students use the principles of MVC to effectively organize code.</td>
+      <td>Clear schema design with detailed and accurate diagram. Migration history reflects table alterations not taught in class. All data types in the schema make logical sense.</td>
+      <td>Inheritance is utilized to DRY up duplicate queries.</td>
+      <td>100% coverage for features and models. Either a gem that enhances testing effectiveness is implemented (orderly, factorybot, faker, etc) or within blocks are used throughout tests.</td>
+    </tr>
+    <tr>
+      <td><strong>3: Passing</strong></td>
+      <td>Students complete all User Stories. No more than 2 Stories fail to correctly implement functionality.</td>
+      <td>Students can defend any of their design decisions. Routing is organized and consistent and demonstrates use of some RESTful principles. Students can describe how data is passed in their application.</td>
+      <td>Relationships modeled in the database correctly. Appropriate use of foreign keys. Schema design accurately represents actual database schema and design document is linked in the README</td>
+      <td>ActiveRecord helpers are utilized whenever possible. ActiveRecord is used in a clear and effective way to read/write data. No Ruby is used to process data. All queries functional and accurately implemented.</td>
+      <td>100% coverage for models. 98% coverage for features. Tests are well written and meaningful. Students can point to the difference between integration and unit testing.</td>
+    </tr>
+    <tr>
+      <td><strong>2: Passing with Concerns</strong></td>
+      <td>Students fail to complete 3-5 User Stories.</td>
+      <td>Students cannot defend some of their design decisions. Students inaccurately describe how some of their data is passed through their application. Routes don’t demonstrate any use of RESTful design.</td>
+      <td>Some errors in database schema. Schema diagram lacks detail or accurate representation in database.</td>
+      <td>Ruby is used to process data that could use ActiveRecord instead. Some instances where ActiveRecord helpers are not utilized. Some queries not accurately implemented.</td>
+      <td>Feature test coverage between 90% and 98%, or model test coverage below 100%, or tests are not meaningfully written or have an unclear objective.</td>
+    </tr>
+    <tr>
+      <td><strong>1: Failing</strong></td>
+      <td>Students fail to complete 6 or more User Stories.</td>
+      <td>Students do not effectively organize code.</td>
+      <td>Poor diagram design. Relationships do not make sense or not accurately modeled in the database. Many errors in database schema.</td>
+      <td>Ruby is used to process data more often than ActiveRecord. Many cases where ActiveRecord helpers are not utilized.</td>
+      <td>Below 90% coverage for either features or models.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="relationships">Relationships</h2>
+
+<h3 id="design-your-database">Design your database</h3>
+
+<p>Read <a href="https://backend.turing.io/module2/lessons/one_to_many_relationships">this lesson plan</a> and use it as a reference when designing your database.</p>
+
+<p>Each person will come up with their own one to many relationship. This should represent a real world example of your choice. An example would be:</p>
+<ul>
+  <li>Shelters and Pets</li>
+  <li>A Shelter has many Pets</li>
+  <li>A Pet belongs to one Shelter.</li>
+</ul>
+
+<p>Do not use Parent/Child as your relationship</p>
+
+<p>These relationships are yours to create, but we instructors are happy to provide feedback on the relationships if asked.</p>
+
+<p>Use <a href="https://www.dbdesigner.net/">This database design site</a> to design your database with <strong>2 one to many relationships.</strong></p>
+
+<p>Here is an example diagram:</p>
+
+<p><img src="../misc/images/adopt_dont_shop_db_design.png" alt="Example Design" /></p>
+
+<p>You can create as many columns on each table as you would like, but we need a few columns represented on each table:</p>
+
+<ol>
+  <li>One string column for a ‘name’</li>
+  <li>One boolean column</li>
+  <li>One numeric column</li>
+  <li>Two DateTime columns: created_at and updated_at</li>
+</ol>
+
+<p>A couple of things to keep in mind as you’re designing your schema:</p>
+
+<ul>
+  <li>Foreign Keys do not count as an integer column</li>
+  <li>You should not create columns that duplicate data. For example, in Pets/Shelters, a Shelter should not store a “pet_count” column since the count of Pets can also be found by counting the number of associated pets</li>
+</ul>
+
+<p><strong>Schema Design will be reviewed at our first check-in</strong></p>
+
+<h2 id="user-stories">User Stories</h2>
+
+<p>In these stories, we will refer to the “one” side of the relationship as the “parent” and the “many” side of the relationship as the “children/child”. In the Pets/Shelters example, Shelter would be the Parent and Pets would be the Children.</p>
+
+<p>Children can be associated to the Parent. Children belong to a parent. Anywhere you see <code class="highlighter-rouge">child_table_name</code> think <code class="highlighter-rouge">pets</code> from our Pets and Shelters example.</p>
+
+<p>Each user story will focus on one of the following:</p>
+
+<p><strong>ActiveRecord</strong></p>
+
+<p><strong>CRUD Functionality</strong></p>
+
+<p><strong>Usability</strong>: Users should be able to use the site easily. This means making sure there are links/buttons to reach all parts of the site and the styling/layout is sensible.</p>
+
+<h3 id="iteration-1">Iteration 1</h3>
+
+<h5 id="crud">CRUD</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 1, Parent Index (x2)
+
+For each parent table
+As a visitor
+When I visit '/parents'
+Then I see the name of each parent record in the system
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 2, Parent Show (x2)
+
+As a visitor
+When I visit '/parents/:id'
+Then I see the parent with that id including the parent's attributes:
+- data from each column that is on the parent table
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 3, Child Index (x2)
+
+As a visitor
+When I visit '/child_table_name'
+Then I see each Child in the system including the Child's attributes:
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 4, Child Show (x2)
+
+As a visitor
+When I visit '/child_table_name/:id'
+Then I see the child with that id including the child's attributes:
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 5, Parent Children Index (x2)
+
+As a visitor
+When I visit '/parents/:parent_id/child_table_name'
+Then I see each Child that is associated with that Parent with each Child's attributes:
+</code></pre></div></div>
+
+<h5 id="activerecord">ActiveRecord</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 6, Parent Index sorted by Most Recently Created (x2)
+
+As a visitor
+When I visit the parent index,
+I see that records are ordered by most recently created first
+And next to each of the records I see when it was created
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 7, Parent Child Count (x2)
+
+As a visitor
+When I visit a parent's show page
+I see a count of the number of children associated with this parent
+</code></pre></div></div>
+
+<h5 id="usability">Usability</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 8, Child Index Link
+
+As a visitor
+When I visit any page on the site
+Then I see a link at the top of the page that takes me to the Child Index
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 9, Parent Index Link
+
+As a visitor
+When I visit any page on the site
+Then I see a link at the top of the page that takes me to the Parent Index
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 10, Parent Child Index Link
+
+As a visitor
+When I visit a parent show page ('/parents/:id')
+Then I see a link to take me to that parent's `child_table_name` page ('/parents/:id/child_table_name')
+</code></pre></div></div>
+
+<p><strong>Iteration 1 will be reviewed at your second check-in</strong></p>
+
+<hr />
+
+<h3 id="iteration-2">Iteration 2</h3>
+
+<h5 id="crud-1">CRUD</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 11, Parent Creation (x2)
+
+As a visitor
+When I visit the Parent Index page
+Then I see a link to create a new Parent record, "New Parent"
+When I click this link
+Then I am taken to '/parents/new' where I  see a form for a new parent record
+When I fill out the form with a new parent's attributes:
+And I click the button "Create Parent" to submit the form
+Then a `POST` request is sent to the '/parents' route,
+a new parent record is created,
+and I am redirected to the Parent Index page where I see the new Parent displayed.
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 12, Parent Update (x2)
+
+As a visitor
+When I visit a parent show page
+Then I see a link to update the parent "Update Parent"
+When I click the link "Update Parent"
+Then I am taken to '/parents/:id/edit' where I  see a form to edit the parent's attributes:
+When I fill out the form with updated information
+And I click the button to submit the form
+Then a `PATCH` request is sent to '/parents/:id',
+the parent's info is updated,
+and I am redirected to the Parent's Show page where I see the parent's updated info
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 13, Parent Child Creation (x2)
+
+As a visitor
+When I visit a Parent Childs Index page
+Then I see a link to add a new adoptable child for that parent "Create Child"
+When I click the link
+I am taken to '/parents/:parent_id/child_table_name/new' where I see a form to add a new adoptable child
+When I fill in the form with the child's attributes:
+And I click the button "Create Child"
+Then a `POST` request is sent to '/parents/:parent_id/child_table_name',
+a new child object/row is created for that parent,
+and I am redirected to the Parent Childs Index page where I can see the new child listed
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 14, Child Update (x2)
+
+As a visitor
+When I visit a Child Show page
+Then I see a link to update that Child "Update Child"
+When I click the link
+I am taken to '/child_table_name/:id/edit' where I see a form to edit the child's attributes:
+When I click the button to submit the form "Update Child"
+Then a `PATCH` request is sent to '/child_table_name/:id',
+the child's data is updated,
+and I am redirected to the Child Show page where I see the Child's updated information
+</code></pre></div></div>
+
+<h5 id="activerecord-1">ActiveRecord</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 15, Child Index only shows `true` Records (x2)
+
+As a visitor
+When I visit the child index
+Then I only see records where the boolean column is `true`
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 16, Sort Parent's Children in Alphabetical Order by name (x2)
+
+As a visitor
+When I visit the Parent's children Index Page
+Then I see a link to sort children in alphabetical order
+When I click on the link
+I'm taken back to the Parent's children Index Page where I see all of the parent's children in alphabetical order
+</code></pre></div></div>
+
+<h5 id="usability-1">Usability</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 17, Parent Update From Parent Index Page (x2)
+
+As a visitor
+When I visit the parent index page
+Next to every parent, I see a link to edit that parent's info
+When I click the link
+I should be taken to that parents edit page where I can update its information just like in User Story 4
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 18, Child Update From Childs Index Page (x1)
+
+As a visitor
+When I visit the `child_table_name` index page or a parent `child_table_name` index page
+Next to every child, I see a link to edit that child's info
+When I click the link
+I should be taken to that `child_table_name` edit page where I can update its information just like in User Story 11
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="iteration-3">Iteration 3</h3>
+
+<h5 id="crud-2">CRUD</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 19, Parent Delete (x2)
+
+As a visitor
+When I visit a parent show page
+Then I see a link to delete the parent
+When I click the link "Delete Parent"
+Then a 'DELETE' request is sent to '/parents/:id',
+the parent is deleted, and all child records are deleted
+and I am redirected to the parent index page where I no longer see this parent
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 20, Child Delete (x2)
+
+As a visitor
+When I visit a child show page
+Then I see a link to delete the child "Delete Child"
+When I click the link
+Then a 'DELETE' request is sent to '/child_table_name/:id',
+the child is deleted,
+and I am redirected to the child index page where I no longer see this child
+</code></pre></div></div>
+
+<h5 id="activerecord-2">ActiveRecord</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 21, Display Records Over a Given Threshold (x2)
+
+As a visitor
+When I visit the Parent's children Index Page
+I see a form that allows me to input a number value
+When I input a number value and click the submit button that reads 'Only return records with more than `number` of `column_name`'
+Then I am brought back to the current index page with only the records that meet that threshold shown.
+</code></pre></div></div>
+
+<h5 id="usability-2">Usability</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 22, Parent Delete From Parent Index Page (x1)
+
+As a visitor
+When I visit the parent index page
+Next to every parent, I see a link to delete that parent
+When I click the link
+I am returned to the Parent Index Page where I no longer see that parent
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+User Story 23, Child Delete From Childs Index Page (x1)
+
+As a visitor
+When I visit the `child_table_name` index page or a parent `child_table_name` index page
+Next to every child, I see a link to delete that child
+When I click the link
+I should be taken to the `child_table_name` index page where I no longer see that child
+</code></pre></div></div>
+<hr />
+
+<h2 id="extensions">Extensions</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+Sort Parents by Number of Children (x2)
+
+As a visitor
+When I visit the Parents Index Page
+Then I see a link to sort parents by the number of `child_table_name` they have
+When I click on the link
+I'm taken back to the Parent Index Page where I see all of the parents in order of their count of `child_table_name` (highest to lowest) And, I see the number of children next to each parent name
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+Search by name (exact match)
+
+As a visitor
+When I visit an index page ('/parents') or ('/child_table_name')
+Then I see a text box to filter results by keyword
+When I type in a keyword that is an exact match of one or more of my records and press the Search button
+Then I only see records that are an exact match returned on the page
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ] done
+
+Search by name (partial match)
+
+As a visitor
+When I visit an index page ('/parents') or ('/child_table_name')
+Then I see a text box to filter results by keyword
+When I type in a keyword that is an partial match of one or more of my records and press the Search button
+Then I only see records that are an partial match returned on the page
+
+This functionality should be separate from your exact match functionality.
+</code></pre></div></div>
+:ET

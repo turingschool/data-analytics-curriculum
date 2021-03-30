@@ -1,0 +1,269 @@
+I"�t<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Write migrations in Rails.</li>
+  <li>Explain what a migration is, and how it relates to our schema.</li>
+  <li>Create one-to-many relationships at the database level using foreign keys.</li>
+  <li>Use <code class="highlighter-rouge">has_many</code> and <code class="highlighter-rouge">belongs_to</code> to create one-to-many relationship at the model level.</li>
+  <li>Create instance methods on a Rails model</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+
+<ul>
+  <li>Migration</li>
+  <li>Schema</li>
+  <li>Relationships</li>
+</ul>
+
+<h2 id="set-up">Set Up</h2>
+
+<p>This lesson builds off of the <a href="./handling_requests">Handling Requests Lessons</a>. You can find the completed code from this lesson on the <code class="highlighter-rouge">handling_requests</code> branch of <a href="https://github.com/turingschool-examples/set_list/tree/handling_requests">this repo</a></p>
+
+<h2 id="tdd-version">TDD Version</h2>
+
+<p>This tutorial does not make use of any testing. You can find a version of this tutorial using the TDD workflow <a href="./active_record_associations_tdd">here</a></p>
+
+<h2 id="warmup">WarmUp</h2>
+
+<ul>
+  <li>In your own words, what is a migration?</li>
+  <li>What are some things that we can do with a migration?</li>
+  <li>What is the relationship between a migration and our database?</li>
+</ul>
+
+<h2 id="models-migrations-and-databases-in-rails">Models, Migrations, and Databases in Rails</h2>
+
+<p>In this lesson, we’ll be adding to our new SetList Rails app to demonstrate a one-to-many relationship.</p>
+
+<p>We’ll add a table <code class="highlighter-rouge">artists</code> to our database, and connect them to our existing <code class="highlighter-rouge">songs</code> table. What might the relationships look like?</p>
+
+<h3 id="at-the-database-level-artists">At the Database Level: Artists</h3>
+
+<p>We want to be able to create some artists with a name, so we’ll add an “Artists” table to our database in order to store this data. Take a look at our <code class="highlighter-rouge">db/schema.rb</code>; at this point, it should look something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Schema</span><span class="p">.</span><span class="nf">define</span><span class="p">(</span><span class="ss">version: </span><span class="mi">20190430171832</span><span class="p">)</span> <span class="k">do</span>
+
+  <span class="c1"># These are extensions that must be enabled in order to support this database</span>
+  <span class="n">enable_extension</span> <span class="s2">"plpgsql"</span>
+
+  <span class="n">create_table</span> <span class="s2">"songs"</span><span class="p">,</span> <span class="ss">force: :cascade</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="s2">"title"</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">integer</span> <span class="s2">"length"</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">integer</span> <span class="s2">"play_count"</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">datetime</span> <span class="s2">"created_at"</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+    <span class="n">t</span><span class="p">.</span><span class="nf">datetime</span> <span class="s2">"updated_at"</span><span class="p">,</span> <span class="ss">null: </span><span class="kp">false</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Currently, our schema does not have an Artists table, so we are going to have to update it. Whenever we need to alter the database schema, we are going to write a <strong>migration</strong>.</p>
+
+<p>From the command line, run <code class="highlighter-rouge">rails g migration CreateArtists name:string</code></p>
+
+<p>The migration generator creates a migration and if we follow the working convention for rails the migration will be pre-populated.</p>
+
+<p>Let’s look at the migration inside of <code class="highlighter-rouge">db/migrate</code>. We will also add the line <code class="highlighter-rouge">t.timestamps</code> to add <code class="highlighter-rouge">created_at</code> and <code class="highlighter-rouge">updated_at</code> timestamps to our table.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateArtists</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">5.2</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">create_table</span> <span class="ss">:artists</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+      <span class="n">t</span><span class="p">.</span><span class="nf">string</span> <span class="ss">:name</span>
+
+      <span class="n">t</span><span class="p">.</span><span class="nf">timestamps</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This migration looks good. Open up the <code class="highlighter-rouge">schema.rb</code> file again. Do you see the new “artists” table? Take a look at the version number next to <code class="highlighter-rouge">ActiveRecord::Schema.define(version: </code>. This version number <em>should</em> match the version of our latest migration file, but it doesn’t!  Both of these mean that we have migrations that have not been run yet.  Let’s do that now:</p>
+
+<p><code class="highlighter-rouge">rails db:migrate</code></p>
+
+<p>Now, if we go back to our schema, we should see <code class="highlighter-rouge">create_table 'artists'</code>. Our migrations have been applied.</p>
+
+<p>Now that we have a database table, we’ll need to create a new model that can connect to this database table:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># app/models/artist.rb</span>
+
+<span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now that we have our model and database table set up, we should be able to create some new Artists using the rails console. Open up a new console from the command line using <code class="highlighter-rouge">rails c</code> and run the following to create some artists:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Talking Heads"</span><span class="p">)</span>
+<span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Prince"</span><span class="p">)</span>
+<span class="no">Artist</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="ss">name: </span><span class="s2">"Britney Spears"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We should see some SQL output in our rails console confirming that each Artist is saved to the database. Double check that we can read all of those artists back from the database by running:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Artist</span><span class="p">.</span><span class="nf">all</span>
+</code></pre></div></div>
+
+<p>and make sure that all of your new Artists are returned.</p>
+
+<h3 id="at-the-database-level-songs">At the Database Level: Songs</h3>
+
+<p>Since each Song should belong to an Artist, each song is going to need a <strong>foreign key</strong> that references its artist. If we open up our schema file, we don’t see a column for that foreign key on our Songs table, so we are going to need another migration to alter our schema:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g migration AddArtistsToSongs artist:references
+</code></pre></div></div>
+
+<p>Take a look at what this migration creates.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AddArtistsToSongs</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span><span class="p">[</span><span class="mf">5.2</span><span class="p">]</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_reference</span> <span class="ss">:songs</span><span class="p">,</span> <span class="ss">:artist</span><span class="p">,</span> <span class="ss">foreign_key: </span><span class="kp">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Don’t forget to run your migration with <code class="highlighter-rouge">rails db:migrate</code>. Check your schema file to make sure you Songs table now has an <code class="highlighter-rouge">artist_id</code> column.</p>
+
+<h2 id="activerecord-associations">ActiveRecord Associations</h2>
+
+<h3 id="one-to-many-relationships-the-hard-way">One-to-Many Relationships the Hard Way</h3>
+
+<p>Now that we have set up our database, we should be able to create some songs and relate them to artists in the rails console:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">beret</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">,</span> <span class="ss">artist_id: </span><span class="n">prince</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+<span class="n">rain</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Purple Rain'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">524</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">19</span><span class="p">,</span> <span class="ss">artist_id: </span><span class="n">prince</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>And what if we want to retrieve all of an Artist’s Songs? The ActiveRecord would like something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">prince_songs</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">where</span><span class="p">(</span><span class="ss">artist_id: </span><span class="n">prince</span><span class="p">.</span><span class="nf">id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Similarly, we could find the Artist for a Song:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">purple_rain</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Purple Rain'</span><span class="p">)</span>
+<span class="n">purple_rain_artist</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">purple_rain</span><span class="p">.</span><span class="nf">artist_id</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>This will work, but working with associated records is something we are going to have to do very often, and writing the queries to retrieve and create records this way can get overly verbose. Luckily ActiveRecord gives us some nice helper methods to make this much easier.</p>
+
+<h3 id="activerecord-associations-the-path-to-enlightenment">ActiveRecord Associations: The Path to Enlightenment</h3>
+
+<p>Rather than do things the hard way, we can create <strong>ActiveRecord Associations</strong>. In your Song model, add a line to associate it to the Artist Model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Song</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">belongs_to</span> <span class="ss">:artist</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Similarly, add a line in your Artist model to associate it with the Song model:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Writing our migrations and altering our schema made this association at the database level. Now we have added <strong>ActiveRecord Associations</strong> to relate them at the Model level.</p>
+
+<p>The association <code class="highlighter-rouge">has_many :songs</code> in our Artist model gives us the ability to call <code class="highlighter-rouge">.songs</code> on an Artist object. We can use this to more easily associate a Song to an Artist when creating a Song:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">beret</span> <span class="o">=</span> <span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+<span class="n">rain</span> <span class="o">=</span> <span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Purple Rain'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">524</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">19</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can also use this new <code class="highlighter-rouge">.songs</code> method to retrieve all the Songs related to an Artist:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prince_songs</span> <span class="o">=</span> <span class="n">prince</span><span class="p">.</span><span class="nf">songs</span>
+</code></pre></div></div>
+
+<p>Take a look at the SQL that is generated in the Rails Console when you run this command. You’ll notice that it is very similar to the query we wrote in the last section to retrieve an Artist’s Songs. So under the hood, the same SQL is still being executed, but the code we wrote to make it happen is now much more elegant and concise.</p>
+
+<p>Similarly, the association <code class="highlighter-rouge">belongs_to :artist</code> in our Song model gives us the ability to call <code class="highlighter-rouge">.artist</code> on a Song object:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">beret_artist</span> <span class="o">=</span> <span class="n">beret</span><span class="p">.</span><span class="nf">artist</span>
+</code></pre></div></div>
+
+<p>Finally, ActiveRecord associations will put some constraints or <strong>validations</strong> on our Models. Let’s try to create a Song without an Artist:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Song</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The bang <code class="highlighter-rouge">!</code> on the end of the <code class="highlighter-rouge">create</code> method tells ActiveRecord to throw an error if anything goes wrong which is useful when developing or debugging. This command should produce an error that the Artist must exist. Now that a <code class="highlighter-rouge">song</code> <strong>belongs_to</strong> an <code class="highlighter-rouge">artist</code>, a <code class="highlighter-rouge">song</code> can not exist without an <code class="highlighter-rouge">artist</code>. So when we create a Song, we also have to tell it which Artist it belongs to.</p>
+
+<h2 id="seeds">Seeds</h2>
+
+<p>Now that our App is getting more complex, it would be good to add some seeds. Seeding your database is when you insert a set of data into the database. It is useful to have some seed data when we are experimenting and developing. You could consider what we’ve done in the Rails Console so far as a type of seeding, but doing things manually in the Rails Console can get very tedious, so what we will do instead is write a script to seed our database that we can reuse. Rails comes with a file for us to write this script in <code class="highlighter-rouge">db/seeds.rb</code>. Open up that file and add the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Song</span><span class="p">.</span><span class="nf">destroy_all</span>
+<span class="no">Artist</span><span class="p">.</span><span class="nf">destroy_all</span>
+
+<span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">rtj</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Run The Jewels'</span><span class="p">)</span>
+<span class="n">caamp</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Caamp'</span><span class="p">)</span>
+<span class="n">jgb</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Jerry Garcia Band'</span><span class="p">)</span>
+<span class="n">billie</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Billie Eilish'</span><span class="p">)</span>
+<span class="n">lcd</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'LCD Soundsystem'</span><span class="p">)</span>
+
+<span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Raspberry Beret'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">345</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">34</span><span class="p">)</span>
+<span class="n">prince</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Purple Rain'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">524</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">19</span><span class="p">)</span>
+
+<span class="n">rtj</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Legend Has It'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">2301</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">2300000</span><span class="p">)</span>
+<span class="n">rtj</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Talk to Me'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">2301</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">2300000</span><span class="p">)</span>
+
+<span class="n">caamp</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'26'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">940</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">150000</span><span class="p">)</span>
+<span class="n">caamp</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Vagabond'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">240</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">120000</span><span class="p">)</span>
+
+<span class="n">jgb</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Aint No Bread In The Breadbox'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">540</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">12000</span><span class="p">)</span>
+<span class="n">jgb</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'The Harder They Come'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">240</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">120000</span><span class="p">)</span>
+
+<span class="n">billie</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'bury a friend'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">340</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1200000</span><span class="p">)</span>
+<span class="n">billie</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'bad guy'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">240</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">100000</span><span class="p">)</span>
+
+<span class="n">lcd</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'Someone Great'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">500</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">1000000</span><span class="p">)</span>
+<span class="n">lcd</span><span class="p">.</span><span class="nf">songs</span><span class="p">.</span><span class="nf">create!</span><span class="p">(</span><span class="ss">title: </span><span class="s1">'I Can Change'</span><span class="p">,</span> <span class="ss">length: </span><span class="mi">640</span><span class="p">,</span> <span class="ss">play_count: </span><span class="mi">100000</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now that we have our seeds file, we can run it with <code class="highlighter-rouge">rails db:seed</code>. Additionally, if we check this file into our version control system, other developers working on this app will be able to easily seed their local databases.</p>
+
+<p>Notice that the first two lines of this seeds file will destroy all Songs and Artists from the database. The reason we want to do this is so that we know we are starting with an empty database every time we want to reseed our database. If we did not have these two lines, this script would create duplicate records every time we reran <code class="highlighter-rouge">rails db:seed</code>.</p>
+
+<h2 id="adding-behaviors-to-models">Adding Behaviors to Models</h2>
+
+<p>Now, we have two models that are related to each other with <strong>has_many</strong> and <strong>belongs_to</strong>, and these models can handle basic CRUD functionality through the methods that they inherit from ActiveRecord - but what if we need our models to be customized to perform behaviors related to our application? For example, what if we want to find the average length of an artist’s songs?</p>
+
+<p>In our Artist model, we can create an instance method to perform this logic:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Artist</span> <span class="o">&lt;</span> <span class="no">ApplicationRecord</span>
+  <span class="n">has_many</span> <span class="ss">:songs</span>
+
+  <span class="k">def</span> <span class="nf">average_song_length</span>
+    <span class="n">songs</span><span class="p">.</span><span class="nf">average</span><span class="p">(</span><span class="ss">:length</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Because we have <code class="highlighter-rouge">has_many :songs</code> in this class, we can call <code class="highlighter-rouge">.songs</code> on an Artist instance, and because we have defined an instance method, we can call <code class="highlighter-rouge">songs</code> inside of it to get all the Songs associated to the Artist object. We can then chain on the ActiveRecord method <code class="highlighter-rouge">.average</code> to average the length column of all of those associated records.</p>
+
+<p>Let’s open the rails console up again and try out our new method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">prince</span> <span class="o">=</span> <span class="no">Artist</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">name: </span><span class="s1">'Prince'</span><span class="p">)</span>
+<span class="n">prince</span><span class="p">.</span><span class="nf">average_song_length</span>
+</code></pre></div></div>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>What are two different types of table relationships that you might need to implement? In what scenario would you use each?</li>
+  <li>What is the syntax for the following migrations in Rails?
+    <ul>
+      <li>Create a table</li>
+      <li>Add a column to a table, with or without a data type</li>
+      <li>Add a reference from one table to another</li>
+    </ul>
+  </li>
+  <li>What does a <code class="highlighter-rouge">has_many</code> association in a model do?</li>
+  <li>What does a <code class="highlighter-rouge">belongs_to</code> association in a model do?</li>
+</ul>
+:ET

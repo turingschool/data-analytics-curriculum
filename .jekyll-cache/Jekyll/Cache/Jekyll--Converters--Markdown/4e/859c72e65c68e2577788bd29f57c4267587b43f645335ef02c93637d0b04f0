@@ -1,0 +1,108 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the structure of a HTML5 page</li>
+  <li>Learn how to access and manipulate CSS from the Chrome Developer Tools</li>
+  <li>Layout semantic HTML using CSS</li>
+  <li>Style HTML elements using CSS</li>
+  <li>Apply CSS transformations and transitions</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>10 - Group Discussion</li>
+  <li>10 - Anatomy of an HTML Page</li>
+  <li>10 - Basic CSS Refresher</li>
+  <li>50 - Mini-Project Work Time</li>
+  <li>10 - Wrap-up</li>
+</ul>
+
+<h2 id="group-discussion">Group Discussion</h2>
+
+<ul>
+  <li>Q&amp;A</li>
+</ul>
+
+<h2 id="full-group-instruction">Full-Group Instruction</h2>
+
+<h3 id="anatomy-of-an-html-page">Anatomy of an HTML Page</h3>
+
+<p>Clone the TuringBistro <a href="https://github.com/turingschool-examples/turing-bistro">repo</a>. As a group, we’re going to go through the <code class="highlighter-rouge">index.html</code> in this repository and discuss the components. Feel free to interject and ask questions at this time.</p>
+
+<h4 id="additional-discussion-points">Additional Discussion Points</h4>
+
+<ul>
+  <li>Chrome Developer Tools</li>
+  <li><code class="highlighter-rouge">class</code> vs. <code class="highlighter-rouge">id</code></li>
+  <li><a href="https://developer.mozilla.org/en-US/">Mozilla Developer Network</a></li>
+</ul>
+
+<h3 id="css-refresher">CSS Refresher</h3>
+
+<p>As a group, we’ll discuss the basics of CSS selectors and properties. Feel free to interject and ask questions.</p>
+
+<h4 id="additional-discussion-points-1">Additional Discussion Points</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">normalize.css</code></li>
+</ul>
+
+<h2 id="independent-challenges">Independent Challenges</h2>
+
+<p>In pairs, style the <code class="highlighter-rouge">index.html</code> page using <code class="highlighter-rouge">main.css</code> in the <code class="highlighter-rouge">stylesheets</code> folder.</p>
+
+<p>You have two constraints:</p>
+
+<ul>
+  <li>You can’t change any of the HTML markup</li>
+  <li>You can’t use JavaScript</li>
+</ul>
+
+<h3 id="must-knows">Must Knows</h3>
+
+<ul>
+  <li>Center the container</li>
+  <li>Remove the underline from the hyperlinks</li>
+  <li>Change the style of the hyperlinks when a mouse hovers over them</li>
+  <li>Make the items in the navigation align horizontally</li>
+  <li>Move the announcements to a side bar</li>
+</ul>
+
+<h3 id="nice-to-haves">Nice to Haves</h3>
+
+<ul>
+  <li>Prefix each of the menu prices with a dollar sign ($)</li>
+  <li>Style the menu items like a traditional menu you’d find at a restaurant</li>
+  <li>Gradually transition the color of a hyperlink when a mouse hovers over it</li>
+  <li>Float the Turing Logo to the left or the right</li>
+</ul>
+
+<h3 id="challenging">Challenging</h3>
+
+<ul>
+  <li>Make the page responsive to different screen sizes (desktop, tablet, mobile)</li>
+</ul>
+
+<h2 id="wrap-up">Wrap-Up</h2>
+
+<ul>
+  <li>What was challenging?</li>
+  <li>What areas are still unclear to you?</li>
+  <li>What are you proud of?</li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="http://learnlayout.com/">Learn Layout</a></li>
+  <li><a href="http://static.incompl.com/awful/">CSS is Awful</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/learn/css">Learn CSS MDN</a></li>
+  <li><a href="http://www.quirksmode.org/css/quirksmode.html">Quirks Mode and Strict Mode</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag">Using the viewport meta tag to control layout on mobile browsers</a></li>
+  <li><a href="https://developer.apple.com/library/ios/documentation/appleapplications/reference/safariwebcontent/usingtheviewport/usingtheviewport.html">Safari Web Content Guide: Configuring the Viewport</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Using_CSS_transitions">CSS Transitions</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/transform">CSS Transformations</a></li>
+</ul>
+
+:ET

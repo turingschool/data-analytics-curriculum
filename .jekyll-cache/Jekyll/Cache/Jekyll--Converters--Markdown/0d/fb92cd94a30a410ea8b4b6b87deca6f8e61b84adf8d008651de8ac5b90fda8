@@ -1,0 +1,110 @@
+I"`#<h2 id="csv-exploration">CSV Exploration</h2>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>Think back to your first two projects. How have you currently been making instances of objects in those projects? Likely you have been creating an instance of the objects you need in the <code class="highlighter-rouge">runner</code> file or having the user input information that was then used to create the object. What if there was a larger set of data that you wanted to use to create objects?</p>
+
+<h3 id="using-files-to-create-objects">Using files to create objects</h3>
+
+<p>Sometimes the data that we want to use will be stored in a CSV. CSV is a file type that stands for <em>comma separated values</em>. Think of it similar to a spreadsheet or an excel sheet. The information within these files can be organized in columns and rows and might look like this:</p>
+
+<p><img src="./assets/csv_example.png" /></p>
+
+<p>The first row is the headers for each column which gives us information about the values in the rows below. Each row we can think of as being a package of information that belongs together. Looking at our example we should see the first package of information is <code class="highlighter-rouge">1, Rubeus, Hagrid, 60</code>. We know that <code class="highlighter-rouge">1</code> is the id, <code class="highlighter-rouge">Rubeus</code> is the first name, <code class="highlighter-rouge">Hagrid</code> is the last name and <code class="highlighter-rouge">60</code> is the age because of the header for each column in which the information is located.</p>
+
+<p>Rows and columns are nice for us to visually organize information, but what if we want to use that information in our application? Ruby has helped us by having a defined class called CSV. This class contains methods that we can use to interact with a file.</p>
+
+<h3 id="challenge">Challenge</h3>
+
+<p>Fork and clone <a href="https://github.com/turingschool-examples/csv_example">this repo</a>.</p>
+
+<p>For the next 30 minutes, read and use the ruby docs for CSV found <a href="https://ruby-doc.org/stdlib-2.6.5/libdoc/csv/rdoc/CSV.html#method-c-new">here</a>. Within the <code class="highlighter-rouge">runner.rb</code> file write some code that will print each row from <code class="highlighter-rouge">animal_lovers.csv</code> to the terminal. If you’ve been able to print each row, now see if you can also print the header with the value for each row.</p>
+
+<p>If you complete the above, try doing the same for the <code class="highlighter-rouge">magical_pets.csv</code>.</p>
+
+<p><em>The docs may not be the easiest to read, but do start there to gather information and get some practice reading documentation. After you’ve looked through the documentation, you can also google for additional resources to help you.</em></p>
+
+<p><em>If you’ve tried the docs and have googled additional resources and you are not making any progress try this</em></p>
+<details open="">
+<summary>Last Resort</summary>
+<br />
+<a href="https://github.com/turingschool/backend-curriculum-site/blob/gh-pages/module1/lessons/csv_walkthrough.md">CSV Walkthrough</a>
+</details>
+
+<h2 id="introduction-to-black-thursday-lite">Introduction to Black Thursday Lite</h2>
+
+<p>Shortly you will be working through Black Thursday Lite. This is a mini-project for you to work through. It is okay if you do not complete this project, but please work through as much as possible because we will revisit it next week to do some code share and use as a reference in the Class Methods Lesson.</p>
+
+<h3 id="class-methods-at-a-high-level">Class Methods at a High Level</h3>
+
+<p>Currently in the projects you have completed the methods you have been creating are instance methods. This means that you call a method on an instance of an object. However, in order to create an instance of an object we call <code class="highlighter-rouge">new</code> on the class itself. <code class="highlighter-rouge">new</code> is a class method.</p>
+
+<p>For example, in the following code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hagrid</span> <span class="o">=</span> <span class="no">AnimalLover</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s1">'Rebeus'</span><span class="p">,</span><span class="s1">'Hagrid'</span><span class="p">,</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">harry</span> <span class="o">=</span> <span class="no">AnimalLover</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="s1">'Harry'</span><span class="p">,</span><span class="s1">'Potter'</span><span class="p">,</span><span class="mi">13</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>the <code class="highlighter-rouge">new</code> is a class method because it is called on the name of the class <code class="highlighter-rouge">AnimalLover</code>.</p>
+
+<p>Now if we had, <code class="highlighter-rouge">hagrid.full_name</code> or <code class="highlighter-rouge">harry.full_name</code> this is an instance method. The method is called on a single instance method and the return would be different depending on which instance it is call on.</p>
+
+<p>When writing an instance method the format looks like this</p>
+
+<pre><code class="language-Ruby">def name_of_method
+  #code here
+end
+</code></pre>
+
+<p>When writing a class method the format looks like this</p>
+
+<pre><code class="language-Ruby">def self.name_of_method
+  #code here
+end
+</code></pre>
+
+<p>Use this exploration as an opportunity to see how these behave differently. It is okay if it isn’t completely clear during or at the end of this exploration. The goal is that you try it on your own for now and we will dive into the specifics in our Class Method Lesson.</p>
+
+<h3 id="orm-at-a-high-level">ORM at a High Level</h3>
+
+<p>ORM stands for Object Relational Mapper. Earlier we were worked through taking a package of information from each row and creating an object so that we could more easily use the information in our application. That idea–the idea of turning data (such as rows of data from a CSV) into objects and allowing you to interact with those objects is the concept of an ORM.</p>
+
+<p>Once you’ve done that, an ORM also allows you to <em>query</em> (ask for specific objects that meet certain criteria– like a <code class="highlighter-rouge">find</code> or <code class="highlighter-rouge">find_all</code>, plus many, many more) all of that data, using the objects that you’ve created.</p>
+
+<p>ORMs are good because:</p>
+
+<ol>
+  <li>DRY: It makes it easier to update, maintain, and reuse your code.</li>
+  <li>A lot of stuff is done for you, behind the scenes</li>
+  <li>You don’t have to write SQL, which is a language for querying databases</li>
+  <li>You can clean up the data that you’re taking in very quickly and easily (data can be a real mess sometimes, with the crazy ways that people input things)</li>
+  <li>It helps you follow the principles of OOP</li>
+</ol>
+
+<p>This is an example of something an ORM gives you:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Person.find(10)
+</code></pre></div></div>
+<p>✅ It’s nice, right? Pretty much human-readable.
+This is the alternative in SQL:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT * FROM clients WHERE (clients.id = 10) LIMIT 1
+</code></pre></div></div>
+<p>😬 Less nice.</p>
+
+<p>ORMs can be tricky because:</p>
+
+<ol>
+  <li>They can be pretty heavyweight, and require you to learn a new set of tools</li>
+  <li>Performance is not as good as writing SQL</li>
+  <li>It <em>abstracts</em> your data, which means that it hides a lot of the work away from you. That’s good in some ways, but it can make it harder to understand what’s really happening behind the scenes.</li>
+</ol>
+
+<p><em>Don’t worry too much about the details here– just remember that an ORM gives you the ability to interact with objects instead of raw data.</em></p>
+
+<h3 id="go-forth-and-explore">Go Forth and Explore</h3>
+
+<p>Ruby on Rails relies heavily on an ORM called Active Record (https://guides.rubyonrails.org/active_record_basics.html), which is really extensive and powerful.  It’s a great tool, but it does hide away a lot of the work that it does.  We’re going to have you build out a little mini-project that mimics the behavior of an ORM so you can see a little bit of how the under-the-hood concepts work.</p>
+
+<p>Just to reiterate, work through the mini-project as much as you can and use this as an opportunity to think about the concepts we’ve introduced so far. We will revisit this next week, so you will have better context as we go through our classes next week. Have fun!</p>
+
+<h2 id="black-thursday-lite"><a href="https://github.com/turingschool-examples/black_thursday_lite">Black Thursday Lite</a></h2>
+:ET

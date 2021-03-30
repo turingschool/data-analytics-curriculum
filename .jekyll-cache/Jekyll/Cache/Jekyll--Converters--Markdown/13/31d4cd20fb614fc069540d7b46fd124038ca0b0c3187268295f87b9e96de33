@@ -1,0 +1,174 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Identify the structure of a HTTP Request</li>
+  <li>Identify the structure of a HTTP Response</li>
+  <li>Describe how users/clients send information through a request</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+
+<ul>
+  <li>HTTP Request/Response</li>
+  <li>Request Line</li>
+  <li>Status Line</li>
+  <li>Headers</li>
+  <li>Body</li>
+  <li>Query Params</li>
+</ul>
+
+<h2 id="warm-up">Warm Up</h2>
+
+<ul>
+  <li>In your notebooks, diagram the request/response cycle.</li>
+  <li>What are the 5 common HTTP verbs? And, which CRUD actions do they correspond to?</li>
+</ul>
+
+<h2 id="http-requests-and-responses">HTTP Requests and Responses</h2>
+
+<p>The HyperText Transfer Protocol gives us rules about how messages should be sent around the Internet. The system that initiates a connection sends a “request”, and the system the answers sends a “response”.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p>When a “client” (like a web browser) retrieves information, it sends a payload of data to a server as a “request”. This request is made up of three main parts:</p>
+
+<ul>
+  <li>A Request line, containing three piece of information:
+    <ul>
+      <li>the HTTP <strong>verb</strong> (also called an http method) for sending or retrieving information</li>
+      <li>the URI <strong>path</strong> of the resource where we’re sending or retrieving information</li>
+      <li>the version of the HTTP protocol our “client” software is using, usually <code class="highlighter-rouge">HTTP/1.1</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>Headers, which are key/value pairs, which contain supplemental information about our request</p>
+  </li>
+  <li>An optional body; we only send data to the server in the body when we are creating or modifying something</li>
+</ul>
+
+<h3 id="http-response">HTTP Response</h3>
+
+<p>When the server or web application is finished processing our request, it will send back a response which is a payload of data, and is made up of three main parts:</p>
+
+<ul>
+  <li>a Status line, containing three pieces of information:
+    <ul>
+      <li>The version of the HTTP protocol that this response is using</li>
+      <li>a 3-digit numeric “status code”</li>
+      <li>a user-friendly string description of what the “status code” means</li>
+    </ul>
+  </li>
+  <li>
+    <p>Headers, also sent as key/value pairs similar to the HTTP request</p>
+  </li>
+  <li>An optional body; almost all responses will contain additional data in the body. In mod 2, our “body” payload will almost always be HTML.</li>
+</ul>
+
+<h3 id="seeing-http-requests-and-responses-in-action">Seeing HTTP requests and responses in action</h3>
+
+<p>Let’s open a terminal and run some commands to connect to Google’s home page.</p>
+
+<p>Enter <code class="highlighter-rouge">curl google.com -v</code> in a terminal window and review the output.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Rebuilt URL to: google.com/
+*   Trying 2607:f8b0:400f:800::200e...
+* Connected to google.com (2607:f8b0:400f:800::200e) port 80 (#0)
+&gt; GET / HTTP/1.1
+&gt; Host: google.com
+&gt; User-Agent: curl/7.43.0
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 301 Moved Permanently
+&lt; Location: http://www.google.com/
+&lt; Content-Type: text/html; charset=UTF-8
+&lt; Date: Thu, 31 Aug 2017 01:09:30 GMT
+&lt; Expires: Sat, 30 Sep 2017 01:09:30 GMT
+&lt; Cache-Control: public, max-age=2592000
+&lt; Server: gws
+&lt; Content-Length: 219
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Frame-Options: SAMEORIGIN
+&lt;
+&lt;HTML&gt;&lt;HEAD&gt;&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;TITLE&gt;301 Moved&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;
+&lt;H1&gt;301 Moved&lt;/H1&gt;
+The document has moved
+&lt;A HREF="http://www.google.com/"&gt;here&lt;/A&gt;.
+&lt;/BODY&gt;&lt;/HTML&gt;
+* Connection #0 to host google.com left intact
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">&gt;</code> symbols indicate part of the request being sent to the server. The <code class="highlighter-rouge">&lt;</code> symbols indicate the response coming back to our system. Notice:</p>
+
+<ul>
+  <li>Request
+    <ul>
+      <li>The request line with a verb, URI path, and HTTP protocol.</li>
+      <li>The headers providing a host, user agent (identifying the browser or client software), and an indication of the type of response the client will accept.</li>
+      <li>Empty body.</li>
+    </ul>
+  </li>
+  <li>Response
+    <ul>
+      <li>The status line with an HTTP protocol, the status code and reason phrase.</li>
+      <li>Headers.</li>
+      <li>A Body with HTML.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Sending a <code class="highlighter-rouge">curl</code> request to https://google.com will provide the actual site that is displayed when we visit google in a browser.</p>
+
+<h4 id="curl-student-site">curl Student Site</h4>
+
+<p>Send a <code class="highlighter-rouge">curl</code> request to a web site of your choice. Note many of the same pieces from the request/response above, with slightly more HTML. Also note, the CSS is not in any way included in the response when you make a request to a student site (unless they used inline CSS). In order to get a CSS file we need to make a second request to something like <code class="highlighter-rouge">https://username.github.io/main.css</code>.</p>
+
+<h2 id="sending-data-through-http-requests">Sending Data Through HTTP Requests</h2>
+
+<p>Now that we’re a little bit more familiar with HTTP requests, which parts are we most concerned about? The key pieces of information in the request are:</p>
+
+<ul>
+  <li>Verb</li>
+  <li>Path</li>
+  <li>Query Params (part of the path)</li>
+  <li>Body</li>
+</ul>
+
+<h3 id="how-do-we-create-requests">How do We Create Requests?</h3>
+
+<p>A User doesn’t need to know the inner workings of HTTP in order to use a website. They don’t need to know they are sending a <code class="highlighter-rouge">POST</code> request to <code class="highlighter-rouge">/orders</code>. The requests they send are generated for them by the browser.</p>
+
+<p>Requests are created by:</p>
+
+<ol>
+  <li>Typing a URL into a browser address bar
+    <ul>
+      <li>Always a <code class="highlighter-rouge">GET</code> request</li>
+      <li>Path is hand-typed</li>
+      <li>Can include Query Params that must be hand-typed</li>
+      <li>Does not include a body</li>
+    </ul>
+  </li>
+  <li>Clicking Links or Buttons
+    <ul>
+      <li>The developer decides what Verb, Path and Query Params are included</li>
+      <li>Does not include a body</li>
+    </ul>
+  </li>
+  <li>Form submission
+    <ul>
+      <li>Developer decides on Verb and Path</li>
+      <li>Can include query params but usually does not.</li>
+      <li>User inputs data into form fields. This data is included in the body of the request</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="checks-for-understanding">Checks for Understanding</h2>
+
+<ul>
+  <li>What are the parts of an HTTP Request?</li>
+  <li>What are the parts of an HTTP Response?</li>
+  <li>What are the ways that requests get generated?</li>
+</ul>
+:ET

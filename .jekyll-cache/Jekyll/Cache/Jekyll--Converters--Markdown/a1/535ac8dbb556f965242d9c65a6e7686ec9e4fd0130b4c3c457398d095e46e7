@@ -1,0 +1,90 @@
+I"�<p>SQL is a programming language used to interact with a database. Learning to interact with databases is crucial to your work as a backend developer. While we eventually want to use libraries that will write SQL for us, it is important to be familiar with how SQL works under the hood so that you understand what your code is doing at the database level.</p>
+
+<p>For your SQl intermission work, you will complete an introductory tutorial, and then will complete some exercises to help you practice the most important SQL concepts. This assignment is meant as an introduction to sql, so don’t be alarmed if you don’t feel like you have mastered these concepts. Use the accompanying Checks for Understanding to assess yourself.</p>
+
+<h2 id="jumpstart-lab-tutorial">Jumpstart Lab Tutorial</h2>
+
+<p>Work through the <a href="http://tutorials.jumpstartlab.com/topics/sql/fundamental_sql.html">Jumpstart Lab SQL Tutorial</a>, <strong>but do not complete the “Sequel” tutorial linked at the bottom of the Jumpstart Lab page.</strong> Then complete the Checks for Understanding.</p>
+
+<h3 id="checks-for-understanding">Checks for Understanding</h3>
+
+<ol>
+  <li>What is a database?</li>
+  <li>What is SQL?</li>
+  <li>What is SQLite3?</li>
+  <li>What is a Table?</li>
+  <li>What is a primary key?</li>
+  <li>What is a foreign key?</li>
+  <li>Explain what each of the following SQL commands do:
+    <ul>
+      <li>insert</li>
+      <li>select</li>
+      <li>where</li>
+      <li>order by</li>
+      <li>inner join</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="sql-exercises">SQL Exercises</h2>
+
+<p>Now you’ll work through some of the exercises at <a href="https://pgexercises.com/">pgexercises.com</a>. In the Jumpstart Lab tutorial, you used SQLite3. In these exercises, you will use Postgresql. It’s largely the same, but make sure that when you are looking at documentation you are looking at the <a href="https://www.postgresql.org/docs/9.3/index.html">Postgresql Documentation</a>.</p>
+
+<p>Work through the three following sections (Basic, Joins, Aggregates) of exercises on the site. Make sure you are also reading the Answers and Discussion section at the bottom, even if you get the answer right. There are some helpful explanations and alternative solutions.</p>
+
+<p>To reiterate from before, you do not need to be a master of SQL coming out these exercises, so you should <strong>timebox these exercises</strong>. Timebox each of the three sections to <strong>no more than 2 hours</strong> for a maximum of 6 hours spent on these exercises. There will likely be exercises that you have difficulty completing, and that’s okay! Use the provided hints, give it your best effort, and skip to the answer if you can’t get it. Just make sure you read and understand the answer before moving on.</p>
+
+<p>After you complete the exercises, answer the Checks for Understanding.</p>
+
+<h3 id="basics">Basics</h3>
+
+<ol>
+  <li><a href="https://pgexercises.com/gettingstarted.html">Getting Started</a>. Skip the “I want to use my own Postgres system” at the end.</li>
+  <li><a href="https://pgexercises.com/questions/basic/selectall.html">Select All</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/selectspecific.html">Selecting Columns</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/where.html">Where</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/where2.html">Where 2</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/where3.html">String Search</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/where4.html">Where 3</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/classify.html">Case</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/date.html">Dates</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/unique.html">Unique and Order</a></li>
+  <li><a href="https://pgexercises.com/questions/basic/agg.html">Basic Aggregate</a></li>
+</ol>
+
+<h3 id="joins">Joins</h3>
+
+<ol>
+  <li><a href="https://pgexercises.com/questions/joins/simplejoin.html">Intro to Joins</a></li>
+  <li><a href="https://pgexercises.com/questions/joins/simplejoin2.html">More Joins</a></li>
+  <li><a href="https://pgexercises.com/questions/joins/self.html">Joining a Table to Itself</a></li>
+  <li><a href="https://pgexercises.com/questions/joins/threejoin.html">Multiple Joins</a></li>
+  <li><a href="https://pgexercises.com/questions/joins/threejoin2.html">Multiple Joins 2</a></li>
+</ol>
+
+<h3 id="aggregates">Aggregates</h3>
+
+<ol>
+  <li><a href="https://pgexercises.com/questions/aggregates/count.html">Count</a></li>
+  <li><a href="https://pgexercises.com/questions/aggregates/count2.html">More Counting</a></li>
+  <li><a href="https://pgexercises.com/questions/aggregates/count3.html">Group</a></li>
+  <li><a href="https://pgexercises.com/questions/aggregates/fachours.html">Sum</a></li>
+  <li><a href="https://pgexercises.com/questions/aggregates/fachoursbymonth.html">More Summing</a></li>
+  <li><a href="https://pgexercises.com/questions/aggregates/fachours1a.html">Having</a></li>
+  <li><a href="https://pgexercises.com/questions/aggregates/facrev.html">Aggregates and Joins</a></li>
+</ol>
+
+<h3 id="checks-for-understanding-1">Checks for Understanding</h3>
+
+<ol>
+  <li>How can you limit which columns you select from a table?</li>
+  <li>How can you limit which rows you select from a table?</li>
+  <li>How can you give a selected column a different name in your output?</li>
+  <li>How can you sort your output from a SQL statement?</li>
+  <li>What is joining? When do you need to join?</li>
+  <li>What is an aggregate function?</li>
+  <li>List three aggregate functions and what they do.</li>
+  <li>What does the <code class="highlighter-rouge">group</code> statement do?</li>
+  <li>How does the <code class="highlighter-rouge">group</code> statement relate to aggregates?</li>
+</ol>
+:ET

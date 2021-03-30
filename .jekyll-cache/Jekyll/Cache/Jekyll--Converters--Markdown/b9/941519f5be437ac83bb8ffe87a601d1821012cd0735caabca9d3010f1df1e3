@@ -1,0 +1,42 @@
+I"�
+<h2 id="ruby-253">Ruby 2.5.3</h2>
+
+<p>We will use Ruby 2.5.3 in Module 3. You can check your Ruby version by running <code class="highlighter-rouge">ruby -v</code>.</p>
+
+<p>Using <a href="https://github.com/rbenv/rbenv">rbenv</a>, you can install Ruby 2.5.3 (if you don’t have it already) with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rbenv install 2.5.3
+</code></pre></div></div>
+
+<p>With <code class="highlighter-rouge">rbenv</code> you can set your Ruby version for a directory and all subdirectories within it. If you have a <code class="highlighter-rouge">3module</code> directory on your machine, you can set your Ruby version for this directory (and all subdirectories) by first changing into that directory and then running</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rbenv local 2.5.3
+</code></pre></div></div>
+
+<p>Always double check that your Ruby version is correct after changing it with <code class="highlighter-rouge">ruby -v</code></p>
+
+<h2 id="rails-5243">Rails 5.2.4.3</h2>
+
+<p>We will use Rails version 5.2.4.3 in Module 3.</p>
+
+<p>Rails is a Gem, and if you are using <code class="highlighter-rouge">rbenv</code>, gems are specific to your current Ruby version, so you need to make sure you are on Ruby 2.5.3 before proceeding by following the instructions above.</p>
+
+<p>Once you have verified your Ruby version is 2.5.3, check if you have Rails. From the command line:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>If you get a message saying rails is not installed or you do not have version 5.2.4.3, run</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gem <span class="nb">install </span>rails <span class="nt">--version</span> 5.2.4.3
+</code></pre></div></div>
+
+<p>You may need to quit and restart your terminal session to see these changes show up when you check your rails version with:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>Be careful not to install the latest version of Rails by only doing <code class="highlighter-rouge">gem install rails</code> – our curriculum is not up to date with the latest version and you will need to uninstall it.</p>
+
+<p>If you instead get a version of Rails besides <code class="highlighter-rouge">5.2.4.3</code>, follow <a href="https://github.com/turingschool-examples/task_manager_rails/blob/master/rails_uninstall.md">these instructions</a>.</p>
+:ET

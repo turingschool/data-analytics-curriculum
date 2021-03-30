@@ -1,0 +1,66 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand structure of an HTML page</li>
+  <li>Understand difference between semantic/non-semantic tags</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+
+<ul>
+  <li>What does HTML stand for?</li>
+  <li>What do you know about HTML so far?</li>
+</ul>
+
+<h2 id="intro-3-5-minutes">Intro (3-5 minutes)</h2>
+<ul>
+  <li>
+    <p>What is HTML?
+Simply put, it is the skeleton structure of a web page.</p>
+  </li>
+  <li>
+    <p>What do we mean by semantic vs. non-semantic elements?
+Semantic elements help provide context for what they contain.
+Here are some example of semantic elements:</p>
+    <article>
+<aside>
+<details>
+<figcaption>
+<figure>
+<footer>
+<header>
+<main>
+<mark>
+<nav>
+<section>
+<summary>
+<time>
+
+</time></summary></section></nav></mark></main></header></footer></figure></figcaption></details></aside></article>
+  </li>
+</ul>
+<p>Non-semantic elements definitely still have a place in our HTML and are used. However, before reaching for non-semantic elements think “can a semantic one be used instead”.</p>
+
+<p>Non-Semantic Elements:</p>
+<div>
+  <span>
+
+## Exploration
+
+Take time to look at the HTML for each section and ask yourself these questions: [Article]((https://github.com/turingschool/backend-curriculum-site/blob/gh-pages/module2/misc/article.html))
+
+- What is the skeleton of this section? How does it fit in with the other sections? Can you roughly sketch what the section falls within the page?
+
+- Do you have repeating elements? What are they and why do you think they are repeating?
+
+- Is there anything interesting you notice about the elements(excluding the content)?
+
+- Does your section have semantic elements what are they?
+
+- Does your section use non-semantic elements? What are they being used for?
+
+## What to take away?
+
+HTML is how we structure our view's content. Be conscientious of what elements you are using and if they logically make sense for what they are containing.
+</span></div>
+:ET

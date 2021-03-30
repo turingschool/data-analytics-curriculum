@@ -1,0 +1,137 @@
+I"�<p>There are <a href="https://www.dropbox.com/s/iya4p2i6wvp83tu/how_the_web_works.key?dl=0">Josh’s slides</a> or <a href="https://www.dropbox.com/s/p85t37ygbaclrto/how_the_web_works_2.key?dl=0">Rachel’s slides</a> that are intended to use along with whiteboard drawings.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understand the relationship between client and server</li>
+  <li>Understand HTTP Requests
+    <ul>
+      <li>Protocols</li>
+      <li>HTTP Verbs</li>
+      <li>Address</li>
+    </ul>
+  </li>
+  <li>DNS Lookup</li>
+  <li>IP Address</li>
+  <li>Ports</li>
+  <li>Servers</li>
+  <li>Understand HTTP Responses
+    <ul>
+      <li>Header</li>
+      <li>Response Code</li>
+      <li>Body</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="notes-for-discussion">Notes for Discussion</h3>
+
+<ul>
+  <li>
+    <p>Client - Browser, command line using tools like cURL.</p>
+  </li>
+  <li>
+    <p>Request
+GET /path/file.html HTTP/1.0
+From: someuser@example.com
+User-Agent: HTTPTool/1.0</p>
+
+    <ul>
+      <li>Protocol
+        <ul>
+          <li>HTTP - Foundation of data communication on the Web</li>
+          <li>IMAP, SSH, SMTP, FTP</li>
+        </ul>
+      </li>
+      <li>Verb
+        <ul>
+          <li>GET - Retrieve information identified by the Request-URI.</li>
+          <li>POST - Create a new resource identified by the Request-URI.</li>
+          <li>PUT - Update a specific resource identified by the Request-URI.</li>
+          <li>DELETE - Delete the resource identified by the Request-URI.</li>
+        </ul>
+      </li>
+      <li>Address
+        <ul>
+          <li>DNS lookup</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>DNS Lookup
+    <ul>
+      <li>Domain Name System</li>
+      <li>Protocol within the set of standards for how computers exchange information (called TCP/IP).</li>
+      <li>Massive database mapping domain names to IP addresses.</li>
+      <li>DNS name resolution.</li>
+      <li>DNS servers are often selected by configuration settings sent by your Internet service provider (ISP), WiFi network,
+modem or router that assigns your computer’s network address.</li>
+      <li>It’s a distributed system on millions of machines managed by millions of people.</li>
+      <li>Check for the domain name and IP address in its database, it resolves the name itself.</li>
+      <li>If it doesn’t have the domain name and IP address in its database, it contacts another DNS server on the Internet.</li>
+      <li>Cache the lookup results for a limited time so it can quickly resolve subsequent requests to the same domain name.</li>
+      <li>Return an error indicating that the name is invalid or doesn’t exist if it can’t find the domain.</li>
+    </ul>
+  </li>
+  <li>IP Address
+    <ul>
+      <li>IPv4 uses 32 bit addresses or 2**32</li>
+      <li>Human readable:
+        <ul>
+          <li>172.16.254.1</li>
+          <li>172     .16      .254     .1</li>
+          <li>10101100.00010000.11111110.00000001</li>
+          <li>76543210 (Places of binary)</li>
+          <li>Each number is one byte, or eight bits</li>
+        </ul>
+      </li>
+      <li>Some addresses are reserved
+        <ul>
+          <li>127.0.0.0/8 (Is this a range of 0-8???)</li>
+        </ul>
+      </li>
+      <li>IPv6 uses 128-bit addresses or 2**128</li>
+    </ul>
+  </li>
+  <li>Port
+    <ul>
+      <li>Endpoints on a connection</li>
+      <li>Allows processes and applications running on a machine to share a physical connection to a packet-switched network like the Internet.</li>
+      <li>Well known ports are reserved.
+        <ul>
+          <li>HTTP 80, HTTPS 443</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Server
+    <ul>
+      <li>Apache/Nginx routes to Puma, Unicorn or Passenger</li>
+    </ul>
+  </li>
+  <li>Response
+    <ul>
+      <li>Header</li>
+      <li>Response Code</li>
+      <li>Body</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  HTTP/1.0 200 OK
+  Date: Fri, 31 Dec 1999 23:59:59 GMT
+  Content-Type: text/html
+  Content-Length: 49
+
+  <span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Hello World!<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+  <span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<h3 id="resources">Resources</h3>
+<p><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">Request Protocols</a>
+<a href="http://en.wikipedia.org/wiki/IPv4#Addressing">IP Addresses</a></p>
+
+:ET

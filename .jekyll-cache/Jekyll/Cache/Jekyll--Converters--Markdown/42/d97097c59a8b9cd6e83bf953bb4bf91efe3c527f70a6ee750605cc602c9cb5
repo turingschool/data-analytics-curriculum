@@ -1,0 +1,21 @@
+I"�<p>We’re gonna cover a whole bunch of JS concepts.</p>
+
+<p><img src="https://media.giphy.com/media/qKltgF7Aw515K/giphy.gif" alt="Information" /></p>
+
+<p>Here’s the repo:</p>
+
+<p><a href="https://github.com/mdn/advanced-js-fundamentals-ck">advanced-js-fundamentals-ck</a></p>
+
+<p>Clone that down. Some of the lessons will have tests you need to get passing. We’ll work through the lessons on Github</p>
+
+<p>Here’s the lessons, in order of how much you need to know them:</p>
+
+<ol>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/02-functions/01-calling-functions.md">Calling functions in JavaScript</a></li>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/02-functions/02-what-is-this.md">What is <code class="highlighter-rouge">this</code>?</a></li>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/01-array-prototype-methods/README.md">Array Prototype Methods</a></li>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/03-object-oriented-javascript/01-introduction-to-object-oriented-javascript.md">Intro to Object-oriented JavaScript</a></li>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/04-events/01-basic-events.md">Basic events</a></li>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/04-events/06-data-attributes.md">Data Attributes</a></li>
+</ol>
+:ET

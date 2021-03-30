@@ -1,0 +1,17 @@
+I"�<h1 id="how-ruby-works">How Ruby Works</h1>
+
+<p>Let’s set a bit of context by discussing how your Ruby programs actually run on the computer. Let’s discuss:</p>
+
+<ul>
+  <li>Hardware resources (CPU, memory, accessories, network)</li>
+  <li>Operating systems (ex: Windows and Unix/MacOS)</li>
+  <li>File systems in Windows and Unix/MacOS</li>
+  <li>Processes</li>
+  <li>The Ruby “Virtual Machine”</li>
+  <li>Virtual machines &amp; cross-operating system compatibility</li>
+  <li>The OS X Terminal</li>
+  <li>Running multiple processes (and virtual machines)</li>
+  <li>In-Memory storage vs File System storage</li>
+  <li>Running <code class="highlighter-rouge">irb</code> vs <code class="highlighter-rouge">ruby</code></li>
+</ul>
+:ET

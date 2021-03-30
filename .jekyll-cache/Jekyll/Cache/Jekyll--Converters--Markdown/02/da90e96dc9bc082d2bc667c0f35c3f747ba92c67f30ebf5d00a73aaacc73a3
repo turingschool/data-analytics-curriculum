@@ -1,0 +1,21 @@
+I"�<h3 id="release-4--implement-authorization">Release 4:  Implement Authorization</h3>
+
+<p>To this point, we’ve been dealing with <em>authentication</em>:  answering the question, “Who are you?”  Now we’re going to handle <em>authorization</em>:  answering the question, “What do you have permission to do?”</p>
+
+<p>In applications there are different use cases for authorization.  For example, an application might have a group of administrators with special privileges.  Perhaps they can edit content, delete posts, etc., while other users cannot.  In our application, we’ll authorize all logged in users to view the content of our site.  If users have not logged in, they will not be authorized to view the content.</p>
+
+<p>What is our content?  We’re practicing authorization, so let’s just create a “secret” page, at the path ‘/secret’.  Users should be authorized to see the secret page only if they’re logged in.  If visitors try to access the secret page when they’re not logged in, they should be redirected to the login page.</p>
+
+<p>One way to restrict access to authorized users is a <a href="http://guides.rubyonrails.org/action_controller_overview.html#filters">filter</a>.  This is not the only way to accomplish this and not necessarily the best way in this case.  But it’s one tool to implement this kind of pre-route logic.  For an application this simple, it’s ok to put the authorization logic in the controller action itself. Use the following user stories to build out this functionality.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a visitor
+When I visit '/secret'
+I am returned to the login path ('/login')
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>As a logged in user
+I can visit '/secret'
+and my current path is '/secret'
+</code></pre></div></div>
+
+<p><a href="./auth_exploration">Back to Auth Exp Home</a></p>
+:ET

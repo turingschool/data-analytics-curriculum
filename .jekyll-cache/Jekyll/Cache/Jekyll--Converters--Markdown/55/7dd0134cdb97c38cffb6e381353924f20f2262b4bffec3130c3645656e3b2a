@@ -1,0 +1,480 @@
+I"F�<h2 id="six-rules-for-functions-in-js">Six Rules for Functions in JS</h2>
+
+<p>Functions are truly one of the fundamental building blocks for programming in JavaScript.
+To newcomers or developers learning JavaScript after another language, the nuances and rules involved
+can often be daunting. However it is possible to distill all of these down to a handful of
+“guiding principles” which will give you the foundation you need for working with functions
+in <em>most</em> situations.</p>
+
+<h3 id="goals">Goals</h3>
+
+<ul>
+  <li>Understand hoisting</li>
+  <li>Understand the Arguments array</li>
+  <li>Have a general idea of bind(), apply() and call()</li>
+</ul>
+
+<h3 id="1-functions-are-values">1. Functions are Values</h3>
+
+<p>This simple fact about JavaScript is also one of its most powerful traits.
+To reiterate, functions are one of the primary “types” of things we encounter in JavaScript.
+We can pass them around and manipulate them just as we do more familiar data types like
+Strings and Numbers.</p>
+
+<p>The ability to work with functions in this way is one of the main reasons JavaScript is often
+referred to as a “functional language”. You’ll often also hear the catchphrase “functions are first-class
+citizens.”</p>
+
+<h5 id="demonstration-consider-these-examples-by-executing-them-in-your-browser-console">Demonstration: Consider these examples by executing them in your browser console:</h5>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typeof</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">hi</span><span class="dl">"</span><span class="p">);</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">pizza</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">mmmm</span><span class="dl">"</span><span class="p">);</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typeof</span> <span class="k">typeof</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span>
+</code></pre></div></div>
+
+<p><strong>What did you find?</strong></p>
+
+<h5 id="invoking-functions">Invoking Functions</h5>
+
+<p>This may be familiar to you by now, but we (generally) invoke a function by
+affixing a pair of parentheses to the end of it.</p>
+
+<p>What’s the difference between this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>and this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span>
+</code></pre></div></div>
+
+<p><strong>Remember:</strong> Functions are values. If we refer by name to a variable or object property
+which stores a function, it will return to us the function value itself – just as if we
+referred to a variable or object property storing a Number or a String.</p>
+
+<h4 id="exercise-functions-that-take-functions-as-arguments">Exercise: Functions that take functions as arguments</h4>
+
+<p>On your own, write a function which:</p>
+
+<ol>
+  <li>Takes another function as its argument</li>
+  <li>Invokes that function</li>
+  <li>Returns that function back</li>
+</ol>
+
+<h3 id="2-functions-can-be-stored-as-values-or-declared-with-names">2. Functions Can be <em>Stored</em> as Values or <em>Declared</em> With Names</h3>
+
+<p>There are 2 basic ways to create a function in JavaScript: a function
+<strong>expression</strong> and a function <strong>declaration</strong>.</p>
+
+<h4 id="function-expressions">Function Expressions</h4>
+
+<p>Function <strong>expressions</strong> are how we create function values “on the fly” in JavaScript, similarly
+to how typing a series of characters surrounded by “quotation marks” produces a string.</p>
+
+<p>Since, as we said in <strong>Rule 1</strong>, functions are values, we can do all the same things with them
+that we do with other data types, including:</p>
+
+<p><strong>Store them in Variables:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">pizza</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">toppingType</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">MMM, that is a tasty</span><span class="dl">"</span><span class="p">,</span> <span class="nx">toppingType</span><span class="p">,</span> <span class="dl">"</span><span class="s2">pizza!</span><span class="dl">"</span><span class="p">);</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Pass them as arguments to other functions:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span> <span class="p">});</span>
+</code></pre></div></div>
+
+<h4 id="function-declarations">Function Declarations</h4>
+
+<p>Function declarations are a slightly more rigid way of declaring functions with explicit
+names. For example:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doughType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">mmmm whole wheat</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="declarations-vs-expressions--why-do-i-care">Declarations vs. Expressions – Why do I care?</h4>
+
+<p>There is a subtle difference in how the interpreter evaluates a function expression and a function
+declaration. This behavior is generally referred to as <strong>hoisting</strong>, since it effectively “hoists”
+declared functions to the top of their containing scope.</p>
+
+<p><strong>Execute this example in your browser console:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">());</span>
+<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">a</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>What happened? Did you get an error? What kind?</p>
+
+<p><strong>Now try this one:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">());</span>
+<span class="kd">function</span> <span class="nx">b</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">b</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Sweet function Hoisting Batman! No TypeErrors here!</strong></p>
+
+<p>For some other mindbending examples, consider this <a href="https://JavaScriptweblog.wordpress.com/2010/07/06/function-declarations-vs-function-expressions/">blog post</a>.</p>
+
+<h4 id="discussion-js-evaluation-process-variable-declaration-vs-assignments">Discussion: JS Evaluation Process: Variable Declaration vs. Assignments</h4>
+
+<ul>
+  <li>JS is actually evaluated in a few distinct “phases”</li>
+  <li>One phase declares all variables <code class="highlighter-rouge">var thing</code>, etc.</li>
+  <li>At this time, function declarations are also evaluated</li>
+  <li>After this step, execution resumes from the top of a scope and proceeds
+linearly. Function expressions are evaluated as they are reached and slotted into
+any appropriate variables.</li>
+</ul>
+
+<p>One rough rule of thumb: if a function declaration appears on the right side of an <code class="highlighter-rouge">=</code> sign,
+or surrounded by <code class="highlighter-rouge">()</code>, it’s being declared as a value. Otherwise it is likely a declaration.</p>
+
+<h3 id="3-functions-always-accept-a-variable-number-of-arguments">3. Functions Always Accept a Variable Number of Arguments</h3>
+
+<p>In JavaScript, all functions can be passed a variable number
+of arguments. In practice, passing the wrong number of arguments often results in an error,
+or in additional arguments being ignored. But we can pass them and the function will accept them
+nonetheless.</p>
+
+<p>In <strong>Ruby,</strong> we sometimes define methods like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">a</span><span class="p">.</span><span class="nf">inspect</span>
+  <span class="nb">puts</span> <span class="n">b</span><span class="p">.</span><span class="nf">inspect</span>
+  <span class="nb">puts</span> <span class="n">args</span><span class="p">.</span><span class="nf">inspect</span>
+<span class="k">end</span>
+<span class="n">my_method</span><span class="p">(</span><span class="s2">"one"</span><span class="p">,</span> <span class="s2">"two"</span><span class="p">,</span> <span class="s2">"three"</span><span class="p">,</span> <span class="s2">"four"</span><span class="p">)</span>
+<span class="c1"># "one"</span>
+<span class="c1"># "two"</span>
+<span class="c1"># ["three", "four"]</span>
+</code></pre></div></div>
+
+<p>In JavaScript, this behavior is actually in place <em>all the time.</em> So how do we access any
+extra arguments?</p>
+
+<h4 id="arguments-array">Arguments Array</h4>
+
+<p>Within a function, we can refer to a special variable called <code class="highlighter-rouge">arguments</code>. This object is an array
+which stores, in order, all of the arguments that were passed to our function.</p>
+
+<p>Consider this example:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>What happens when you evaluate:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">foo</span><span class="p">(</span><span class="dl">"</span><span class="s2">hi</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>What about:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">foo</span><span class="p">(</span><span class="dl">"</span><span class="s2">hello</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">world</span><span class="dl">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Or:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">foo</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p><strong>Variadic Arguments!</strong></p>
+
+<p>This ability to always handle any number of arguments is partly responsible for the
+flexible behaviors of functions like <code class="highlighter-rouge">console.log</code>. <strong>Consider:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">a</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">b</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="exercise-logstring-function">Exercise: logString Function</h4>
+
+<p><code class="highlighter-rouge">console.log</code> is cool, but it simply prints our string to the terminal without returning
+it to us. Let’s see if we can add our own version which returns the actual string itself.</p>
+
+<p>Define a function which:</p>
+
+<ul>
+  <li>Accepts any number of arguments</li>
+  <li>Returns a string of all of those arguments separated by spaces</li>
+</ul>
+
+<p><strong>Level 2:</strong></p>
+
+<p>Update your function so that  it accepts</p>
+
+<ul>
+  <li>A “header” value, which is separated from the rest of the output by a newline (<code class="highlighter-rouge">\n</code>)</li>
+  <li>Any number of additional values, which are separated by spaces after the header</li>
+</ul>
+
+<h3 id="4-this-is-a-special-keyword-wihtin-a-function-referring-to-its-context-of-invocation">4. <code class="highlighter-rouge">this</code> is a special keyword wihtin a function, referring to its context of invocation</h3>
+
+<p><strong>Lo, the dreaded <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"><code class="highlighter-rouge">this</code></a>!</strong></p>
+
+<p><code class="highlighter-rouge">this</code> is a special keyword in JavaScript which, when referenced from within a function body,
+refers, roughly, to the “contextual object” from which the function was executed.</p>
+
+<p>There are actually several rules governing the exact precedence of <code class="highlighter-rouge">this</code> assignment,
+which we will cover in more detail in a coming lesson.</p>
+
+<p>For now, we can roughly think of <code class="highlighter-rouge">this</code> as referring to whichever object the function
+we are invoking is currently attached to.</p>
+
+<p><strong>Consider:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">myFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>what does <code class="highlighter-rouge">myFunc()</code> output?</p>
+
+<p>What if we attach myFunc to an object:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">myObj</span> <span class="o">=</span> <span class="p">{</span><span class="na">func</span><span class="p">:</span> <span class="nx">myFunc</span><span class="p">,</span> <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">myObj</span><span class="dl">"</span><span class="p">};</span>
+</code></pre></div></div>
+
+<p>What does <code class="highlighter-rouge">myObj.func()</code> output? Why? What is the behavior of <code class="highlighter-rouge">this</code> as the function is
+attached to different objects?</p>
+
+<p><em>note</em> - when using “strict mode”, these behaviors will behave alightly differently.
+In general, strict mode (helpfully) tries to help us avoid accidentally modifying the
+global scope. Thus it will often trigger an error when you do so.</p>
+
+<h4 id="exercise-this-ness">Exercise: <code class="highlighter-rouge">this</code>-ness</h4>
+
+<p>In your console:</p>
+
+<ul>
+  <li>Define an object called “me” with your own name as a property called <code class="highlighter-rouge">name</code></li>
+  <li>Add another property to the object called <code class="highlighter-rouge">sayHello</code>. When invoked, it should
+output the string “Hi, my name is <your-name-here>". Use `this` within the function to retrieve
+the name value stored on the object.</your-name-here></li>
+</ul>
+
+<h3 id="5-call-and-apply--2-alternate-means-of-invoking-functions">5. <code class="highlighter-rouge">call</code> and <code class="highlighter-rouge">apply</code> – 2 Alternate Means of Invoking Functions</h3>
+
+<p>Remember how we said we “generally” invoke functions by appending <code class="highlighter-rouge">()</code> to
+them? Well there are also a couple of other ways to invoke a function, 2
+of which are the functions <code class="highlighter-rouge">call</code> and <code class="highlighter-rouge">apply</code>.</p>
+
+<p>Where do <code class="highlighter-rouge">call</code> and <code class="highlighter-rouge">apply</code> live? Well they’re actually functions
+stored on…functions. Specifically they’re functions attached to
+the <code class="highlighter-rouge">Function</code> prototype – JavaScript’s inheritance mechanism which
+we’ll discuss further in a future lesson.</p>
+
+<p>In short, since these functions are stored on the <code class="highlighter-rouge">Function</code> prototype,
+their behavior is available to all functions that we interact with.</p>
+
+<p><strong>Try this:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typeof</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">functions all the way down...</span><span class="dl">"</span><span class="p">)}).</span><span class="nx">call</span>
+<span class="k">typeof</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">functions all the way down...</span><span class="dl">"</span><span class="p">)}).</span><span class="nx">apply</span>
+</code></pre></div></div>
+
+<p><strong>Or, perhaps more clearly:</strong></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">pizza</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">enough with the functions already</span><span class="dl">"</span><span class="p">);</span> <span class="p">}</span>
+<span class="k">typeof</span> <span class="nx">pizza</span>
+<span class="k">typeof</span> <span class="nx">pizza</span><span class="p">.</span><span class="nx">call</span>
+</code></pre></div></div>
+
+<p>Well, there you have it: functions (like any other object) can have properties
+that store values. And since functions (like any other object) are values,
+you can store them as a property…even of <em>another function</em>!</p>
+
+<h4 id="using-call-and-apply">Using Call and Apply</h4>
+
+<p>So what do call and apply actually do?</p>
+
+<p>In short they fulfill 2 responsibilities:</p>
+
+<ol>
+  <li>Explicitly assigning the value of <code class="highlighter-rouge">this</code> within the function</li>
+  <li>Passing arguments through to the invoked function</li>
+</ol>
+
+<p>The way they do this is a little bit different, so let’s take a look.</p>
+
+<h4 id="functionprototypecall">Function.prototype.call</h4>
+
+<p><strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call">Function.prototype.call</a></strong> takes <code class="highlighter-rouge">N</code> arguments. The first argument
+will be used as the value of <code class="highlighter-rouge">this</code> within the function. The remaining
+arguments will be <em>passed through</em> to the original function, as if they had
+been provided as normal arguments.</p>
+
+<p>For example, try this example:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">anObject</span> <span class="o">=</span> <span class="p">{</span><span class="na">aFunction</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="p">},</span> <span class="na">anotherProperty</span><span class="p">:</span> <span class="dl">'</span><span class="s1">hi there</span><span class="dl">'</span><span class="p">}</span>
+<span class="nx">anObject</span><span class="p">.</span><span class="nx">aFunction</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>What about this one:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">anObject</span> <span class="o">=</span> <span class="p">{</span><span class="na">aFunction</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="p">},</span> <span class="na">anotherProperty</span><span class="p">:</span> <span class="dl">'</span><span class="s1">hi there</span><span class="dl">'</span><span class="p">}</span>
+<span class="nx">anObject</span><span class="p">.</span><span class="nx">aFunction</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="dl">"</span><span class="s2">a different object</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>What about other arguments? As mentioned, they are passed through to the original function.
+Consider:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span> <span class="nx">arg2</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span> <span class="nx">arg2</span><span class="p">);</span> <span class="p">}</span>
+<span class="nx">foo</span><span class="p">(</span><span class="dl">"</span><span class="s2">pizza</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">pie</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">foo</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="dl">"</span><span class="s2">pizza</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">pie</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Notice that:</p>
+
+<ul>
+  <li>the additional arguments “pizza”, and “pie” are passed into the original function</li>
+  <li>we pass <code class="highlighter-rouge">null</code> as a placeholder for the first argument, since in this case we don’t
+really need to manipulate the function’s <code class="highlighter-rouge">this</code> value</li>
+</ul>
+
+<h4 id="functionprototypeapply">Function.prototype.apply</h4>
+
+<p><strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">Function.prototype.apply</a></strong> is a bit more interesting. Similar to call, its first argument
+will be used as the value of <code class="highlighter-rouge">this</code> within the function.</p>
+
+<p>But for its second argument, <code class="highlighter-rouge">apply</code> expects actually a <em>collection</em> - generally an Array.
+What does it do with the array? Let’s experiment to find out:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">myFunc</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// remember our friend the arguments array?</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">first:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">second:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">third:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="c1">//try this:</span>
+
+<span class="nx">myFunc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="c1">// and what about this:</span>
+
+<span class="nx">myFunc</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="dl">"</span><span class="s2">this arg</span><span class="dl">"</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<p><strong>Discussion: What happens with apply?</strong></p>
+
+<p>In short, apply allows us to “flatten out” a collection of
+values against the argument list of a function. More specifically,
+it allows us to “apply” the function over the “list” of arguments provided
+– here JavaScript shows some of its <a href="http://c2.com/cgi/wiki?EvalApply">LISP Heritage</a>.</p>
+
+<h3 id="6-functions-like-other-values-can-be-stored-as-object-properties">6. Functions, Like Other Values, Can Be Stored As Object Properties</h3>
+
+<p>Whooo! That was a sprint! We’ve learned quite a bit about functions, though.
+Now that we’re here, what can we do with our newfound knowledge?</p>
+
+<p>Let’s close by returning to one of our earlier points, and looking more
+specifically at how it can help us better organize and structure our day-to-day
+JavaScript code.</p>
+
+<p>Some of our main points before included:</p>
+
+<ul>
+  <li>Functions are values just like other built-in JS types.</li>
+  <li>In this vein, functions can be stored as <em>properties</em> on <em>objects</em> as we see fit.</li>
+</ul>
+
+<p>This flexibility to shuffle functions around and organize them as we see fit is
+a powerful feature of the language, and it gives us some common patterns for
+organizing our code.</p>
+
+<p>Consider your average programmer’s JavaScript trajectory, helpfully expressed
+in ASCII Art format:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    Oh god now the code is everywhere-----&gt;Undefined is not a function----&gt; X(
+                    /
+                   /
+                 Hey I can write some code
+                 /
+                /
+How do I even JS
+</code></pre></div></div>
+
+<p>JavaScript can be very powerful, but it can also get very messy very quickly. A common
+painpoint of JS codebases is that they become scattered piles of randomly invoked
+and structured statements, often leaking scope over one another and worse.</p>
+
+<p>It’s amazing what a little organization can do for these symptoms, and in that vein,
+here are 2 dead-simple principles of JS code organization:</p>
+
+<ol>
+  <li>Put your code in functions. Yes all of it. In a function of some sort.</li>
+  <li>Attach those functions to Objects.</li>
+</ol>
+
+<p><strong>Done.</strong> Now you can snicker at other developer’s whose JS grows into gnarled piles of
+unscoped variables.</p>
+
+<p>This might not get you to JavaScript PhD level, and there are more advanced techniques
+we’ll discuss in the coming days, but honestly for 80% of web development cases this is
+sufficient.</p>
+
+<p>Need to bind some event handlers around your TaskList UI? Sounds like a <code class="highlighter-rouge">TaskList</code>
+object with a <code class="highlighter-rouge">bindEventListeners</code> property might be for you!</p>
+
+<p>Need to send and receive Task Data from a server via AJAX? Sounds like a <code class="highlighter-rouge">TaskDataService</code>
+with some ajax-y function properties might be for you!</p>
+
+<p>Remember that functions can always be attached as properties of objects:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">pizzaOven</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">makeMeAPizza</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="dl">"</span><span class="s2">mmm za</span><span class="dl">"</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">pizzaOven</span><span class="p">.</span><span class="nx">makeMeAPizza</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>This simple pattern will actually handle a lot of cases.
+It can easily be extrapolated to Jquery-intensive code for
+dealing with DOM events and manipulations</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//hypothetical example</span>
+<span class="kd">var</span> <span class="nx">TaskList</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">taskClicked</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">woo task clicked!</span><span class="dl">"</span><span class="p">);</span> <span class="p">},</span>
+  <span class="na">bindEventListeners</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="dl">"</span><span class="s2">.task</span><span class="dl">"</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">taskClicked</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// one call to set up our code</span>
+<span class="c1">// as opposed to a bunch of inline Jquery statements</span>
+<span class="nx">TaskList</span><span class="p">.</span><span class="nx">bindEventListeners</span><span class="p">();</span>
+</code></pre></div></div>
+
+<h3 id="recap">Recap</h3>
+
+<p>Let’s briefly summarize some of the major points we’ve encountered:</p>
+
+<ol>
+  <li>Functions are first-class values in JavaScript and thanks to this
+we can manipulate them in lots of exciting ways</li>
+  <li>Functions in JavaScript can be defined with a <em>function expression</em> or
+a <em>function declaration</em>, which subtly tweaks their evaluation order</li>
+  <li>Functions in JavaScript always accept variable numbers of arguments</li>
+  <li><code class="highlighter-rouge">this</code> is a special keyword in JS which roughly refers to a function’s
+“invocation context”</li>
+  <li>We generally invoke functions using the <code class="highlighter-rouge">()</code> syntax, but we can also
+use special functions like <code class="highlighter-rouge">call</code> and <code class="highlighter-rouge">apply</code> to invoke them in different ways</li>
+  <li>Thanks to the flexibility of functions, we can get a lot of mileage out of
+simple organizational idioms – like attaching them as properties of objects!</li>
+</ol>
+
+<h3 id="reference--related-links">Reference / Related Links</h3>
+
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this"><code class="highlighter-rouge">this</code></a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call"><code class="highlighter-rouge">call</code></a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply"><code class="highlighter-rouge">apply</code></a></li>
+  <li><a href="https://github.com/mdn/advanced-js-fundamentals-ck/blob/gh-pages/tutorials/02-functions/01-calling-functions.md">more on JS functions in general</a></li>
+  <li><a href="http://eloquentjavascript.net/03_functions.html">Follow up reading: Functions Chapter in Eloquent javascript</a></li>
+</ul>
+:ET

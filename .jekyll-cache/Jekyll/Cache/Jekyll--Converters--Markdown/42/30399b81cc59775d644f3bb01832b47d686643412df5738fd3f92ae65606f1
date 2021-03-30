@@ -1,0 +1,245 @@
+I"�9<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Access dynamic parameters in a controller</li>
+  <li>Access query string parameters in a controller.</li>
+  <li>Access form parameters in a controller.</li>
+</ul>
+
+<h2 id="vocab">Vocab</h2>
+
+<ul>
+  <li>parameters</li>
+  <li>params</li>
+  <li>dynamic parameters</li>
+  <li>query string parameters</li>
+</ul>
+
+<h2 id="warmup">WarmUp</h2>
+
+<ul>
+  <li>Today we’re going to add the ability for a user to visit <code class="highlighter-rouge">/songs/1</code> and see the information for a Song with the id of 1</li>
+</ul>
+
+<h2 id="passing-data-with-sinatra">Passing Data with Sinatra</h2>
+
+<ul>
+  <li>What are ways that we can pass parameters in Sinatra?
+    <ul>
+      <li>URL
+      - dynamic parameters
+      - query string parameters</li>
+      <li>Input Form</li>
+    </ul>
+  </li>
+  <li>
+    <p>In this workshop, you’ll practice passing data between a client and a Sinatra server.</p>
+  </li>
+  <li>There are a few different ways to pass data: through dynamic parameters in the URL, through the query string parameters in the URL, and through forms. We’ll focus on passing data via dynamic params and via forms.</li>
+</ul>
+
+<h2 id="passing-data-from-client-to-server">Passing Data from Client to Server</h2>
+
+<h3 id="dynamic-parameters">Dynamic Parameters</h3>
+
+<ul>
+  <li>In the <a href="https://github.com/turingschool-examples/set-list">set-list</a> repo, create a route to get the first song populated on the page <code class="highlighter-rouge">/songs/1</code>.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/songs/1'</span> <span class="k">do</span>
+  <span class="vi">@song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">erb</span> <span class="ss">:"songs/show"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Let’s talk about how to make this dynamic.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/songs/:id'</span> <span class="k">do</span>
+  <span class="vi">@song</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+  <span class="n">erb</span> <span class="ss">:"songs/show"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li>We often refer to the <code class="highlighter-rouge">:id</code> part as a wildcard. It doesn’t have to say <code class="highlighter-rouge">:id</code> instead you could put in <code class="highlighter-rouge">:bananas</code>. In which case we’d see <code class="highlighter-rouge">{"bananas" =&gt; 1}</code> in our <code class="highlighter-rouge">params</code> hash. We typically use <code class="highlighter-rouge">:id</code> though, as it is more descriptive of what information is coming through.</li>
+</ul>
+
+<h3 id="query-string-parameters">Query String Parameters</h3>
+<ul>
+  <li>add <code class="highlighter-rouge">gem 'pry'</code> in your Gemfile within the development/test block, and run <code class="highlighter-rouge">bundle install</code> again.</li>
+  <li>Put a pry in your above method:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">get</span> <span class="s1">'/songs/:id'</span> <span class="k">do</span>
+    <span class="nb">require</span> <span class="s1">'pry'</span> <span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+    <span class="vi">@songs</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="ss">:id</span><span class="p">])</span>
+    <span class="n">erb</span> <span class="ss">:"songs/show"</span>
+  <span class="k">end</span>
+</code></pre></div></div>
+<ul>
+  <li>Go back to your browser and visit <code class="highlighter-rouge">/songs/1?term=apples</code></li>
+  <li>What is that <code class="highlighter-rouge">?term=apples</code> part? This is a <strong>query string parameter</strong>. You can string as many key value pairs together without spaces using an <code class="highlighter-rouge">&amp;</code> to separate the pairs. (i.e. <code class="highlighter-rouge">?term=apples&amp;count=4</code>)</li>
+  <li>Switch to terminal and check out what we have in params in our pry session</li>
+</ul>
+
+<p><strong>Turn &amp; Talk</strong></p>
+
+<p>How might this be useful?</p>
+
+<h3 id="form-parameters">Form Parameters</h3>
+<ul>
+  <li>create a new ‘get’ operation in our controller somewhere ABOVE the <code class="highlighter-rouge">get '/songs/:id' do</code> code:
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">get</span> <span class="s1">'/songs/new'</span> <span class="k">do</span>
+<span class="n">erb</span> <span class="ss">:"songs/new"</span>
+  <span class="k">end</span>
+</code></pre></div>    </div>
+  </li>
+  <li>create <code class="highlighter-rouge">views/songs/new</code> file:</li>
+</ul>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">"new-song"</span> <span class="na">action=</span><span class="s">"/songs"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"song[title]"</span> <span class="na">value=</span><span class="s">"Title"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"song[length]"</span> <span class="na">value=</span><span class="s">"Length"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">name=</span><span class="s">"song[play_count]"</span> <span class="na">value=</span><span class="s">"Play Count"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Submit"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>What resource are we trying to create?</li>
+  <li>Based on REST:
+    <ul>
+      <li>What verb should we use?</li>
+      <li>What route should we send it to?</li>
+    </ul>
+  </li>
+  <li>let’s add a ‘post’ operation and a binding pry
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">post</span> <span class="s2">"/songs"</span> <span class="k">do</span>
+<span class="nb">require</span> <span class="s1">'pry'</span><span class="p">;</span> <span class="nb">binding</span><span class="p">.</span><span class="nf">pry</span>
+<span class="k">end</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Let’s shotgun. Navigate to <code class="highlighter-rouge">/songs/new</code> to see our form and fill it in. Click Submit.</li>
+  <li>Clicking submit stops our program and allows us to utilize our favorite tool, PRY!</li>
+  <li>Now that we are here, we can see the output of <code class="highlighter-rouge">params</code></li>
+  <li>Nesting our parameters with <code class="highlighter-rouge">song[title]</code> will help us if we ever have multiple resources’ inputs on our page</li>
+</ul>
+
+<p><strong>Partner Practice</strong><br />
+Test your knowledge by finishing the exercise so that your new song shows on the “songs/index”</p>
+
+<h2 id="passing-data-from-controller-to-view">Passing Data From Controller to View</h2>
+
+<h3 id="locals-vs-instance-variables">Locals vs. Instance Variables</h3>
+
+<p>Try this out:</p>
+
+<p>1) Go to your controller, and change your <code class="highlighter-rouge">get '/songs' do...</code> route to say this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/songs'</span> <span class="k">do</span>
+  <span class="n">songs</span> <span class="o">=</span> <span class="no">Song</span><span class="p">.</span><span class="nf">all</span>
+  <span class="n">erb</span> <span class="ss">:"songs/index"</span><span class="p">,</span> <span class="ss">:locals</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:song_list</span> <span class="o">=&gt;</span> <span class="n">songs</span> <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>2) Go to your <code class="highlighter-rouge">index.erb</code> view and <code class="highlighter-rouge">@songs.each</code> to <code class="highlighter-rouge">song_list.each</code>. It should now just say <code class="highlighter-rouge">song_list.each do...</code>. Does it work? Can you think of pros and cons for this versus the way we originally had it?</p>
+
+<h3 id="notes-locals-vs-instance-variables">Notes: Locals vs. Instance Variables</h3>
+
+<p>With Sinatra, we <em>can</em> pass variables to rendered views with the <code class="highlighter-rouge">:locals</code> option. This is handy, but adds more overhead than is necessary.</p>
+
+<p>Sinatra allows us to access <em>instance</em> variables defined in a particular route within that route’s corresponding rendered view. Not only does this save us a little bit of code to write, this is how things work in Rails! For that reason alone, let’s get into this habit, rather than use <code class="highlighter-rouge">:locals</code>.</p>
+
+<p>To test out how well you understand what pieces were affected by our changes, go ahead and switch back to using the instance variable <code class="highlighter-rouge">@songs</code> instead of the locals hash.</p>
+
+<h2 id="workshophomework">Workshop/Homework</h2>
+
+<p>1) Clone this app: <a href="http://github.com/turingschool/shopping">http://github.com/turingschool/shopping</a></p>
+
+<p>2) This application doesn’t use ActiveRecord so create and migrate the database by running the two migration files:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ruby db/migrations/001_create_items.rb
+<span class="o">=&gt;</span> Items table created and seeded.
+<span class="nv">$ </span>ruby db/migrations/002_create_users.rb
+<span class="o">=&gt;</span> Users table created.
+</code></pre></div></div>
+
+<p>Running these migrations will also create five items for your shop.</p>
+
+<h2 id="query-string-parameters-1">Query String Parameters</h2>
+
+<h4 id="activity-1">Activity 1</h4>
+
+<p>You’ll see a route defined in <code class="highlighter-rouge">shopping_app.rb</code> that handles requests to the index of all items (<code class="highlighter-rouge">/items</code>). Start up your server and check that five items appear.</p>
+
+<p>For this task, you will <em>not</em> need to add or change any code. Instead, take a look at the route, then modify only the URL in order to filter these items by a word in their description.</p>
+
+<p>For example, type a URL that will:</p>
+
+<ul>
+  <li>show only the items made by Apple</li>
+  <li>show only the items made by Samsung</li>
+  <li>show only the year 2016 items</li>
+  <li>show only the year 2017 items</li>
+</ul>
+
+<p>If you’re stuck, research query string parameters.</p>
+
+<p>Confused about the use of LIKE in the SQL in the <code class="highlighter-rouge">.find_by</code> method? Check out <a href="https://www.tutorialspoint.com/sqlite/sqlite_like_clause.htm">this explanation of the LIKE operator</a>.</p>
+
+<h4 id="activity-2">Activity 2</h4>
+
+<p>Imagine that the company whose website you’re building no longer wants to use “term”, but instead wants to use “filter”. What do you need to modify in your code? Make the change(s), then test out this URL to make sure it works: <code class="highlighter-rouge">localhost:9393/items?filter=Samsung</code>.</p>
+
+<h4 id="activity-3">Activity 3</h4>
+
+<p>Modify the URL, controller, and view to make this message appear when a user looks at the items index.</p>
+
+<p><code class="highlighter-rouge">Note: Contact your local stores in Denver to check item availability.</code></p>
+
+<p>or</p>
+
+<p><code class="highlighter-rouge">Note: Contact your local stores in Los Angeles to check item availability.</code></p>
+
+<p>…etc…</p>
+
+<p>The value of the city should be able to be modified based on my URL query params.</p>
+
+<h4 id="questions-to-consider">Questions to Consider</h4>
+
+<ul>
+  <li>What are some common use cases for query strings on the internet?</li>
+  <li>What are some of the limitations of passing data through query strings?</li>
+</ul>
+
+<h2 id="form-parameters-1">Form Parameters</h2>
+
+<h4 id="activity-1-1">Activity 1</h4>
+
+<p>Take a look in <code class="highlighter-rouge">views/new_item.erb</code>. You’ll see an existing form, but something is wrong with it! Use your debugging skills and tools to fix <em>just the form</em>.</p>
+
+<h4 id="activity-2-1">Activity 2</h4>
+
+<p>You’ll see a route in your <code class="highlighter-rouge">shopping_app.rb</code> to <code class="highlighter-rouge">get '/users/new'</code>. It renders a view template that is currently blank. Create a form in this file that will accept two attributes: a name and an email address. Use the <code class="highlighter-rouge">&lt;label&gt;</code> HTML tag to differentiate between the name and email address input fields.</p>
+
+<p>Create a route that handles the submission of this form (follow the conventions from our CRUD chart) and ultimately brings the user back to the list of all users.</p>
+
+<h1 id="done">Done?</h1>
+
+<p>If you’re finished, here are some ideas:</p>
+
+<ul>
+  <li>Build out full CRUD functionality for Users.</li>
+  <li>Use Bootstrap to style your views.</li>
+</ul>
+
+<h2 id="wrapup">WrapUp</h2>
+<ul>
+  <li>What are dynamic parameters and why would you use them?</li>
+  <li>What are query string parameters and why would you use them?</li>
+  <li>How do you get access in your controller to information submitted in a form?</li>
+  <li>How do you pass local variables to a view? Should we use them? Why? Why not?</li>
+</ul>
+:ET

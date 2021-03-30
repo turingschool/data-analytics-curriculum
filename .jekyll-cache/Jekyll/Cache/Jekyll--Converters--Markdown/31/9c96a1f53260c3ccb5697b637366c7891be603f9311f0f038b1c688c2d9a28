@@ -1,0 +1,99 @@
+I"<h2 id="learning-goals">Learning Goals</h2>
+
+<ol>
+  <li>Understand what a RegEx is</li>
+  <li>Understand why they’re used</li>
+  <li>Be able to read “basic” regexes</li>
+  <li>Be able to write basic regexes,  “basic” includes the ability to use <code class="highlighter-rouge">.\s\d+*</code> and a capture.</li>
+  <li>Get better at science (answering your own questions)</li>
+</ol>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>30 minutes guided chaos</li>
+  <li>60 minutes students discover and update our shared knowledge</li>
+  <li>30 minutes take the results and solve a challenge</li>
+</ul>
+
+<h2 id="content">Content</h2>
+
+<h3 id="definition">Definition</h3>
+
+<p>Regex are ways to match strings.</p>
+
+<h3 id="axiomatic-information">Axiomatic information</h3>
+
+<p>These methods, on strings, are useful:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">=~</code></li>
+  <li><code class="highlighter-rouge">[]</code></li>
+  <li><code class="highlighter-rouge">gsub</code></li>
+  <li><code class="highlighter-rouge">split</code></li>
+  <li><code class="highlighter-rouge">scan</code></li>
+</ul>
+
+<p>These variables might or might not get set with information after a match:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">$1</code></li>
+  <li><code class="highlighter-rouge">$2</code></li>
+  <li><code class="highlighter-rouge">$3</code></li>
+  <li>…</li>
+</ul>
+
+<h3 id="guided-chaos">Guided chaos</h3>
+
+<p>Lets figure out how a few of these work.
+We’ll discover the answer together, I’ll lead, but not tell you anything.
+You have to tell me which experiments
+to try and then summarize what we figure out.</p>
+
+<p>Here are some fun starting strings</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"HTTP/1.1 200 OK"</span>
+<span class="s2">"Horace Williams [11:32 AM]"</span>
+</code></pre></div></div>
+
+<h3 id="coalesce-our-knowledge">Coalesce our knowledge!</h3>
+
+<p>Break out into groups, figure out as much as you can,
+and update a single cheat sheet of information.</p>
+
+<p><a href="https://github.com/JoshCheek/regular-expression-knowledge-we-have-discovered">Here</a>
+is the result from last time, to get a sense of what it looks like,
+but don’t take results from it, that robs you of the opportunity to discover!</p>
+
+<h3 id="challenge">Challenge</h3>
+
+<p>Run this to get some text to match: <code class="highlighter-rouge">$ curl -i google.com</code></p>
+
+<ul>
+  <li>
+    <p>Get me every set of consecutive characters where none of them is a space
+and they include “http” in there somewhere, regardles of case.
+I’m expecting the result to be this:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="s2">"HTTP/1.1"</span><span class="p">,</span>
+ <span class="s2">"http://www.google.com/"</span><span class="p">,</span>
+ <span class="s2">"http-equiv=</span><span class="se">\"</span><span class="s2">content-type</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span>
+ <span class="s2">"HREF=</span><span class="se">\"</span><span class="s2">http://www.google.com/</span><span class="se">\"</span><span class="s2">&gt;here&lt;/A&gt;."</span><span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Get me every header. I’m expecting this:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="s2">"Location"</span><span class="p">,</span>
+ <span class="s2">"Content-Type"</span><span class="p">,</span>
+ <span class="s2">"Date"</span><span class="p">,</span>
+ <span class="s2">"Expires"</span><span class="p">,</span>
+ <span class="s2">"Cache-Control"</span><span class="p">,</span>
+ <span class="s2">"Server"</span><span class="p">,</span>
+ <span class="s2">"Content-Length"</span><span class="p">,</span>
+ <span class="s2">"X-XSS-Protection"</span><span class="p">,</span>
+ <span class="s2">"X-Frame-Options"</span><span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+:ET

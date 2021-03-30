@@ -1,0 +1,135 @@
+I"sC<p><em><a href="./index">Back to FlashCards Home</a></em><br />
+<em><a href="./requirements">Back to Requirements</a></em></p>
+
+<h2 id="iteration-2">Iteration 2</h2>
+
+<h3 id="storing-cards-in-a-deck">Storing Cards in a Deck</h3>
+
+<p>Create a <code class="highlighter-rouge">Deck</code> class with an accompanying test file. A <code class="highlighter-rouge">Deck</code> is initialized with an array of <code class="highlighter-rouge">Card</code> objects. A <code class="highlighter-rouge">Deck</code> should also be able to return cards based on a given category. The <code class="highlighter-rouge">Deck</code> class should respond to the following interaction pattern:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/deck'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card_1</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"What is the capital of Alaska?"</span><span class="p">,</span> <span class="s2">"Juneau"</span><span class="p">,</span> <span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa16104e160 @answer="Juneau", @question="What is the capital of Alaska?", @category=:Geography&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card_2</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"The Viking spacecraft sent back to Earth photographs and reports about the surface of which planet?"</span><span class="p">,</span> <span class="s2">"Mars"</span><span class="p">,</span> <span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa160a62e90 @answer="Mars", @question="The Viking spacecraft sent back to Earth photographs and reports about the surface of which planet?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card_3</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Describe in words the exact direction that is 697.5° clockwise from due north?"</span><span class="p">,</span> <span class="s2">"North north west"</span><span class="p">,</span> <span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa161a136f0 @answer="North north west", @question="Describe in words the exact direction that is 697.5° clockwise from due north?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">cards</span> <span class="o">=</span> <span class="p">[</span><span class="n">card_1</span><span class="p">,</span> <span class="n">card_2</span><span class="p">,</span> <span class="n">card_3</span><span class="p">]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">cards</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Deck:0x00007fa160a38ed8...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span><span class="p">.</span><span class="nf">cards</span>
+<span class="c1">#=&gt; [#&lt;Card:0x00007fa16104e160...&gt;, #&lt;Card:0x00007fa160a62e90...&gt;, #&lt;Card:0x00007fa161a136f0...&gt;]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span><span class="p">.</span><span class="nf">count</span>
+<span class="c1">#=&gt; 3</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span><span class="p">.</span><span class="nf">cards_in_category</span><span class="p">(</span><span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; [#&lt;Card:0x00007fa160a62e90...&gt;, #&lt;Card:0x00007fa161a136f0...&gt;]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span><span class="p">.</span><span class="nf">cards_in_category</span><span class="p">(</span><span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; [#&lt;Card:0x00007fa16104e160...&gt;]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span><span class="p">.</span><span class="nf">cards_in_category</span><span class="p">(</span><span class="s2">"Pop Culture"</span><span class="p">)</span>
+<span class="c1">#=&gt; []</span>
+</code></pre></div></div>
+
+<h3 id="the-round">The Round</h3>
+
+<p>A <code class="highlighter-rouge">Round</code> will be the object that processes responses and records guesses. A <code class="highlighter-rouge">Round</code> is initialized with a <code class="highlighter-rouge">Deck</code>. The idea is that when we start a Round, the current card is the first in the deck (the first in the Deck’s array of Cards). When we make a guess, the guess is recorded, and the next card in the deck becomes the current card.</p>
+
+<p>The <code class="highlighter-rouge">take_turn</code> method is the crux of this problem. The <code class="highlighter-rouge">take_turn</code> method takes a string representing the guess. It should create a new <code class="highlighter-rouge">Turn</code> object with the appropriate guess and Card. It should store this new Turn, as well as return it from the <code class="highlighter-rouge">take_turn</code> method. Also, when the <code class="highlighter-rouge">take_turn</code> method is called, the <code class="highlighter-rouge">Round</code> should move on to the next card in the deck.</p>
+
+<p>A <code class="highlighter-rouge">Round</code> should respond to the following interaction pattern:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/card'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/turn'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/deck'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">'./lib/round'</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card_1</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"What is the capital of Alaska?"</span><span class="p">,</span> <span class="s2">"Juneau"</span><span class="p">,</span> <span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa16104e160 @answer="Juneau", @question="What is the capital of Alaska?", @category=:Geography&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card_2</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"The Viking spacecraft sent back to Earth photographs and reports about the surface of which planet?"</span><span class="p">,</span> <span class="s2">"Mars"</span><span class="p">,</span> <span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa160a62e90 @answer="Mars", @question="The Viking spacecraft sent back to Earth photographs and reports about the surface of which planet?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">card_3</span> <span class="o">=</span> <span class="no">Card</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Describe in words the exact direction that is 697.5° clockwise from due north?"</span><span class="p">,</span> <span class="s2">"North north west"</span><span class="p">,</span> <span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa161a136f0 @answer="North north west", @question="Describe in words the exact direction that is 697.5° clockwise from due north?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">deck</span> <span class="o">=</span> <span class="no">Deck</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">card_1</span><span class="p">,</span> <span class="n">card_2</span><span class="p">,</span> <span class="n">card_3</span><span class="p">])</span>
+<span class="c1">#=&gt; #&lt;Deck:0x00007fa160a38ed8...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span> <span class="o">=</span> <span class="no">Round</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Round:0x00007f972a1c7960...&gt;,</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">deck</span>
+<span class="c1">#=&gt; #&lt;Deck:0x00007fa160a38ed8...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">turns</span>
+<span class="c1">#=&gt; []</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">current_card</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa16104e160 @answer="Juneau", @question="What is the capital of Alaska?", @category=:Geography&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">new_turn</span> <span class="o">=</span> <span class="n">round</span><span class="p">.</span><span class="nf">take_turn</span><span class="p">(</span><span class="s2">"Juneau"</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Turn:0x00007f99842f09e8 @card=#&lt;Card:0x00007f800e29f0c9 @question=""What is the capital of Alaska?", @answer="Juneau", @category=:Geography&gt;, @guess="Juneau"&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">new_turn</span><span class="p">.</span><span class="nf">class</span>
+<span class="c1">#=&gt; Turn</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">new_turn</span><span class="p">.</span><span class="nf">correct?</span>
+<span class="c1">#=&gt; true</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">turns</span>
+<span class="c1">#=&gt; [#&lt;Turn:0x00007f99842f09e8 @card=#&lt;Card:0x00007f800e29f0c9 @question=""What is the capital of Alaska?", @answer="Juneau", @category=:Geography&gt;, @guess="Juneau"&gt;]</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">number_correct</span>
+<span class="c1">#=&gt; 1</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">current_card</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa160a62e90 @answer="Mars", @question="The Viking spacecraft sent back to Earth photographs and reports about the surface of which planet?", @category=:STEM&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">take_turn</span><span class="p">(</span><span class="s2">"Venus"</span><span class="p">)</span>
+<span class="c1">#=&gt; #&lt;Turn:0x00007f972a215b38...&gt;</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">turns</span><span class="p">.</span><span class="nf">count</span>
+<span class="c1">#=&gt; 2</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">turns</span><span class="p">.</span><span class="nf">last</span><span class="p">.</span><span class="nf">feedback</span>
+<span class="c1">#=&gt; "Incorrect."</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">number_correct</span>
+<span class="c1">#=&gt; 1</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">number_correct_by_category</span><span class="p">(</span><span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; 1</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">number_correct_by_category</span><span class="p">(</span><span class="ss">:STEM</span><span class="p">)</span>
+<span class="c1">#=&gt; 0</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">percent_correct</span>
+<span class="c1">#=&gt; 50.0</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">percent_correct_by_category</span><span class="p">(</span><span class="ss">:Geography</span><span class="p">)</span>
+<span class="c1">#=&gt; 100.0</span>
+
+<span class="n">pry</span><span class="p">(</span><span class="n">main</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">round</span><span class="p">.</span><span class="nf">current_card</span>
+<span class="c1">#=&gt; #&lt;Card:0x00007fa161a136f0 @answer="North north west", @question="Describe in words the exact direction that is 697.5° clockwise from due north?", @category=:STEM&gt;</span>
+</code></pre></div></div>
+:ET

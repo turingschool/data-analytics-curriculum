@@ -1,0 +1,17 @@
+I"s<h1 id="iteration-0---node-basics">Iteration 0 - Node Basics</h1>
+
+<p>Our Linked List will ultimately be composed of individual nodes, so in this iteration we’ll start with building out these nodes.
+Note that they are quite simple – a Node needs to have a slot for some data and a slot for a “next node”. Eventually this
+<code class="highlighter-rouge">next_node</code> position will be what we use to link the multiple nodes together to form the list.</p>
+
+<p>For this iteration, build a node class that can perform these functions:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="nb">require</span> <span class="s2">"./lib/node"</span>
+<span class="o">&gt;</span> <span class="n">node</span> <span class="o">=</span> <span class="no">Node</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"Burke"</span><span class="p">)</span>
+<span class="o">=&gt;</span> <span class="o">&lt;</span><span class="no">Node</span> <span class="vi">@surname</span><span class="o">=</span><span class="s2">"Burke"</span> <span class="vi">@next_node</span><span class="o">=</span><span class="kp">nil</span> <span class="c1">#5678904567890&gt;</span>
+<span class="o">&gt;</span> <span class="n">node</span><span class="p">.</span><span class="nf">surname</span>
+<span class="o">=&gt;</span> <span class="s2">"Burke"</span>
+<span class="o">&gt;</span> <span class="n">node</span><span class="p">.</span><span class="nf">next_node</span>
+<span class="o">=&gt;</span> <span class="kp">nil</span>
+</code></pre></div></div>
+:ET

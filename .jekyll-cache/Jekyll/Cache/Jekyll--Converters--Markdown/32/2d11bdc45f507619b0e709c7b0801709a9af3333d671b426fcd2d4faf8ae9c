@@ -1,0 +1,80 @@
+I"
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Understanding what is Ajax and why is important</li>
+  <li>Using Ajax to make API calls to access a third-party API</li>
+  <li>Replacing the data in the DOM without refreshing the page</li>
+</ul>
+
+<h2 id="structure">Structure</h2>
+
+<ul>
+  <li>5 - Lecture: What is Ajax</li>
+  <li>5 - Lecture: A brief history of Ajax</li>
+  <li>5 - Lecture: How does Ajax work with jQuery</li>
+  <li>5 - Lecture: Ajax and front-end development</li>
+  <li>5 - Break</li>
+  <li>15 - Code Along: Fetching third-party data on load</li>
+  <li>15 - Code Along: Creating data on a third-party service and update the DOM without refreshing the page</li>
+  <li>10 - Workshop 1</li>
+  <li>5 - Break</li>
+  <li>15 - Workshop Review</li>
+  <li>15 - Code Along: Deleting data and removing elements from the DOM</li>
+  <li>5 - Break</li>
+  <li>10 - Workshop 2</li>
+  <li>15 - Workshop Review</li>
+  <li>5 - Recap</li>
+</ul>
+
+<h2 id="repository">Repository</h2>
+
+<ul>
+  <li>Birdeck - https://github.com/turingschool-examples/birdeck.git</li>
+  <li>Birdie (third-party API)
+    <ul>
+      <li>Repo - https://github.com/turingschool-examples/birdie</li>
+      <li>Heroku - https://birdeck.herokuapp.com</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="procedure">Procedure</h2>
+
+<ol>
+  <li>Lecture: What is AJAX</li>
+  <li>Lecture: How does it work with JavaScript</li>
+  <li>Lecture: How does it work with jQuery</li>
+  <li>Diagram: Overall structure of the app</li>
+  <li>Add GET example</li>
+  <li>Add POST example</li>
+  <li>Workshop 1</li>
+  <li>Workshop Review</li>
+  <li>Add DELETE example</li>
+  <li>Workshop 2</li>
+  <li>Workshop Review</li>
+</ol>
+
+<h2 id="workshops">Workshops</h2>
+
+<h3 id="workshop-1-refresh">Workshop 1: Refresh</h3>
+
+<ol>
+  <li>Right now, you have to reload the page to get the new posts. Can you modify your app so that the posts are reloaded when you click a button?</li>
+  <li>Right now, there is some duplication when we render the template, can you refactor?</li>
+</ol>
+
+<h3 id="workshop-2-polling--put">Workshop 2: Polling &amp; PUT</h3>
+
+<ol>
+  <li>Right now, you have to click on a button to refresh the feed. Can you check the server every 5 seconds to see if there are any new posts?</li>
+  <li>Can you implement a PUT option to modify the data via AJAX?</li>
+</ol>
+
+<h2 id="supporting-materials">Supporting Materials</h2>
+
+<p>*<a href="https://www.dropbox.com/s/bikkpsmenjwtlag/Turing%20-%20Working%20with%20AJAX.pages?dl=0">Notes</a></p>
+<ul>
+  <li><a href="https://vimeo.com/131025914">Video 1502</a></li>
+</ul>
+:ET

@@ -1,0 +1,109 @@
+I"a<h2 id="why">Why</h2>
+
+<p>We’ve built some experiments using queues and services, but let’s build something with demonstrable business value.</p>
+
+<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Students will demonstrate comfort with using a message queue</li>
+  <li>Students will implement three distinct programs/services that coordinate with each other</li>
+  <li>Students will revisit their understandings of CSVs</li>
+  <li>Students will revisit their understandinds of accessing APIs</li>
+</ul>
+
+<h2 id="challenge">Challenge</h2>
+
+<p>Imagine that we have a group of politically engaged youth who want to reach out to their congresspeople and senators. We’ll use their address data to lookup and supply them with the relevant contact information.</p>
+
+<p>In this work session you’ll work alone to build a cluster of services called RepFinder.</p>
+
+<h3 id="how-its-used">How It’s Used</h3>
+
+<p>From the terminal we run this command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ruby repfinder.rb event_attendees.csv
+</code></pre></div></div>
+
+<p>Which means that it’s taking an existing <code class="highlighter-rouge">event_attendees.csv</code> as input.</p>
+
+<h3 id="input-data">Input Data</h3>
+
+<p>You’ll need this <a href="https://cl.ly/47242m1X1n3j">event_attendees.csv</a> file.</p>
+
+<h3 id="what-it-does">What It Does</h3>
+
+<p>Each line of the input file includes several fields of data. But we’re only interested in the:</p>
+
+<ul>
+  <li>ID</li>
+  <li>First Name</li>
+  <li>Last Name</li>
+  <li>Street</li>
+  <li>City</li>
+  <li>State</li>
+  <li>Zipcode</li>
+</ul>
+
+<p>For each attendee, use the Street, City, State, and Zipcode to lookup the representatives from the Sunlight Foundation API described below. Then output a file that can be printed and distributed to the attendees as the event.</p>
+
+<h3 id="sunlight-foundations-congress-api">Sunlight Foundation’s Congress API</h3>
+
+<ul>
+  <li>You’ll want to install the <code class="highlighter-rouge">congress</code> gem</li>
+  <li>The SunlightFoundation’s API registration is down, but use the key <code class="highlighter-rouge">"e179a6973728c4dd3fb1204283aaccb5"</code></li>
+  <li>Have the <a href="https://sunlightlabs.github.io/congress/">API documentation</a></li>
+  <li>See the <a href="https://github.com/codeforamerica/congress">gem documentation</a></li>
+</ul>
+
+<h3 id="output-expectations">Output Expectations</h3>
+
+<ul>
+  <li>Create a folder named <code class="highlighter-rouge">output</code></li>
+  <li>For each attendee, generate a text file like the below.</li>
+  <li>Use a filename like <code class="highlighter-rouge">00123_casimir_jeff.txt</code> for an attendee with ID 123 and name Jeff Casimir</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>== Jeff Casimir ==
+
+Sen Cory Gardner (R): 202-224-5941
+Rep Diana DeGette (D): 202-225-4431
+Rep Mike Coffman (R): 202-225-7882
+Sen Michael Bennet (D): 202-224-5852
+</code></pre></div></div>
+
+<h3 id="architecture">Architecture</h3>
+
+<p>Build three separate programs that use RabbitMQ as a message queue between them.</p>
+
+<h4 id="the-parser-service">The Parser Service</h4>
+
+<ul>
+  <li>reads the CSV</li>
+  <li>pulls out the data needed for individual lookups</li>
+  <li>publishes a message with the data to be looked up to a queue for the Fetcher</li>
+</ul>
+
+<h4 id="the-fetcher-service">The Fetcher Service</h4>
+
+<ul>
+  <li>watches for messages to hit the queue</li>
+  <li>uses the data in a message to fetch the data from the Sunlight API</li>
+  <li>publishes the relevant data for the user and representatives to the Printer queue</li>
+</ul>
+
+<h4 id="the-printer-service">The Printer Service</h4>
+
+<ul>
+  <li>watches for messages to hit the queue</li>
+  <li>formats the data and stores it to an output file</li>
+</ul>
+
+<h3 id="extension">Extension</h3>
+
+<p>The Fetcher is our slowest component:</p>
+
+<ul>
+  <li>Use the unix <code class="highlighter-rouge">time</code> utility to see how long the run takes</li>
+  <li>Reconfigure your app to spin up three Fetcher instances all using the same queues * Time the program runtime now</li>
+</ul>
+:ET

@@ -1,0 +1,52 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<p>Below are technical goals that you should be applying in this project. The priority of these goals are demonstrated using a star grading system.</p>
+
+<p>By the end of this project:</p>
+<ul>
+  <li>Student should have a functional understanding of the concept ⭐ ⭐ ⭐, or</li>
+  <li>Student should have a familiar understanding, but may still have questions ⭐ ⭐, or</li>
+  <li>Student should be be aware of the concept, but may need further resources to implement ⭐</li>
+</ul>
+
+<p><em>Note: See <a href="../../misc/learning_goals">Learning Goals</a> to see at what level these skills need to be by the final.</em></p>
+
+<h3 id="explicit-technical-expectations">Explicit Technical Expectations</h3>
+<ul>
+  <li>Consume two or more external APIs ⭐ ⭐ ⭐</li>
+  <li>Build APIs that return JSON responses ⭐ ⭐ ⭐</li>
+  <li>Use an external OAuth provider to authenticate users ⭐ ⭐</li>
+  <li>Refactor code for better code organization/readability ⭐ ⭐</li>
+  <li>Utilize a Service-Oriented Architecture with a front-end, a back-end, and at least one micro-service ⭐ ⭐</li>
+  <li>Implement a production-quality user interface using Bootstrap or other common CSS styling framework ⭐ ⭐</li>
+  <li>Optimize your application using at least one of the following ⭐
+    <ul>
+      <li>database indexing</li>
+      <li>eager loading</li>
+      <li>caching</li>
+      <li>background workers</li>
+      <li>AJAX requests</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="explicit-professional-expectations">Explicit Professional Expectations</h3>
+
+<ul>
+  <li>Practice good project management by using project boards, participating in daily stand-ups and team retros ⭐ ⭐ ⭐</li>
+  <li>Utilize quality workflow practices: small commits, descriptive pull requests, and code reviews ⭐ ⭐</li>
+  <li>Write thorough, understandable documentation ⭐ ⭐</li>
+</ul>
+
+<h3 id="implicit-learning-goals">Implicit Learning Goals</h3>
+
+<ul>
+  <li>Reading Documentation</li>
+  <li>Time Management</li>
+  <li>Prioritizing Work</li>
+  <li>Breaking down large project into small pieces</li>
+  <li>Breaking down a problem into small steps</li>
+  <li>Practice individual research (articles, videos, mentors)</li>
+  <li>Self-advocacy in a team</li>
+</ul>
+:ET

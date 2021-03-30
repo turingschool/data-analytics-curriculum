@@ -1,0 +1,24 @@
+I"�<h2 id="learning-goals">Learning Goals</h2>
+
+<ul>
+  <li>Follow an interaction pattern</li>
+  <li>Write readable code that adheres to Ruby convention</li>
+  <li>Write tests</li>
+  <li>Create an Object Oriented Solution to a problem (objects should interact to achieve the stated goal)</li>
+  <li>Host code on Github and submit a Pull Request</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>In this project, you will write a program to simulate a game of <a href="https://en.wikipedia.org/wiki/War_(card_game)">war</a>. A user will be able to create two players, and watch them ‘play’ the game.</p>
+
+<p>In order to build good habits, we’ve broken the project into small classes to demonstrate objects that have a single responsibility.</p>
+
+<p>Additional detail is included in the pages below.</p>
+
+<ul>
+  <li><a href="./setup">Setup</a></li>
+  <li><a href="./requirements">Project Requirements</a></li>
+  <li><a href="./rubric">Evaluation Rubric</a></li>
+</ul>
+:ET
