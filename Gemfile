@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'jekyll', '3.9.0'
-gem 'kramdown', '2.3.0'
-gem 'rouge', '3.3.0'
+ruby '2.7.2'
+
+gem 'jekyll', '4.0.1'
 gem 'octopress', '3.0.11'
-gem 'jemoji'
+gem 'jemoji', '0.12.0'
 
 group :jekyll_plugins do
-  gem 'jekyll-algolia', '1.4.7'
+  gem 'jekyll-algolia', '1.6.0'
 end
