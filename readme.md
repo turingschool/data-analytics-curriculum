@@ -16,7 +16,7 @@ This site is built with Jekyll. Find the docs [here](https://jekyllrb.com/docs/u
 
 ## Site Structure
 
-You will find a module specific directory. eg `module1` and within each directory you will find a directory for `lessons` and `projects`. All files within this site can be written as either markdown or html. To link to each you just need to write the relative path to each file without the file extension. For example `lessons/lesson_on_stuff`.
+You will find a module specific directory (eg. `module1`). Within each directory, you will find a directory for `lessons` and `projects`. All files within this site can be written as either `markdown` or `html`. To link to each, you must write the relative path to each file without the file extension. For example `lessons/lesson_on_stuff`.
 
 The `navigation.html` file is where you will find the sidebar for the site.
 
@@ -26,7 +26,7 @@ The `today.html` file is where you will find the basic html page for today, and 
 
 ### File Headers
 
-Put something like this at the top of all your markdown files:
+Include this at the top of all your markdown files:
 
 ```yaml
 ---
@@ -41,13 +41,11 @@ layout: page
 
 ### Index.md instead of Readme.md
 
-The system we're using to translate from Github to [data.turing.io](https://data.turing.io) uses index files instead of readme files. Where you would have created a file called `readme.md`, just use `index.md` instead.
+The system we're using to translate from Github to [data.turing.io](https://data.turing.io) uses index files instead of readme files. Where you would have created a file called `readme.md`, use `index.md` instead.
 
 ### Links and Paths
 
 When linking to a markdown file, drop the `.md` in your link. Instead of linking to `learning_to_pair.md`, just use `learning_to_pair`. Other files, such as PDFs and PNGs, keep the original extension.
-
-#### Absolute vs Relative paths
 
 Since you're editing on Github, and viewing at [data.turing.io](https://data.turing.io), use *relative* links instead of *absolute* links. You can learn more about their differences [here](http://www.boogiejack.com/server_paths.html).
 
