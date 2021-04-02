@@ -1,6 +1,0 @@
-I"V<p>For this lesson, we’ll be working through this tutorial on Query Performance Strategies: <a href="http://tutorials.jumpstartlab.com/topics/performance/queries.html">Queries</a></p>
-
-<h3 id="corrections--improvements-for-next-time">Corrections &amp; Improvements for Next Time</h3>
-
-<p>This is a beefy lesson covering numerous SQL and ActiveRecord techniques. We have recently been experimenting with giving it twice, once in module 3 and once in module 4, as the repetition seems to be helpful in absorbing the material. Additionally, it’s good to follow this lesson shortly after with the <a href="https://github.com/turingschool/lesson_plans/blob/master/ruby_04-apis_and_scalability/blogger_performance_workshop.markdown">JS Blogger Performance Workshop</a>, which requires hands-on application of a number of the techniques in this lesson.</p>
-:ET
