@@ -1,18 +1,16 @@
 ---
 layout: page
 title: Module 1
-subheading: Object Oriented Programming with Ruby
+subheading: Programming for Data Analysis
 ---
 
 ## Overview
 
-In Module 1, students will learn to use Ruby and object-oriented programming to build software. They will develop skills to write automated tests, pseudocode, write implementation code, and refactor code to meet Ruby conventions. Through several large group projects and regular pairing exercises, students will learn skills and procedures for effectively collaborating and pairing with other developers.
+In Module 1, students will learn to use SQL and Python to find and prepare data to gain business insights. They will develop skills to query records among multiple tables, write scripts to clean data, and create basic reports to communicate their findings. Through several discovery sessions, workshops and projects, students will learn how to gather requirements from stakeholders, collaborate with other team members, and present their findings to decision makers.
 
 ## Instructors
 
-* Michael Dao (Anchor)
-* Megan McMahon
-* Robert Gu
+* (Pending)
 
 ## Curriculum
 
@@ -34,4 +32,4 @@ In Module 1, students will learn to use Ruby and object-oriented programming to 
 
 <br>
 
-<iframe src="https://calendar.google.com/calendar/embed?src=casimircreative.com_59k8msrrc2ddhcv787vubvp0s4@group.calendar.google.com&ctz=America/Denver&mode=week" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+<iframe src="https://calendar.google.com/calendar/embed?src=c_ivg8ea7tvahl0fjur2rqj48388%40group.calendar.google.com&ctz=America/Denver&mode=week" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
