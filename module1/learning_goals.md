@@ -3,7 +3,7 @@ title: Learning Goals
 layout: page
 ---
 
-Academic success in DAM1 means that students demonstrate proficiency and comfort with the concepts below. The expected mastery level can be understood with the following scale:
+Academic success in **DA M1** means that students demonstrate proficiency and comfort with the concepts below. The expected mastery level can be understood with the following scale:
 
 * **Mastery**: student is able to explain and implement the concept independently or with light reference.
 * **Functional**: student recognizes when to use the concept and can implement it with the support of * documentation and/or a collaborator.
