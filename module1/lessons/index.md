@@ -1,56 +1,52 @@
 ---
-layout: page
 title: Module 1 Lessons
+layout: page
 ---
 
-### Ruby Mechanics
+## Week 1
 
-* [Pre-Work Code Share](./code_share)
-* [Ruby Data Types](./datatypes)
-* [Flow Control](./flow_control)
-* [#each](./each)
-* [Methods, Arguments, Return Values](./methods_and_return_values)
-* [Objects, Instances and Classes](./objects_classes_instances)
-* [Enumerables I](./enumerables_i)
-* [Hashes](./introducing_hashes)
-* [Scope](./scope)
-* [Working with Files](./working_with_files)
-* [Nested Collections](./nested_collections)
-* [Enumerables II](./enumerables_ii)
-* [Nested Iteration](./nested_iteration)
-* [Boolean Logic](./boolean_logic)
-* [Object Oriented Programming](./object_oriented_programming)
-* [Modules](./modules)
-* [Inheritance](./inheritance)
-* [Class Methods](class_methods)
-* [Ruby Object Model](./ruby_object_model)
-* [Enumerables Review](./enumerables_review)
-* [Memory Allocation](./memory_allocation)
-* [The Call Stack](./call_stack)
-* [Intro to How the Web Works](./intro_to_how_the_web_works)
+* Lesson 1
+* Lesson 2
+* Lesson 3
+* Lesson 4
+* Case Study
 
-### Design
-* [Ruby Project Etiquette](./project_etiquette)
-* [Design Principles](design_principles)
-* [Problem Solving](./problems_solutions_algorithms)
-* [Programming with Values](./programming_with_values)
+## Week 2
 
-### Testing
-* [Intro to Testing](./intro_to_testing)
-* [Test Driven Development](./test_driven_development)
-* [Mocks and Stubs](./mocks_stubs)
+* Lesson 1
+* Lesson 2
+* Lesson 3
+* Lesson 4
+* Case Study
 
-### Debugging
-* [Debugging with Pry](./debugging_with_pry)
-* [Debugging Techniques](./debugging_techniques)
+## Week 3
 
-### Version Control
-* [Git and Github](./git_and_github)
-* [Git Review](./git_review)
-* [Git for Pairs](./git_for_pairs)
+* Lesson 1
+* Lesson 2
+* Lesson 3
+* Lesson 4
+* Case Study
 
-### Exploration
-* [CSV Exploration](./csv_exploration)
+## Week 4
 
-### Good Practices & Process
-* [Productive Struggle](./productive_struggle)
+* Lesson 1
+* Lesson 2
+* Lesson 3
+* Lesson 4
+* Case Study
+
+## Week 5
+
+* Lesson 1
+* Lesson 2
+* Lesson 3
+* Lesson 4
+* Case Study
+
+## Week 6
+
+* Lesson 1
+* Lesson 2
+* Lesson 3
+* Lesson 4
+* Case Study

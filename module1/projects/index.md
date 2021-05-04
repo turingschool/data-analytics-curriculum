@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Data Analytics Module 1 Projects
+title: Module 1 Projects
 ---
 
 The following projects are required to be promoted to **Module 2**. At the end of each project, you'll be asked to write a **project reflection**. You can find the project reflection template below.
