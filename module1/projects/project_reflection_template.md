@@ -1,6 +1,9 @@
-## Project Reflections
+---
+layout: page
+title: Project Reflection
+---
 
-Throughout your time at Turing School (Mods 1 - 3) you will be asked to keep a log of reflections for each of your projects. We suggest creating a gist that you can update at the end of each project so that all of your information exists in one place. This gist will come in handy as a reference when you start your interview prep and thinking about how you can leverage your project experience as great examples in your answers. 
+Throughout your time at Turing School (Mods 1 - 3) you will be asked to keep a log of reflections for each of your projects. We suggest creating a `gist` that you can update at the end of each project so that all of your information exists in one place. This gist will come in handy as a reference when you start your interview prep and thinking about how you can leverage your project experience as great examples in your answers. 
 
 Below is the template to use when writing out your reflection. Feel free to add additional questions/prompts that you want to reflect on to help you prepare for future interviews.
 
@@ -8,16 +11,16 @@ Below is the template to use when writing out your reflection. Feel free to add 
 
 In a few sentences, explain what the project was and the scope of your work. Imagine explaining your answer to a technical recruiter or a developer who you’d potentially be interviewing with.
 
-### Overall (Choose One)
+### Project Objectives
 
-#### Solo
+_Solo_
 
 * What were your personal learning goals for this project? 
 * How did you work to achieve these goals?
 * What was your process for starting the project? 
 * What worked well in the project? If something didn’t work well, what was it and how would you approach it differently?
 
-#### Pair/Group
+_Pair/Group_
 
 * How do you think you did working with this group compared with the groups you’ve worked with previously?
 * If you were to work with the same group again, what is one change the group could make to work together more effectively? 
@@ -25,19 +28,19 @@ In a few sentences, explain what the project was and the scope of your work. Ima
 * How would you describe your role in this team? 
 * How often did you interact with other team members?
 
-### Technical (Choose One)
+### Technical Challenges
 
 * What was a specific technical challenge your group faced? 
 * How did you approach this challenge?
 * What resources or strategies did you use when you were presented with a technical challenge?
 
-### Reflection
+### Learning Lessons
 
 * What lessons did you learn during this project? 
 * How have you applied these lessons in a recent project? 
 * How do you plan to apply these lessons in the future?
 
-### Group Project Reflections
+### Project Management
 
 * What have you learned about the use of agile vs. waterfall in software projects?
 * How did you and your group approach project management in this project? (What tools did you use, how did you hold each other accountable, etc.)

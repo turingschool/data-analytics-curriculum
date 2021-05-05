@@ -13,7 +13,7 @@ Source: [Wikipedia](https://en.wikipedia.org/wiki/Titanic).
 
 ## Overview
 
-In this project, you will analyze the passenger data of the RMS Titanic and find insights related to the accident. To achieve this, you will need to import the data to **Jupyter** notebooks; use **Python**, **Numpy**, and **Pandas** to explore the data; and create a report with your findings. At the end you will submit your Jupyter notebook with your findings on a repository on **Github**.
+In this project, you will analyze the passenger data of the RMS Titanic and find insights related to the accident. To achieve this, you will need to import the data to **Jupyter** notebooks; use **Python** and **Pandas** to explore the data; and create a report with your findings. At the end you will submit your Jupyter notebook with your findings on a repository on **Github**.
 
 ## Vocabulary
 
@@ -21,7 +21,6 @@ In this project, you will analyze the passenger data of the RMS Titanic and find
 * **Python**: an object-oriented general-purpose programming language that emphasizes code readability. It is used mainly for data-related tasks, web development, and automation.
 * **Anaconda**: a Python and R distribution for scientific programming that simplifies package management and deployment.
 * **Jupyter**: an initiative to develop open-source systems for interactive computing. The two most used Jupyter products in Data Analysis are JupyterLab, a web-based interactive development environment, and Jupyter Notebooks, a web-application that allows users to create documents that contain live code.
-* **Numpy**: a Python package for scientific computing. It used to perform mathematical operations on arrays such as those in Trigonometry, Statistics, and Algebra.
 * **Pandas**: a Python package for data manipulation and analysis. It offers data structures and operations for manipulating numerical tables and time series.
 
 ## Learning Goals
@@ -32,7 +31,6 @@ At the end of this project, students will be able to:
 * Install Python packages using Anaconda.
 * Use Jupyter notebooks to explore data and write reports.
 * Use Pandas to load data into dataframes.
-* Use Numpy to create series objects.
 * Use Matplotlib to create data visualizations.
 * Use Seaborn to create data visualizations.
 * Create objects to manipulate data programmatically.
