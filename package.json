@@ -1,7 +1,7 @@
 {
-  "name": "front-end-curriculum",
+  "name": "data-analytics-curriculum",
   "version": "1.0.0",
-  "description": "Open source curriculum for Turing School's back-end engineering program.",
+  "description": "Open source curriculum for Turing School's Data Analytics program.",
   "main": "index.html",
   "dependencies": {
     "eslint": "^6.7.2",
@@ -17,12 +17,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/turingschool/back-end-curriculum-site.git"
+    "url": "git+https://github.com/turingschool/data-analytics-curriculum.git"
   },
   "author": "Turing School of Software and Design",
   "license": "CC-BY-NC-SA-4.0",
   "bugs": {
-    "url": "https://github.com/turingschool/back-end-curriculum-site/issues"
+    "url": "https://github.com/turingschool/data-analytics-curriculum/issues"
   },
-  "homepage": "https://github.com/turingschool/back-end-curriculum-site#readme"
+  "homepage": "https://github.com/turingschool/data-analytics-curriculum#readme"
 }
