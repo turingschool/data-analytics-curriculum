@@ -36,10 +36,10 @@ Students can find examples of Independent Challenges [here](./practice_assessmen
 
 Projects and Independent Assessments will be scored on a 4 point scale:
 
-* 4. Exceptional
-* 3. Passing
-* 2. Below Expectations
-* 1. Far Below Expectations
+* 4: Exceptional
+* 3: Passing
+* 2: Below Expectations
+* 1: Far Below Expectations
 
 Students are expected to receive 18 points on each project and independent assessment to obtain a passing grade. The first project doesn't count towards promotion.
 
