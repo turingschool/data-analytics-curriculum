@@ -43,6 +43,12 @@ Projects and Independent Assessments will be scored on a 4 point scale:
 
 Students are expected to receive 18 points on each project and independent assessment to obtain a passing grade. The first project doesn't count towards promotion.
 
+<!-- ## Exercises
+
+- [Ruby Exercises](https://github.com/turingschool/ruby-exercises)
+
+Students will use these Ruby Exercises to practice the material covered in Module 1. While the projects require synthesizing many concepts, the Ruby Exercises are meant to practice a concept in isolation. Successful students will reinforce their skills through both projects and exercises. Exercises will not be assigned or graded, however instructors will provide a weekly list of suggested exercises to practice the material. -->
+
 ## Support
 
 **One-on-Ones**: Students can request to meet with an instructor to talk about non-technical topics at any time. This can include a student’s progress, stress management, suggestions for improvement, etc. This conversation should not involve laptops, coding, whiteboarding, etc. These will be guaranteed if requested.
