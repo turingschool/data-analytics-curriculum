@@ -13,7 +13,7 @@ In a few sentences, explain what the project was and the scope of your work. Ima
 
 ### Project Objectives
 
-_Solo_
+_Individual_
 
 * What were your personal learning goals for this project? 
 * How did you work to achieve these goals?
