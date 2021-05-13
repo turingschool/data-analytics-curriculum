@@ -40,7 +40,7 @@ At the end of this project, students will be able to:
 
 To start working on this project, you will need to install Anaconda and download the RMS Titanic passenger data set. To install Anaconda follow the instructions [here](https://docs.anaconda.com/anaconda/install/). You can download the data set [here](https://www.kaggle.com/c/titanic/data). The data provides information such as age, class of ticket and sex; It contains 891 rows and 12 columns.
 
-For full technical requirements click [here]().
+For full technical requirements click [here](https://github.com/mihir787/turing_data_projects/tree/main/project_1_titanic).
 
 ## Submission
 
