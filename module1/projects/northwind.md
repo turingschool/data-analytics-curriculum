@@ -5,7 +5,7 @@ title: Northwind
 
 ## Context
 
-Food distribuition is one the most important industries in the United States. There are about 33,000 establishments with a combined revenue of $670 billion. The 50-largest companies, such as [McLane Comapany](https://www.mclaneco.com), [Supervalu](https://supervalu.ie), [Sysco Corp](https://www.sysco.com), and [US Foodservice](https://www.usfoods.com), generate 50% of the food distribution revenue.
+Food distribuition is one the most important industries in the United States. There are about 33,000 establishments with a combined revenue of $670 billion. The 50-largest companies, such as [McLane Company](https://www.mclaneco.com), [Supervalu](https://supervalu.ie), [Sysco Corp](https://www.sysco.com), and [US Foodservice](https://www.usfoods.com), generate 50% of the food distribution revenue.
 
 Knowing your customers is key to food distributors' success. The demand of their products is highly dependent on changes in demographics and customer preferences. While largest distributors focus on bulk purchasing and economies of scale, smaller companies compete by specializing in certain products or specific geographical areas.
 
