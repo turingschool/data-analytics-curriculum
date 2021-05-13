@@ -47,7 +47,7 @@ For full installation instruction and technical requirements click [here](https:
 
 ## Submission
 
-You will submit your findings via a repository on **Github**. The repository will be named `<first name>-<last name>-northwind`. The repository should contain your Jupyter notebook.
+You will submit your findings via a repository on **Github**. The repository will be named `<first name>-<last name>-northwind`. The repository should contain your Jupyter notebook and SQL file.
 
 ## Rubric
 
