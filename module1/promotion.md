@@ -9,10 +9,10 @@ Promoted students will demonstrate proficiency in the material outlined in the [
 
 ## Projects
 
-* Week 2 (individual): [Titanic](./projects/war_or_peace) (evaluated, but does not count toward promotion)
-* Week 3 (individual): [Northwind](./projects/battleship) (must earn a passing grade)
-* Week 4 (individual): [Movie Night](./projects/futbol) (must earn a passing grade)
-* Week 5-6 (group): [Big Short](./projects/night_writer) (must earn a passing grade)
+* Week 2 (individual): [Titanic](./projects/titanic) (evaluated, but does not count toward promotion)
+* Week 3 (individual): [Northwind](./projects/northwind) (must earn a passing grade)
+* Week 4 (individual): [Movie Night](./projects/movie_night) (must earn a passing grade)
+* Week 5-6 (group): [Big Short](./projects/big_short) (must earn a passing grade)
 
 ## Assessments
 
