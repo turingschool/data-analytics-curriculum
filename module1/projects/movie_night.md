@@ -11,7 +11,7 @@ The motion picture and video industry generated [$69.9 billion](https://www.stat
 
 ![Graphic showing industry revenue by source](./assets/movie_industry_revenue.jpg)
 
-Streaming services such as [Netflix](https://www.netflix.com), [Hulu], [Disney+] and [HBO Max](https://www.hbomax.com) have become the dominant force in the industry. The largest service, Netflix, had a total net income of over [USD$2.76 billion](https://www.statista.com/statistics/272561/netflix-net-income/) and a revenue of USD$25 billion, in 2020. 
+Streaming services such as [Netflix](https://www.netflix.com), [Hulu](https://www.hulu.com), [Disney+](https://www.disneyplus.com) and [HBO Max](https://www.hbomax.com) have become the dominant force in the industry. The largest service, Netflix, had a total net income of over [USD$2.76 billion](https://www.statista.com/statistics/272561/netflix-net-income/) and a revenue of USD$25 billion, in 2020. 
 
 To maintain their preeminence, streaming services allocate significant resources to create new content. This content, in turn, drives customers onto the streaming services increasing subscriptions, improving retention, and creating more user data. This data is then used by streaming services to predict consumer trends, produce new content, and recommend additional shows for customers.
 
