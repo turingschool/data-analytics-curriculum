@@ -32,7 +32,7 @@ Sources: [Statista](https://www.statista.com/statistics/185100/revenue-sources-o
 
 The CEO of Streamflix, a fictional streaming service, has asked his team to prepare a new content strategy for next year. Streamflix is facing intense competition from rival services and it needs to produce appealing content that can increase subscriptions and retain existing customers. 
 
-To fulfill the CEO's request, Streamflix's Data Science Director have tasked you with analyzing the 2020 data from IMDB. He expects to use your findings to inform investment decisions in new content. You will have to report your insights on a Jupyter notebok that will be stored in a Github repository.
+To fulfill the CEO's request, Streamflix's Data Science Director has tasked you with analyzing the 2020 data from IMDB. She expects to use your findings to inform investment decisions in new content. You will have to report your insights on a Jupyter notebok that will be stored in a Github repository.
 
 ## Vocabulary
 
