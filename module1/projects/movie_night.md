@@ -26,7 +26,7 @@ These were the investments made in 2020:
 
 Therefore, to maximize their return on investment, streaming services need to understand customer preferences to improve their competitive edge and increase their revenue.
 
-Sources: [Statista](https://www.statista.com/statistics/185100/revenue-sources-of-us-motion-picture-and-video-industry-2009/), [Data USA](https://datausa.io/profile/naics/motion-pictures-video-industries) ,[Forbes](https://www.forbes.com/sites/sergeiklebnikov/2020/05/22/streaming-wars-continue-heres-how-much-netflix-amazon-disney-and-their-rivals-are-spending-on-new-content/?sh=3faf0ee3623b).
+Sources: [Statista](https://www.statista.com/statistics/185100/revenue-sources-of-us-motion-picture-and-video-industry-2009/), [Data USA](https://datausa.io/profile/naics/motion-pictures-video-industries), [Forbes](https://www.forbes.com/sites/sergeiklebnikov/2020/05/22/streaming-wars-continue-heres-how-much-netflix-amazon-disney-and-their-rivals-are-spending-on-new-content/?sh=3faf0ee3623b).
 
 ## Overview
 
