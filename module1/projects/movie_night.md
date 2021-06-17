@@ -45,7 +45,17 @@ To fulfill the CEO's request, Streamflix's Data Science Director has tasked you 
 
 At the end of this project, students will be able to:
 
-* 
+* Clean and format data
+* Load data frames into postgresql
+* Derive new columns from existing data
+* Manipulate a database structure (tables, primary keys, foreign keys, constraints)
+* Execute DDL statements using Python
+* Create materialize views
+* Create tables from queries
+* Use unions
+* Apply window functions
+* Export data
+* Compress SQL files
 
 ## Requirements
 
