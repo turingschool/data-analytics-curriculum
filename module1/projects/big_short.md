@@ -30,7 +30,7 @@ To fulfill this request, the Risk Analysis Department has tasked you with assess
 * **Risk Analysis**: when related to the lending industry, this is an assessment of the likelihood that a person will pay back its loan.
 * **Financial Crisis**: an event that causes a steep decline in asset prices preventing consumers and businesses to pay their debt.
 * **Asset**: a resource with economic value that someone owns with the expectation that it will increase in value.
-* **Leverage**: use of borrowed capital to invest multiplying the gains and losses of the investors.
+* **Leverage**: use of borrowed capital to invest. This could exponentially multiply the gains and losses of the investors.
 
 ## Learning Goals
 
