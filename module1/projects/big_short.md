@@ -3,11 +3,6 @@ layout: page
 title: Big Short
 ---
 
----
-layout: page
-title: Movie Night
----
-
 ## Context
 
 The US housing boom had the conditions for a perfect storm. After seeing the constant increase in housing prices, regular people started investing in the housing market. Given the surge in demand for mortgages, lending institutions reduced their criteria to approve more loans. To increase eligibility, lending institutions designed mortgages that had an interest rate that increased every year. Investors saw this as an opportunity to buy a house, let its price increase, and sell it with a profit.
