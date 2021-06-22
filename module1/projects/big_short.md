@@ -11,7 +11,7 @@ However, in 2005, foreclosures started to increase. People with mortgages with i
 
 The mortgage foreclosures created a systemic failure. First, they reduced the demand for housing purchases, which in turn, lowered the price of houses. Second, this decrease in housing value made it harder for people to refinance existing mortgages. Third, people who could no longer flip or afford their houses started defaulting more. Finally, the lending institutions, which had borrowed a significant amount of money to multiply their returns (leverage), faced unprecedented losses causing a global financial crisis.
 
-Sources: [Statista](https://www.statista.com/statistics/185100/revenue-sources-of-us-motion-picture-and-video-industry-2009/), [Data USA](https://datausa.io/profile/naics/motion-pictures-video-industries), [Forbes](https://www.forbes.com/sites/sergeiklebnikov/2020/05/22/streaming-wars-continue-heres-how-much-netflix-amazon-disney-and-their-rivals-are-spending-on-new-content/?sh=3faf0ee3623b).
+Sources: [Wikipedia](https://en.wikipedia.org/wiki/Timeline_of_the_United_States_housing_bubble), [History](https://www.history.com/topics/21st-century/recession), [Federal Reserve History](https://www.federalreservehistory.org/essays/great-recession-of-200709).
 
 ## Overview
 
