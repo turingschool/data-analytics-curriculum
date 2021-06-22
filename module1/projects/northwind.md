@@ -41,8 +41,6 @@ At the end of this project, students will be able to:
 
 ## Requirements
 
-To start working on this project, you will to download the [Postgres App](https://postgresapp.com/downloads.html), install the **Postgres CLI Tools**, and setup the project database.
-
 For full installation instruction and technical requirements click [here](https://github.com/mihir787/turing_data_projects/tree/main/project_2_northwind).
 
 ## Submission
